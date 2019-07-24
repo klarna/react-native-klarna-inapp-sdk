@@ -9,7 +9,7 @@
  */
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button } from 'react-native';
+import { Platform, StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import KlarnaPaymentView from 'react-native-klarna-payment-view';
 
 
@@ -47,7 +47,8 @@ export default class App extends Component<{}> {
 
   render = () => {
     return (
-      <View style={styles.container}>
+      <View style={styles.outer}>
+      <ScrollView vertical style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
         <Text style={styles.header}>☆Klarna Payments Test App</Text>
         {paymentMethods.map(paymentMethod => {
           return (
@@ -62,6 +63,7 @@ export default class App extends Component<{}> {
             </View>
           )
         })}
+      </ScrollView>
       </View>
     );
   }
@@ -72,8 +74,23 @@ const authToken = 'eyJhbGciOiJSUzI1NiJ9.ewogICJzZXNzaW9uX2lkIiA6ICIwOWExMzA5OC0w
 const paymentMethods = ['pay_now', 'pay_later', 'slice_it'];
 
 const styles = StyleSheet.create({
-  container: {
+  outer: {
     flex: 1,
+    flexGrow: 1
+  },
+  scrollView: {
+    flex: 1,
+    flexGrow: 1
+    },
+  scrollViewContentContainer: {
+    // flex: 1,
+    // flexGrow: 1,
+    justifyContent: 'space-between'
+  },
+
+  container: {
+    // flex: 1,
+    // flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
@@ -85,8 +102,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   paymentView: {
-    flex: 1,
-    width: "100%"
+    // flex: 1,
+    width: "100%",
+    flexGrow: 1,
+    height: 400
   },
   title: {
     textAlign: 'center',
