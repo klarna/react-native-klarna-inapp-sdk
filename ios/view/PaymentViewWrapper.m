@@ -108,7 +108,7 @@
     self.onEvent(@{
         @"name": @"authorized",
         @"approved": [NSNumber numberWithBool:approved],
-        @"authToken": authToken,
+        @"authToken": NSNull.null,
         @"finalizeRequired": [NSNumber numberWithBool:finalizeRequired]
     });
 
