@@ -9,7 +9,7 @@ PODS:
   - KlarnaMobileSDK (2.0.2)
   - React (0.59.10):
     - React/Core (= 0.59.10)
-  - react-native-klarna-payment-view (1.0.0):
+  - react-native-klarna-inapp-sdk (1.0.0):
     - KlarnaMobileSDK (~> 2.0.2)
     - React
   - React/Core (0.59.10):
@@ -76,7 +76,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/GLog.podspec`)
-  - react-native-klarna-payment-view (from `../../react-native-klarna-payment-view.podspec`)
+  - react-native-klarna-inapp-sdk (from `../../react-native-klarna-inapp-sdk.podspec`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -109,8 +109,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/GLog.podspec"
   React:
     :path: "../node_modules/react-native"
-  react-native-klarna-payment-view:
-    :path: "../../react-native-klarna-payment-view.podspec"
+  react-native-klarna-inapp-sdk:
+    :path: "../../react-native-klarna-inapp-sdk.podspec"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
@@ -121,9 +121,9 @@ SPEC CHECKSUMS:
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   KlarnaMobileSDK: d432267f8c3b3a4636d71f5a3f70af52b15dc1f3
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
-  react-native-klarna-payment-view: 441a53217dd5469ae64ea6b02db241cc7a159bcf
+  react-native-klarna-inapp-sdk: f0c4a8f1793fd394354da0dca4722fd925b5b1c9
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 7fb08e3332b23141f8ccbb4bb6542b0aa7e99991
+PODFILE CHECKSUM: 9e5e2d273f416092a2dfad2743a827ff8631227c
 
 COCOAPODS: 1.7.2

@@ -37,6 +37,18 @@ export default class App extends Component {
           }}
           title="Authorize"
           style={styles.button} />
+        <Button
+          onPress={() => {
+            this.refs[paymentMethod].reauthorize()
+          }}
+          title="Reauthorize"
+          style={styles.button} />
+        <Button
+          onPress={() => {
+            this.refs[paymentMethod].finalize()
+          }}
+          title="Finalize"
+          style={styles.button} />
       </View>
     )
   }
@@ -58,7 +70,9 @@ export default class App extends Component {
                 category={paymentMethod}
                 ref={paymentMethod}
                 style={styles.paymentView}
-                onEvent={this.onEvent} />
+                onInitialized={this.onEvent}
+                onLoaded={this.onEvent}
+                onAuthorized={this.onEvent} />
               {this.actionButtons(paymentMethod)}
             </View>
           )
@@ -69,7 +83,7 @@ export default class App extends Component {
   }
 }
 
-const authToken = 'eyJhbGciOiJSUzI1NiJ9.ewogICJzZXNzaW9uX2lkIiA6ICIwOWExMzA5OC0wMGFmLTc0M2UtYTc2My0zMDI3ZWIxMTYyYzgiLAogICJiYXNlX3VybCIgOiAiaHR0cHM6Ly9rbGFybmEtcGF5bWVudHMtZXUucGxheWdyb3VuZC5rbGFybmEuY29tIiwKICAiZGVzaWduIiA6ICJrbGFybmEiLAogICJsYW5ndWFnZSIgOiAic3YiLAogICJwdXJjaGFzZV9jb3VudHJ5IiA6ICJTRSIsCiAgInRyYWNlX2Zsb3ciIDogZmFsc2UsCiAgImVudmlyb25tZW50IiA6ICJwbGF5Z3JvdW5kIiwKICAibWVyY2hhbnRfbmFtZSIgOiAiUGxheWdyb3VuZCBEZW1vIE1lcmNoYW50IiwKICAic2Vzc2lvbl90eXBlIiA6ICJQQVlNRU5UUyIsCiAgImNsaWVudF9ldmVudF9iYXNlX3VybCIgOiAiaHR0cHM6Ly9ldnQucGxheWdyb3VuZC5rbGFybmEuY29tIiwKICAiZXhwZXJpbWVudHMiIDogWyBdCn0.Vf9j13i75k1TNmbibUJzffRH88DgoSHhYKfmlF6byXrZFxEWnWKLgv6s2tPPXhBbtvVVgn7ko1q9RWa6wbHRfCjmruza8iO6Eoma7n-2pbvtn4ZAgJUCGZUwen5uTB9rlMKk9zdW7hvogHDX2D7yIeK7duTmjyxV6SKDITbDWz8UP2Sg8QT5MRW1qglb4Aor7UymJGiofPU8apo9BnaeGIlQw1t3Okk9739EokmQkXZl9OLD3W50qBr4ucHr2-xzQkZEPFPMqaTMFLwOPYBX6_pH-FSlx7PhtyraMvsou1FRLh2BWO5zrm_hUAE6tRpvSvnkcsae6-evhE7IKGmo2Q';
+const authToken = 'eyJhbGciOiJSUzI1NiJ9.ewogICJzZXNzaW9uX2lkIiA6ICIwMWE2MTEwNi1kYTI2LTdmMDYtODMzNi0zNWE0NDc5ZjdmNGQiLAogICJiYXNlX3VybCIgOiAiaHR0cHM6Ly9rbGFybmEtcGF5bWVudHMtZXUucGxheWdyb3VuZC5rbGFybmEuY29tIiwKICAiZGVzaWduIiA6ICJrbGFybmEiLAogICJsYW5ndWFnZSIgOiAic3YiLAogICJwdXJjaGFzZV9jb3VudHJ5IiA6ICJTRSIsCiAgInRyYWNlX2Zsb3ciIDogZmFsc2UsCiAgImVudmlyb25tZW50IiA6ICJwbGF5Z3JvdW5kIiwKICAibWVyY2hhbnRfbmFtZSIgOiAiUGxheWdyb3VuZCBEZW1vIE1lcmNoYW50IiwKICAic2Vzc2lvbl90eXBlIiA6ICJQQVlNRU5UUyIsCiAgImNsaWVudF9ldmVudF9iYXNlX3VybCIgOiAiaHR0cHM6Ly9ldnQucGxheWdyb3VuZC5rbGFybmEuY29tIiwKICAiZXhwZXJpbWVudHMiIDogWyBdCn0.DB7vuHfTTFEyRC8MYd13d4fqShCSKltQLkTRiweFRrPe0DNY8_V-DGwM-kUL-Gh-t2DnOrvoY7Y4G4jfL9SgNoSe-pf8ldUz0rgW7XzC1H4kva3BfStGwtjgeTKC6vnBoyOCxIOpIyJ7Y4f7vaUYh6g4IgXzM1KYPx7rL89Ql-jRruJIt9Y15c8-QWk5PU4RBk-4xL4gnRSL_YR08FA2ZsyFFPPcwvtXZK2jsV7oSznQITYqueiSNglJzi2aMYxiHt3uFq1ZDm3R2OPXYQTIV5cjicRDfE-Hwx5txokuRa5JAviSi0zOh-AeAsnYYZHv3MKjDU4u8WcQlmaXYaIcnA'
 
 const paymentMethods = ['pay_now', 'pay_later', 'slice_it'];
 
@@ -104,8 +118,7 @@ const styles = StyleSheet.create({
   paymentView: {
     // flex: 1,
     width: "100%",
-    flexGrow: 1,
-    height: 400
+    flexGrow: 1
   },
   title: {
     textAlign: 'center',

@@ -45,6 +45,8 @@
         [self.actualPaymentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [self.actualPaymentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
     ]];
+    
+
 }
 
 - (void)layoutSubviews {
@@ -60,74 +62,101 @@
     [self.actualPaymentView initializeWithClientToken:clientToken returnUrl:url];
 }
 
-- (void)loadPaymentView {
-    [self.actualPaymentView loadWithJsonData:nil];
+- (void)loadPaymentViewWithSessionData:(NSString*)sessionData {
+    [self.actualPaymentView loadWithJsonData:sessionData];
 }
 
-- (void)authorizePaymentViewWithAutoFinalize:(BOOL)autoFinalize {
-    [self.actualPaymentView authorizeWithAutoFinalize:autoFinalize jsonData:nil];
+- (void)loadPaymentReview {
+    [self.actualPaymentView loadPaymentReview];
+}
+
+- (void)authorizePaymentViewWithAutoFinalize:(BOOL)autoFinalize sessionData:(NSString*)sessionData {
+    [self.actualPaymentView authorizeWithAutoFinalize:autoFinalize jsonData:sessionData];
+}
+
+- (void)reauthorizePaymentViewWithSessionData:(NSString*)sessionData {
+    [self.actualPaymentView reauthorizeWithJsonData:sessionData];
+}
+
+- (void)finalizePaymentViewWithSessionData:(NSString*)sessionData {
+    [self.actualPaymentView finaliseWithJsonData:sessionData];
+
 }
 
 #pragma mark - Klarna PaymentEventListener
 
 
 - (void)klarnaInitializedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView {
-    if (!self.onEvent) {
-        RCTLog(@"Missing 'onEvent' callback prop.");
+    if (!self.onInitialized) {
+        RCTLog(@"Missing 'onInitialized' callback prop.");
         return;
     }
     
-    self.onEvent(@{
-       @"name": @"initialized"
-    });
+    self.onInitialized(@{});
 }
 
 - (void)klarnaLoadedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView {
-    if (!self.onEvent) {
-        RCTLog(@"Missing 'onEvent' callback prop.");
+    if (!self.onLoaded) {
+        RCTLog(@"Missing 'onLoaded' callback prop.");
         return;
     }
     
-    self.onEvent(@{
-       @"name": @"loaded"
-    });
+    self.onLoaded(@{});
 }
 
 - (void)klarnaLoadedPaymentReviewWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView {
-    if (!self.onEvent) {
-        RCTLog(@"Missing 'onEvent' callback prop.");
+    if (!self.onLoadedPaymentReview) {
+        RCTLog(@"Missing 'onLoadedPaymentReview' callback prop.");
         return;
     }
     
-    self.onEvent(@{
-        @"name": @"loadedPaymentReview"
-    });
+    self.onLoadedPaymentReview(@{});
 }
 
 - (void)klarnaAuthorizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView approved:(BOOL)approved authToken:(NSString * _Nullable)authToken finalizeRequired:(BOOL)finalizeRequired {
-    self.onEvent(@{
-        @"name": @"authorized",
+    if (!self.onAuthorized) {
+        RCTLog(@"Missing 'onAuthorized' callback prop.");
+        return;
+    }
+    
+    self.onAuthorized(@{
         @"approved": [NSNumber numberWithBool:approved],
-        @"authToken": NSNull.null,
+        @"authToken": authToken ? authToken : NSNull.null,
         @"finalizeRequired": [NSNumber numberWithBool:finalizeRequired]
     });
 
 }
 - (void)klarnaReauthorizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView approved:(BOOL)approved authToken:(NSString * _Nullable)authToken {
+    if (!self.onReauthorized) {
+        RCTLog(@"Missing 'onReauthorized' callback prop.");
+        return;
+    }
     
+    self.onReauthorized(@{
+        @"approved": [NSNumber numberWithBool:approved],
+        @"authToken": authToken ? authToken : NSNull.null,
+    });
 }
 
 - (void)klarnaFinalizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView approved:(BOOL)approved authToken:(NSString * _Nullable)authToken {
+    if (!self.onFinalized) {
+        RCTLog(@"Missing 'onFinalized' callback prop.");
+        return;
+    }
     
+    self.onFinalized(@{
+        @"approved": [NSNumber numberWithBool:approved],
+        @"authToken": authToken ? authToken : NSNull.null,
+    });
 }
 
 - (void)klarnaFailedInPaymentView:(KlarnaPaymentView * _Nonnull)paymentView withError:(KlarnaPaymentError * _Nonnull)error {
    
 }
 
-
 - (void)klarnaResizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView to:(CGFloat)newHeight {
-    
+
+    [self.uiManager setIntrinsicContentSize:CGSizeMake(UIViewNoIntrinsicMetric, newHeight) forView:self];
 }
 
 @end
