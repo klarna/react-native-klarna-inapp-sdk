@@ -27,5 +27,5 @@ platform :ios, '10.0'
 			'DevSupport'
 		]
 	
-		pod 'react-native-klarna-payment-view', :path => '../../react-native-klarna-payment-view.podspec'
+		pod 'react-native-klarna-inapp-sdk', :path => '../../react-native-klarna-inapp-sdk.podspec'
 	end

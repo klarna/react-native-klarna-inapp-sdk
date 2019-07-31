@@ -10,11 +10,11 @@
 
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, ScrollView } from 'react-native';
-import KlarnaPaymentView from 'react-native-klarna-payment-view';
+import KlarnaPaymentView from 'react-native-klarna-inapp-sdk';
 
 
 
-export default class App extends Component<{}> {
+export default class App extends Component {
 
   actionButtons = (paymentMethod) => {
     return (

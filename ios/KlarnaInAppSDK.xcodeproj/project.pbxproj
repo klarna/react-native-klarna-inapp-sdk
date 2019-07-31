@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libKlarnaPaymentView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKlarnaPaymentView.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKlarnaInAppSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* KlarnaPaymentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KlarnaPaymentView.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* KlarnaPaymentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KlarnaPaymentView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -42,7 +42,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libKlarnaPaymentView.a */,
+				134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,9 +59,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* KlarnaPaymentView */ = {
+		58B511DA1A9E6C8500147676 /* KlarnaInAppSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "KlarnaPaymentView" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "KlarnaInAppSDK" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -71,9 +71,9 @@
 			);
 			dependencies = (
 			);
-			name = KlarnaPaymentView;
+			name = KlarnaInAppSDK;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libKlarnaPaymentView.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -90,11 +90,12 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "KlarnaPaymentView" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "KlarnaInAppSDK" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 58B511D21A9E6C8500147676;
@@ -102,7 +103,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* KlarnaPaymentView */,
+				58B511DA1A9E6C8500147676 /* KlarnaInAppSDK */,
 			);
 		};
 /* End PBXProject section */
@@ -216,14 +217,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-				"$(inherited)",
+					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = KlarnaPaymentView;
+				PRODUCT_NAME = KlarnaInAppSDK;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -239,7 +240,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = KlarnaPaymentView;
+				PRODUCT_NAME = KlarnaInAppSDK;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -247,7 +248,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "KlarnaPaymentView" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "KlarnaInAppSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -256,7 +257,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "KlarnaPaymentView" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "KlarnaInAppSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,
