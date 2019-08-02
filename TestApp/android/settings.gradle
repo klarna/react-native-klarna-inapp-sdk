@@ -1,5 +1,5 @@
 rootProject.name = 'TestApp'
-include ':react-native-klarna-payment-view'
-project(':react-native-klarna-payment-view').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-klarna-payment-view/android')
+include ':react-native-klarna-inapp-sdk'
+project(':react-native-klarna-inapp-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-klarna-inapp-sdk/android')
 
 include ':app'
