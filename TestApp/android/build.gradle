@@ -30,7 +30,7 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
         maven {
-        url 'https://x.klarnacdn.net/mobile-sdk/'
+            url 'https://x.klarnacdn.net/mobile-sdk/'
         }
     }
 }
