@@ -5,19 +5,18 @@
   "description": "TODO",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_account/react-native-klarna-payment-view.git",
-    "baseUrl": "https://github.com/github_account/react-native-klarna-payment-view"
+    "url": "git+https://github.com/klarna/react-native-klarna-inapp-sdk.git",
+    "baseUrl": "https://github.com/klarna/react-native-klarna-inapp-sdk"
   },
   "keywords": [
     "react-native"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "yourname@email.com"
+    "name": "In-App Team @ Klarna",
+    "email": "mobile.sdk@klarna.com"
   },
   "license": "Apache-2.0",
   "licenseFilename": "LICENSE",
