@@ -24,7 +24,7 @@ class KlarnaReactPaymentView extends React.Component {
         )
     }
 
-    loadPaymentReview = (sessionData) => {
+    loadPaymentReview = () => {
         UIManager.dispatchViewManagerCommand(
             findNodeHandle(this),
             UIManager.getViewManagerConfig('KlarnaPaymentView').Commands.loadPaymentReview,
