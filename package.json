@@ -1,11 +1,10 @@
 {
   "name": "react-native-klarna-inapp-sdk",
   "title": "React Native Klarna In-App SDK",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TODO",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/klarna/react-native-klarna-inapp-sdk.git",
