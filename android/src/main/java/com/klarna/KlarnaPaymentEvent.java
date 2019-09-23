@@ -13,30 +13,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A `KlarnaPaymentEvent` is the event type being sent via `onEvent`.
+ * A `KlarnaPaymentEvent` builds the event that will be eventually sent via `on<event>`.
  *
  * It consists of a flat JSON object with a single `name` parameter for the event name as well as
  * other, optional parameters depending on the function that was called.
  */
 public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
 
-    public static final String EVENT_NAME_ON_CHANGE = "onEvent";
+    public static final String EVENT_NAME_ON_INITIALIZE = "onInitialized";
+    public static final String EVENT_NAME_ON_LOAD = "onLoaded";
+    public static final String EVENT_NAME_ON_LOAD_PAYMENT_REVIEW = "onLoadedPaymentReview";
+    public static final String EVENT_NAME_ON_AUTHORIZE = "onAuthorized";
+    public static final String EVENT_NAME_ON_REAUTHORIZE = "onReauthorized";
+    public static final String EVENT_NAME_ON_FINALIZE = "onFinalized";
 
     @NonNull
-    private final String name;
+    private final String eventName;
 
     @Nullable
     private final Map<String, Object> additionalParams;
 
-    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String name, Map<String, Object> additionalParams) {
+    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String eventName, Map<String, Object> additionalParams) {
         super(viewId);
-        this.name = name;
+        this.eventName = eventName;
         this.additionalParams = additionalParams;
     }
 
     @Override
     public String getEventName() {
-        return EVENT_NAME_ON_CHANGE;
+        return eventName;
     }
 
     /**
@@ -46,7 +51,6 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
     @Override
     public void dispatch(RCTEventEmitter rctEventEmitter) {
         Map<String, Object> map = new HashMap<>();
-        map.put("name", name);
 
         if (additionalParams != null) {
             map.putAll(additionalParams);
