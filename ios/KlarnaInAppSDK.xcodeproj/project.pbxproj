@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9CDEDC2C23475BB6006C9C97 /* PaymentViewWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */; };
 		B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentView.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* KlarnaPaymentView.m */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +25,8 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKlarnaInAppSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapper.m; sourceTree = "<group>"; };
+		9CDEDC2B23475BAC006C9C97 /* PaymentViewWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentViewWrapper.h; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* KlarnaPaymentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KlarnaPaymentView.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* KlarnaPaymentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KlarnaPaymentView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,8 +55,18 @@
 			children = (
 				B3E7B5881CC2AC0600A0062D /* KlarnaPaymentView.h */,
 				B3E7B5891CC2AC0600A0062D /* KlarnaPaymentView.m */,
+				9CDEDC2923475BAC006C9C97 /* view */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		9CDEDC2923475BAC006C9C97 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */,
+				9CDEDC2B23475BAC006C9C97 /* PaymentViewWrapper.h */,
+			);
+			path = view;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -114,6 +127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentView.m in Sources */,
+				9CDEDC2C23475BB6006C9C97 /* PaymentViewWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
