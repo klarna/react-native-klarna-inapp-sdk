@@ -9,12 +9,12 @@ Pod::Spec.new do |s|
   s.description  = <<-DESC
                   react-native-klarna-inapp-sdk
                    DESC
-  s.homepage     = "https://github.com/github_account/react-native-klarna-inapp-sdk"
+  s.homepage     = "https://github.com/klarna/react-native-klarna-inapp-sdk"
   s.license      = "MIT"
   # s.license    = { :type => "MIT", :file => "FILE_LICENSE" }
   s.authors      = { "Your Name" => "yourname@email.com" }
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/github_account/react-native-klarna-inapp-sdk.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/klarna/react-native-klarna-inapp-sdk.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m}"
   s.requires_arc = true
