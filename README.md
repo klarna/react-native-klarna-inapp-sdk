@@ -10,19 +10,41 @@ This repository also includes a test application that you can use to see how it 
 
 `$ npm install react-native-klarna-inapp-sdk --save`
 
-### Mostly automatic installation
-
-`$ react-native link react-native-klarna-inapp-sdk`
-
-### Manual installation
-
+### Installation
 
 #### iOS
-
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-klarna-inapp-sdk` and add `KlarnaPaymentView.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libKlarnaPaymentView.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
+1. Run `$ pod init` in `[your project]/ios` folder.
+2. Go to `[your project]/node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec` and make sure that `s.dependency ‘KlarnaMobileSDK’, ’~> 2.0.4` and `s.platform  = :ios, “10.0”`. Also, make sure that your project target is iOS 10.0.
+3. Put the following inside the Podfile:
+```
+pod ‘react-native-klarna-inapp-sdk’, :path => ‘../node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec’
+ rn_path = ‘../node_modules/react-native’
+   pod ‘yoga’, path: “#{rn_path}/ReactCommon/yoga/yoga.podspec”
+   pod ‘DoubleConversion’, :podspec => “#{rn_path}/third-party-podspecs/DoubleConversion.podspec”
+   pod ‘Folly’, :podspec => “#{rn_path}/third-party-podspecs/Folly.podspec”
+   pod ‘glog’, :podspec => “#{rn_path}/third-party-podspecs/GLog.podspec”
+   pod ‘React’, path: rn_path, subspecs: [
+     ‘Core’,
+     ‘CxxBridge’,
+     ‘RCTAnimation’,
+     ‘RCTActionSheet’,
+     ‘RCTImage’,
+     ‘RCTLinkingIOS’,
+     ‘RCTNetwork’,
+     ‘RCTSettings’,
+     ‘RCTText’,
+     ‘RCTVibration’,
+     ‘RCTWebSocket’,
+     ‘RCTPushNotification’,
+     ‘RCTCameraRoll’,
+     ‘RCTSettings’,
+     ‘RCTBlob’,
+     ‘RCTGeolocation’,
+     ‘DevSupport’
+   ]
+```
+4. Go back to `[your project]/ios` and run `pod install`.
+5. Open `.xcworkspace` and run the project.
 
 #### Android
 
