@@ -2,7 +2,7 @@
   "name": "react-native-klarna-inapp-sdk",
   "title": "React Native Klarna In-App SDK",
   "version": "1.0.4",
-  "description": "TODO",
+  "description": "This library wraps Klarna’s In-App SDK and exposes its functionality as React Native components. It currently supports Klarna Payments via a Payment View component.",
   "main": "index.js",
   "scripts": {},
   "repository": {
