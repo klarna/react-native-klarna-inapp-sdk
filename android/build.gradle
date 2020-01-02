@@ -54,7 +54,7 @@ repositories {
 
 dependencies {
     implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
-    implementation 'com.klarna.mobile:sdk:2.0.3'
+    implementation 'com.klarna.mobile:sdk:2.0.9'
 }
 
 def configureReactNativePom(def pom) {
