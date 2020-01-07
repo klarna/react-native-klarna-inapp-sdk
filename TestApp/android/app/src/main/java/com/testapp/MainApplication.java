@@ -3,7 +3,7 @@ package com.testapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.klarna.KlarnaPaymentViewPackage;
+import com.klarna.inapp.sdk.KlarnaPaymentViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
