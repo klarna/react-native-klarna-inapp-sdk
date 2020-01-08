@@ -1,4 +1,4 @@
-package com.klarna;
+package com.klarna.inapp.sdk;
 
 import android.app.Application;
 

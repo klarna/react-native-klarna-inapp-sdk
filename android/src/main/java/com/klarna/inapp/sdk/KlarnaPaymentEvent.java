@@ -1,4 +1,4 @@
-package com.klarna;
+package com.klarna.inapp.sdk;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
