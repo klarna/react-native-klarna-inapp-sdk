@@ -239,10 +239,10 @@ If you'd like to understand what each method does, you can read about it [on Kla
 
 ## Example
 
-In addition to the test app in `/TestApp`, the you can see an abridged version below. 
+In addition to the test app in [/TestApp](https://github.com/klarna/react-native-klarna-inapp-sdk/tree/master/TestApp), the you can see an abridged version below.
 
 ```jsx
-import KlarnaPaymentView from 'react-native-klarna-payment-view';
+import KlarnaPaymentView from 'react-native-klarna-inapp-sdk';
 
 class MyCheckoutView extends React.Component {
 
