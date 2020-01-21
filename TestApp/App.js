@@ -97,14 +97,10 @@ const styles = StyleSheet.create({
     flexGrow: 1
     },
   scrollViewContentContainer: {
-    // flex: 1,
-    // flexGrow: 1,
     justifyContent: 'space-between'
   },
 
   container: {
-    // flex: 1,
-    // flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
@@ -116,7 +112,6 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   paymentView: {
-    // flex: 1,
     width: "100%",
     flexGrow: 1
   },
