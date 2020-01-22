@@ -9,7 +9,7 @@ currently supports Klarna Payments via a Payment View component.
 
 This repository also includes a test application that you can use to see how it works.
 
-**Looking for Klarna In-App SDK?** Check out the [Klarna In-App SDK](https://github.com/klarna/klarna-inapp-sdk) repo instead.
+**Looking for the pure native Klarna In-App SDK?** Check out the [Klarna In-App SDK](https://github.com/klarna/klarna-inapp-sdk) repo instead.
 
 ## Requirements
 * iOS 10 or later.
@@ -21,20 +21,16 @@ If you are having any issues using the library in your project, please create a 
 ### Klarna In-App SDK documentation
 [Overview of the SDK](https://developers.klarna.com/documentation/in-app/)
 
-## What Does Klarna In-App SDK Offer?
-Klarna In-App SDK offers two integration approaches: Native integration and Hybrid integration.
-
-Native integration allows fully native apps to add views with Klarna content to their app. We currently support Klarna Payments, allowing you to add payment views to your checkout and authorizing a session to create an order natively.
-
-Hybrid integration will enhance your customers' experience if your app renders in a web view that presents content from Klarna.
+## What Does React Native Klarna In-App SDK Offer?
+This library allows React Native apps to add views with Klarna content to their app. We currently support Klarna Payments, allowing you to add payment views to your checkout and authorizing a session to create an order natively.
 
 ### Why should you use the SDK?
 The SDK removes any possible friction in your app's checkout flow by leveraging native functionality in iOS and Android. Some of the things the SDK does are:
 
-Plays nicely with 3rd-party apps. Many customers complete their purchase through their banking application or other 3rd-party apps. We make this experience seamless not just by opening these apps, but returning your users automatically when they’re done.
-Safeguards your users' identity. The SDK adds an extra layer of security lowering the risk of fraudulent purchases. It also insures that your customer doesn’t have to write in any redundant info. (e.g. address or credentials) on successive purchases.
-Improves 3D Secure flow. If certain payment methods require opening banking pages, we’ll display an in-app browser. Your customer can safely authenticate with their bank without ever leaving your app.
-Open links without making your customers leave your app. As with 3D Secure, we open most resources in an in-app browser or a fullscreen overlay. This insures that your customer doesn’t ever have to leave your app.
+* **Plays nicely with 3rd-party apps.** Many customers complete their purchase through their banking application or other 3rd-party apps. We make this experience seamless not just by opening these apps, but returning your users automatically when they’re done.
+* **Safeguards your users' identity.** The SDK adds an extra layer of security lowering the risk of fraudulent purchases. It also insures that your customer doesn’t have to write in any redundant info. (e.g. address or credentials) on successive purchases.
+* **Improves 3D Secure flow.** If certain payment methods require opening banking pages, we’ll display an in-app browser. Your customer can safely authenticate with their bank without ever leaving your app.
+* **Open links without making your customers leave your app.** As with 3D Secure, we open most resources in an in-app browser or a fullscreen overlay. This insures that your customer doesn’t ever have to leave your app.
 
 ## Getting started
 
@@ -49,10 +45,15 @@ Open links without making your customers leave your app. As with 3D Secure, we o
 
 #### iOS
 
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-klarna-inapp-sdk` and add `KlarnaPaymentView.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libKlarnaPaymentView.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
+We strongly encourage you to use CocoaPods to manage the library and follow the instructions below to add the SDK as a dependency to the React Native app. If you add the SDK to CocoaPods elsewhere in the application may cause the SDK to not be visible to the library.
+
+1. After running `$ npm install react-native-klarna-inapp-sdk --save` go to `[your project]/ios` folder.
+2. Make sure you have a Podfile ready, if not use `pod init`. Check that `platform :ios, ‘10.0’`.
+3. Go to `[your project]/node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec` and make sure that `s.dependency ‘KlarnaMobileSDK’, ’~> 2.0.4` and `s.platform = :ios, “10.0”`.
+4. Add `react-native-klarna-inapp-sdk` as a dependency to your podfile (`[your project]/ios` folder)  `pod ‘react-native-klarna-inapp-sdk’, :podspec => ‘../node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec’`.
+5. Go back to `[your project]/ios` and run `pod install`.
+
+
 
 #### Android
 
@@ -345,7 +346,7 @@ class MyCheckoutView extends React.Component {
 ```
 
 ## Contributing
-Thank you for reading this and taking time to contribute to Klarna In-App SDK! Below is a set of guidelines to help you contribute whether you want to report a bug, come with suggestions or modify code.
+Thank you for reading this and taking time to contribute to React Native Klarna In-App SDK! Below is a set of guidelines to help you contribute whether you want to report a bug, come with suggestions or modify code.
 
 ### How can I contribute?
 #### Reporting Bugs
