@@ -11,12 +11,11 @@
     "baseUrl": "https://github.com/klarna/react-native-klarna-inapp-sdk"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "klarna",
+    "sdk"
   ],
-  "author": {
-    "name": "In-App Team @ Klarna",
-    "email": "mobile.sdk@klarna.com"
-  },
+  "author": "In-App Team @ Klarna",
   "license": "Apache-2.0",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
