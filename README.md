@@ -45,7 +45,7 @@ The SDK removes any possible friction in your app's checkout flow by leveraging 
 
 #### iOS
 
-We strongly encourage you to use CocoaPods to manage the library and follow the instructions below to add the SDK as a dependency to the React Native app. If you add the SDK to CocoaPods elsewhere in the application may cause the SDK to not be visible to the library.
+We strongly encourage you to use CocoaPods to manage the library and follow the instructions below to add the SDK as a dependency to the React Native app. If you add the SDK to CocoaPods elsewhere in the application it may cause the SDK to not be visible to the library.
 
 1. After running `$ npm install react-native-klarna-inapp-sdk --save` go to `[your project]/ios` folder.
 2. Make sure you have a Podfile ready, if not use `pod init`. Check that `platform :ios, ‘10.0’`.
