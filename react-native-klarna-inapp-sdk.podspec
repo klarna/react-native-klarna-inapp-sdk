@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   # s.license    = { :type => "MIT", :file => "FILE_LICENSE" }
   s.authors      = { "Your Name" => "yourname@email.com" }
   s.platform     = :ios, "10.0"
-  s.source       = { :git => "https://github.com/klarna/react-native-klarna-inapp-sdk.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/klarna/react-native-klarna-inapp-sdk.git", :tag => "v#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m}"
   s.requires_arc = true
