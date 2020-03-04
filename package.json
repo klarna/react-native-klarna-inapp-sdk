@@ -15,7 +15,10 @@
     "klarna",
     "sdk"
   ],
-  "author": "In-App Team @ Klarna",
+  "author": {
+    "name": "In-App Team @ Klarna",
+    "email": "mobile.sdk@klarna.com"
+  },
   "license": "Apache-2.0",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
