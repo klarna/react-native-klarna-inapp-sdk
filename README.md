@@ -58,7 +58,7 @@ We strongly encourage you to use CocoaPods to manage the library and follow the 
 #### Android
 
 1. Open up `android/app/src/main/java/[...]/MainApplication.java`
-  - Add `import com.klarna.KlarnaPaymentViewPackage;` to the imports at the top of the file
+  - Add `import com.klarna.inapp.sdk.KlarnaPaymentViewPackage;` to the imports at the top of the file
   - Add `new KlarnaPaymentViewPackage()` to the list returned by the `getPackages()` method
 2. Append the following lines to `android/settings.gradle`:
     ```
