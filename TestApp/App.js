@@ -72,7 +72,8 @@ export default class App extends Component {
                 style={styles.paymentView}
                 onInitialized={this.onEvent}
                 onLoaded={this.onEvent}
-                onAuthorized={this.onEvent} />
+                onAuthorized={this.onEvent}
+                onError={this.onEvent} />
               {this.actionButtons(paymentMethod)}
             </View>
           )
