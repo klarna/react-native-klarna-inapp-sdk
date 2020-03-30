@@ -49,7 +49,7 @@ We strongly encourage you to use CocoaPods to manage the library and follow the 
 
 1. After running `$ npm install react-native-klarna-inapp-sdk --save` go to `[your project]/ios` folder.
 2. Make sure you have a Podfile ready, if not use `pod init`. Check that `platform :ios, ‘10.0’`.
-3. Go to `[your project]/node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec` and make sure that `s.dependency ‘KlarnaMobileSDK’, ’~> 2.0.4` and `s.platform = :ios, “10.0”`.
+3. Go to `[your project]/node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec` and make sure that `s.dependency ‘KlarnaMobileSDK’, ’~> 2.0.11` and `s.platform = :ios, “10.0”`.
 4. Add `react-native-klarna-inapp-sdk` as a dependency to your podfile (`[your project]/ios` folder)  `pod ‘react-native-klarna-inapp-sdk’, :podspec => ‘../node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec’`.
 5. Go back to `[your project]/ios` and run `pod install`.
 
