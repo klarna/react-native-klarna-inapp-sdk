@@ -1,7 +1,6 @@
 package com.klarna.inapp.sdk;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableArray;
@@ -159,7 +158,8 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
                 KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW),
                 KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE),
                 KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE),
-                KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE)
+                KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE),
+                KlarnaPaymentEvent.EVENT_NAME_ON_ERROR, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_ERROR)
         );
     }
 
@@ -242,7 +242,10 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
 
     @Override
     public void onErrorOccurred(@NotNull KlarnaPaymentView klarnaPaymentView, @NotNull KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
-        Log.e("TAG", klarnaPaymentsSDKError.toString());
+        WritableKlarnaPaymentsSDKError sdkError = new WritableKlarnaPaymentsSDKError(klarnaPaymentsSDKError);
+        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR,
+                MapBuilder.<String, Object>of("error", sdkError.toWritableMap()),
+                klarnaPaymentView);
     }
 
     private PaymentViewWrapper wrapperForPaymentView(KlarnaPaymentView paymentView) {
