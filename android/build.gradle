@@ -47,6 +47,7 @@ repositories {
         url "$projectDir/../node_modules/react-native/android"
     }
     mavenCentral()
+    google()
     maven {
         url 'https://x.klarnacdn.net/mobile-sdk/'
     }
@@ -55,6 +56,17 @@ repositories {
 dependencies {
     implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
     implementation 'com.klarna.mobile:sdk:2.0.+'
+
+    testImplementation "junit:junit:4.13"
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation "org.robolectric:robolectric:4.3"
+    testImplementation "org.mockito:mockito-core:3.3.3"
+    testImplementation "org.mockito:mockito-inline:2.19.0"
+    testImplementation "org.powermock:powermock-core:2.0.7"
+    testImplementation "org.powermock:powermock-api-mockito2:2.0.7"
+    testImplementation "org.powermock:powermock-module-junit4:2.0.7"
+    testImplementation "org.powermock:powermock-module-junit4-rule:2.0.7"
+    testImplementation "org.powermock:powermock-classloading-xstream:2.0.7"
 }
 
 def configureReactNativePom(def pom) {
