@@ -69,6 +69,8 @@ We strongly encourage you to use CocoaPods to manage the library and follow the 
     ```
     compile project(':react-native-klarna-inapp-sdk')
     ```
+    
+**Note:** If you encounter any build failure errors regarding the `androidx.annotations` package missing, you should enable `react-native-jetifier` in the `gradle.properties` file inside your project. See how to enable this [here](https://github.com/jumpn/react-native-jetifier).
 
 ### Warning regarding Android integration
 
