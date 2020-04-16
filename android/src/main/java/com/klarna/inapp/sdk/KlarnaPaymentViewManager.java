@@ -242,9 +242,9 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
 
     @Override
     public void onErrorOccurred(@NotNull KlarnaPaymentView klarnaPaymentView, @NotNull KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
-        WritableKlarnaPaymentsSDKError sdkError = new WritableKlarnaPaymentsSDKError(klarnaPaymentsSDKError);
+        MappableKlarnaPaymentsSDKError sdkError = new MappableKlarnaPaymentsSDKError(klarnaPaymentsSDKError);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR,
-                MapBuilder.<String, Object>of("error", sdkError.toWritableMap()),
+                MapBuilder.<String, Object>of("error", sdkError.buildMap()),
                 klarnaPaymentView);
     }
 

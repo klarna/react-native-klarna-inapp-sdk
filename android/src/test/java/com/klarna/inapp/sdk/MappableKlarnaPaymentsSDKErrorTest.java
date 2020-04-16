@@ -5,8 +5,6 @@ import android.os.SystemClock;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.JavaOnlyArray;
 import com.facebook.react.bridge.JavaOnlyMap;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.WritableMap;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
 
 import org.junit.Assert;
@@ -22,12 +20,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 @PrepareForTest({Arguments.class, SystemClock.class})
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*", "com.android.*"})
 @RunWith(RobolectricTestRunner.class)
-public class WritableKlarnaPaymentsSDKErrorTest {
+public class MappableKlarnaPaymentsSDKErrorTest {
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
@@ -65,20 +66,22 @@ public class WritableKlarnaPaymentsSDKErrorTest {
                 Collections.singletonList("testInvalidField")
         );
 
-        WritableKlarnaPaymentsSDKError writableError = new WritableKlarnaPaymentsSDKError(error);
+        MappableKlarnaPaymentsSDKError writableError = new MappableKlarnaPaymentsSDKError(error);
 
-        WritableMap map = writableError.toWritableMap();
+        Map map = writableError.buildMap();
 
-        Assert.assertEquals("testName", map.getString("name"));
-        Assert.assertEquals("testMessage", map.getString("message"));
-        Assert.assertFalse(map.getBoolean("isFatal"));
-        Assert.assertEquals("testAction", map.getString("action"));
+        Assert.assertEquals("testName", map.get("name"));
+        Assert.assertEquals("testMessage", map.get("message"));
+        Assert.assertEquals(false, map.get("isFatal"));
+        Assert.assertEquals("testAction", map.get("action"));
 
-        ReadableArray readableArray = map.getArray("invalidFields");
+        Object inv = map.get("invalidFields");
+        Assert.assertTrue(inv instanceof Collection);
+        Collection invalidFields = (Collection) inv;
 
-        Assert.assertNotNull(readableArray);
-        Assert.assertEquals(1, readableArray.size());
-        Assert.assertEquals("testInvalidField", readableArray.toArrayList().get(0));
+        Assert.assertNotNull(invalidFields);
+        Assert.assertEquals(1, invalidFields.size());
+        Assert.assertEquals("testInvalidField", new ArrayList(invalidFields).get(0));
 
     }
 }

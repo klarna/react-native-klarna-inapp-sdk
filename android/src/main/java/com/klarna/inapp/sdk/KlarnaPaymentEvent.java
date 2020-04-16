@@ -34,7 +34,7 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
     @Nullable
     private final Map<String, Object> additionalParams;
 
-    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String eventName, Map<String, Object> additionalParams) {
+    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String eventName, @Nullable Map<String, Object> additionalParams) {
         super(viewId);
         this.eventName = eventName;
         this.additionalParams = additionalParams;
