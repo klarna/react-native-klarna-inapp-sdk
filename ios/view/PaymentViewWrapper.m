@@ -151,7 +151,17 @@
 }
 
 - (void)klarnaFailedInPaymentView:(KlarnaPaymentView * _Nonnull)paymentView withError:(KlarnaPaymentError * _Nonnull)error {
-   
+       if (!self.onError) {
+        RCTLog(@"Missing 'onError' callback prop.");
+        return;
+    }
+
+    self.onError(@{
+        @"action": error.action,
+        @"isFatal": [NSNumber numberWithBool:error.isFatal],
+        @"message": error.message,
+        @"name": error.name
+    });
 }
 
 - (void)klarnaResizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView to:(CGFloat)newHeight {
