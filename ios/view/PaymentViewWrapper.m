@@ -157,10 +157,12 @@
     }
 
     self.onError(@{
-        @"action": error.action,
-        @"isFatal": [NSNumber numberWithBool:error.isFatal],
-        @"message": error.message,
-        @"name": error.name
+        @"error": @{
+            @"action": error.action,
+            @"isFatal": [NSNumber numberWithBool:error.isFatal],
+            @"message": error.message,
+            @"name": error.name
+        }
     });
 }
 
