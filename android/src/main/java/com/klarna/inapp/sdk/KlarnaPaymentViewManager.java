@@ -111,6 +111,7 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
                 if (args != null) {
                     sessionData = args.getString(0);
                 }
+                root.requestLayout();
                 root.paymentView.load(sessionData);
                 break;
 
