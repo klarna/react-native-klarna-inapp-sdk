@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to React Native Klarna In-App SDK will be documented in this file.
 
+### [2.0.3] - 2020-04-27
+- Fixed a rendering issue while loading the payment view in Android SDK 
+
 ### [2.0.2] - 2020-04-20
 - Updated the iOS SDK version to the latest (2.0.12)
 - Updated the Android SDK version to the latest (2.0.16)
