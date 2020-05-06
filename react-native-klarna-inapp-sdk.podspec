@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency 'KlarnaMobileSDK', '~> 2.0.12'
+  s.dependency 'KlarnaMobileSDK', '~> 2.0.13'
   # s.dependency "..."
 end
 

@@ -53,7 +53,7 @@ We strongly encourage you to use CocoaPods to manage the library and follow the 
 4. Add `react-native-klarna-inapp-sdk` as a dependency to your podfile (`[your project]/ios` folder)  `pod ‘react-native-klarna-inapp-sdk’, :podspec => ‘../node_modules/react-native-klarna-inapp-sdk/react-native-klarna-inapp-sdk.podspec’`.
 5. Go back to `[your project]/ios` and run `pod install`.
 
-
+**Note:** If you encounter the build failure error Library not loaded: `@rpath/libswiftCore.dylib`, you should create a `Swift Bridging Header`. in Xcode,  create a new .swift file in the project, it should ask if you would like to configure the bridging header, click `yes`, clean the project, clean DerivedData and build the project again.
 
 #### Android
 
