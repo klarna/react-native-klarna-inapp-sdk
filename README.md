@@ -15,9 +15,6 @@ This repository also includes a test application that you can use to see how it 
 * iOS 10 or later.
 * Android 4.4 or later.
 
-## Support
-If you are having any issues using the library in your project, please create a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/klarna-inapp-sdk) tagged with `klarna-inapp-sdk`. If you think that something is wrong with the library itself, please create an issue.
-
 ### Klarna In-App SDK documentation
 [Overview of the SDK](https://developers.klarna.com/documentation/in-app/)
 
@@ -348,9 +345,15 @@ class MyCheckoutView extends React.Component {
 ```
 
 ## Contributing
-Thank you for reading this and taking time to contribute to React Native Klarna In-App SDK! Below is a set of guidelines to help you contribute whether you want to report a bug, come with suggestions or modify code.
+
+### Support
+
+If you are having any issues using the SDK in your project or if you think that something is wrong with the SDK itself, please create an issue on [Github](https://github.com/klarna/react-native-klarna-inapp-sdk/issues) or report a bug by following the guidelines in the next section.
 
 ### How can I contribute?
+
+Thank you for reading this and taking time to contribute to React Native Klarna In-App SDK! Below is a set of guidelines to help you contribute whether you want to report a bug, come with suggestions or modify code.
+
 #### Reporting Bugs
 This section will guide you through submitting a bug report for Klarna In-App SDK.
 
