@@ -40,11 +40,11 @@ class KlarnaReactPaymentView extends React.Component {
         )
     }
 
-    reauthorize = (autoFinalize, sessionData) => {
+    reauthorize = (sessionData) => {
         UIManager.dispatchViewManagerCommand(
             findNodeHandle(this),
             UIManager.getViewManagerConfig('KlarnaPaymentView').Commands.reauthorize,
-            [autoFinalize || true, sessionData || null]
+            [sessionData || null]
         )
     }
 
