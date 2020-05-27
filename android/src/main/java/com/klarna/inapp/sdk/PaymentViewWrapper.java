@@ -72,16 +72,22 @@ public class PaymentViewWrapper extends LinearLayout {
         innerWebView.evaluateJavascript("document.body.scrollHeight", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                final float contentHeight = Float.parseFloat(value);
-                final float scaledHeight = contentHeight * displayDensity;
-
-                getReactAppContext().runOnNativeModulesQueueThread(new GuardedRunnable(getReactAppContext()) {
-                    @Override
-                    public void runGuarded() {
-                        UIManagerModule uimm = getReactAppContext().getNativeModule(UIManagerModule.class);
-                        uimm.updateNodeSize(getId(), viewWidth, (int) scaledHeight);
-                    }
-                });
+                if(value == null || value.equals("null") || value.equals("undefined")){
+                    return;
+                }
+                try {
+                    final float contentHeight = Float.parseFloat(value);
+                    final float scaledHeight = contentHeight * displayDensity;
+                    getReactAppContext().runOnNativeModulesQueueThread(new GuardedRunnable(getReactAppContext()) {
+                        @Override
+                        public void runGuarded() {
+                            UIManagerModule uimm = getReactAppContext().getNativeModule(UIManagerModule.class);
+                            uimm.updateNodeSize(getId(), viewWidth, (int) scaledHeight);
+                        }
+                    });
+                } catch (Throwable t){
+                    return;
+                }
             }
         });
     }
