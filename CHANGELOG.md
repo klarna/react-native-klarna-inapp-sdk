@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to React Native Klarna In-App SDK will be documented in this file.
 
+### [2.0.6] - 2020-06-08
+- Updated the parameters of reauthorize and finalize methods. 
+
 ### [2.0.5] - 2020-05-27
 - Fixed a resizing issue on Android when the web view's scroll height value was returned null. 
 
