@@ -27,7 +27,8 @@ pipeline {
 
         stage('Android Native Unit Tests') {
             steps {
-                sh 'cd android && ./gradlew test && cd ..'
+                sh 'cd android && ./gradlew clean && ./gradlew testDebugUnitTest && cd ..'
+                junit 'android/build/test-results/testDebugUnitTest/*.xml'
             }
         }
 
