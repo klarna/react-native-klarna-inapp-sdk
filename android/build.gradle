@@ -47,6 +47,7 @@ repositories {
         url "$projectDir/../node_modules/react-native/android"
     }
     mavenCentral()
+    jcenter()
     google()
     maven {
         url 'https://x.klarnacdn.net/mobile-sdk/'
