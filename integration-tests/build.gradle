@@ -13,5 +13,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21"
     testImplementation 'io.appium:java-client:7.3.0'
     testImplementation 'junit:junit:4.12'
-    implementation 'org.json:json:20190722'
+    testImplementation 'org.json:json:20190722'
+    testImplementation 'com.squareup.okhttp3:okhttp:3.12.1'
 }
