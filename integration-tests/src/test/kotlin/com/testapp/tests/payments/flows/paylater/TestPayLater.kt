@@ -78,7 +78,7 @@ internal class TestPayLater : BaseAppiumTest() {
     }
 
     private fun testSuccess(session: Session?, billing: LinkedHashMap<String, String?>) {
-        if(session?.client_token == null || session.payment_method_categories.isNullOrEmpty()){
+        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_LATER.value)){
             return
         }
         val token = session.client_token
@@ -123,7 +123,7 @@ internal class TestPayLater : BaseAppiumTest() {
     }
 
     private fun testFailure(session: Session?, billing: LinkedHashMap<String, String?>) {
-        if(session?.client_token == null || session.payment_method_categories.isNullOrEmpty()){
+        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_LATER.value)){
             return
         }
         val token = session.client_token

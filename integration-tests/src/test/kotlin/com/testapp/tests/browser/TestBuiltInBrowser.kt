@@ -103,7 +103,7 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
 
     private fun testLinks(session: Session?, category: PaymentCategory, linkLocator: By) {
 
-        if(session?.client_token == null || session.payment_method_categories.isNullOrEmpty()){
+        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(category.value)){
             return
         }
         val token = session.client_token

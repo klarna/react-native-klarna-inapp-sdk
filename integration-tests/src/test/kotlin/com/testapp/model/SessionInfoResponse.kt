@@ -6,7 +6,7 @@ internal data class SessionInfoResponse(
 
 internal data class Session(
         var client_token: String?,
-        var payment_method_categories: List<PaymentMethodCategory>?
+        var payment_method_categories: List<PaymentMethodCategory>
 )
 
 internal data class PaymentMethodCategory(
