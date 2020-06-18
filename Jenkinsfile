@@ -19,7 +19,7 @@ pipeline {
             }
         }
         
-        stage('Yarn Install') {
+        stage('Yarn Install Lib') {
             steps {
                 sh "yarn install"
             }
@@ -34,10 +34,35 @@ pipeline {
 
         // TODO : iOS Tests
 
-        // TODO : TestApp & integration tests
+        stage('Yarn Install TestApp') {
+            steps {
+                sh 'cd TestApp && yarn install && cd ..'
+            }
+        }
 
-        // TODO : npm version (patameterized, on master)
-        // TODO : npm publish (on master)
+        stage('Build Android TestApp') {
+            steps {
+                sh 'cd TestApp/android && ./gradlew clean && ./gradlew app:assembleDebug && cd ../..'
+                // apk location: TestApp/android/app/build/outputs/apk/debug/app-debug.apk
+                // TODO : Upload apk
+            }
+        }
+
+        // TODO : npm version (parameterized, on master)
+        
+        stage('Publish to npm') {
+            when {
+                expression { env.BRANCH_NAME == 'master' }
+            }
+            steps {
+                withCredentials([string(credentialsId: 'npm-auth-token', variable: 'NPM_TOKEN')]) {
+                    sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > .npmrc"
+                    sh 'npm whoami'
+                    sh 'npm publish'
+                    sh 'rm .npmrc'
+                }
+            }
+        }
 
     }
 }
