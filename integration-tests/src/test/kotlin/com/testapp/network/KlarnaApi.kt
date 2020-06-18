@@ -1,11 +1,11 @@
 package com.testapp.network
 
 import com.google.gson.Gson
-import com.testapp.models.Session
-import com.testapp.models.SessionInfoRequest
-import com.testapp.models.SessionInfoResponse
-import com.testapp.models.SessionRequest
-import com.testapp.models.SessionResponse
+import com.testapp.model.Session
+import com.testapp.model.SessionInfoRequest
+import com.testapp.model.SessionInfoResponse
+import com.testapp.model.SessionRequest
+import com.testapp.model.SessionResponse
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -20,7 +20,7 @@ internal object KlarnaApi {
     private val sessionRequestUrl = "https://www.klarna.com/demo/klarna-api/sessions/"
     private val sessionInfoUrl = "https://www.klarna.com/demo/klarna-api/sessions/session-get/"
 
-    fun getClientToken(sessionRrequest: SessionRequest): String? {
+    fun getSessionInfo(sessionRrequest: SessionRequest): SessionInfoResponse? {
         try {
             val sessionResponse = createSession(sessionRrequest)
             return sessionResponse?.let {
@@ -28,7 +28,7 @@ internal object KlarnaApi {
                         "payments/v1/sessions/${it.sessionId}",
                         sessionRrequest.country
                 ))
-                sessionInfo?.session?.client_token
+                sessionInfo
             }
         } catch (t: Throwable){
             return null
@@ -64,7 +64,7 @@ internal object KlarnaApi {
                 val bodyText = response.body()!!.string().replace("\\n", "").replace(" ", "")
                 val bodyObject = JSONObject(bodyText)
                 val sessionObject = JSONObject(bodyObject.get("session").toString())
-                return SessionInfoResponse(Session(sessionObject["client_token"].toString()))
+                return SessionInfoResponse(gson.fromJson(sessionObject.toString(), Session::class.java))
             }
             return null
         } catch (t: Throwable){

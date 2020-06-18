@@ -7,10 +7,7 @@ import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
-import org.junit.After
-import org.junit.AfterClass
-import org.junit.Assume
-import org.junit.BeforeClass
+import org.junit.*
 
 internal open class BaseAppiumTest {
 
@@ -63,7 +60,7 @@ internal open class BaseAppiumTest {
         }
     }
 
-    @After
+    @Before
     fun reset() {
         DriverUtils.switchContextToNative(driver)
         driver.launchApp()

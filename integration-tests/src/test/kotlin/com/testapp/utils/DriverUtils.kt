@@ -26,7 +26,8 @@ internal object DriverUtils {
             val desiredCapabilities = DesiredCapabilities()
             desiredCapabilities.setCapability("newCommandTimeout", 60)
             desiredCapabilities.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
-            desiredCapabilities.setCapability("noSign", true)
+            desiredCapabilities.setCapability("deviceName", "Android Emulator")
+            desiredCapabilities.setCapability("platformName", "Android")
             return desiredCapabilities
         }
 
@@ -38,8 +39,6 @@ internal object DriverUtils {
      */
     fun getLocalDriver(appiumService: AppiumDriverLocalService): AndroidDriver<WebElement> {
         val desiredCapabilities = commonCapabilities
-        desiredCapabilities.setCapability("deviceName", "Android Emulator")
-        desiredCapabilities.setCapability("platformName", "Android")
         //desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
         desiredCapabilities.setCapability("appPackage", "com.testapp")
         desiredCapabilities.setCapability("appActivity", "com.testapp.MainActivity")
@@ -69,7 +68,7 @@ internal object DriverUtils {
         caps.setCapability("recreateChromeDriverSessions", "true")
         caps.setCapability("device", "Samsung Galaxy S9")
         caps.setCapability("app", app)
-        caps.setCapability("project", "IN-APP MOBILE SDK INTEGRATION")
+        caps.setCapability("project", "IN-APP RN MOBILE SDK INTEGRATION")
         caps.setCapability("name", testName)
         return AndroidDriver(
                 URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
@@ -165,7 +164,7 @@ internal object DriverUtils {
         switchContextToNative(driver)
         var found = false
         val startTime = System.currentTimeMillis()
-        while(System.currentTimeMillis() - startTime < timeOutInSeconds){
+        while(System.currentTimeMillis() - startTime < timeOutInSeconds * 1000){
             if (driver.currentActivity() == activity){
                 found = true
                 break
@@ -175,4 +174,7 @@ internal object DriverUtils {
             fail("Couldn't find the activity: $activity")
         }
     }
+
+    fun isAndroid(driver: AppiumDriver<*>) = driver.capabilities.getCapability("platformName") == "Android"
+    fun isIos(driver: AppiumDriver<*>) = driver.capabilities.getCapability("platformName") == "ios"
 }

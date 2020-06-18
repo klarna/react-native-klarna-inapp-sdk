@@ -7,7 +7,6 @@ import io.appium.java_client.MobileBy
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
-import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal class TestAppiumServer : BaseAppiumTest() {

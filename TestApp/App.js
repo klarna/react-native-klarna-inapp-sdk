@@ -11,8 +11,7 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, TextInput, View, Button, ScrollView } from 'react-native';
 import KlarnaPaymentView from 'react-native-klarna-inapp-sdk';
-
-
+import { NativeModules } from 'react-native';
 
 export default class App extends Component {
 
@@ -22,6 +21,9 @@ export default class App extends Component {
         <Button
           onPress={() => {
             this.refs[paymentMethod].initialize(authToken, 'returnUrl://')
+
+            //You can skip this line, it's for integration testing purposes by Klarna.
+            NativeModules.DebugWebViewModule.enable()
           }}
           title="Init."
           {...testProps('initButton_' + paymentMethod)}
@@ -106,7 +108,7 @@ export default class App extends Component {
 
 let authToken = ''; // set your token here
 
-const paymentMethods = ['pay_now', 'pay_later', 'slice_it'];
+const paymentMethods = ['pay_now', 'pay_later', 'pay_over_time'];
 
 const styles = StyleSheet.create({
   outer: {

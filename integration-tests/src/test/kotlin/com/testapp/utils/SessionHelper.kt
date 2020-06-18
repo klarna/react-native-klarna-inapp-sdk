@@ -1,8 +1,8 @@
 package com.testapp.utils
 
-import com.testapp.models.OrderLines
-import com.testapp.models.Payload
-import com.testapp.models.SessionRequest
+import com.testapp.model.OrderLines
+import com.testapp.model.Payload
+import com.testapp.model.SessionRequest
 
 internal object SessionHelper {
 
