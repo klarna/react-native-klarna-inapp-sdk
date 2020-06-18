@@ -19,10 +19,8 @@ platform :ios do
   desc "Description of what the lane does"
 
   lane :build_test_apps do
-    find_xcodes
-
     clean_test_apps_build_dir
-    
+
     build_time_start = DateTime.now
 
     build_test_app(test_app: "TestApp", output_dir: "TestApp")
