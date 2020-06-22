@@ -13,7 +13,7 @@ module Fastlane
             scheme: test_app,
             clean: true,
             output_directory: "../build/" + output_dir,
-            configuration: "Debug",
+            configuration: "Release",
             export_method: "enterprise",
           )
         end
