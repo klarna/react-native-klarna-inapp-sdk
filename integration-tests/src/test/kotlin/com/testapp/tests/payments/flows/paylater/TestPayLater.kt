@@ -87,11 +87,11 @@ internal class TestPayLater : BaseAppiumTest() {
             sendKeys(token)
             Assert.assertEquals(token, text)
         }
-        driver.findElement(ByRnId(driver,"initButton_${PaymentCategory.PAY_LATER}")).click()
+        driver.findElement(ByRnId(driver,"initButton_${PaymentCategory.PAY_LATER.value}")).click()
         //wait for init response
         PaymentFlowsTestHelper.readConsoleMessage(driver, "{}")
 
-        driver.findElement(ByRnId(driver,"loadButton_${PaymentCategory.PAY_LATER}")).click()
+        driver.findElement(ByRnId(driver,"loadButton_${PaymentCategory.PAY_LATER.value}")).click()
         DriverUtils.switchContextToWebView(driver)
         val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
         mainWindow?.let {
@@ -101,14 +101,14 @@ internal class TestPayLater : BaseAppiumTest() {
         DriverUtils.switchContextToNative(driver)
 
         try {
-            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER}")).click()
+            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}")).click()
         } catch (t: Throwable){
             if(DriverUtils.isAndroid(driver)) {
                 (driver as AndroidDriver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"slice_it\"))")
             } else if(DriverUtils.isIos(driver)){
                 //TODO scroll down in ios
             }
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER}"))).click()
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}"))).click()
         }
 
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
@@ -133,11 +133,11 @@ internal class TestPayLater : BaseAppiumTest() {
             Assert.assertEquals(token, text)
         }
         BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver,"initButton_${PaymentCategory.PAY_LATER}"))).click()
+        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver,"initButton_${PaymentCategory.PAY_LATER.value}"))).click()
         //wait for init response
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '{}')]")))
 
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver,"loadButton_${PaymentCategory.PAY_LATER}"))).click()
+        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver,"loadButton_${PaymentCategory.PAY_LATER.value}"))).click()
         DriverUtils.switchContextToWebView(driver)
         val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
         mainWindow?.let {
@@ -147,14 +147,14 @@ internal class TestPayLater : BaseAppiumTest() {
         DriverUtils.switchContextToNative(driver)
 
         try {
-            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER}")).click()
+            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}")).click()
         } catch (t: Throwable){
             if(DriverUtils.isAndroid(driver)) {
                 (driver as AndroidDriver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"slice_it\"))")
             } else if(DriverUtils.isIos(driver)){
                 //TODO scroll down in ios
             }
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER}"))).click()
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}"))).click()
         }
 
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
