@@ -36,6 +36,15 @@ internal class TestPayNowSofort : BaseAppiumTest(){
 
     @Test
     fun `test payment pay now DE Sofort successful flow`() {
+        testPayNowSofort(true)
+    }
+
+    @Test
+    fun `test payment pay now DE Sofort failure flow`() {
+        testPayNowSofort(false)
+    }
+
+    private fun testPayNowSofort(success: Boolean){
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
         if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_NOW.value)){
             return
@@ -82,11 +91,24 @@ internal class TestPayNowSofort : BaseAppiumTest(){
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}"))).click()
         }
 
-        PaymentFlowsTestHelper.fillBillingAddress(driver, BillingAddressTestHelper.getBillingInfoDE())
+        val billing = BillingAddressTestHelper.getBillingInfoDE()
+        if(!success) {
+            BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
+        }
+        PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
 
-        DriverUtils.switchContextToNative(driver)
-        var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
+        if(!success) {
+            val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
+            val refusedText =
+                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
+            with(refusedText.text.toLowerCase()) {
+                assert(this.contains("sorry") || this.contains("unfortunately"))
+            }
+        } else {
+            DriverUtils.switchContextToNative(driver)
+            var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
 
-        PaymentFlowsTestHelper.checkAuthorizeResponse(response, true)
+            PaymentFlowsTestHelper.checkAuthorizeResponse(response, true)
+        }
     }
 }
