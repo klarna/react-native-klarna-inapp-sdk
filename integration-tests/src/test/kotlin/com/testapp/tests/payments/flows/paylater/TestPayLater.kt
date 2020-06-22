@@ -100,11 +100,13 @@ internal class TestPayLater : BaseAppiumTest() {
         DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
         DriverUtils.switchContextToNative(driver)
 
+        PaymentFlowsTestHelper.dismissConsole()
+
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}")).click()
         } catch (t: Throwable){
             if(DriverUtils.isAndroid(driver)) {
-                (driver as AndroidDriver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"slice_it\"))")
+                (driver as AndroidDriver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"${PaymentCategory.SLICE_IT.value}\"))")
             } else if(DriverUtils.isIos(driver)){
                 //TODO scroll down in ios
             }

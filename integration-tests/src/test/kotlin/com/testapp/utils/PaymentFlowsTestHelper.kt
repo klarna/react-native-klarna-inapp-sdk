@@ -1,6 +1,7 @@
 package com.testapp.utils
 
 import com.testapp.base.BaseAppiumTest
+import com.testapp.constants.AppiumTestConstants
 import io.appium.java_client.AppiumDriver
 import org.json.JSONObject
 import org.junit.Assert
@@ -93,5 +94,16 @@ internal object PaymentFlowsTestHelper {
         else {
             Assert.assertFalse(json.getBoolean("approved"))
         }
+    }
+
+    fun fillCardInfo(driver: AppiumDriver<*>) {
+        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("cardNumber")))
+        driver.findElementById("cardNumber").sendKeys(AppiumTestConstants.CARD_NUMBER)
+        driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
+        driver.findElementById("securityCode").sendKeys(AppiumTestConstants.CARD_CVV)
+    }
+
+    fun dismissConsole() {
+        readConsoleMessage(BaseAppiumTest.driver, "Dismiss All")?.click()
     }
 }
