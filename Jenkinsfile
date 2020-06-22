@@ -40,11 +40,23 @@ pipeline {
             }
         }
 
+        stage('Bundle Install TestApp') {
+            steps {
+                sh 'cd TestApp/ios && bundle install && cd ../..'
+            }
+        }
+
         stage('Build Android TestApp') {
             steps {
                 sh 'cd TestApp/android && ./gradlew clean && ./gradlew app:assembleDebug && cd ../..'
                 // apk location: TestApp/android/app/build/outputs/apk/debug/app-debug.apk
                 // TODO : Upload apk
+            }
+        }
+
+        stage('Build iOS TestApp') {
+            steps {
+                sh 'cd TestApp/ios && bundle exec fastlane ios build_test_apps && cd ../..'
             }
         }
 
