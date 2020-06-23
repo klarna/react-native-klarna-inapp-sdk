@@ -13,6 +13,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /***
  * Wraps the KlarnaPaymentView so we can see when a requestLayout() has been triggered.
  */
@@ -20,7 +22,7 @@ public class PaymentViewWrapper extends LinearLayout {
 
     private float displayDensity = 1;
     public KlarnaPaymentView paymentView;
-    private boolean attachedResizeObserver;
+    private AtomicBoolean attachedResizeObserver = new AtomicBoolean(false);
 
     public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,6 +36,14 @@ public class PaymentViewWrapper extends LinearLayout {
         addView(paymentView, webViewParams);
 
         getPaymentViewWebView().addJavascriptInterface(this, "AndroidResizeObserver");
+    }
+
+    @Override
+    public void requestLayout() {
+        super.requestLayout();
+        if (isReady()) {
+            updateHeight();
+        }
     }
 
     /**
@@ -55,14 +65,6 @@ public class PaymentViewWrapper extends LinearLayout {
      * <p>
      * The width will be whatever the parent component's width is.
      */
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-        if (isReady()) {
-            updateHeight();
-        }
-    }
-
     private void updateHeight() {
         final WebView innerWebView = getPaymentViewWebView();
 
@@ -83,7 +85,7 @@ public class PaymentViewWrapper extends LinearLayout {
                 try {
                     final float contentHeight = Float.parseFloat(value);
                     final float scaledHeight = contentHeight * displayDensity;
-                    if (scaledHeight > 0 && !attachedResizeObserver) {
+                    if (scaledHeight > 0 && !attachedResizeObserver.get()) {
                         attachResizeObserver(innerWebView);
                     }
                     getReactAppContext().runOnNativeModulesQueueThread(new GuardedRunnable(getReactAppContext()) {
@@ -161,7 +163,7 @@ public class PaymentViewWrapper extends LinearLayout {
         post(new Runnable() {
             @Override
             public void run() {
-                attachedResizeObserver = true;
+                attachedResizeObserver.set(true);
                 updateHeight();
             }
         });
