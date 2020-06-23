@@ -85,7 +85,7 @@ public class PaymentViewWrapper extends LinearLayout {
                 try {
                     final float contentHeight = Float.parseFloat(value);
                     final float scaledHeight = contentHeight * displayDensity;
-                    if (scaledHeight > 0 && !attachedResizeObserver.get()) {
+                    if (!attachedResizeObserver.get()) {
                         attachResizeObserver(innerWebView);
                     }
                     getReactAppContext().runOnNativeModulesQueueThread(new GuardedRunnable(getReactAppContext()) {
