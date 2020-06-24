@@ -147,10 +147,10 @@ public class PaymentViewWrapper extends LinearLayout {
     private void attachResizeObserver(WebView webView) {
         String script =
                 "try{" +
-                        "window.androidResizeObserver = new ResizeObserver(entries => {AndroidResizeObserver.resized();});" +
-                        "window.androidResizeObserver.observe(document.getElementById('payment-container'));" +
-                        "}catch(error){" +
-                        "console.log('Failed to attach AndroidResizeObserver: ' + error);}";
+                    "window.addEventListener('resize', function() { AndroidResizeObserver.resized(); });" +
+                "}catch(error){" +
+                    "console.log('Failed to attach AndroidResizeObserver: ' + error);" +
+                "}";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             webView.evaluateJavascript(script, null);
         } else {
