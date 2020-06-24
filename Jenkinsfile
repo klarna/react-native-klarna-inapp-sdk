@@ -1,4 +1,5 @@
-def sdkVersion = ""
+def currentSdkVersion = ""
+def newSdkVersion = ""
 def gitCommit = ""
 
 pipeline {
@@ -11,8 +12,8 @@ pipeline {
         stage('Initialize') {
             steps {
                 script {
-                    sdkVersion = sh(returnStdout: true, script: "sed -n -e '/\"version\"/ s/.*\\: *//p' package.json").trim().replaceAll("\"", "").replaceAll(",", "")
-                    echo "sdkVersion: ${sdkVersion}"
+                    currentSdkVersion = sdkVersion()
+                    echo "currentSdkVersion: ${currentSdkVersion}"
                     gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                     echo "gitCommit: ${gitCommit}"
                 }
@@ -48,7 +49,29 @@ pipeline {
             }
         }
 
-        // TODO : npm version (parameterized, on master)
+        stage('Set new version for npm package') {
+            when {
+                expression { env.BRANCH_NAME == 'master' }
+            }
+            steps {
+                script {
+                    sh "git reset --hard"
+                    timeout(time: 5, unit: 'HOURS') {
+                        def choices = ["none","patch","minor","major"];    
+                        def version = input  message: 'How should we version this release?',ok : 'Continue',id :'id_version',
+                                        parameters:[choice(choices: choices, description: 'Select a version type for this build.', name: 'VERSION')]
+                        if (version != "none") {
+                            sh "npm version $version"
+                            newSdkVersion = sdkVersion()
+                            echo "newSdkVersion: ${newSdkVersion}"
+                            sh "git push origin master"
+                        } else {
+                            echo "keeping current version: ${currentSdkVersion}"
+                        }
+                    }
+                }
+            }
+        }
         
         stage('Publish to npm') {
             when {
@@ -65,4 +88,8 @@ pipeline {
         }
 
     }
+}
+
+String sdkVersion() {
+    return sh(returnStdout: true, script: "sed -n -e '/\"version\"/ s/.*\\: *//p' package.json").trim().replaceAll("\"", "").replaceAll(",", "")
 }
