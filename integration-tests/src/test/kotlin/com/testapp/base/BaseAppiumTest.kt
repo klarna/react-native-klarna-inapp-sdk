@@ -3,11 +3,11 @@ package com.testapp.base
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
 import com.testapp.utils.DriverUtils.getLocalDriver
-import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
 import org.junit.*
+import org.openqa.selenium.WebElement
 
 internal open class BaseAppiumTest {
 
@@ -16,7 +16,8 @@ internal open class BaseAppiumTest {
 
     companion object {
 
-        internal lateinit var driver: AndroidDriver<*>
+        private var platform = Platform.ANDROID
+        internal lateinit var driver: PlatformDriver<WebElement>
         private var appiumService: AppiumDriverLocalService? = null
         internal var testName: String? = null
 
@@ -24,8 +25,17 @@ internal open class BaseAppiumTest {
         @BeforeClass
         fun setup() {
             val localAppiumTest: Boolean
+
             val browserstackUsername = System.getProperty("browserstack.username")
             val browserstackPassword = System.getProperty("browserstack.password")
+            val inputPlatform = System.getProperty("platform")
+
+            platform = when(inputPlatform.toLowerCase()){
+                "android" -> Platform.ANDROID
+                "ios" -> Platform.IOS
+                else -> Platform.ANDROID
+            }
+
             localAppiumTest = browserstackUsername == null || browserstackPassword == null
             if (localAppiumTest) {
                 if (appiumService == null) {
@@ -39,13 +49,14 @@ internal open class BaseAppiumTest {
                         }
                     }
                 }
-                driver = getLocalDriver(appiumService!!)
+                driver = getLocalDriver(appiumService!!, platform)
             } else {
                 try {
                     driver = getBrowserstackDriver(
                             browserstackUsername,
                             browserstackPassword,
-                            testName
+                            testName,
+                            platform
                     )
                 } catch (t: Throwable) {
                     Assume.assumeNoException(t)

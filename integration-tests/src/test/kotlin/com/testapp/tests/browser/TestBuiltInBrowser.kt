@@ -6,6 +6,7 @@ import com.testapp.model.Session
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
 import io.appium.java_client.MobileBy
+import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Test
@@ -133,7 +134,7 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
                 val links = DriverUtils.getWaiter(driver)
                         .until(ExpectedConditions.presenceOfAllElementsLocatedBy(linkLocator)).filter { !it.text.isNullOrEmpty() }
                 links.first().click()
-                DriverUtils.waitForActivity(driver, "com.klarna.mobile.sdk.core.natives.browser.ui.InternalBrowserActivity", 2)
+                DriverUtils.waitForActivity(driver as AndroidDriver<*>, "com.klarna.mobile.sdk.core.natives.browser.ui.InternalBrowserActivity", 2)
                 DriverUtils.switchContextToNative(driver)
                 driver.findElement(MobileBy.id("closeIcon")).click()
                 DriverUtils.switchContextToWebView(driver)

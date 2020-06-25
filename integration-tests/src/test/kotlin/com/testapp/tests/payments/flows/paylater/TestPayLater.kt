@@ -106,7 +106,7 @@ internal class TestPayLater : BaseAppiumTest() {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}")).click()
         } catch (t: Throwable){
             if(DriverUtils.isAndroid(driver)) {
-                (driver as AndroidDriver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_LATER.value}\"))")
+                (driver as AndroidDriver<*>).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_LATER.value}\"))")
             } else if(DriverUtils.isIos(driver)){
                 //TODO scroll down in ios
             }

@@ -5,6 +5,14 @@ plugins {
 group 'testapp.com'
 version '1.0-SNAPSHOT'
 
+test {
+    // system properties that are read from gradle input to run integration tests on Browserstack.
+    // tests will be executed on local Appium test if these properties are not provided
+    systemProperty 'browserstack.username', System.getProperty('browserstack.username')
+    systemProperty 'browserstack.password', System.getProperty('browserstack.password')
+    systemProperty 'platform', System.getProperty('platform')
+}
+
 repositories {
     mavenCentral()
 }

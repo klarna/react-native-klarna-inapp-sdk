@@ -1,5 +1,7 @@
 package com.testapp.utils
 
+import com.testapp.base.Platform
+import com.testapp.base.PlatformDriver
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.remote.AutomationName
@@ -25,54 +27,81 @@ internal object DriverUtils {
         get() {
             val desiredCapabilities = DesiredCapabilities()
             desiredCapabilities.setCapability("newCommandTimeout", 60)
-            desiredCapabilities.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
-            desiredCapabilities.setCapability("deviceName", "Android Emulator")
-            desiredCapabilities.setCapability("platformName", "Android")
             return desiredCapabilities
         }
 
     /**
-     * Builds an AndroidDriver based on the local appium server
+     * Builds an PlatformDriver based on the local appium server
      *
      * @param appiumService Appium server to connect the driver to
-     * @return AndroidDriver instance
+     * @return PlatformDriver instance
      */
-    fun getLocalDriver(appiumService: AppiumDriverLocalService): AndroidDriver<WebElement> {
+    fun getLocalDriver(appiumService: AppiumDriverLocalService, platform: Platform): PlatformDriver<WebElement> {
         val desiredCapabilities = commonCapabilities
         //desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
-        desiredCapabilities.setCapability("appPackage", "com.testapp")
-        desiredCapabilities.setCapability("appActivity", "com.testapp.MainActivity")
+        when(platform){
+            Platform.ANDROID -> {
+                desiredCapabilities.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
+                desiredCapabilities.setCapability("deviceName", "Android Emulator")
+                desiredCapabilities.setCapability("platformName", "Android")
+                desiredCapabilities.setCapability("appPackage", "com.testapp")
+                desiredCapabilities.setCapability("appActivity", "com.testapp.MainActivity")
+            }
+            Platform.IOS -> {
+                desiredCapabilities.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
+                desiredCapabilities.setCapability("deviceName", "iPhone Simulator")
+                desiredCapabilities.setCapability("platformName", "iOS")
+
+            }
+        }
+
         desiredCapabilities.setCapability("noReset", "true")
-        return AndroidDriver(appiumService.url, desiredCapabilities)
+        return PlatformDriver(appiumService.url, desiredCapabilities, platform)
     }
 
     /**
-     * Builds an AndroidDriver based on browser stack
+     * Builds an PlatformDriver based on browser stack
      *
      * @param username browser stack username
      * @param password browser stack password
-     * @return AndroidDriver instance
+     * @return PlatformDriver instance
      */
     fun getBrowserstackDriver(
             username: String,
             password: String,
-            testName: String?
-    ): AndroidDriver<WebElement> {
-        val app = "INAPP_SDK_TEST_APP"
+            testName: String?,
+            platform: Platform
+    ): PlatformDriver<WebElement> {
         val caps = commonCapabilities
         caps.setCapability("browserstack.local", "true")
         caps.setCapability("browserstack.debug", "true")
         caps.setCapability("browserstack.networkLogs", "true")
         caps.setCapability("browserstack.appiumLogs", "true")
         caps.setCapability("browserstack.deviceLogs", "true")
-        caps.setCapability("recreateChromeDriverSessions", "true")
-        caps.setCapability("device", "Samsung Galaxy S9")
-        caps.setCapability("app", app)
         caps.setCapability("project", "IN-APP RN MOBILE SDK INTEGRATION")
         caps.setCapability("name", testName)
-        return AndroidDriver(
+        val app = "INAPP_RN_SDK_TEST_APP"
+        caps.setCapability("app", app)
+        when(platform) {
+            Platform.ANDROID -> {
+                caps.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
+                caps.setCapability("deviceName", "Android Emulator")
+                caps.setCapability("platformName", "Android")
+                caps.setCapability("recreateChromeDriverSessions", "true")
+                caps.setCapability("device", "Samsung Galaxy S9")
+            }
+            Platform.IOS -> {
+                caps.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
+                caps.setCapability("deviceName", "iPhone Simulator")
+                caps.setCapability("platformName", "iOS")
+                caps.setCapability("device", "iPhone 11")
+            }
+        }
+
+        return PlatformDriver(
                 URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
-                caps
+                caps,
+                platform
         )
     }
 
