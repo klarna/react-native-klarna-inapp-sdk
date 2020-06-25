@@ -96,9 +96,9 @@ internal object PaymentFlowsTestHelper {
         }
     }
 
-    fun fillCardInfo(driver: AppiumDriver<*>) {
+    fun fillCardInfo(driver: AppiumDriver<*>, is3ds: Boolean = false) {
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("cardNumber")))
-        driver.findElementById("cardNumber").sendKeys(AppiumTestConstants.CARD_NUMBER)
+        driver.findElementById("cardNumber").sendKeys(if(is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
         driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
         driver.findElementById("securityCode").sendKeys(AppiumTestConstants.CARD_CVV)
     }

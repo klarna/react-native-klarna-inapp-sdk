@@ -2,6 +2,7 @@ package com.testapp.tests.payments.flows.paynow
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
+import com.testapp.base.RetryRule
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.BillingAddressTestHelper
 import com.testapp.utils.ByRnId
@@ -12,6 +13,7 @@ import com.testapp.utils.WebViewTestHelper
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -27,9 +29,9 @@ internal class TestSliceItUK : BaseAppiumTest(){
         }
     }
 
-    /*@Rule
+    @Rule
     @JvmField
-    var retryRule = RetryRule(retryCount, ignoreOnFailure)*/
+    var retryRule = RetryRule(retryCount, ignoreOnFailure)
 
     @Test
     fun `test payment slice it UK successful flow`() {
