@@ -104,6 +104,8 @@ internal object PaymentFlowsTestHelper {
     }
 
     fun dismissConsole() {
-        readConsoleMessage(BaseAppiumTest.driver, "Dismiss All")?.click()
+        try {
+            readConsoleMessage(BaseAppiumTest.driver, "Dismiss All")?.click()
+        } catch (t: Throwable){}
     }
 }

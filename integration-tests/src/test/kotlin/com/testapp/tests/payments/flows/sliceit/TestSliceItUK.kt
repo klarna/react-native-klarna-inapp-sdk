@@ -2,9 +2,7 @@ package com.testapp.tests.payments.flows.paynow
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
-import com.testapp.base.RetryRule
 import com.testapp.network.KlarnaApi
-import com.testapp.utils.*
 import com.testapp.utils.BillingAddressTestHelper
 import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
@@ -14,39 +12,38 @@ import com.testapp.utils.WebViewTestHelper
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.junit.BeforeClass
-import org.junit.Rule
 import org.junit.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal class TestPayNowSofort : BaseAppiumTest(){
+internal class TestSliceItUK : BaseAppiumTest(){
     companion object {
 
         @JvmStatic
         @BeforeClass
         fun setup() {
-            testName = TestPayNowSofort::class.java.simpleName
+            testName = TestSliceItUK::class.java.simpleName
             BaseAppiumTest.setup()
         }
     }
 
-    @Rule
+    /*@Rule
     @JvmField
-    var retryRule = RetryRule(retryCount, ignoreOnFailure)
+    var retryRule = RetryRule(retryCount, ignoreOnFailure)*/
 
     @Test
-    fun `test payment pay now DE Sofort successful flow`() {
-        testPayNowSofort(true)
+    fun `test payment slice it UK successful flow`() {
+        testSliceItUK(true)
     }
 
     @Test
-    fun `test payment pay now DE Sofort failure flow`() {
-        testPayNowSofort(false)
+    fun `test payment slice it UK failure flow`() {
+        testSliceItUK(false)
     }
 
-    private fun testPayNowSofort(success: Boolean){
-        val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
-        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_NOW.value)){
+    private fun testSliceItUK(success: Boolean){
+        val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestUK())?.session
+        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.SLICE_IT.value)){
             return
         }
         val token = session.client_token
@@ -55,11 +52,11 @@ internal class TestPayNowSofort : BaseAppiumTest(){
             sendKeys(token)
             Assert.assertEquals(token, text)
         }
-        driver.findElement(ByRnId(driver,"initButton_${PaymentCategory.PAY_NOW.value}")).click()
+        driver.findElement(ByRnId(driver,"initButton_${PaymentCategory.SLICE_IT.value}")).click()
         //wait for init response
         PaymentFlowsTestHelper.readConsoleMessage(driver, "{}")
 
-        driver.findElement(ByRnId(driver,"loadButton_${PaymentCategory.PAY_NOW.value}")).click()
+        driver.findElement(ByRnId(driver,"loadButton_${PaymentCategory.SLICE_IT.value}")).click()
         DriverUtils.switchContextToWebView(driver)
 
         val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
@@ -68,9 +65,7 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         } ?: Assert.fail("Main window wasn't found")
         DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
 
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
-
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
+        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-later-slice-it-slice-it-by-card-card\"]/iframe")))
 
         PaymentFlowsTestHelper.fillCardInfo(driver)
 
@@ -81,17 +76,17 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         PaymentFlowsTestHelper.dismissConsole()
 
         try {
-            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}")).click()
+            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}")).click()
         } catch (t: Throwable){
             if(DriverUtils.isAndroid(driver)) {
-                (driver as AndroidDriver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_LATER.value}\"))")
+                (driver as AndroidDriver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.SLICE_IT.value}\"))")
             } else if(DriverUtils.isIos(driver)){
                 //TODO scroll down in ios
             }
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}"))).click()
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}"))).click()
         }
 
-        val billing = BillingAddressTestHelper.getBillingInfoDE()
+        val billing = BillingAddressTestHelper.getBillingInfoUK()
         if(!success) {
             BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
         }
