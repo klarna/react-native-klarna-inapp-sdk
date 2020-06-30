@@ -23,7 +23,9 @@ export default class App extends Component {
             this.refs[paymentMethod].initialize(authToken, 'returnUrl://')
 
             //You can skip this line, it's for integration testing purposes by Klarna.
-            NativeModules.DebugWebViewModule.enable()
+            if (Platform.OS === 'android') {
+              NativeModules.DebugWebViewModule.enable()
+            }
           }}
           title="Init."
           {...testProps('initButton_' + paymentMethod)}
