@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to React Native Klarna In-App SDK will be documented in this file.
 
+### [2.0.8] - 2020-06-29
+- Fixed a resizing issue on Android when the web view's height was not properly updated.
+
 ### [2.0.7] - 2020-06-12
 - Updated the iOS SDK version to the latest (2.0.17)
 
