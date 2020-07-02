@@ -36,7 +36,7 @@ internal object DriverUtils {
      */
     fun getLocalDriver(appiumService: AppiumDriverLocalService): AppiumDriver<WebElement> {
         val desiredCapabilities = commonCapabilities
-        desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
+        //desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
         desiredCapabilities.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
         desiredCapabilities.setCapability("deviceName", "Android Emulator")
         desiredCapabilities.setCapability("platformName", "Android")
