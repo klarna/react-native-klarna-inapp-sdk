@@ -1,6 +1,7 @@
 package com.testapp.utils
 
-import io.appium.java_client.AppiumDriver
+import io.appium.java_client.MobileElement
+import io.appium.java_client.android.AndroidDriver
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
@@ -17,7 +18,7 @@ internal object WebViewTestHelper {
      * @param elementLocator The locator for the element we wish to find
      * @return The found Window handle, null otherwise
      */
-    fun findWindowFor(driver: AppiumDriver<*>, iframeLocator: By?, elementLocator: By? = null): String? {
+    fun findWindowFor(driver: AndroidDriver<MobileElement>, iframeLocator: By?, elementLocator: By? = null): String? {
         DriverUtils.switchContextToWebView(driver)
         val waitTimeInSec = 1
         val initialWindow = driver.windowHandle

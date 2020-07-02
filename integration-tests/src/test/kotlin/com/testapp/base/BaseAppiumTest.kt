@@ -1,14 +1,18 @@
 package com.testapp.base
 
+import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
 import com.testapp.utils.DriverUtils.getLocalDriver
 import io.appium.java_client.AppiumDriver
+import io.appium.java_client.MobileElement
+import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
 import org.junit.*
 import org.openqa.selenium.WebElement
+import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal open class BaseAppiumTest {
 
@@ -17,7 +21,7 @@ internal open class BaseAppiumTest {
 
     companion object {
 
-        internal lateinit var driver: AppiumDriver<WebElement>
+        internal lateinit var driver: AndroidDriver<MobileElement>
         private var appiumService: AppiumDriverLocalService? = null
         internal var testName: String? = null
 
@@ -68,5 +72,18 @@ internal open class BaseAppiumTest {
         DriverUtils.switchContextToNative(driver)
         driver.launchApp()
         DriverUtils.switchContextToNative(driver)
+    }
+
+    fun initLoadSDK(token: String?, category: String){
+        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
+            sendKeys(token)
+            Assert.assertEquals(token, text)
+        }
+        DriverUtils.getWaiter(BaseAppiumTest.driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category}"))).click()
+        //wait for init response
+        DriverUtils.wait(BaseAppiumTest.driver, 1)
+        BaseAppiumTest.driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
+        DriverUtils.wait(BaseAppiumTest.driver, 1)
+        BaseAppiumTest.driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
     }
 }

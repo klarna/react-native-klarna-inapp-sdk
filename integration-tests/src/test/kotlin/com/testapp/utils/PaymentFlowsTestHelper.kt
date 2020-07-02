@@ -2,7 +2,8 @@ package com.testapp.utils
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.constants.AppiumTestConstants
-import io.appium.java_client.AppiumDriver
+import io.appium.java_client.MobileElement
+import io.appium.java_client.android.AndroidDriver
 import org.json.JSONObject
 import org.junit.Assert
 import org.openqa.selenium.By
@@ -12,7 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal object PaymentFlowsTestHelper {
 
-    fun fillBillingAddress(driver: AppiumDriver<*>, billingInfo: LinkedHashMap<String, String?>) {
+    fun fillBillingAddress(driver: AndroidDriver<MobileElement>, billingInfo: LinkedHashMap<String, String?>) {
         val loadingLocator = By.id("loading-overlay")
 
         // switch to klarna payment billing address iframe
@@ -68,8 +69,8 @@ internal object PaymentFlowsTestHelper {
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(submitButtonBy)).click()
     }
 
-    fun readConsoleMessage(driver: AppiumDriver<*>, containText: String): WebElement?{
-        return DriverUtils.getWaiter(BaseAppiumTest.driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '$containText')]")))
+    fun readConsoleMessage(driver: AndroidDriver<MobileElement>, containText: String): WebElement?{
+        return DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '$containText')]")))
     }
 
     fun checkAuthorizeResponse(response: String?, successful: Boolean) {
@@ -90,7 +91,7 @@ internal object PaymentFlowsTestHelper {
         }
     }
 
-    fun fillCardInfo(driver: AppiumDriver<*>, is3ds: Boolean = false) {
+    fun fillCardInfo(driver: AndroidDriver<MobileElement>, is3ds: Boolean = false) {
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("cardNumber")))
         driver.findElementById("cardNumber").sendKeys(if(is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
         driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)

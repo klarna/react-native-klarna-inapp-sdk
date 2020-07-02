@@ -2,6 +2,7 @@ package com.testapp.tests.browser
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
+import com.testapp.base.RetryRule
 import com.testapp.model.Session
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
@@ -9,6 +10,7 @@ import io.appium.java_client.MobileBy
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -23,6 +25,10 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
             BaseAppiumTest.setup()
         }
     }
+
+    @Rule
+    @JvmField
+    var retryRule = RetryRule(retryCount, ignoreOnFailure)
 
     @Test
     fun `test if the terms links open the built-in browser - pay later uk`() {
@@ -108,17 +114,7 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
             return
         }
         val token = session.client_token
-
-        DriverUtils.switchContextToNative(driver)
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
-            sendKeys(token)
-            Assert.assertEquals(token, text)
-        }
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category.value}"))).click()
-        //wait for init response
-        PaymentFlowsTestHelper.readConsoleMessage(driver, "{}")
-        DriverUtils.wait(driver, 1)
-        driver.findElement(ByRnId(driver,"loadButton_${category.value}")).click()
+        initLoadSDK(token, category.value)
         DriverUtils.switchContextToWebView(driver)
         val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
         mainWindow?.let {
@@ -134,7 +130,7 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
                 val links = DriverUtils.getWaiter(driver)
                         .until(ExpectedConditions.presenceOfAllElementsLocatedBy(linkLocator)).filter { !it.text.isNullOrEmpty() }
                 links.first().click()
-                DriverUtils.waitForActivity(driver as AndroidDriver<*>, "com.klarna.mobile.sdk.core.natives.browser.ui.InternalBrowserActivity", 2)
+                DriverUtils.waitForActivity(driver, "com.klarna.mobile.sdk.core.natives.browser.ui.InternalBrowserActivity", 2)
                 DriverUtils.switchContextToNative(driver)
                 driver.findElement(MobileBy.id("closeIcon")).click()
                 DriverUtils.switchContextToWebView(driver)

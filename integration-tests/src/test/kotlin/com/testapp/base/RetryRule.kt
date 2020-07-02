@@ -14,10 +14,7 @@ class RetryRule(
     private val whiteListedExceptions = arrayListOf(
             "chrome not reachable",
             "session not created",
-            "Could not proxy",
-            "android.widget.Toast",
-            AppiumTestConstants.APP_OPTIONS,
-            AppiumTestConstants.INAPP_BACKEND
+            "Could not proxy"
     )
 
     override fun apply(base: Statement, description: Description): Statement {

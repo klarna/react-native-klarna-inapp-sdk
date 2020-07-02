@@ -49,16 +49,7 @@ internal class TestPayNowSofort : BaseAppiumTest(){
             return
         }
         val token = session.client_token
-
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
-            sendKeys(token)
-            Assert.assertEquals(token, text)
-        }
-        driver.findElement(ByRnId(driver,"initButton_${PaymentCategory.PAY_NOW.value}")).click()
-        //wait for init response
-        PaymentFlowsTestHelper.readConsoleMessage(driver, "{}")
-
-        driver.findElement(ByRnId(driver,"loadButton_${PaymentCategory.PAY_NOW.value}")).click()
+        initLoadSDK(token, PaymentCategory.PAY_NOW.value)
         DriverUtils.switchContextToWebView(driver)
 
         val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
@@ -82,7 +73,7 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}")).click()
         } catch (t: Throwable){
-            (driver as AndroidDriver<*>).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
+            driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}"))).click()
         }
 
