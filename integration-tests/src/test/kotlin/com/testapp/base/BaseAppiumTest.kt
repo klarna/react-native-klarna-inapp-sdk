@@ -3,6 +3,7 @@ package com.testapp.base
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
 import com.testapp.utils.DriverUtils.getLocalDriver
+import io.appium.java_client.AppiumDriver
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
@@ -16,8 +17,7 @@ internal open class BaseAppiumTest {
 
     companion object {
 
-        private var platform = Platform.ANDROID
-        internal lateinit var driver: PlatformDriver<WebElement>
+        internal lateinit var driver: AppiumDriver<WebElement>
         private var appiumService: AppiumDriverLocalService? = null
         internal var testName: String? = null
 
@@ -28,13 +28,6 @@ internal open class BaseAppiumTest {
 
             val browserstackUsername = System.getProperty("browserstack.username")
             val browserstackPassword = System.getProperty("browserstack.password")
-            val inputPlatform = System.getProperty("platform")
-
-            platform = when(inputPlatform.toLowerCase()){
-                "android" -> Platform.ANDROID
-                "ios" -> Platform.IOS
-                else -> Platform.ANDROID
-            }
 
             localAppiumTest = browserstackUsername == null || browserstackPassword == null
             if (localAppiumTest) {
@@ -49,14 +42,13 @@ internal open class BaseAppiumTest {
                         }
                     }
                 }
-                driver = getLocalDriver(appiumService!!, platform)
+                driver = getLocalDriver(appiumService!!)
             } else {
                 try {
                     driver = getBrowserstackDriver(
                             browserstackUsername,
                             browserstackPassword,
-                            testName,
-                            platform
+                            testName
                     )
                 } catch (t: Throwable) {
                     Assume.assumeNoException(t)

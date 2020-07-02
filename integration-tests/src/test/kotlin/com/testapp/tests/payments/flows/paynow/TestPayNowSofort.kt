@@ -4,7 +4,6 @@ import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.base.RetryRule
 import com.testapp.network.KlarnaApi
-import com.testapp.utils.*
 import com.testapp.utils.BillingAddressTestHelper
 import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
@@ -83,11 +82,7 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}")).click()
         } catch (t: Throwable){
-            if(DriverUtils.isAndroid(driver)) {
-                (driver as AndroidDriver<*>).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
-            } else if(DriverUtils.isIos(driver)){
-                //TODO scroll down in ios
-            }
+            (driver as AndroidDriver<*>).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}"))).click()
         }
 

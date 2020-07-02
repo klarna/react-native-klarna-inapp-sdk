@@ -69,13 +69,7 @@ internal object PaymentFlowsTestHelper {
     }
 
     fun readConsoleMessage(driver: AppiumDriver<*>, containText: String): WebElement?{
-        if(DriverUtils.isAndroid(driver)){
-            return DriverUtils.getWaiter(BaseAppiumTest.driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '$containText')]")))
-        }
-        if(DriverUtils.isIos(driver)){
-            //TODO: define ios part
-        }
-        return null
+        return DriverUtils.getWaiter(BaseAppiumTest.driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '$containText')]")))
     }
 
     fun checkAuthorizeResponse(response: String?, successful: Boolean) {

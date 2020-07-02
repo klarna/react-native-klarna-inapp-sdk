@@ -9,17 +9,11 @@ import org.openqa.selenium.WebElement
 internal class ByRnId(val driver: AppiumDriver<*>, val id: String) : By() {
 
     override fun findElements(context: SearchContext): List<WebElement> {
-        when(driver.capabilities.getCapability("platform")){
-            "ios" -> return context.findElements(name(id))
-            else -> return context.findElements(MobileBy.ByAccessibilityId(id))
-        }
+        return context.findElements(MobileBy.ByAccessibilityId(id))
     }
 
     override fun findElement(context: SearchContext): WebElement {
-        when(driver.capabilities.getCapability("platform")){
-            "ios" -> return context.findElement(name(id))
-            else -> return context.findElement(MobileBy.ByAccessibilityId(id))
-        }
+        return context.findElement(MobileBy.ByAccessibilityId(id))
     }
 
     override fun toString(): String {

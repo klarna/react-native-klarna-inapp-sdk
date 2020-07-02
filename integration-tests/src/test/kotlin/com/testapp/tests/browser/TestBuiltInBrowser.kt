@@ -114,10 +114,10 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
             sendKeys(token)
             Assert.assertEquals(token, text)
         }
-        driver.findElement(ByRnId(driver,"initButton_${category.value}")).click()
+        DriverUtils.getWaiter(driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category.value}"))).click()
         //wait for init response
         PaymentFlowsTestHelper.readConsoleMessage(driver, "{}")
-
+        DriverUtils.wait(driver, 1)
         driver.findElement(ByRnId(driver,"loadButton_${category.value}")).click()
         DriverUtils.switchContextToWebView(driver)
         val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
