@@ -1,0 +1,26 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
+}
+
+group 'testapp.com'
+version '1.0-SNAPSHOT'
+
+test {
+    // system properties that are read from gradle input to run integration tests on Browserstack.
+    // tests will be executed on local Appium test if these properties are not provided
+    systemProperty 'browserstack.username', System.getProperty('browserstack.username')
+    systemProperty 'browserstack.password', System.getProperty('browserstack.password')
+    systemProperty 'platform', System.getProperty('platform')
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21"
+    testImplementation 'io.appium:java-client:7.3.0'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.json:json:20190722'
+    testImplementation 'com.squareup.okhttp3:okhttp:3.12.1'
+}

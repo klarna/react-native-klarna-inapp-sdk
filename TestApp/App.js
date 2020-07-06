@@ -9,10 +9,9 @@
  */
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View, Button, ScrollView } from 'react-native';
 import KlarnaPaymentView from 'react-native-klarna-inapp-sdk';
-
-
+import { NativeModules } from 'react-native';
 
 export default class App extends Component {
 
@@ -22,32 +21,42 @@ export default class App extends Component {
         <Button
           onPress={() => {
             this.refs[paymentMethod].initialize(authToken, 'returnUrl://')
+
+            //You can skip this line, it's for integration testing purposes by Klarna.
+            if (Platform.OS === 'android') {
+              NativeModules.DebugWebViewModule.enable()
+            }
           }}
           title="Init."
+          {...testProps('initButton_' + paymentMethod)}
           style={styles.button} />
         <Button
           onPress={() => {
             this.refs[paymentMethod].load()
           }}
           title="Load"
+          {...testProps('loadButton_' + paymentMethod)}
           style={styles.button} />
         <Button
           onPress={() => {
             this.refs[paymentMethod].authorize()
           }}
           title="Authorize"
+          {...testProps('authorizeButton_' + paymentMethod)}
           style={styles.button} />
         <Button
           onPress={() => {
             this.refs[paymentMethod].reauthorize()
           }}
           title="Reauthorize"
+          {...testProps('reauthorizeButton_' + paymentMethod)}
           style={styles.button} />
         <Button
           onPress={() => {
             this.refs[paymentMethod].finalize()
           }}
           title="Finalize"
+          {...testProps('finalizeButton_' + paymentMethod)}
           style={styles.button} />
       </View>
     )
@@ -57,11 +66,26 @@ export default class App extends Component {
     window.console.warn(JSON.stringify(event.nativeEvent))
   }
 
+  renderSetTokenInput(){
+    if(authToken==''){
+      return(
+          <TextInput
+              style={styles.tokenInput}
+              placeholder="Set token here..."
+              multiline={true}
+              {...testProps('setTokenInput')}
+              onChangeText={(text) => {authToken = text;}}
+          />
+      );
+    }
+  }
+
   render = () => {
     return (
       <View style={styles.outer}>
       <ScrollView vertical style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
         <Text style={styles.header}>☆Klarna Payments Test App</Text>
+        {this.renderSetTokenInput()}
         {paymentMethods.map(paymentMethod => {
           return (
             <View style={styles.container} key={paymentMethod}>
@@ -84,9 +108,9 @@ export default class App extends Component {
   }
 }
 
-const authToken = '<your token here>'
+let authToken = ''; // set your token here
 
-const paymentMethods = ['pay_now', 'pay_later', 'slice_it'];
+const paymentMethods = ['pay_now', 'pay_later', 'pay_over_time'];
 
 const styles = StyleSheet.create({
   outer: {
@@ -127,7 +151,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 10
   },
+  tokenInput: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    borderColor: 'gray',
+    height: 40,
+    borderWidth: 1,
+    padding: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 10
+  },
   button: {
     height: 10
   },
 });
+
+export function testProps (id) {
+  return {testID: id, accessibilityLabel: id};
+}
