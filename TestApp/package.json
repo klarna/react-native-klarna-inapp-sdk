@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "acorn": "^6.4.1",
+    "lodash": "^4.17.19",
     "minimist": "^0.2.1",
     "react": "16.8.3",
     "react-native": "0.59",
