@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "acorn": "^6.4.1",
+    "minimist": "^1.2.3",
     "lodash": "^4.17.19",
-    "minimist": "^0.2.1",
     "react": "16.8.3",
     "react-native": "0.59",
     "react-native-klarna-inapp-sdk": "file:../"
