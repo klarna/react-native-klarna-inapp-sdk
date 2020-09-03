@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "acorn": "^6.4.1",
-    "minimist": "^1.2.3",
+    "minimist": "^1.2.5",
+    "lodash": "^4.17.20",
     "react": "16.8.3",
     "react-native": "0.59",
     "react-native-klarna-inapp-sdk": "file:../"
@@ -19,7 +20,7 @@
     "@babel/runtime": "^7.5.5",
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
-    "metro-react-native-babel-preset": "^0.55.0",
+    "metro-react-native-babel-preset": "^0.55.cd0",
     "react-test-renderer": "16.8.3"
   },
   "jest": {
