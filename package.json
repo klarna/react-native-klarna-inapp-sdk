@@ -33,6 +33,7 @@
   "dependencies": {
     "kind-of": "^6.0.3",
     "logkitty": "^0.7.1",
-    "minimist": "^1.2.3"
+    "minimist": "^1.2.5",
+    "lodash": "^4.17.20"
   }
 }
