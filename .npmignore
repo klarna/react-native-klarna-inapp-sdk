@@ -1,1 +1,61 @@
+# Sample App
 TestApp
+
+# npm
+.npmrc
+npm-debug.log
+yarn-error.log
+
+# Dependency directory
+node_modules
+
+# VCS
+.github/
+.git/
+
+# Built generated
+android/*/build
+ios/build
+ios/DerivedData
+
+# Local configuration file (sdk path, etc)
+android/local.properties
+
+# Gradle generated files
+android/.gradle
+
+# Signing files
+android/.signing
+
+# User-specific configurations
+.idea
+*.iml
+
+# Xcode
+ios/Pods
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+ios/xcuserdata/
+project.xcworkspace
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Logs
+*.log
+logs
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
