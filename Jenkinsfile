@@ -49,6 +49,17 @@ pipeline {
             }
         }
 
+        // TODO : iOS TestApp
+
+        stage('Clean Directory') {
+            steps {
+                script {
+                    sh 'git reset --hard'
+                    sh 'git clean -d -x -f'
+                }
+            }
+        }
+
         stage('Set new version for npm package') {
             when {
                 expression { env.BRANCH_NAME == 'master' }
@@ -78,11 +89,17 @@ pipeline {
                 expression { env.BRANCH_NAME == 'master' }
             }
             steps {
-                withCredentials([string(credentialsId: 'npm-auth-token', variable: 'NPM_TOKEN')]) {
-                    sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > .npmrc"
-                    sh 'npm whoami'
-                    sh 'npm publish'
-                    sh 'rm .npmrc'
+                timeout(time: 1, unit: 'HOURS') {
+                    input  message: 'Publish package to npm?',ok : 'Publish',id :'id_publish'
+                    withCredentials([string(credentialsId: 'npm-auth-token', variable: 'NPM_TOKEN')]) {
+                        sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > .npmrc"
+                        sh 'npm whoami'
+                        sh 'npm publish'
+                        sh 'rm .npmrc'
+                    }
+                    withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                        sh "gh release create v${sdkVersion()}"
+                    }
                 }
             }
         }
