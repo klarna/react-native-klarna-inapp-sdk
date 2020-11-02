@@ -61,18 +61,26 @@ pipeline {
             }
         }
 
+        stage('Clean Directory') {
+            steps {
+                script {
+                    sh 'git reset --hard'
+                    sh 'git clean -d -x -f'
+                }
+            }
+        }
+
         stage('Set new version for npm package') {
             when {
                 expression { env.BRANCH_NAME == 'master' }
             }
             steps {
                 script {
-                    sh "git reset --hard"
                     timeout(time: 5, unit: 'HOURS') {
-                        def choices = ["none","patch","minor","major"];    
+                        def choices = ["keep","patch","minor","major"];
                         def version = input  message: 'How should we version this release?',ok : 'Continue',id :'id_version',
                                         parameters:[choice(choices: choices, description: 'Select a version type for this build.', name: 'VERSION')]
-                        if (version != "none") {
+                        if (version != "keep") {
                             sh "npm version $version"
                             newSdkVersion = sdkVersion()
                             echo "newSdkVersion: ${newSdkVersion}"
@@ -85,16 +93,26 @@ pipeline {
             }
         }
         
-        stage('Publish to npm') {
+        stage('Publish to npm and create a release') {
             when {
                 expression { env.BRANCH_NAME == 'master' }
             }
             steps {
-                withCredentials([string(credentialsId: 'npm-auth-token', variable: 'NPM_TOKEN')]) {
-                    sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > .npmrc"
-                    sh 'npm whoami'
-                    sh 'npm publish'
-                    sh 'rm .npmrc'
+                script {
+                    timeout(time: 1, unit: 'HOURS') {
+                        newSdkVersion = sdkVersion()
+                        input  message: "Publish package to npm? (v$newSdkVersion)",ok : 'Publish',id :'id_publish'
+                        withCredentials([string(credentialsId: 'npm-auth-token', variable: 'NPM_TOKEN')]) {
+                            sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > .npmrc"
+                            sh 'npm whoami'
+                            sh 'npm publish'
+                            sh 'rm .npmrc'
+                        }
+                        input  message: "Create release on Github? (v$newSdkVersion)",ok : 'Release',id :'id_release'
+                        withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                            sh "gh release create v$newSdkVersion"
+                        }
+                    }
                 }
             }
         }
