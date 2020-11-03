@@ -43,7 +43,7 @@ pipeline {
 
         stage('Bundle Install TestApp') {
             steps {
-                sh 'cd TestApp/ios && bundle install && cd ../..'
+                bash 'cd TestApp/ios && bundle install && cd ../..'
             }
         }
 
@@ -57,7 +57,7 @@ pipeline {
 
         stage('Build iOS TestApp') {
             steps {
-                sh 'cd TestApp/ios && bundle exec fastlane ios build_test_apps && cd ../..'
+                bash 'cd TestApp/ios && bundle exec fastlane ios build_test_apps && cd ../..'
             }
         }
 
@@ -122,4 +122,9 @@ pipeline {
 
 String sdkVersion() {
     return sh(returnStdout: true, script: "sed -n -e '/\"version\"/ s/.*\\: *//p' package.json").trim().replaceAll("\"", "").replaceAll(",", "")
+}
+
+def bash(custom) {
+    sh '''#!/bin/bash -l
+    ''' + custom
 }
