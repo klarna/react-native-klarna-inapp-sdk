@@ -6,7 +6,9 @@ module Fastlane
       class BuildTestAppAction < Action
         def self.run(params)
           test_app = params[:test_app]
-          output_dir = params[:output_dir]  
+          output_dir = params[:output_dir]
+
+          other_action.xcode_select('/Applications/Xcode_12_1.app')
   
           other_action.gym(
             workspace: "../TestApp.xcworkspace",
