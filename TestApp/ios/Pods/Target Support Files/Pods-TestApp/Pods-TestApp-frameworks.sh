@@ -197,10 +197,10 @@ if [ -r "${ARTIFACT_LIST_FILE}" ]; then
 fi
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${PODS_ROOT}/KlarnaMobileSDK/ios/xcode-11.5-fat/KlarnaMobileSDK.framework"
+  install_framework "${PODS_ROOT}/KlarnaMobileSDK/ios/xcode-12.0.1-fat/KlarnaMobileSDK.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${PODS_ROOT}/KlarnaMobileSDK/ios/xcode-11.5-fat/KlarnaMobileSDK.framework"
+  install_framework "${PODS_ROOT}/KlarnaMobileSDK/ios/xcode-12.0.1-fat/KlarnaMobileSDK.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait
