@@ -102,12 +102,12 @@ public class KlarnaPaymentViewManagerTest {
     @Test
     public void testReceiveCommandLoad() {
         manager.receiveCommand(wrapper, COMMAND_LOAD, null);
-        Mockito.verify(wrapper.paymentView, Mockito.times(1)).load(null);
+        Mockito.verify(wrapper, Mockito.times(1)).load(null);
 
         final JavaOnlyArray args = new JavaOnlyArray();
         args.pushString("testSessionData");
         manager.receiveCommand(wrapper, COMMAND_LOAD, args);
-        Mockito.verify(wrapper.paymentView, Mockito.times(1)).load("testSessionData");
+        Mockito.verify(wrapper, Mockito.times(1)).load("testSessionData");
     }
 
     @Test
