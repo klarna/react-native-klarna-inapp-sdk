@@ -1,4 +1,3 @@
-def currentSdkVersion = ""
 def newSdkVersion = ""
 def gitCommit = ""
 
@@ -12,8 +11,6 @@ pipeline {
         stage('Initialize') {
             steps {
                 script {
-                    currentSdkVersion = sdkVersion()
-                    echo "currentSdkVersion: ${currentSdkVersion}"
                     gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                     echo "gitCommit: ${gitCommit}"
                 }
