@@ -59,29 +59,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Set new version for npm package') {
-            when {
-                expression { env.BRANCH_NAME == 'master' }
-            }
-            steps {
-                script {
-                    timeout(time: 5, unit: 'HOURS') {
-                        def choices = ["keep","patch","minor","major"];    
-                        def version = input  message: 'How should we version this release?',ok : 'Continue',id :'id_version',
-                                        parameters:[choice(choices: choices, description: 'Select a version type for this build.', name: 'VERSION')]
-                        if (version != "keep") {
-                            sh "npm version $version"
-                            newSdkVersion = sdkVersion()
-                            echo "newSdkVersion: ${newSdkVersion}"
-                            sh "git push origin master"
-                        } else {
-                            echo "keeping current version: ${currentSdkVersion}"
-                        }
-                    }
-                }
-            }
-        }
         
         stage('Publish to npm and create a release') {
             when {
