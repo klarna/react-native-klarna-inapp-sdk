@@ -67,30 +67,6 @@ pipeline {
             }
         }
         
-        stage('Publish to npm and create a release') {
-            when {
-                expression { env.BRANCH_NAME == 'master' }
-            }
-            steps {
-                script {
-                    timeout(time: 1, unit: 'HOURS') {
-                        newSdkVersion = sdkVersion()
-                        input  message: "Publish package to npm? (v$newSdkVersion)",ok : 'Publish',id :'id_publish'
-                        withCredentials([string(credentialsId: 'npm-auth-token', variable: 'NPM_TOKEN')]) {
-                            sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > .npmrc"
-                            sh 'npm whoami'
-                            sh 'npm publish'
-                            sh 'rm .npmrc'
-                        }
-                        input  message: "Create release on Github? (v$newSdkVersion)",ok : 'Release',id :'id_release'
-                        withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-                            sh "gh release create v$newSdkVersion"
-                        }
-                    }
-                }
-            }
-        }
-
     }
 }
 
