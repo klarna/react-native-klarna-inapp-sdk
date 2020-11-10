@@ -8,6 +8,8 @@ module Fastlane
           test_app = params[:test_app]
           output_dir = params[:output_dir]
 
+          other_action.xcversion(version: "~> 12.1.0")
+
           other_action.gym(
             workspace: "../TestApp.xcworkspace",
             scheme: test_app,
