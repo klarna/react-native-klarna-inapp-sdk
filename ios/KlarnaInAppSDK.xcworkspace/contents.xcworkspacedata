@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/gabriel.banfalvi/work/sdk/klarna/react-native-klarna-payment-view/ios/KlarnaInAppSDK.xcodeproj">
+      location = "group:KlarnaInAppSDK.xcodeproj">
    </FileRef>
 </Workspace>
