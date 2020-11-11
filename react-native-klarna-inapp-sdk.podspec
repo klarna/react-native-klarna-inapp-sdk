@@ -19,6 +19,10 @@ Pod::Spec.new do |s|
   s.source_files = "ios/Sources/**/*.{h,m}"
   s.requires_arc = true
 
+  s.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'ios/Tests/**/*.{h,m}'
+  end
+
   s.dependency "React"
   s.dependency 'KlarnaMobileSDK', '~> 2.0.28'
   # s.dependency "..."

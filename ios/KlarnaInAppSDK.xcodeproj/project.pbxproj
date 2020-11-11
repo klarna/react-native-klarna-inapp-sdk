@@ -7,9 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7917D755255C45FB00E16799 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7917D754255C45FB00E16799 /* Tests.m */; };
+		7917D757255C45FB00E16799 /* libKlarnaInAppSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */; };
 		9CDEDC2C23475BB6006C9C97 /* PaymentViewWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */; };
 		B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentView.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* KlarnaPaymentView.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7917D758255C45FB00E16799 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58B511D31A9E6C8500147676 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 58B511DA1A9E6C8500147676;
+			remoteInfo = KlarnaInAppSDK;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		58B511D91A9E6C8500147676 /* CopyFiles */ = {
@@ -25,6 +37,9 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKlarnaInAppSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7917D752255C45FB00E16799 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7917D754255C45FB00E16799 /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
+		7917D756255C45FB00E16799 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapper.m; sourceTree = "<group>"; };
 		9CDEDC2B23475BAC006C9C97 /* PaymentViewWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentViewWrapper.h; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* KlarnaPaymentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KlarnaPaymentView.h; sourceTree = "<group>"; };
@@ -36,6 +51,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7917D74F255C45FB00E16799 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7917D757255C45FB00E16799 /* libKlarnaInAppSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,7 +77,10 @@
 			isa = PBXGroup;
 			children = (
 				7917D74C255C445E00E16799 /* Sources */,
+				7917D753255C45FB00E16799 /* Tests */,
+				7917D75F255C460300E16799 /* Configs */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				7917D752255C45FB00E16799 /* Tests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,6 +92,30 @@
 				9CDEDC2923475BAC006C9C97 /* view */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		7917D753255C45FB00E16799 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7917D754255C45FB00E16799 /* Tests.m */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		7917D75F255C460300E16799 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				7917D760255C464600E16799 /* Tests */,
+			);
+			path = Configs;
+			sourceTree = "<group>";
+		};
+		7917D760255C464600E16799 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7917D756255C45FB00E16799 /* Info.plist */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		9CDEDC2923475BAC006C9C97 /* view */ = {
@@ -97,6 +147,24 @@
 			productReference = 134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		7917D751255C45FB00E16799 /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7917D75A255C45FB00E16799 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				7917D74E255C45FB00E16799 /* Sources */,
+				7917D74F255C45FB00E16799 /* Frameworks */,
+				7917D750255C45FB00E16799 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7917D759255C45FB00E16799 /* PBXTargetDependency */,
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 7917D752255C45FB00E16799 /* Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -108,6 +176,10 @@
 				TargetAttributes = {
 					58B511DA1A9E6C8500147676 = {
 						CreatedOnToolsVersion = 6.1.1;
+					};
+					7917D751255C45FB00E16799 = {
+						CreatedOnToolsVersion = 12.1;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -125,9 +197,20 @@
 			projectRoot = "";
 			targets = (
 				58B511DA1A9E6C8500147676 /* KlarnaInAppSDK */,
+				7917D751255C45FB00E16799 /* Tests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7917D750255C45FB00E16799 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		58B511D71A9E6C8500147676 /* Sources */ = {
@@ -139,7 +222,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7917D74E255C45FB00E16799 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7917D755255C45FB00E16799 /* Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7917D759255C45FB00E16799 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 58B511DA1A9E6C8500147676 /* KlarnaInAppSDK */;
+			targetProxy = 7917D758255C45FB00E16799 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		58B511ED1A9E6C8500147676 /* Debug */ = {
@@ -267,6 +366,58 @@
 			};
 			name = Release;
 		};
+		7917D75B255C45FB00E16799 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Configs/Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.klarna.inapp.sdk.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7917D75C255C45FB00E16799 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Configs/Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.klarna.inapp.sdk.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -284,6 +435,15 @@
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,
 				58B511F11A9E6C8500147676 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7917D75A255C45FB00E16799 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7917D75B255C45FB00E16799 /* Debug */,
+				7917D75C255C45FB00E16799 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
