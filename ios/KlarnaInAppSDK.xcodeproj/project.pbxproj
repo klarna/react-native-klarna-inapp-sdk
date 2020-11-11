@@ -37,7 +37,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKlarnaInAppSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		7917D752255C45FB00E16799 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7917D752255C45FB00E16799 /* KlarnaInAppSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KlarnaInAppSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7917D754255C45FB00E16799 /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		7917D756255C45FB00E16799 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapper.m; sourceTree = "<group>"; };
@@ -80,7 +80,7 @@
 				7917D753255C45FB00E16799 /* Tests */,
 				7917D75F255C460300E16799 /* Configs */,
 				134814211AA4EA7D00B7C361 /* Products */,
-				7917D752255C45FB00E16799 /* Tests.xctest */,
+				7917D752255C45FB00E16799 /* KlarnaInAppSDKTests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -147,9 +147,9 @@
 			productReference = 134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		7917D751255C45FB00E16799 /* Tests */ = {
+		7917D751255C45FB00E16799 /* KlarnaInAppSDKTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7917D75A255C45FB00E16799 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildConfigurationList = 7917D75A255C45FB00E16799 /* Build configuration list for PBXNativeTarget "KlarnaInAppSDKTests" */;
 			buildPhases = (
 				7917D74E255C45FB00E16799 /* Sources */,
 				7917D74F255C45FB00E16799 /* Frameworks */,
@@ -160,9 +160,9 @@
 			dependencies = (
 				7917D759255C45FB00E16799 /* PBXTargetDependency */,
 			);
-			name = Tests;
+			name = KlarnaInAppSDKTests;
 			productName = Tests;
-			productReference = 7917D752255C45FB00E16799 /* Tests.xctest */;
+			productReference = 7917D752255C45FB00E16799 /* KlarnaInAppSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -197,7 +197,7 @@
 			projectRoot = "";
 			targets = (
 				58B511DA1A9E6C8500147676 /* KlarnaInAppSDK */,
-				7917D751255C45FB00E16799 /* Tests */,
+				7917D751255C45FB00E16799 /* KlarnaInAppSDKTests */,
 			);
 		};
 /* End PBXProject section */
@@ -439,7 +439,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7917D75A255C45FB00E16799 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+		7917D75A255C45FB00E16799 /* Build configuration list for PBXNativeTarget "KlarnaInAppSDKTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7917D75B255C45FB00E16799 /* Debug */,
