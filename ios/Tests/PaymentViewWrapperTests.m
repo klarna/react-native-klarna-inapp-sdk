@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import <RCTComponent.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import "PaymentViewWrapper.h"
 
@@ -32,7 +33,11 @@
 
     id mockPaymentView = OCMClassMock([KlarnaPaymentView class]);
     OCMStub([mockPaymentView alloc]).andReturn(mockPaymentView);
-    OCMStub([mockPaymentView initWithCategory:OCMOCK_ANY eventListener:OCMOCK_ANY]).andReturn(mockPaymentView);
+    OCMStub([mockPaymentView initWithCategory:OCMOCK_ANY eventListener:OCMOCK_ANY])
+        .andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaInitializedWithPaymentView:self.actualPaymentViewMock];
+        })
+        .andReturn(mockPaymentView);
     self.actualPaymentViewMock = mockPaymentView;
 }
 
@@ -174,6 +179,134 @@
 
     // THEN
     OCMVerifyAll(self.actualPaymentViewMock);
+}
+
+- (void)test_onInitialized {
+    // GIVEN
+    [self.paymentViewWrapper setOnInitialized:^(NSDictionary *body) {
+        
+    }];
+    
+    // WHEN
+    [self initializePaymentView];
+    
+    // THEN
+    OCMVerify([self.paymentViewWrapper onInitialized]);
+}
+
+- (void)test_onLoaded {
+    // GIVEN
+    OCMStub([self.actualPaymentViewMock loadWithJsonData:OCMOCK_ANY])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaLoadedWithPaymentView:self.actualPaymentViewMock];
+        });
+    [self.paymentViewWrapper setOnLoaded:^(NSDictionary *body) {
+        
+    }];
+    
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper loadPaymentViewWithSessionData:NULL];
+    
+    // THEN
+    OCMVerify([self.paymentViewWrapper onLoaded]);
+}
+
+- (void)test_onLoadedPaymentReview {
+    // GIVEN
+    OCMStub([self.actualPaymentViewMock loadPaymentReview])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaLoadedPaymentReviewWithPaymentView:self.actualPaymentViewMock];
+        });
+    [self.paymentViewWrapper setOnLoadedPaymentReview:^(NSDictionary *body) {
+        
+    }];
+    
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper loadPaymentReview];
+    
+    // THEN
+    OCMVerify([self.paymentViewWrapper onLoadedPaymentReview]);
+}
+
+- (void)test_onAuthorized {
+    // GIVEN
+    OCMStub([self.actualPaymentViewMock authorizeWithAutoFinalize:false jsonData:NULL])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaAuthorizedWithPaymentView:self.actualPaymentViewMock approved:true authToken:@"authToken" finalizeRequired:true];
+        });
+    [self.paymentViewWrapper setOnAuthorized:^(NSDictionary *body) {
+        
+    }];
+    
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper authorizePaymentViewWithAutoFinalize:false sessionData:NULL];
+    
+    // THEN
+    OCMVerify([self.paymentViewWrapper onAuthorized]);
+}
+
+- (void)test_onReauthorized {
+    // GIVEN
+    OCMStub([self.actualPaymentViewMock reauthorizeWithJsonData:OCMOCK_ANY])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaReauthorizedWithPaymentView:self.actualPaymentViewMock approved:true authToken:@"authToken"];
+        });
+    [self.paymentViewWrapper setOnReauthorized:^(NSDictionary *body) {
+        
+    }];
+    
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper reauthorizePaymentViewWithSessionData:NULL];
+    
+    // THEN
+    OCMVerify([self.paymentViewWrapper onReauthorized]);
+}
+
+- (void)test_onFinalized {
+    // GIVEN
+    OCMStub([self.actualPaymentViewMock finaliseWithJsonData:OCMOCK_ANY])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaFinalizedWithPaymentView:self.actualPaymentViewMock approved:true authToken:@"authToken"];
+        });
+    [self.paymentViewWrapper setOnFinalized:^(NSDictionary *body) {
+        
+    }];
+    
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper finalizePaymentViewWithSessionData:NULL];
+    
+    // THEN
+    OCMVerify([self.paymentViewWrapper onFinalized]);
+}
+
+- (void)test_onError {
+    // GIVEN
+    KlarnaPaymentError *mockError = OCMClassMock([KlarnaPaymentError class]);
+    OCMStub([mockError action]).andReturn(@"action");
+    OCMStub([mockError invalidFields]).andReturn(@[]);
+    OCMStub([mockError isFatal]).andReturn(true);
+    OCMStub([mockError message]).andReturn(@"errorMessage");
+    OCMStub([mockError name]).andReturn(@"errorName");
+    OCMStub([self.actualPaymentViewMock finaliseWithJsonData:OCMOCK_ANY])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper)
+                    klarnaFailedInPaymentView:self.actualPaymentViewMock withError:mockError];
+        });
+    [self.paymentViewWrapper setOnError:^(NSDictionary *body) {
+        
+    }];
+    
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper finalizePaymentViewWithSessionData:NULL];
+    
+    // THEN
+    OCMVerify([self.paymentViewWrapper onError]);
 }
 
 @end
