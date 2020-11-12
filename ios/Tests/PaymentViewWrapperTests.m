@@ -7,12 +7,13 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "KlarnaPaymentView.h"
 
-@interface Tests : XCTestCase
+@interface KlarnaPaymentViewTests : XCTestCase
 
 @end
 
-@implementation Tests
+@implementation KlarnaPaymentViewTests
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -23,8 +24,11 @@
 }
 
 - (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+    // GIVEN
+    KlarnaPaymentView* paymentView = [KlarnaPaymentView new];
+    
+    // WHEN
+    [paymentView ]
 }
 
 - (void)testPerformanceExample {

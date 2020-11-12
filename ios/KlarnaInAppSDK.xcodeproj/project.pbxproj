@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7917D755255C45FB00E16799 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7917D754255C45FB00E16799 /* Tests.m */; };
+		7917D755255C45FB00E16799 /* PaymentViewWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */; };
 		7917D757255C45FB00E16799 /* libKlarnaInAppSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */; };
 		9A45DC1583D4687CCBD0A97F /* Pods_KlarnaInAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D30AFFFD5C48286C170CF7C /* Pods_KlarnaInAppSDK.framework */; };
 		9CDEDC2C23475BB6006C9C97 /* PaymentViewWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */; };
@@ -42,7 +42,7 @@
 		5DF52E0283B9572452488D7F /* Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.release.xcconfig"; path = "Target Support Files/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		64D2921168A909AB18C918C7 /* Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.debug.xcconfig"; path = "Target Support Files/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7917D752255C45FB00E16799 /* KlarnaInAppSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KlarnaInAppSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7917D754255C45FB00E16799 /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
+		7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapperTests.m; sourceTree = "<group>"; };
 		7917D756255C45FB00E16799 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D30AFFFD5C48286C170CF7C /* Pods_KlarnaInAppSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KlarnaInAppSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapper.m; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 		7917D753255C45FB00E16799 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				7917D754255C45FB00E16799 /* Tests.m */,
+				7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -299,6 +299,7 @@
 				"${BUILT_PRODUCTS_DIR}/ReactCommon/ReactCommon.framework",
 				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
+				"${BUILT_PRODUCTS_DIR}/OCMock/OCMock.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -324,6 +325,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactCommon.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OCMock.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -368,7 +370,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7917D755255C45FB00E16799 /* Tests.m in Sources */,
+				7917D755255C45FB00E16799 /* PaymentViewWrapperTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
