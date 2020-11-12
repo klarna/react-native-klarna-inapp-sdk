@@ -38,12 +38,12 @@
     self.actualPaymentView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self addSubview:self.actualPaymentView];
-    
-    [NSLayoutConstraint activateConstraints:@[
+
+    [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
         [self.actualPaymentView.topAnchor constraintEqualToAnchor:self.topAnchor],
         [self.actualPaymentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
         [self.actualPaymentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [self.actualPaymentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+        [self.actualPaymentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
     ]];
     
 

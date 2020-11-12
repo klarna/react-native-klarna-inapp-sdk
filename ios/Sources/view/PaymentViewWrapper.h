@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString* category;
 
+#pragma mark - React Native Overrides
+- (void) setCategory:(NSString *)category;
+- (void) evaluateProps;
+- (void) initializeActualPaymentView;
+
 @property (nonatomic, weak) RCTUIManager* uiManager;
 
 - (void) initializePaymentViewWithClientToken:(NSString*)clientToken withReturnUrl:(NSString*)returnUrl;
