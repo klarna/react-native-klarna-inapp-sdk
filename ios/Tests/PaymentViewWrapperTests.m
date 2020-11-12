@@ -309,4 +309,21 @@
     OCMVerify([self.paymentViewWrapper onError]);
 }
 
+- (void)test_klarnaResizedWithPaymentView {
+    // GIVEN
+    CGFloat size = CGFLOAT_MAX;
+    OCMStub([self.actualPaymentViewMock loadWithJsonData:OCMOCK_ANY])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaResizedWithPaymentView:self.actualPaymentViewMock to:size];
+        });
+    OCMExpect([self.rctUIManagerMock setIntrinsicContentSize:CGSizeMake(UIViewNoIntrinsicMetric, size) forView:OCMOCK_ANY]).ignoringNonObjectArgs();
+
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper loadPaymentViewWithSessionData:NULL];
+    
+    // THEN
+    OCMVerifyAll(self.rctUIManagerMock);
+}
+
 @end
