@@ -94,4 +94,86 @@
     OCMVerify([mockConstraints activateConstraints:OCMOCK_ANY]);
 }
 
+- (void)initializePaymentView {
+    OCMStub([((UIView *)self.paymentViewWrapper) addSubview:OCMOCK_ANY]);
+    id mockConstraints = OCMClassMock([NSLayoutConstraint class]);
+    OCMStub([mockConstraints activateConstraints:OCMOCK_ANY]);
+    NSArray *mockPlaceholderArray = OCMClassMock([NSArray class]);
+    OCMStub([mockPlaceholderArray initWithObjects:OCMArg.anyObjectRef count:OCMArg.anyPointer]);
+
+    [self.paymentViewWrapper initializeActualPaymentView];
+}
+
+- (void)test_initializePaymentViewWithClientToken {
+    // GIVEN
+    [self initializePaymentView];
+    OCMExpect([self.actualPaymentViewMock initializeWithClientToken:@"token" returnUrl: [NSURL URLWithString:@"returnUrl"]]);
+
+    // WHEN
+    [self.paymentViewWrapper initializePaymentViewWithClientToken:@"token" withReturnUrl:@"returnUrl"];
+
+    // THEN
+    OCMVerifyAll(self.actualPaymentViewMock);
+}
+
+- (void)test_loadPaymentViewWithSessionData {
+    // GIVEN
+    [self initializePaymentView];
+    OCMExpect([self.actualPaymentViewMock loadWithJsonData:@"sessionData"]);
+
+    // WHEN
+    [self.paymentViewWrapper loadPaymentViewWithSessionData:@"sessionData"];
+
+    // THEN
+    OCMVerifyAll(self.actualPaymentViewMock);
+}
+
+- (void)test_loadPaymentReview {
+    // GIVEN
+    [self initializePaymentView];
+    OCMExpect([self.actualPaymentViewMock loadPaymentReview]);
+
+    // WHEN
+    [self.paymentViewWrapper loadPaymentReview];
+
+    // THEN
+    OCMVerifyAll(self.actualPaymentViewMock);
+}
+
+- (void)test_authorizePaymentViewWithAutoFinalize {
+    // GIVEN
+    [self initializePaymentView];
+    OCMExpect([self.actualPaymentViewMock authorizeWithAutoFinalize:true jsonData:@"sessionData"]);
+
+    // WHEN
+    [self.paymentViewWrapper authorizePaymentViewWithAutoFinalize:true sessionData:@"sessionData"];
+
+    // THEN
+    OCMVerifyAll(self.actualPaymentViewMock);
+}
+
+- (void)test_reauthorizePaymentViewWithSessionData {
+    // GIVEN
+    [self initializePaymentView];
+    OCMExpect([self.actualPaymentViewMock reauthorizeWithJsonData:@"sessionData"]);
+
+    // WHEN
+    [self.paymentViewWrapper reauthorizePaymentViewWithSessionData:@"sessionData"];
+
+    // THEN
+    OCMVerifyAll(self.actualPaymentViewMock);
+}
+
+- (void)test_finalizePaymentViewWithSessionDataa {
+    // GIVEN
+    [self initializePaymentView];
+    OCMExpect([self.actualPaymentViewMock finaliseWithJsonData:@"sessionData"]);
+
+    // WHEN
+    [self.paymentViewWrapper finalizePaymentViewWithSessionData:@"sessionData"];
+
+    // THEN
+    OCMVerifyAll(self.actualPaymentViewMock);
+}
+
 @end
