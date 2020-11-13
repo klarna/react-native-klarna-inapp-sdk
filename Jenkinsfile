@@ -25,6 +25,18 @@ pipeline {
             }
         }
 
+        stage('Bundle Install Lib') {
+            steps {
+                bash 'bundle install'
+            }
+        }
+        
+        stage('Pod Install Lib') {
+            steps {
+                sh "cd ios && pod install && cd .."
+            }
+        }
+
         stage('Android Native Unit Tests') {
             steps {
                 sh 'cd android && ./gradlew clean && ./gradlew testDebugUnitTest && cd ..'
@@ -32,17 +44,15 @@ pipeline {
             }
         }
 
-        // TODO : iOS Tests
+        stage('iOS Native Unit Tests') {
+            steps {
+                bash 'bundle exec fastlane ios run_lib_tests'
+            }
+        }
 
         stage('Yarn Install TestApp') {
             steps {
                 sh 'cd TestApp && yarn install && cd ..'
-            }
-        }
-
-        stage('Bundle Install TestApp') {
-            steps {
-                bash 'cd TestApp/ios && bundle install && cd ../..'
             }
         }
 
@@ -62,7 +72,7 @@ pipeline {
 
         stage('Build iOS TestApp') {
             steps {
-                bash 'cd TestApp/ios && bundle exec fastlane ios build_test_apps && cd ../..'
+                bash 'bundle exec fastlane ios build_test_apps'
             }
         }
 
