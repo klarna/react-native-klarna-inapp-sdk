@@ -1,4 +1,4 @@
-def newSdkVersion = ""
+def currentSdkVersion = ""
 def gitCommit = ""
 
 pipeline {
@@ -13,6 +13,8 @@ pipeline {
                 script {
                     gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                     echo "gitCommit: ${gitCommit}"
+                    currentSdkVersion = sdkVersion()
+                    echo "currentSdkVersion: ${currentSdkVersion}"
                 }
             }
         }
@@ -41,6 +43,12 @@ pipeline {
         stage('Bundle Install TestApp') {
             steps {
                 bash 'cd TestApp/ios && bundle install && cd ../..'
+            }
+        }
+
+        stage('Pod Install TestApp') {
+            steps {
+                bash 'cd TestApp/ios && pod install && cd ../..'
             }
         }
 
