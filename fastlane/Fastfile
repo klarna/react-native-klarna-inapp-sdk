@@ -21,6 +21,7 @@ platform :ios do
   lane :run_lib_tests do
     clean_lib_build_dir
 
+    xcversion(version: ">= 12.1")
     run_tests(workspace: "ios/KlarnaInAppSDK.xcworkspace",
         output_directory: "build/KlarnaInAppSDK",
         scheme: "KlarnaInAppSDK")
