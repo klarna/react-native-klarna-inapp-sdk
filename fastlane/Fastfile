@@ -19,14 +19,14 @@ platform :ios do
   desc "Description of what the lane does"
 
   lane :tests do
-    clean_test_apps_build_dir
+    clean_lib_build_dir
 
     run_tests(workspace: "ios/KlarnaInAppSDK.xcworkspace",
         output_directory: "build/KlarnaInAppSDK",
         scheme: "KlarnaInAppSDK")
   end
 
-  lane :clean_test_apps_build_dir do
+  lane :clean_lib_build_dir do
     sh "rm -rf build/*"
   end
 end
