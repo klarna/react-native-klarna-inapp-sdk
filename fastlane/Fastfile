@@ -18,7 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc "Description of what the lane does"
 
-  lane :tests do
+  lane :run_lib_tests do
     clean_lib_build_dir
 
     run_tests(workspace: "ios/KlarnaInAppSDK.xcworkspace",
@@ -28,5 +28,25 @@ platform :ios do
 
   lane :clean_lib_build_dir do
     sh "rm -rf build/*"
+  end
+
+  lane :build_test_apps do
+    clean_test_apps_build_dir
+
+    build_time_start = DateTime.now
+
+    xcversion(version: ">= 12.1")
+    gym(
+      workspace: "TestApp/ios/TestApp.xcworkspace",
+      scheme: "TestApp",
+      clean: true,
+      output_directory: "TestApp/build/",
+      configuration: "Release",
+      export_method: "enterprise",
+    )
+  end
+
+  lane :clean_test_apps_build_dir do
+    sh "rm -rf TestApp/build/*"
   end
 end
