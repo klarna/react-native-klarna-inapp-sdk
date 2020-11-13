@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.00032">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: Switch to ios clean_test_apps_build_dir lane" time="0.000172">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: rm -rf build/*" time="0.008607">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: run_tests" time="20.932497">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>
