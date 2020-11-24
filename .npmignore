@@ -17,6 +17,7 @@ node_modules
 android/*/build
 ios/build
 ios/DerivedData
+build
 
 # Local configuration file (sdk path, etc)
 android/local.properties
@@ -59,3 +60,10 @@ logs
 buck-out/
 \.buckd/
 *.keystore
+
+# Bundler
+Gemfile
+Gemfile.lock
+
+# fastlane
+fastlane
