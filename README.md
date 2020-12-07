@@ -119,14 +119,14 @@ It has the following props:
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `category`              | `String`   | The payment method category you want to render in your view.
-| `onInitialized`         | `() => {}` | The initialize call succeeded. 
-| `onLoaded`              | `() => {}` | The load call succeeded. 
-| `onLoadedPaymentReview` | `() => {}` | The load payment review call succeeded. 
-| `onAuthorized`          | `({}) => {}` | The authorize call succeeded. 
-| `onReauthorized`        | `({}) => {}` | The reauthorize call succeeded. 
-| `onFinalized`           | `({}) => {}` | The finalize call succeeded. 
-| `onError`               | `({}) => {}` | An error occurred. 
+| `category`              | `String`   | The payment method category you want to render in your view.|
+| `onInitialized`         | `() => {}` | The initialize call succeeded.|
+| `onLoaded`              | `() => {}` | The load call succeeded.|
+| `onLoadedPaymentReview` | `() => {}` | The load payment review call succeeded.|
+| `onAuthorized`          | `({}) => {}` | The authorize call succeeded.|
+| `onReauthorized`        | `({}) => {}` | The reauthorize call succeeded.|
+| `onFinalized`           | `({}) => {}` | The finalize call succeeded.|
+| `onError`               | `({}) => {}` | An error occurred.|
 
 ---
 ---
@@ -149,7 +149,7 @@ Determines whether the previous operation was successful and yielded an authoriz
 
 ---
 
-#### authToken: `String | undefined`
+#### authToken: `String / undefined`
 
 If `authorize()`, `reauthorize()` or `finalize()` succeeded, they will return a token you can submit
 to your backend.
@@ -159,9 +159,9 @@ to your backend.
 - `onReauthorized` 
 - `onFinalized`  
 
---
+---
 
-#### finalizeRequired: `Boolean | undefined`
+#### finalizeRequired: `Boolean / undefined`
 
 If `authorize()` requires that you additionally call `finalize()`, .
 
@@ -170,7 +170,7 @@ If `authorize()` requires that you additionally call `finalize()`, .
 
 ---
 
-#### error: `Object | undefined`
+#### error: `Object / undefined`
 
 If a method failed, `onError()` will let you know via an error object.
 
@@ -195,8 +195,8 @@ supplied a payment method category.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| sessionToken | `String` | The session token you get from Klarna.
-| returnUrl    | `String` | An app-defined URL scheme the component uses to return customers to your app.   
+| sessionToken | `String` | The session token you get from Klarna.|
+| returnUrl    | `String` | An app-defined URL scheme the component uses to return customers to your app.|
 
 ##### Return URL
 
@@ -211,7 +211,7 @@ Loads the view. This will render content in the view.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| sessionData | `String | undefined` | A JSON object with updated session data serialized into a string.  
+| sessionData | `String / undefined` | A JSON object with updated session data serialized into a string.|
 
 ---
 
@@ -233,8 +233,8 @@ Authorizes the payment session.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| autoFinalize | `String | undefined` | A JSON object with session data serialized into a string.  
-| sessionData | `String | undefined` | A JSON object with updated session data serialized into a string.  
+| autoFinalize | `Boolean / undefined` | A flag used to turn on/off auto-finalization for direct bank transfer.|
+| sessionData | `String / undefined` | A JSON object with updated session data serialized into a string.|
 
 ---
 
@@ -246,7 +246,7 @@ the session and get a new authorization token.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| sessionData | `String | undefined` | A JSON object with updated session data serialized into a string.  
+| sessionData | `String / undefined` | A JSON object with updated session data serialized into a string.|
 
 ---
 
@@ -258,7 +258,7 @@ ready.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| sessionData | `String | undefined` | A JSON object with updated session data serialized into a string.  
+| sessionData | `String / undefined` | A JSON object with updated session data serialized into a string.|
 
 ---
 
