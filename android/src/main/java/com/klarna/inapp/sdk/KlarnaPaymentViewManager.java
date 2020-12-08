@@ -194,26 +194,43 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
         foundDispatcher.dispatchEvent(event);
     }
 
+    /**
+     * Calls requestLayout on the wrapper to fetch height of the contents.
+     * @param view
+     */
+    private void requestLayout(KlarnaPaymentView view) {
+        if (view != null) {
+            PaymentViewWrapper wrapper = wrapperForPaymentView(view);
+            if (wrapper != null) {
+                wrapper.requestLayout();
+            }
+        }
+    }
+
 
     /* -- KlarnaPaymentView callback methods -- */
 
     @Override
     public void onInitialized(@NotNull KlarnaPaymentView paymentView) {
+        requestLayout(paymentView);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE, null, paymentView);
     }
 
     @Override
     public void onLoaded(@NotNull KlarnaPaymentView paymentView) {
+        requestLayout(paymentView);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_LOAD, null, paymentView);
     }
 
     @Override
     public void onLoadPaymentReview(@NotNull KlarnaPaymentView paymentView, boolean b) {
+        requestLayout(paymentView);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW, null, paymentView);
     }
 
     @Override
     public void onAuthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken, @org.jetbrains.annotations.Nullable Boolean finalizeRequired) {
+        requestLayout(paymentView);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE,
                 MapBuilder.<String, Object>of(
                         "approved", approved,
@@ -224,6 +241,7 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
 
     @Override
     public void onReauthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
+        requestLayout(paymentView);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE,
                 MapBuilder.<String, Object>of(
                         "approved", approved,
@@ -233,6 +251,7 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
 
     @Override
     public void onFinalized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
+        requestLayout(paymentView);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE,
                 MapBuilder.<String, Object>of(
                         "approved", approved,
@@ -242,6 +261,7 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
 
     @Override
     public void onErrorOccurred(@NotNull KlarnaPaymentView klarnaPaymentView, @NotNull KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
+        requestLayout(klarnaPaymentView);
         MappableKlarnaPaymentsSDKError sdkError = new MappableKlarnaPaymentsSDKError(klarnaPaymentsSDKError);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR,
                 MapBuilder.<String, Object>of("error", sdkError.buildMap()),
