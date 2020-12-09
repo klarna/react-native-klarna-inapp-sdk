@@ -1,17 +1,17 @@
 package com.testapp.utils
 
 internal object BillingAddressTestHelper {
-    const val EMAIL_KEY = "//*[@id=\"email\"]"
-    const val ZIPCODE_KEY = "//*[@id=\"postal_code\"]"
-    const val ID_KEY = "//*[@id=\"national_identification_number\"]"
-    const val FIRST_NAME_KEY = "//*[@id=\"given_name\"]"
-    const val LAST_NAME_KEY = "//*[@id=\"family_name\"]"
-    const val TITLE_KEY = "//*[@id=\"withAutofillProps(Component)-59355024-fc88-419f-91b4-81689c73b3d2\"]"
-    const val ADDRESS_KEY = "//*[@id=\"street_address\"]"
-    const val CITY_KEY = "//*[@id=\"city\"]"
-    const val STATE_KEY = "//*[@id=\"region\"]"
-    const val PHONE_KEY = "//*[@id=\"phone\"]"
-    const val BIRTHDAY_KEY = "//*[@id=\"date_of_birth\"]"
+    const val EMAIL_KEY = "//input[@data-cid=\"am.email\"]"
+    const val ZIPCODE_KEY = "//input[@data-cid=\"am.postal_code\"]"
+    const val ID_KEY = "//input[@data-cid=\"am.national_identification_number\"]"
+    const val FIRST_NAME_KEY = "//input[@data-cid=\"am.given_name\"]"
+    const val LAST_NAME_KEY = "//input[@data-cid=\"am.family_name\"]"
+    const val TITLE_KEY = "//input[@id=\"withAutofillProps(Component)-59355024-fc88-419f-91b4-81689c73b3d2\"]"
+    const val ADDRESS_KEY = "//input[@data-cid=\"am.street_address\"]"
+    const val CITY_KEY = "//input[@data-cid=\"am.city\"]"
+    const val STATE_KEY = "//input[@data-cid=\"am.region\"]"
+    const val PHONE_KEY = "//input[@data-cid=\"am.phone\"]"
+    const val BIRTHDAY_KEY = "//input[contains(@id,'date_of_birth')]"
 
     const val EMAIL_FLAG_REJECTED = "+rejected"
 

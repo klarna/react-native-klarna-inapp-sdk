@@ -4,11 +4,11 @@ import com.testapp.base.BaseAppiumTest
 import com.testapp.constants.AppiumTestConstants
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.android.nativekey.AndroidKey
+import io.appium.java_client.android.nativekey.KeyEvent
 import org.json.JSONObject
 import org.junit.Assert
-import org.openqa.selenium.By
-import org.openqa.selenium.Keys
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.*
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal object PaymentFlowsTestHelper {
@@ -22,51 +22,57 @@ internal object PaymentFlowsTestHelper {
         billingWindow?.let {
             driver.switchTo().window(it)
         } ?: Assert.fail("Billing address window wasn't found")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+        DriverUtils.getWaiter(driver)
+                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
 
         val selectAllKeys = Keys.chord(Keys.CONTROL, "a")
         for ((key, value) in billingInfo) {
             value?.let {
-                val element = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
-                element.apply {
-                    if (isEnabled) {
-                        sendKeys(selectAllKeys)
-                        sendKeys(Keys.DELETE)
-                        DriverUtils.getWaiter(driver)
-                                .until(ExpectedConditions.invisibilityOfElementLocated(loadingLocator))
-                        sendKeys(value)
+                try {
+                    val element =
+                            DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
+                    element.apply {
+                        if (isEnabled) {
+                            sendKeys(selectAllKeys)
+                            sendKeys(Keys.DELETE)
+                            DriverUtils.getWaiter(driver)
+                                    .until(ExpectedConditions.invisibilityOfElementLocated(loadingLocator))
+                            sendKeys(value)
+                        }
                     }
+                    driver.pressKey(KeyEvent(AndroidKey.ENTER))
+                } catch (t: TimeoutException) {
+                    // element is not visible (not required to fill)
+                } catch (t: StaleElementReferenceException) {
+                    // element is not attached
                 }
             }
         }
 
         // click on the submit button
-        val submitButtonBy = By.id("identification-dialog__footer-button-wrapper")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(submitButtonBy)).click()
+        var submitButtonBy: By? = null
+        val submitButtonByDefault = By.id("identification-dialog__footer-button-wrapper")
+        val submitButtonByInParts = By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper")
 
-        // check if we should continue anyway
         try {
-            DriverUtils.wait(driver, 1)
-            val continueAnyWay = driver.findElement(submitButtonBy)
-            if(continueAnyWay.text == "Continue anyway"){
-                continueAnyWay.click()
-            }
-        } catch (exception: Exception){
-            // no warning
+            driver.findElement(submitButtonByDefault).click()
+            submitButtonBy = submitButtonByDefault
+        } catch (t: Throwable) {
+            driver.findElement(submitButtonByInParts).click()
+            submitButtonBy = submitButtonByInParts
         }
 
-        DriverUtils.wait(driver, 2)
-
-        // switch to confirmation window
-        val confirmationWindow =
-                WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
-        confirmationWindow?.let {
-            driver.switchTo().window(it)
-        } ?: Assert.fail("Confirmation window wasn't found")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
-
-        // confirm the billing info
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(submitButtonBy)).click()
+        // check if we should continue anyway
+        var confirmPresent = true
+        do {
+            try {
+                DriverUtils.wait(driver, 1)
+                val continueAnyWay = driver.findElement(submitButtonBy)
+                continueAnyWay.click()
+            } catch (exception: Exception) {
+                confirmPresent = false
+            }
+        } while (confirmPresent)
     }
 
     fun readConsoleMessage(driver: AndroidDriver<MobileElement>, containText: String): WebElement?{
