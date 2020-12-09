@@ -27,5 +27,7 @@ Pod::Spec.new do |s|
   s.dependency "React"
   s.dependency 'KlarnaMobileSDK', '~> 2.0.28'
   # s.dependency "..."
-end
 
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+end
