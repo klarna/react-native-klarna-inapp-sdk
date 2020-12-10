@@ -92,12 +92,10 @@ internal class TestSliceItUK : BaseAppiumTest() {
         PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//button[contains(@id,'purchase-approval-form-continue-button')]"), By.xpath("//div[contains(@id,'purchase-approval__footer-button-wrapper')]"))
 
         if (!success) {
-            val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
-            val refusedText =
-                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
-            with(refusedText.text.toLowerCase()) {
-                assert(this.contains("sorry") || this.contains("unfortunately"))
-            }
+            DriverUtils.waitForPresence(
+                    driver,
+                    By.xpath("//h1[contains(text(),'Your application was declined')]")
+            )
         } else {
             DriverUtils.switchContextToNative(driver)
             var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
