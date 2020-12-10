@@ -16,6 +16,9 @@ pipeline {
                     currentSdkVersion = sdkVersion()
                     echo "currentSdkVersion: ${currentSdkVersion}"
                 }
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'sys-user', usernameVariable: 'MSDK_USER', passwordVariable: 'MSDK_PASSWORD']]) {
+                    sh 'security unlock-keychain -p $MSDK_PASSWORD login.keychain'
+                }
             }
         }
         
