@@ -77,6 +77,9 @@ pipeline {
         }
 
         stage('Android Integration Tests') {
+            when {
+                expression { isPullRequest() }
+            }
             steps {
                 try {
                     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'BrowserStack', usernameVariable: 'BROWSERSTACK_USER', passwordVariable: 'BROWSERSTACK_PASSWORD']]) {
@@ -110,4 +113,8 @@ String sdkVersion() {
 def bash(custom) {
     sh '''#!/bin/bash -l
     ''' + custom
+}
+
+boolean isPullRequest() {
+ return env.JOB_BASE_NAME.startsWith('PR') && env.JOB_BASE_NAME.endsWith('merge')
 }
