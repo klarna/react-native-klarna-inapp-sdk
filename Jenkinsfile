@@ -81,15 +81,17 @@ pipeline {
                 expression { isPullRequest() }
             }
             steps {
-                try {
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'BrowserStack', usernameVariable: 'BROWSERSTACK_USER', passwordVariable: 'BROWSERSTACK_PASSWORD']]) {
-                        sh 'BrowserStackLocal --key ' + "$BROWSERSTACK_PASSWORD" + '&'
-                        sh 'curl -u ' + "$BROWSERSTACK_USER" + ":" + "$BROWSERSTACK_PASSWORD" + ' -X POST https://api-cloud.browserstack.com/app-automate/upload -F file=@TestApp/android/app/build/outputs/apk/debug/app-debug.apk -F "data={\"custom_id\":\"INAPP_RN_SDK_ANDROID_TEST_APP\"}"'
-                        sh './integration-tests/gradlew -p integration-tests :test -Dbrowserstack.username=' + "$BROWSERSTACK_USER" + '" -Dbrowserstack.password="' + "$BROWSERSTACK_PASSWORD"
+                script {
+                    try {
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'BrowserStack', usernameVariable: 'BROWSERSTACK_USER', passwordVariable: 'BROWSERSTACK_PASSWORD']]) {
+                            sh 'BrowserStackLocal --key ' + "$BROWSERSTACK_PASSWORD" + '&'
+                            sh 'curl -u ' + "$BROWSERSTACK_USER" + ":" + "$BROWSERSTACK_PASSWORD" + ' -X POST https://api-cloud.browserstack.com/app-automate/upload -F file=@TestApp/android/app/build/outputs/apk/debug/app-debug.apk -F "data={\"custom_id\":\"INAPP_RN_SDK_ANDROID_TEST_APP\"}"'
+                            sh './integration-tests/gradlew -p integration-tests :test -Dbrowserstack.username=' + "$BROWSERSTACK_USER" + '" -Dbrowserstack.password="' + "$BROWSERSTACK_PASSWORD"
+                        }
+                    } finally {
+                        // Add the test results for statistics
+                        junit 'integration-tests/build/test-results/test/*.xml'
                     }
-                } finally {
-                    // Add the test results for statistics
-                    junit 'integration-tests/build/test-results/test/*.xml'
                 }
             }
         }
