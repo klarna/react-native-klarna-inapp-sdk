@@ -66,7 +66,7 @@ internal object DriverUtils {
         caps.setCapability("browserstack.deviceLogs", "true")
         caps.setCapability("project", "IN-APP RN MOBILE SDK INTEGRATION")
         caps.setCapability("name", testName)
-        caps.setCapability("app", "INAPP_RN_SDK_TEST_APP")
+        caps.setCapability("app", "INAPP_RN_SDK_ANDROID_TEST_APP")
         caps.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
         caps.setCapability("deviceName", "Android Emulator")
         caps.setCapability("platformName", "Android")
