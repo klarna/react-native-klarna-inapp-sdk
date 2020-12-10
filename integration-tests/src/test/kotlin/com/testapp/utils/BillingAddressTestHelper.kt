@@ -12,6 +12,7 @@ internal object BillingAddressTestHelper {
     const val STATE_KEY = "//input[@data-cid=\"am.region\"]"
     const val PHONE_KEY = "//input[@data-cid=\"am.phone\"]"
     const val BIRTHDAY_KEY = "//input[contains(@id,'date_of_birth')]"
+    const val BIRTHDAY_KEY_2 = "//input[contains(@id,'date-of-birth')]"
 
     const val EMAIL_FLAG_REJECTED = "+rejected"
 
@@ -126,10 +127,11 @@ internal object BillingAddressTestHelper {
                     CITY_KEY to city,
                     STATE_KEY to state,
                     PHONE_KEY to phone,
-                    BIRTHDAY_KEY to birthday
+                    BIRTHDAY_KEY to birthday,
+                    BIRTHDAY_KEY_2 to birthday
             )
 
-    fun setEmailFlag(options: LinkedHashMap<String, String?>, flag: String): LinkedHashMap<String, String?>{
+    fun setEmailFlag(options: LinkedHashMap<String, String?>, flag: String): LinkedHashMap<String, String?> {
         var email = options[EMAIL_KEY]
         val emailParts = email?.split("@")
         emailParts?.let {

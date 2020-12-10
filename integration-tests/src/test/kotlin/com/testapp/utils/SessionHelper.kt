@@ -41,13 +41,13 @@ internal object SessionHelper {
                     country,
                     currency,
                     locale,
-                    400,
+                    4000,
                     listOf(OrderLines(
                             "Classic Low Bridge Sunglasses",
                             "sunglasses-$country",
                             1,
-                            400,
-                            400
+                            4000,
+                            4000
                     ))
             )
     )
