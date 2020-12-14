@@ -21,9 +21,11 @@ internal open class BaseAppiumTest {
 
     companion object {
 
-        internal lateinit var driver: AndroidDriver<MobileElement>
+        internal lateinit var driver: AppiumDriver<MobileElement>
         private var appiumService: AppiumDriverLocalService? = null
         internal var testName: String? = null
+
+        val platform = Platform.getSystemConfiguration()
 
         @JvmStatic
         @BeforeClass
@@ -46,13 +48,14 @@ internal open class BaseAppiumTest {
                         }
                     }
                 }
-                driver = getLocalDriver(appiumService!!)
+                driver = getLocalDriver(appiumService!!, platform)
             } else {
                 try {
                     driver = getBrowserstackDriver(
                             browserstackUsername,
                             browserstackPassword,
-                            testName
+                            testName,
+                            platform
                     )
                 } catch (t: Throwable) {
                     Assume.assumeNoException(t)
@@ -73,6 +76,10 @@ internal open class BaseAppiumTest {
         driver.launchApp()
         DriverUtils.switchContextToNative(driver)
     }
+
+    fun android() = platform == Platform.ANDROID
+
+    fun ios() = platform == Platform.IOS
 
     fun initLoadSDK(token: String?, category: String){
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {

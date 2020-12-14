@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal object PaymentFlowsTestHelper {
 
-    fun fillBillingAddress(driver: AndroidDriver<MobileElement>, billingInfo: LinkedHashMap<String, String?>) {
+    fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: LinkedHashMap<String, String?>) {
         // switch to klarna payment billing address iframe
         val billingWindow =
                 WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
@@ -28,7 +28,9 @@ internal object PaymentFlowsTestHelper {
             value?.let {
                 try {
                     fillInfo(driver, key, value)
-                    driver.pressKey(KeyEvent(AndroidKey.ENTER))
+                    if (driver is AndroidDriver) {
+                        driver.pressKey(KeyEvent(AndroidKey.ENTER))
+                    }
                 } catch (t: TimeoutException) {
                     // element is not visible (not required to fill)
                 } catch (t: StaleElementReferenceException) {
@@ -40,7 +42,7 @@ internal object PaymentFlowsTestHelper {
         submitAndConfirm(driver, By.id("identification-dialog__footer-button-wrapper"), By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"))
     }
 
-    fun fillInfo(driver: AndroidDriver<MobileElement>, key: String, value: String?) {
+    fun fillInfo(driver: AppiumDriver<MobileElement>, key: String, value: String?) {
         val element =
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
         element.apply {
@@ -54,7 +56,7 @@ internal object PaymentFlowsTestHelper {
         }
     }
 
-    fun submitAndConfirm(driver: AndroidDriver<MobileElement>, original: By, alternative: By?) {
+    fun submitAndConfirm(driver: AppiumDriver<MobileElement>, original: By, alternative: By?) {
         // click on the submit button
         var submitButtonBy: By? = null
 
@@ -85,7 +87,7 @@ internal object PaymentFlowsTestHelper {
         } while (confirmPresent)
     }
 
-    fun readConsoleMessage(driver: AndroidDriver<MobileElement>, containText: String): WebElement? {
+    fun readConsoleMessage(driver: AppiumDriver<MobileElement>, containText: String): WebElement? {
         return DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '$containText')]")))
     }
 
@@ -106,14 +108,14 @@ internal object PaymentFlowsTestHelper {
         }
     }
 
-    fun fillCardInfo(driver: AndroidDriver<MobileElement>, is3ds: Boolean = false) {
+    fun fillCardInfo(driver: AppiumDriver<MobileElement>, is3ds: Boolean = false) {
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("cardNumber")))
         driver.findElementById("cardNumber").sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
         driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
         driver.findElementById("securityCode").sendKeys(AppiumTestConstants.CARD_CVV)
     }
 
-    fun fillSmsCode(driver: AndroidDriver<MobileElement>) {
+    fun fillSmsCode(driver: AppiumDriver<MobileElement>) {
         // if there is authentication for sms code
         try {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("authentication-ui")))

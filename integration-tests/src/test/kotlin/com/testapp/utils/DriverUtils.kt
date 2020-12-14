@@ -1,7 +1,10 @@
 package com.testapp.utils
 
+import com.testapp.base.Platform
+import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AutomationName
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import org.junit.Assert.fail
@@ -34,16 +37,26 @@ internal object DriverUtils {
      * @param appiumService Appium server to connect the driver to
      * @return PlatformDriver instance
      */
-    fun getLocalDriver(appiumService: AppiumDriverLocalService): AndroidDriver<MobileElement> {
+    fun getLocalDriver(appiumService: AppiumDriverLocalService, platform: Platform): AppiumDriver<MobileElement> {
         val desiredCapabilities = commonCapabilities
-        //desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
-        desiredCapabilities.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
-        desiredCapabilities.setCapability("deviceName", "Android Emulator")
-        desiredCapabilities.setCapability("platformName", "Android")
-        desiredCapabilities.setCapability("appPackage", "com.testapp")
-        desiredCapabilities.setCapability("appActivity", "com.testapp.MainActivity")
-        desiredCapabilities.setCapability("noReset", "true")
-        return AndroidDriver(appiumService.url, desiredCapabilities)
+        when (platform) {
+            Platform.ANDROID -> {
+                //desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
+                desiredCapabilities.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
+                desiredCapabilities.setCapability("deviceName", "Android Emulator")
+                desiredCapabilities.setCapability("platformName", platform.platformName)
+                desiredCapabilities.setCapability("appPackage", "com.testapp")
+                desiredCapabilities.setCapability("appActivity", "com.testapp.MainActivity")
+                desiredCapabilities.setCapability("noReset", "true")
+                return AndroidDriver(appiumService.url, desiredCapabilities)
+            }
+            Platform.IOS -> {
+                desiredCapabilities.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
+                desiredCapabilities.setCapability("deviceName", "iPhone 12")
+                desiredCapabilities.setCapability("platformName", platform.platformName)
+                return IOSDriver(appiumService.url, desiredCapabilities)
+            }
+        }
     }
 
     /**
@@ -56,8 +69,9 @@ internal object DriverUtils {
     fun getBrowserstackDriver(
             username: String,
             password: String,
-            testName: String?
-    ): AndroidDriver<MobileElement> {
+            testName: String?,
+            platform: Platform
+    ): AppiumDriver<MobileElement> {
         val caps = commonCapabilities
         caps.setCapability("browserstack.local", "true")
         caps.setCapability("browserstack.debug", "true")
@@ -66,17 +80,35 @@ internal object DriverUtils {
         caps.setCapability("browserstack.deviceLogs", "true")
         caps.setCapability("project", "IN-APP RN MOBILE SDK INTEGRATION")
         caps.setCapability("name", testName)
-        caps.setCapability("app", "INAPP_RN_SDK_ANDROID_TEST_APP")
-        caps.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
-        caps.setCapability("deviceName", "Android Emulator")
-        caps.setCapability("platformName", "Android")
-        caps.setCapability("recreateChromeDriverSessions", "true")
-        caps.setCapability("device", "Samsung Galaxy S9")
 
-        return AndroidDriver(
-                URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
-                caps
-        )
+        when (platform) {
+            Platform.ANDROID -> {
+                caps.setCapability("app", "INAPP_RN_SDK_ANDROID_TEST_APP")
+                caps.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
+                caps.setCapability("deviceName", "Android Emulator")
+                caps.setCapability("platformName", platform.platformName)
+                caps.setCapability("recreateChromeDriverSessions", "true")
+                caps.setCapability("device", "Samsung Galaxy S9")
+
+                return AndroidDriver(
+                        URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
+                        caps
+                )
+            }
+            Platform.IOS -> {
+                caps.setCapability("app", "INAPP_RN_SDK_IOS_TEST_APP")
+                caps.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
+                caps.setCapability("deviceName", "iPhone 12")
+                caps.setCapability("platformName", platform.platformName)
+//                caps.setCapability("device", "iPhone 12")
+                caps.setCapability("bundleId", "com.klarna.entp.dinhouse.inapp.sdk.react.native.testapp")
+                caps.setCapability("appName", "TestApp")
+                return IOSDriver(
+                        URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
+                        caps
+                )
+            }
+        }
     }
 
     /**
@@ -84,7 +116,7 @@ internal object DriverUtils {
      *
      * @param driver The driver we want its context to be switched to native
      */
-    fun switchContextToNative(driver: AndroidDriver<MobileElement>) {
+    fun switchContextToNative(driver: AppiumDriver<MobileElement>) {
         driver.context(CONTEXT_NATIVE)
     }
 
@@ -93,7 +125,10 @@ internal object DriverUtils {
      *
      * @param driver The driver we want its context to be switched to web view
      */
-    fun switchContextToWebView(driver: AndroidDriver<MobileElement>) {
+    fun switchContextToWebView(driver: AppiumDriver<MobileElement>) {
+        if (driver is IOSDriver) {
+            return
+        }
         if(!driver.context.startsWith(CONTEXT_WEBVIEW)) {
             var webViewAvailable = false
             var retries = 4
@@ -119,7 +154,7 @@ internal object DriverUtils {
      * @param driver        The driver that we want it to wait
      * @param waitTimeInSec The amount of time (in seconds) we want the driver to wait
      */
-    fun wait(driver: AndroidDriver<MobileElement>?, waitTimeInSec: Int) {
+    fun wait(driver: AppiumDriver<MobileElement>?, waitTimeInSec: Int) {
         val wait = WebDriverWait(driver, waitTimeInSec.toLong(), (waitTimeInSec * 1000).toLong())
         try {
             wait.until<Boolean> { false }
@@ -133,7 +168,7 @@ internal object DriverUtils {
      * @param driver The driver that we want its waiter
      * @return WebDriverWait object for the given driver
      */
-    fun getWaiter(driver: AndroidDriver<MobileElement>?): WebDriverWait {
+    fun getWaiter(driver: AppiumDriver<*>?): WebDriverWait {
         return getWaiter(driver, WAIT_TIME)
     }
 
@@ -144,7 +179,7 @@ internal object DriverUtils {
      * @param timeOutInSeconds The timeout value for the waiter in seconds
      * @return WebDriverWait object for the given driver
      */
-    fun getWaiter(driver: AndroidDriver<MobileElement>?, timeOutInSeconds: Int): WebDriverWait {
+    fun getWaiter(driver: AppiumDriver<*>?, timeOutInSeconds: Int): WebDriverWait {
         return WebDriverWait(driver, timeOutInSeconds.toLong(), 500)
     }
 
@@ -155,7 +190,7 @@ internal object DriverUtils {
      * @param timeOutInSeconds The timeout value for the waiter in seconds
      * @return The WebElement object found present
      */
-    fun waitForPresence(driver: AndroidDriver<MobileElement>?, by: By, timeOutInSeconds: Int = WAIT_TIME): WebElement {
+    fun waitForPresence(driver: AppiumDriver<MobileElement>?, by: By, timeOutInSeconds: Int = WAIT_TIME): WebElement {
         return getWaiter(driver, timeOutInSeconds).until(ExpectedConditions.presenceOfElementLocated(by))
     }
 
@@ -165,18 +200,20 @@ internal object DriverUtils {
      * @param driver The driver that we want it to wait
      * @param activity The activity we want to wait for to load
      */
-    fun waitForActivity(driver: AndroidDriver<MobileElement>, activity: String, timeOutInSeconds: Int){
-        switchContextToNative(driver)
-        var found = false
-        val startTime = System.currentTimeMillis()
-        while(System.currentTimeMillis() - startTime < timeOutInSeconds * 1000){
-            if (driver.currentActivity() == activity){
-                found = true
-                break
+    fun waitForActivity(driver: AppiumDriver<MobileElement>, activity: String, timeOutInSeconds: Int){
+        if (driver is AndroidDriver<*>) {
+            switchContextToNative(driver)
+            var found = false
+            val startTime = System.currentTimeMillis()
+            while (System.currentTimeMillis() - startTime < timeOutInSeconds * 1000) {
+                if (driver.currentActivity() == activity) {
+                    found = true
+                    break
+                }
             }
-        }
-        if(!found){
-            fail("Couldn't find the activity: $activity")
+            if (!found) {
+                fail("Couldn't find the activity: $activity")
+            }
         }
     }
 }
