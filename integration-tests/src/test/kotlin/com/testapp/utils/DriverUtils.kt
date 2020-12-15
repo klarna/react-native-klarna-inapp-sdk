@@ -121,7 +121,9 @@ internal object DriverUtils {
      * @param driver The driver we want its context to be switched to native
      */
     fun switchContextToNative(driver: AppiumDriver<MobileElement>) {
-        driver.context(CONTEXT_NATIVE)
+        if (!driver.context.startsWith(CONTEXT_NATIVE)) {
+            driver.context(CONTEXT_NATIVE)
+        }
     }
 
     /**
@@ -171,7 +173,7 @@ internal object DriverUtils {
      * @param driver        The driver that we want it to wait
      * @param waitTimeInSec The amount of time (in seconds) we want the driver to wait
      */
-    fun wait(driver: AppiumDriver<MobileElement>?, waitTimeInSec: Int) {
+    fun wait(driver: AppiumDriver<*>?, waitTimeInSec: Int) {
         val wait = WebDriverWait(driver, waitTimeInSec.toLong(), (waitTimeInSec * 1000).toLong())
         try {
             wait.until<Boolean> { false }

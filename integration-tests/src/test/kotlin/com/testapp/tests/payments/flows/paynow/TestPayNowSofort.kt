@@ -73,10 +73,6 @@ internal class TestPayNowSofort : BaseAppiumTest(){
 
         } else {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
-//            DriverUtils.wait(driver, 2)
-//            DriverUtils.switchContextToWebView(driver)
-//            DriverUtils.wait(driver, 2)
-//             DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
             val card: IOSElement = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
             card.tapElementCenter()
         }
