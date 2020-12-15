@@ -1,18 +1,9 @@
 package com.testapp.utils
 
+import com.testapp.base.BaseAppiumTest
+import io.appium.java_client.android.AndroidDriver
+
 internal object BillingAddressTestHelper {
-    const val EMAIL_KEY = "//input[@data-cid=\"am.email\"]"
-    const val ZIPCODE_KEY = "//input[@data-cid=\"am.postal_code\"]"
-    const val ID_KEY = "//input[@data-cid=\"am.national_identification_number\"]"
-    const val FIRST_NAME_KEY = "//input[@data-cid=\"am.given_name\"]"
-    const val LAST_NAME_KEY = "//input[@data-cid=\"am.family_name\"]"
-    const val TITLE_KEY = "//input[@id=\"withAutofillProps(Component)-59355024-fc88-419f-91b4-81689c73b3d2\"]"
-    const val ADDRESS_KEY = "//input[@data-cid=\"am.street_address\"]"
-    const val CITY_KEY = "//input[@data-cid=\"am.city\"]"
-    const val STATE_KEY = "//input[@data-cid=\"am.region\"]"
-    const val PHONE_KEY = "//input[@data-cid=\"am.phone\"]"
-    const val BIRTHDAY_KEY = "//input[contains(@id,'date_of_birth')]"
-    const val BIRTHDAY_KEY_2 = "//input[contains(@id,'date-of-birth')]"
 
     const val EMAIL_FLAG_REJECTED = "+rejected"
 
@@ -115,28 +106,39 @@ internal object BillingAddressTestHelper {
             state: String? = null,
             phone: String,
             birthday: String? = null
-    ) =
-            linkedMapOf(
-                    EMAIL_KEY to email,
-                    ZIPCODE_KEY to zipCode,
-                    ID_KEY to id,
-                    LAST_NAME_KEY to lastName,
-                    FIRST_NAME_KEY to firstName,
-                    TITLE_KEY to title,
-                    ADDRESS_KEY to address,
-                    CITY_KEY to city,
-                    STATE_KEY to state,
-                    PHONE_KEY to phone,
-                    BIRTHDAY_KEY to birthday,
-                    BIRTHDAY_KEY_2 to birthday
-            )
+    ): LinkedHashMap<String, String?> {
+        val identifiers = getIdentifiers()
+        return linkedMapOf(
+                identifiers.email to email,
+                identifiers.zipCode to zipCode,
+                identifiers.idNumber to id,
+                identifiers.lastName to lastName,
+                identifiers.firstName to firstName,
+                identifiers.title to title,
+                identifiers.address to address,
+                identifiers.city to city,
+                identifiers.state to state,
+                identifiers.phone to phone,
+                identifiers.birthday to birthday,
+                identifiers.birthday2 to birthday
+        )
+    }
 
     fun setEmailFlag(options: LinkedHashMap<String, String?>, flag: String): LinkedHashMap<String, String?> {
-        var email = options[EMAIL_KEY]
+        val identifiers = getIdentifiers()
+        var email = options[identifiers.email]
         val emailParts = email?.split("@")
         emailParts?.let {
             email = it[0] + flag + "@" + it[1]
         }
-        return options.apply { this[EMAIL_KEY] = email }
+        return options.apply { this[identifiers.email] = email }
+    }
+
+    fun getIdentifiers(): BillingIdentifiers {
+        return if (BaseAppiumTest.driver is AndroidDriver) {
+            BillingIdentifiers.ANDROID
+        } else {
+            BillingIdentifiers.IOS
+        }
     }
 }

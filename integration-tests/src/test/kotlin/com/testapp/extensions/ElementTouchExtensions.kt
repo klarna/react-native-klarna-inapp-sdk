@@ -16,3 +16,12 @@ fun MobileElement.tapElementCenter() {
         AndroidTouchAction(BaseAppiumTest.driver).tap(PointOption.point(centerOfElement.x, centerOfElement.y)).perform()
     }
 }
+
+fun MobileElement.longPressElementCenter() {
+    val centerOfElement = this.center
+    if (this is IOSElement) {
+        IOSTouchAction(BaseAppiumTest.driver).longPress(PointOption.point(centerOfElement.x, centerOfElement.y)).perform()
+    } else if (this is AndroidElement) {
+        AndroidTouchAction(BaseAppiumTest.driver).longPress(PointOption.point(centerOfElement.x, centerOfElement.y)).perform()
+    }
+}

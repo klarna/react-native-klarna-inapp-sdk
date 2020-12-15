@@ -2,12 +2,18 @@ package com.testapp.utils
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.constants.AppiumTestConstants
+import com.testapp.extensions.deleteAll
+import com.testapp.extensions.hideKeyboardCompat
+import com.testapp.extensions.selectAll
 import com.testapp.extensions.tapElementCenter
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.nativekey.AndroidKey
 import io.appium.java_client.android.nativekey.KeyEvent
+import io.appium.java_client.ios.IOSDriver
+import io.appium.java_client.ios.IOSElement
+import org.aspectj.weaver.ast.And
 import org.json.JSONObject
 import org.junit.Assert
 import org.openqa.selenium.*
@@ -16,14 +22,16 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 internal object PaymentFlowsTestHelper {
 
     fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: LinkedHashMap<String, String?>) {
-        // switch to klarna payment billing address iframe
-        val billingWindow =
-                WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
-        billingWindow?.let {
-            driver.switchTo().window(it)
-        } ?: Assert.fail("Billing address window wasn't found")
-        DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+        if (driver is AndroidDriver) {
+            // switch to klarna payment billing address iframe
+            val billingWindow =
+                    WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
+            billingWindow?.let {
+                driver.switchTo().window(it)
+            } ?: Assert.fail("Billing address window wasn't found")
+            DriverUtils.getWaiter(driver)
+                    .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+        }
 
         for ((key, value) in billingInfo) {
             value?.let {
@@ -31,6 +39,8 @@ internal object PaymentFlowsTestHelper {
                     fillInfo(driver, key, value)
                     if (driver is AndroidDriver) {
                         driver.pressKey(KeyEvent(AndroidKey.ENTER))
+                    } else {
+                        driver.hideKeyboardCompat()
                     }
                 } catch (t: TimeoutException) {
                     // element is not visible (not required to fill)
@@ -40,19 +50,25 @@ internal object PaymentFlowsTestHelper {
             }
         }
 
-        submitAndConfirm(driver, By.id("identification-dialog__footer-button-wrapper"), By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"))
+        if (driver is AndroidDriver) {
+            submitAndConfirm(driver, By.id("identification-dialog__footer-button-wrapper"), By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"))
+        } else {
+            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Submit')]"), By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"))
+            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"), By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"))
+            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"), null)
+        }
     }
 
     fun fillInfo(driver: AppiumDriver<MobileElement>, key: String, value: String?) {
         val element =
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
         element.apply {
-            if (isEnabled) {
-                sendKeys(Keys.chord(Keys.CONTROL, "a"))
-                sendKeys(Keys.DELETE)
+            if (isEnabled || driver is IOSDriver) {
+                driver.deleteAll(this)
                 DriverUtils.getWaiter(BaseAppiumTest.driver)
                         .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 sendKeys(value)
+                driver.hideKeyboardCompat()
             }
         }
     }
@@ -65,9 +81,12 @@ internal object PaymentFlowsTestHelper {
             driver.findElement(original).click()
             submitButtonBy = original
         } catch (t: Throwable) {
-            alternative?.let {
-                driver.findElement(it).click()
-                submitButtonBy = it
+            try {
+                alternative?.let {
+                    driver.findElement(it).click()
+                    submitButtonBy = it
+                }
+            } catch (t: Throwable) {
             }
         }
 
@@ -89,7 +108,7 @@ internal object PaymentFlowsTestHelper {
     }
 
     fun readConsoleMessage(driver: AppiumDriver<MobileElement>, containText: String): WebElement? {
-        val by = if (driver is AndroidDriver){
+        val by = if (driver is AndroidDriver) {
             By.xpath("//android.widget.TextView[contains(@text, '$containText')]")
         } else {
             By.xpath("//XCUIElementTypeOther[contains(@text, '$containText')]")

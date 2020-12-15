@@ -1,10 +1,17 @@
 package com.testapp.extensions
 
+import com.testapp.base.BaseAppiumTest
 import com.testapp.utils.DriverUtils
 import io.appium.java_client.AppiumDriver
+import io.appium.java_client.MobileElement
 import io.appium.java_client.ios.IOSDriver
+import io.appium.java_client.ios.IOSElement
+import io.appium.java_client.ios.IOSTouchAction
 import io.appium.java_client.remote.HideKeyboardStrategy
+import io.appium.java_client.touch.offset.PointOption
 import org.openqa.selenium.By
+import org.openqa.selenium.Keys
+import org.openqa.selenium.WebElement
 
 fun AppiumDriver<*>.hideKeyboardCompat() {
     try {
@@ -24,6 +31,28 @@ fun AppiumDriver<*>.hideKeyboardCompat() {
             }
         }
     } catch (e: Throwable) {
+
+    }
+}
+
+fun AppiumDriver<*>.selectAll(element: WebElement) {
+    if (element is IOSElement) {
+        element.longPressElementCenter()
+        try {
+            findElement(By.xpath("//XCUIElementTypeMenuItem[@name=\"Select All\"]")).click()
+        } catch (t: Throwable) {
+
+        }
+    } else {
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a"))
+    }
+}
+
+fun AppiumDriver<*>.deleteAll(element: WebElement) {
+    selectAll(element)
+    try {
+        element.sendKeys(Keys.DELETE)
+    } catch (t: Throwable) {
 
     }
 }

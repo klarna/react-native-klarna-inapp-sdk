@@ -11,14 +11,11 @@ import com.testapp.utils.PaymentFlowsTestHelper
 import com.testapp.utils.SessionHelper
 import com.testapp.utils.WebViewTestHelper
 import io.appium.java_client.android.AndroidDriver
-import io.appium.java_client.android.nativekey.AndroidKey
-import io.appium.java_client.android.nativekey.KeyEvent
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.openqa.selenium.By
-import org.openqa.selenium.Keys
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal class TestSliceItUK : BaseAppiumTest() {
@@ -88,7 +85,7 @@ internal class TestSliceItUK : BaseAppiumTest() {
 
         PaymentFlowsTestHelper.fillSmsCode(driver)
 
-        val key = BillingAddressTestHelper.BIRTHDAY_KEY_2
+        val key = BillingAddressTestHelper.getIdentifiers().birthday2
         val value = billing[key]
         PaymentFlowsTestHelper.fillInfo(driver, key, value)
         PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//button[contains(@id,'purchase-approval-form-continue-button')]"), By.xpath("//div[contains(@id,'purchase-approval__footer-button-wrapper')]"))
