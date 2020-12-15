@@ -54,6 +54,8 @@ internal object DriverUtils {
                 desiredCapabilities.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
                 desiredCapabilities.setCapability("deviceName", "iPhone 12")
                 desiredCapabilities.setCapability("platformName", platform.platformName)
+                desiredCapabilities.setCapability("bundleId", "com.klarna.entp.dinhouse.inapp.sdk.react.native.testapp")
+                desiredCapabilities.setCapability("appName", "TestApp")
                 desiredCapabilities.setCapability("fullContextList", true)
                 desiredCapabilities.setCapability("webviewConnectTimeout", 10000)
                 return IOSDriver(appiumService.url, desiredCapabilities)
