@@ -21,9 +21,6 @@ internal object WebViewTestHelper {
      * @return The found Window handle, null otherwise
      */
     fun findWindowFor(driver: AppiumDriver<MobileElement>, iframeLocator: By?, elementLocator: By? = null): String? {
-        if (driver is IOSDriver) {
-            return null
-        }
         DriverUtils.switchContextToWebView(driver)
         val waitTimeInSec = 1
         val initialWindow = driver.windowHandle

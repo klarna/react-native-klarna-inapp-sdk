@@ -1,17 +1,16 @@
 package com.testapp.base
 
+import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
 import com.testapp.utils.DriverUtils.getLocalDriver
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
 import org.junit.*
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal open class BaseAppiumTest {
@@ -86,11 +85,15 @@ internal open class BaseAppiumTest {
             sendKeys(token)
             Assert.assertEquals(token, text)
         }
-        DriverUtils.getWaiter(BaseAppiumTest.driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category}"))).click()
+        driver.hideKeyboardCompat()
+        val initButton = DriverUtils.getWaiter(driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category}")))
+        initButton.click()
+        DriverUtils.wait(driver, 1)
+        initButton.click()
         //wait for init response
-        DriverUtils.wait(BaseAppiumTest.driver, 1)
-        BaseAppiumTest.driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
-        DriverUtils.wait(BaseAppiumTest.driver, 1)
-        BaseAppiumTest.driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
+        DriverUtils.wait(driver, 1)
+        driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
+        DriverUtils.wait(driver, 1)
+        driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
     }
 }

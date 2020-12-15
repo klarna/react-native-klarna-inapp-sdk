@@ -54,6 +54,8 @@ internal object DriverUtils {
                 desiredCapabilities.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
                 desiredCapabilities.setCapability("deviceName", "iPhone 12")
                 desiredCapabilities.setCapability("platformName", platform.platformName)
+                desiredCapabilities.setCapability("fullContextList", true)
+                desiredCapabilities.setCapability("webviewConnectTimeout", 10000)
                 return IOSDriver(appiumService.url, desiredCapabilities)
             }
         }
@@ -103,6 +105,8 @@ internal object DriverUtils {
 //                caps.setCapability("device", "iPhone 12")
                 caps.setCapability("bundleId", "com.klarna.entp.dinhouse.inapp.sdk.react.native.testapp")
                 caps.setCapability("appName", "TestApp")
+                caps.setCapability("fullContextList", true)
+                caps.setCapability("webviewConnectTimeout", 10000)
                 return IOSDriver(
                         URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
                         caps
@@ -126,24 +130,37 @@ internal object DriverUtils {
      * @param driver The driver we want its context to be switched to web view
      */
     fun switchContextToWebView(driver: AppiumDriver<MobileElement>) {
-        if (driver is IOSDriver) {
-            return
-        }
-        if(!driver.context.startsWith(CONTEXT_WEBVIEW)) {
+        if (!driver.context.startsWith(CONTEXT_WEBVIEW)) {
+            val availableContexts: Set<*> = driver.contextHandles
             var webViewAvailable = false
             var retries = 4
             val sleepTime = 500L
             do {
                 try {
-                    driver.context(CONTEXT_WEBVIEW + driver.capabilities.getCapability("appPackage"))
-                    webViewAvailable = true
+                    if (driver is AndroidDriver) {
+                        driver.context(CONTEXT_WEBVIEW + driver.capabilities.getCapability("appPackage"))
+                        webViewAvailable = true
+                    } else {
+                        (availableContexts as? Set<Map<String, String>>)?.let { availableContexts ->
+                            val contexts = availableContexts.filter {
+                                it["title"].equals("Payment View")
+                            }
+                            val context = contexts.get(0)
+                            driver.context(context["id"])
+                            webViewAvailable = true
+                        } ?: (availableContexts as? Set<String>)?.let { availableContexts ->
+                            val context = availableContexts.first { it.startsWith(CONTEXT_WEBVIEW) }
+                            driver.context(context)
+                            webViewAvailable = true
+                        }
+                    }
                 } catch (t: Throwable) {
                     retries--
                     Thread.sleep(sleepTime)
                 }
             } while (!webViewAvailable && retries > 0)
             if (!webViewAvailable) {
-                fail("Couldn't switch to the web view context.")
+                fail("Couldn't switch to the web view context. Available contexts: ${availableContexts.joinToString()}")
             }
         }
     }
@@ -200,7 +217,7 @@ internal object DriverUtils {
      * @param driver The driver that we want it to wait
      * @param activity The activity we want to wait for to load
      */
-    fun waitForActivity(driver: AppiumDriver<MobileElement>, activity: String, timeOutInSeconds: Int){
+    fun waitForActivity(driver: AppiumDriver<MobileElement>, activity: String, timeOutInSeconds: Int) {
         if (driver is AndroidDriver<*>) {
             switchContextToNative(driver)
             var found = false

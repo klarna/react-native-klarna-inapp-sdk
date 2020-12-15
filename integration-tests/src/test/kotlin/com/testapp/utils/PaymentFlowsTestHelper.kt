@@ -2,6 +2,7 @@ package com.testapp.utils
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.constants.AppiumTestConstants
+import com.testapp.extensions.tapElementCenter
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
@@ -88,7 +89,12 @@ internal object PaymentFlowsTestHelper {
     }
 
     fun readConsoleMessage(driver: AppiumDriver<MobileElement>, containText: String): WebElement? {
-        return DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '$containText')]")))
+        val by = if (driver is AndroidDriver){
+            By.xpath("//android.widget.TextView[contains(@text, '$containText')]")
+        } else {
+            By.xpath("//XCUIElementTypeOther[contains(@text, '$containText')]")
+        }
+        return DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
     }
 
     fun checkAuthorizeResponse(response: String?, successful: Boolean) {
@@ -109,10 +115,26 @@ internal object PaymentFlowsTestHelper {
     }
 
     fun fillCardInfo(driver: AppiumDriver<MobileElement>, is3ds: Boolean = false) {
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("cardNumber")))
-        driver.findElementById("cardNumber").sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
-        driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
-        driver.findElementById("securityCode").sendKeys(AppiumTestConstants.CARD_CVV)
+        if (driver is AndroidDriver) {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("cardNumber")))
+            driver.findElementById("cardNumber").sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
+            driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
+            driver.findElementById("securityCode").sendKeys(AppiumTestConstants.CARD_CVV)
+        } else {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")))
+            driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")).apply {
+                tapElementCenter()
+                sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
+            }
+            driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='MM/YY']")).apply {
+                tapElementCenter()
+                sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
+            }
+            driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='CVC']")).apply {
+                tapElementCenter()
+                sendKeys(AppiumTestConstants.CARD_CVV)
+            }
+        }
     }
 
     fun fillSmsCode(driver: AppiumDriver<MobileElement>) {
