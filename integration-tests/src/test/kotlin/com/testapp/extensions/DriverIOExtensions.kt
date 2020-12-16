@@ -3,7 +3,9 @@ package com.testapp.extensions
 import com.testapp.base.BaseAppiumTest
 import com.testapp.utils.DriverUtils
 import io.appium.java_client.AppiumDriver
+import io.appium.java_client.HasOnScreenKeyboard
 import io.appium.java_client.MobileElement
+import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.ios.IOSElement
 import io.appium.java_client.ios.IOSTouchAction
@@ -33,6 +35,10 @@ fun AppiumDriver<*>.hideKeyboardCompat() {
     } catch (e: Throwable) {
 
     }
+}
+
+fun AppiumDriver<*>.isKeyboardVisible(): Boolean {
+    return if (this is HasOnScreenKeyboard) isKeyboardShown else false
 }
 
 fun AppiumDriver<*>.selectAll(element: WebElement) {

@@ -3,10 +3,7 @@ package com.testapp.utils
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.constants.AppiumTestConstants
-import com.testapp.extensions.deleteAll
-import com.testapp.extensions.hideKeyboardCompat
-import com.testapp.extensions.selectAll
-import com.testapp.extensions.tapElementCenter
+import com.testapp.extensions.*
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileBy
 import io.appium.java_client.MobileElement
@@ -69,8 +66,13 @@ internal object PaymentFlowsTestHelper {
                 driver.deleteAll(this)
                 DriverUtils.getWaiter(BaseAppiumTest.driver)
                         .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
-                sendKeys(value)
-                driver.hideKeyboardCompat()
+                if (this is IOSElement) {
+                    tapElementCenter()
+                }
+                if (driver.isKeyboardVisible()) {
+                    sendKeys(value)
+                    driver.hideKeyboardCompat()
+                }
             }
         }
     }
