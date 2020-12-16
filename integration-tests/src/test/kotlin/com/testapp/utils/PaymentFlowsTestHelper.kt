@@ -1,12 +1,14 @@
 package com.testapp.utils
 
 import com.testapp.base.BaseAppiumTest
+import com.testapp.base.PaymentCategory
 import com.testapp.constants.AppiumTestConstants
 import com.testapp.extensions.deleteAll
 import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.extensions.selectAll
 import com.testapp.extensions.tapElementCenter
 import io.appium.java_client.AppiumDriver
+import io.appium.java_client.MobileBy
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.nativekey.AndroidKey
@@ -116,6 +118,13 @@ internal object PaymentFlowsTestHelper {
         return DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
     }
 
+    fun readStateMessage(driver: AppiumDriver<MobileElement>, paymentCategory: PaymentCategory): String? {
+        val id = "state_${paymentCategory.value}"
+        val by = ByRnId(BaseAppiumTest.driver, id)
+        val stateLabel = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
+        return stateLabel.text
+    }
+
     fun checkAuthorizeResponse(response: String?, successful: Boolean) {
         assert(!response.isNullOrBlank())
         val json = JSONObject(response!!.substring(response.indexOf("{")))
@@ -129,7 +138,18 @@ internal object PaymentFlowsTestHelper {
                 Assert.fail("Null authorization token.")
             }
         } else {
-            Assert.assertFalse(json.getBoolean("approved"))
+            when {
+                json.has("approved") -> {
+                    Assert.assertFalse(json.getBoolean("approved"))
+                }
+                json.has("error") -> {
+                    val errorJson = json.getJSONObject("error")
+                    Assert.assertEquals("Authorize", errorJson.getString("action"))
+                }
+                else -> {
+                    Assert.assertTrue(false)
+                }
+            }
         }
     }
 

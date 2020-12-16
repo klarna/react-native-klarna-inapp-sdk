@@ -12,6 +12,7 @@ import com.testapp.utils.DriverUtils
 import com.testapp.utils.PaymentFlowsTestHelper
 import com.testapp.utils.SessionHelper
 import com.testapp.utils.WebViewTestHelper
+import io.appium.java_client.MobileElement
 import io.appium.java_client.TouchAction
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSElement
@@ -102,15 +103,25 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
 
         if(!success) {
-            val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
-            val refusedText =
-                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
-            with(refusedText.text.toLowerCase()) {
-                assert(this.contains("sorry") || this.contains("unfortunately"))
+            if (android()) {
+                val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
+                val refusedText =
+                        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
+                with(refusedText.text.toLowerCase()) {
+                    assert(this.contains("sorry") || this.contains("unfortunately"))
+                }
+            } else {
+                val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
+                val changePayment = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
+                (changePayment as MobileElement).tapElementCenter()
+                val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
+
+                PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }
+
         } else {
             DriverUtils.switchContextToNative(driver)
-            var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
+            val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
 
             PaymentFlowsTestHelper.checkAuthorizeResponse(response, true)
         }
