@@ -23,7 +23,7 @@ internal class Test3DS : BaseAppiumTest() {
         @JvmStatic
         @BeforeClass
         fun setup() {
-            testName = TestSliceItUK::class.java.simpleName
+            testName = Test3DS::class.java.simpleName
             BaseAppiumTest.setup()
         }
     }
@@ -65,9 +65,9 @@ internal class Test3DS : BaseAppiumTest() {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
             val card: IOSElement = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
             card.tapElementCenter()
-            DriverUtils.wait(driver, 5)
         }
 
+        DriverUtils.wait(driver, 5)
         PaymentFlowsTestHelper.fillCardInfo(driver, true)
         DriverUtils.switchContextToNative(driver)
 

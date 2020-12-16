@@ -22,6 +22,7 @@ internal object PaymentFlowsTestHelper {
 
     fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: LinkedHashMap<String, String?>) {
         if (driver is AndroidDriver) {
+            DriverUtils.switchContextToWebView(BaseAppiumTest.driver)
             // switch to klarna payment billing address iframe
             val billingWindow =
                     WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
@@ -67,10 +68,11 @@ internal object PaymentFlowsTestHelper {
                         .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
                     tapElementCenter()
-                }
-                if (driver.isKeyboardVisible()) {
+                    if (driver.isKeyboardVisible()) {
+                        sendKeys(value)
+                    }
+                } else {
                     sendKeys(value)
-                    driver.hideKeyboardCompat()
                 }
             }
         }
@@ -99,15 +101,17 @@ internal object PaymentFlowsTestHelper {
 
         // check if we should continue anyway
         var confirmPresent = true
+        var retries = 5
         do {
             try {
+                retries--
                 DriverUtils.wait(driver, 1)
                 val continueAnyWay = driver.findElement(submitButtonBy)
                 continueAnyWay.click()
             } catch (exception: Exception) {
                 confirmPresent = false
             }
-        } while (confirmPresent)
+        } while (confirmPresent && retries > 0)
     }
 
     fun readConsoleMessage(driver: AppiumDriver<MobileElement>, containText: String): WebElement? {
@@ -122,7 +126,14 @@ internal object PaymentFlowsTestHelper {
     fun readStateMessage(driver: AppiumDriver<MobileElement>, paymentCategory: PaymentCategory): String? {
         val id = "state_${paymentCategory.value}"
         val by = ByRnId(BaseAppiumTest.driver, id)
-        val stateLabel = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
+        val stateLabel: WebElement = try {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
+        } catch (t: Throwable) {
+            (driver as? AndroidDriver<*>)?.let { driver ->
+                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"$id\"))")
+            }
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
+        }
         return stateLabel.text
     }
 
