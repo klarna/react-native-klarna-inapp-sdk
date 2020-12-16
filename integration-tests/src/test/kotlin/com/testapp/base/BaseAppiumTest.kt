@@ -1,6 +1,7 @@
 package com.testapp.base
 
 import com.testapp.extensions.hideKeyboardCompat
+import com.testapp.extensions.removeWhitespace
 import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
@@ -82,8 +83,9 @@ internal open class BaseAppiumTest {
 
     fun initLoadSDK(token: String?, category: String){
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
-            sendKeys(token)
-            Assert.assertEquals(token, text)
+            val trimmedToken = token?.removeWhitespace()
+            sendKeys(trimmedToken)
+            Assert.assertEquals(trimmedToken, text?.removeWhitespace())
         }
         driver.hideKeyboardCompat()
         val initButton = DriverUtils.getWaiter(driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category}")))

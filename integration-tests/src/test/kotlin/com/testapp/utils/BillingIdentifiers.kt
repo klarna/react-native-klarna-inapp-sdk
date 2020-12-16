@@ -44,6 +44,53 @@ data class BillingIdentifiers(
                 "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]",
                 "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]"
         )
+
+        val IOS_US_UK = BillingIdentifiers(
+                "//XCUIElementTypeStaticText[contains(@name,'Email address')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Zip code')]",
+                "//XCUIElementTypeStaticText[contains(@name,'ID number')]",
+                "//XCUIElementTypeStaticText[contains(@name,'First Name')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Last Name')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Title')]",
+                "//XCUIElementTypeOther[contains(@value,'Address')]",
+                "//XCUIElementTypeOther[contains(@value,'City')]",
+                "//XCUIElementTypeStaticText[contains(@name,'State')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Mobile phone')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]"
+        )
+
+        val IOS_SE_NO = BillingIdentifiers(
+                "//XCUIElementTypeStaticText[contains(@name,'Email address')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Postal code')]",
+                "//XCUIElementTypeStaticText[contains(@name,'ID number')]",
+                "//XCUIElementTypeStaticText[contains(@name,'First Name')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Last Name')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Title')]",
+                "//XCUIElementTypeOther[contains(@value,'Address')]",
+                "//XCUIElementTypeOther[contains(@value,'City')]",
+                "//XCUIElementTypeStaticText[contains(@name,'State')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Mobile phone')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]"
+        )
+
+
+        val IOS_FI = BillingIdentifiers(
+                "//XCUIElementTypeStaticText[contains(@name,'Email address')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Postcode')]",
+                "//XCUIElementTypeStaticText[contains(@name,'ID number')]",
+                "//XCUIElementTypeStaticText[contains(@name,'First Name')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Last Name')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Title')]",
+                "//XCUIElementTypeOther[contains(@value,'Address')]",
+                "//XCUIElementTypeOther[contains(@value,'Town or city')]",
+                "//XCUIElementTypeStaticText[contains(@name,'State')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Mobile phone')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]",
+                "//XCUIElementTypeStaticText[contains(@name,'Date of Birth')]"
+        )
+
     }
 
 }

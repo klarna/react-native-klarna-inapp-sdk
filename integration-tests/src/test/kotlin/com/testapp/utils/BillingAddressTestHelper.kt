@@ -9,6 +9,7 @@ internal object BillingAddressTestHelper {
 
     fun getBillingInfoSE() =
             createBillingOptions(
+                    identifiers = getIdentifiers(ios = BillingIdentifiers.IOS_SE_NO),
                     email = "test-user@inapp-test.klarna.com",
                     zipCode = "26030",
                     id = "6104084980",
@@ -21,6 +22,7 @@ internal object BillingAddressTestHelper {
 
     fun getBillingInfoNO() =
             createBillingOptions(
+                    identifiers = getIdentifiers(ios = BillingIdentifiers.IOS_SE_NO),
                     email = "test-user@inapp-test.klarna.com",
                     zipCode = "3730",
                     id = "01087000571",
@@ -33,6 +35,7 @@ internal object BillingAddressTestHelper {
 
     fun getBillingInfoFI() =
             createBillingOptions(
+                    identifiers = getIdentifiers(ios = BillingIdentifiers.IOS_FI),
                     email = "test-user@inapp-test.klarna.com",
                     zipCode = "28400",
                     id = "280486-573Y",
@@ -45,6 +48,7 @@ internal object BillingAddressTestHelper {
 
     fun getBillingInfoUS() =
             createBillingOptions(
+                    identifiers = getIdentifiers(ios = BillingIdentifiers.IOS_US_UK),
                     email = "test-user@inapp-test.klarna.com",
                     zipCode = "01103",
                     firstName = "Marta",
@@ -57,6 +61,7 @@ internal object BillingAddressTestHelper {
 
     fun getBillingInfoUK() =
             createBillingOptions(
+                    identifiers = getIdentifiers(ios = BillingIdentifiers.IOS_US_UK),
                     email = "test-user@inapp-test.klarna.com",
                     zipCode = "CA10 0WE",
                     firstName = "Helen",
@@ -95,6 +100,7 @@ internal object BillingAddressTestHelper {
             )
 
     private fun createBillingOptions(
+            identifiers: BillingIdentifiers = getIdentifiers(),
             email: String,
             zipCode: String,
             id: String? = null,
@@ -107,7 +113,6 @@ internal object BillingAddressTestHelper {
             phone: String,
             birthday: String? = null
     ): LinkedHashMap<String, String?> {
-        val identifiers = getIdentifiers()
         return linkedMapOf(
                 identifiers.email to email,
                 identifiers.zipCode to zipCode,
@@ -134,11 +139,11 @@ internal object BillingAddressTestHelper {
         return options.apply { this[identifiers.email] = email }
     }
 
-    fun getIdentifiers(): BillingIdentifiers {
+    fun getIdentifiers(android: BillingIdentifiers = BillingIdentifiers.ANDROID, ios: BillingIdentifiers = BillingIdentifiers.IOS): BillingIdentifiers {
         return if (BaseAppiumTest.driver is AndroidDriver) {
-            BillingIdentifiers.ANDROID
+            android
         } else {
-            BillingIdentifiers.IOS
+            ios
         }
     }
 }

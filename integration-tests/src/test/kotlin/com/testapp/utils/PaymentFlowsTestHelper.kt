@@ -63,7 +63,6 @@ internal object PaymentFlowsTestHelper {
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
         element.apply {
             if (isEnabled || driver is IOSDriver) {
-                driver.deleteAll(this)
                 DriverUtils.getWaiter(BaseAppiumTest.driver)
                         .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
@@ -82,12 +81,12 @@ internal object PaymentFlowsTestHelper {
         var submitButtonBy: By? = null
 
         try {
-            driver.findElement(original).click()
+            DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(original)).click()
             submitButtonBy = original
         } catch (t: Throwable) {
             try {
                 alternative?.let {
-                    driver.findElement(it).click()
+                    DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(it)).click()
                     submitButtonBy = it
                 }
             } catch (t: Throwable) {
