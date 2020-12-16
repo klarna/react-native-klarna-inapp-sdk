@@ -3,10 +3,13 @@ package com.testapp.tests.payments.flows.threeds
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.base.RetryRule
+import com.testapp.extensions.hideKeyboardCompat
+import com.testapp.extensions.tapElementCenter
 import com.testapp.network.KlarnaApi
 import com.testapp.tests.payments.flows.paynow.TestSliceItUK
 import com.testapp.utils.*
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.ios.IOSElement
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Rule
@@ -47,41 +50,57 @@ internal class Test3DS : BaseAppiumTest() {
         }
         val token = session.client_token
         initLoadSDK(token, PaymentCategory.PAY_NOW.value)
-        DriverUtils.switchContextToWebView(driver)
 
-        val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
-        mainWindow?.let {
-            driver.switchTo().window(it)
-        } ?: Assert.fail("Main window wasn't found")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
+        if (android()) {
+            DriverUtils.switchContextToWebView(driver)
+
+            val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
+            mainWindow?.let {
+                driver.switchTo().window(it)
+            } ?: Assert.fail("Main window wasn't found")
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
+        } else {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            val card: IOSElement = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
+            card.tapElementCenter()
+            DriverUtils.wait(driver, 5)
+        }
+
         PaymentFlowsTestHelper.fillCardInfo(driver, true)
-        // switch to native context
         DriverUtils.switchContextToNative(driver)
-        driver.hideKeyboard()
+
+        driver.hideKeyboardCompat()
         PaymentFlowsTestHelper.dismissConsole()
+
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}")).click()
         } catch (t: Throwable) {
             (driver as? AndroidDriver<*>)?.let { driver ->
                 driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
-                DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}"))).click()
             }
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}"))).click()
         }
         // enter billing address
         val billing = BillingAddressTestHelper.getBillingInfoDE()
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
 
-        val window = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
-        window?.let {
-            driver.switchTo().window(it)
-        } ?: Assert.fail("3DS window wasn't found")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
-        val frame = DriverUtils.waitForPresence(driver, By.id("3ds-dialog-iframe"))
-        driver.switchTo().frame(frame)
-        val actionSelector = if (success) By.id("success") else By.id("rejected")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.and(ExpectedConditions.visibilityOfElementLocated(actionSelector), ExpectedConditions.elementToBeClickable(actionSelector)))
+        val actionSelector: By
+        if (android()) {
+            val window = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
+            window?.let {
+                driver.switchTo().window(it)
+            } ?: Assert.fail("3DS window wasn't found")
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+            val frame = DriverUtils.waitForPresence(driver, By.id("3ds-dialog-iframe"))
+            driver.switchTo().frame(frame)
+            actionSelector = if (success) By.id("success") else By.id("rejected")
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.and(ExpectedConditions.visibilityOfElementLocated(actionSelector), ExpectedConditions.elementToBeClickable(actionSelector)))
+        } else {
+            actionSelector = if (success) By.xpath("//XCUIElementTypeButton[@name='Success']") else By.xpath("//XCUIElementTypeButton[@name='3DS failure']")
+            DriverUtils.wait(driver, 5)
+        }
 
         var retryCount = 0
         var retries = 5
@@ -101,15 +120,20 @@ internal class Test3DS : BaseAppiumTest() {
 
         if (success) {
             DriverUtils.switchContextToNative(driver)
-            var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
+            val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
             PaymentFlowsTestHelper.checkAuthorizeResponse(response, true)
         } else {
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
-            val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
-            val refusedText =
-                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
-            with(refusedText.text.toLowerCase()) {
-                assert(this.contains("sorry") || this.contains("unfortunately"))
+            if (android()) {
+                DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+                val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
+                val refusedText =
+                        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
+                with(refusedText.text.toLowerCase()) {
+                    assert(this.contains("sorry") || this.contains("unfortunately"))
+                }
+            } else {
+                val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
+                PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }
         }
     }
