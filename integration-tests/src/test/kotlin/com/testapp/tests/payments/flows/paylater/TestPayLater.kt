@@ -123,11 +123,16 @@ internal class TestPayLater : BaseAppiumTest() {
                     assert(this.contains("sorry") || this.contains("unfortunately"))
                 }
             } else {
-                val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
-                val changePayment = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
-                (changePayment as MobileElement).tapElementCenter()
+                try {
+                    val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
+                    val changePayment = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
+                    (changePayment as MobileElement).tapElementCenter()
+                } catch (t:Throwable) {
+                    val closeBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Close')]")
+                    val close = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(closeBy))
+                    (close as MobileElement).tapElementCenter()
+                }
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_LATER)
-
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }
         } else{
