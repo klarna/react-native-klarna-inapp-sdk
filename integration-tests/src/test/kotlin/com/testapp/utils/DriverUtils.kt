@@ -77,7 +77,7 @@ internal object DriverUtils {
             platform: Platform
     ): AppiumDriver<MobileElement> {
         val caps = commonCapabilities
-        caps.setCapability("browserstack.local", "true")
+//        caps.setCapability("browserstack.local", "true")
         caps.setCapability("browserstack.debug", "true")
         caps.setCapability("browserstack.networkLogs", "true")
         caps.setCapability("browserstack.appiumLogs", "true")
