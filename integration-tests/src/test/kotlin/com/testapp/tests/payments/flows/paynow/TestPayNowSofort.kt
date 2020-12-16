@@ -27,7 +27,7 @@ import org.openqa.selenium.Point
 import org.openqa.selenium.interactions.touch.SingleTapAction
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal class TestPayNowSofort : BaseAppiumTest(){
+internal class TestPayNowSofort : BaseAppiumTest() {
     companion object {
 
         @JvmStatic
@@ -52,9 +52,9 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         testPayNowSofort(false)
     }
 
-    private fun testPayNowSofort(success: Boolean){
+    private fun testPayNowSofort(success: Boolean) {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
-        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_NOW.value)){
+        if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_NOW.value)) {
             return
         }
         val token = session.client_token
@@ -76,9 +76,9 @@ internal class TestPayNowSofort : BaseAppiumTest(){
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
             val card: IOSElement = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
             card.tapElementCenter()
+            DriverUtils.wait(driver, 5)
         }
 
-        DriverUtils.wait(driver, 2)
         PaymentFlowsTestHelper.fillCardInfo(driver)
 
         DriverUtils.switchContextToNative(driver)
@@ -97,12 +97,12 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         }
 
         val billing = BillingAddressTestHelper.getBillingInfoDE()
-        if(!success) {
+        if (!success) {
             BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
         }
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
 
-        if(!success) {
+        if (!success) {
             if (android()) {
                 val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
                 val refusedText =
