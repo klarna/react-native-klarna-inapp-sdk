@@ -6,7 +6,6 @@ import com.testapp.base.RetryRule
 import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.extensions.tapElementCenter
 import com.testapp.network.KlarnaApi
-import com.testapp.tests.payments.flows.paynow.TestSliceItUK
 import com.testapp.utils.*
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSElement

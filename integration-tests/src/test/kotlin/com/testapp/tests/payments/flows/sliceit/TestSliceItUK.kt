@@ -1,4 +1,4 @@
-package com.testapp.tests.payments.flows.paynow
+package com.testapp.tests.payments.flows.sliceit
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory

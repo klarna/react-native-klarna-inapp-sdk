@@ -109,6 +109,7 @@ export default class App extends Component {
               {this.actionButtons(paymentMethod)}
               <Text
                 style={{ color: 'gray' }}
+                {...testProps('state_' + paymentMethod)}
                 testID={'state_' + paymentMethod}>
                 {this.state[paymentMethod]}
                 </Text>
