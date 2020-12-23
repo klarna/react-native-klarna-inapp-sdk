@@ -89,7 +89,7 @@ internal class Test3DS : BaseAppiumTest() {
                 break
             } catch (t: Throwable) {
                 if (retryCount < retries - 1) {
-                    DriverUtils.wait(driver, 1)
+                    DriverUtils.wait(driver, 3)
                     retryCount++
                 } else {
                     throw t

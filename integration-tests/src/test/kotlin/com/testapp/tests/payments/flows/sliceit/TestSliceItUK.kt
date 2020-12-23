@@ -11,14 +11,17 @@ import com.testapp.utils.PaymentFlowsTestHelper
 import com.testapp.utils.SessionHelper
 import com.testapp.utils.WebViewTestHelper
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.android.nativekey.AndroidKey
+import io.appium.java_client.android.nativekey.KeyEvent
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.openqa.selenium.By
+import org.openqa.selenium.Keys
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal class TestSliceItUK : BaseAppiumTest(){
+internal class TestSliceItUK : BaseAppiumTest() {
     companion object {
 
         @JvmStatic
@@ -43,9 +46,9 @@ internal class TestSliceItUK : BaseAppiumTest(){
         testSliceItUK(false)
     }
 
-    private fun testSliceItUK(success: Boolean){
+    private fun testSliceItUK(success: Boolean) {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestUK())?.session
-        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.SLICE_IT.value)){
+        if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.SLICE_IT.value)) {
             return
         }
         val token = session.client_token
@@ -58,9 +61,9 @@ internal class TestSliceItUK : BaseAppiumTest(){
         } ?: Assert.fail("Main window wasn't found")
         DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
 
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-later-slice-it-slice-it-by-card-card\"]/iframe")))
-
-        PaymentFlowsTestHelper.fillCardInfo(driver)
+        DriverUtils.waitForPresence(driver, By.id("scheme-payment-selector"))
+//
+//        PaymentFlowsTestHelper.fillCardInfo(driver)
 
         DriverUtils.switchContextToNative(driver)
 
@@ -70,24 +73,29 @@ internal class TestSliceItUK : BaseAppiumTest(){
 
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}")).click()
-        } catch (t: Throwable){
+        } catch (t: Throwable) {
             driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.SLICE_IT.value}\"))")
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}"))).click()
         }
 
         val billing = BillingAddressTestHelper.getBillingInfoUK()
-        if(!success) {
+        if (!success) {
             BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
         }
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
 
-        if(!success) {
-            val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
-            val refusedText =
-                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
-            with(refusedText.text.toLowerCase()) {
-                assert(this.contains("sorry") || this.contains("unfortunately"))
-            }
+        PaymentFlowsTestHelper.fillSmsCode(driver)
+
+        val key = BillingAddressTestHelper.BIRTHDAY_KEY_2
+        val value = billing[key]
+        PaymentFlowsTestHelper.fillInfo(driver, key, value)
+        PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//button[contains(@id,'purchase-approval-form-continue-button')]"), By.xpath("//div[contains(@id,'purchase-approval__footer-button-wrapper')]"))
+
+        if (!success) {
+            DriverUtils.waitForPresence(
+                    driver,
+                    By.xpath("//h1[contains(text(),'Your application was declined')]")
+            )
         } else {
             DriverUtils.switchContextToNative(driver)
             var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
