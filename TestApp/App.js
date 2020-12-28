@@ -109,8 +109,7 @@ export default class App extends Component {
               {this.actionButtons(paymentMethod)}
               <Text
                 style={{ color: 'gray' }}
-                {...testProps('state_' + paymentMethod)}
-                testID={'state_' + paymentMethod}>
+                {...testProps('state_' + paymentMethod)}>
                 {this.state[paymentMethod]}
                 </Text>
             </View>
@@ -183,5 +182,7 @@ const styles = StyleSheet.create({
 });
 
 export function testProps (id) {
-  return {testID: id, accessibilityLabel: id};
+  return Platform.OS === 'android'
+    ? { testID: id, accessibilityLabel: id }
+    : { testID: id }
 }
