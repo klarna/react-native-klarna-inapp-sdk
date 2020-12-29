@@ -131,6 +131,9 @@ internal class Test3DS : BaseAppiumTest() {
                     assert(this.contains("sorry") || this.contains("unfortunately"))
                 }
             } else {
+                try {
+                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeButton[@name='Close']"))).click()
+                } catch (t: Throwable){}
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }
