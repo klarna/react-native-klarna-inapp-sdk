@@ -4,6 +4,7 @@ import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.base.RetryRule
 import com.testapp.extensions.hideKeyboardCompat
+import com.testapp.extensions.tapElementCenter
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.BillingAddressTestHelper
 import com.testapp.utils.ByRnId
@@ -11,6 +12,7 @@ import com.testapp.utils.DriverUtils
 import com.testapp.utils.PaymentFlowsTestHelper
 import com.testapp.utils.SessionHelper
 import com.testapp.utils.WebViewTestHelper
+import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.junit.BeforeClass
@@ -96,7 +98,8 @@ internal class TestSliceItUK : BaseAppiumTest() {
         if (android()) {
             PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//button[contains(@id,'purchase-approval-form-continue-button')]"), By.xpath("//div[contains(@id,'purchase-approval__footer-button-wrapper')]"))
         } else {
-            PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"), null)
+            driver.hideKeyboardCompat()
+            PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]"), null)
         }
 
         if (!success) {
@@ -106,6 +109,9 @@ internal class TestSliceItUK : BaseAppiumTest() {
                         By.xpath("//h1[contains(text(),'Your application was declined')]")
                 )
             } else {
+                val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
+                val changePayment = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
+                (changePayment as MobileElement).tapElementCenter()
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.SLICE_IT)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }

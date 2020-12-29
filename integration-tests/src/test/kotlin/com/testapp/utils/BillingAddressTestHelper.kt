@@ -61,7 +61,7 @@ internal object BillingAddressTestHelper {
 
     fun getBillingInfoUK() =
             createBillingOptions(
-                    identifiers = getIdentifiers(ios = BillingIdentifiers.IOS_US_UK),
+                    identifiers = getIdentifiers(ios = BillingIdentifiers.IOS_FI),
                     email = "test-user@inapp-test.klarna.com",
                     zipCode = "CA10 0WE",
                     firstName = "Helen",

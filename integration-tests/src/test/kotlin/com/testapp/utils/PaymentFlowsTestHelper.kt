@@ -5,17 +5,18 @@ import com.testapp.base.PaymentCategory
 import com.testapp.constants.AppiumTestConstants
 import com.testapp.extensions.*
 import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileBy
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.nativekey.AndroidKey
 import io.appium.java_client.android.nativekey.KeyEvent
 import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.ios.IOSElement
-import org.aspectj.weaver.ast.And
 import org.json.JSONObject
 import org.junit.Assert
-import org.openqa.selenium.*
+import org.openqa.selenium.By
+import org.openqa.selenium.StaleElementReferenceException
+import org.openqa.selenium.TimeoutException
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal object PaymentFlowsTestHelper {
@@ -25,17 +26,20 @@ internal object PaymentFlowsTestHelper {
             DriverUtils.switchContextToWebView(BaseAppiumTest.driver)
             // switch to klarna payment billing address iframe
             val billingWindow =
-                    WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
+                WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
             billingWindow?.let {
                 driver.switchTo().window(it)
             } ?: Assert.fail("Billing address window wasn't found")
             DriverUtils.getWaiter(driver)
-                    .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
         }
 
         for ((key, value) in billingInfo) {
             value?.let {
                 try {
+                    if (driver is IOSDriver) {
+                        driver.scroll()
+                    }
                     fillInfo(driver, key, value)
                     if (driver is AndroidDriver) {
                         driver.pressKey(KeyEvent(AndroidKey.ENTER))
@@ -51,21 +55,33 @@ internal object PaymentFlowsTestHelper {
         }
 
         if (driver is AndroidDriver) {
-            submitAndConfirm(driver, By.id("identification-dialog__footer-button-wrapper"), By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"))
+            submitAndConfirm(
+                driver,
+                By.id("identification-dialog__footer-button-wrapper"),
+                By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper")
+            )
         } else {
-            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Submit')]"), By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"))
-            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"), By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"))
-            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"), null)
+            submitAndConfirm(
+                driver,
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Submit')]"),
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]")
+            )
+            submitAndConfirm(
+                driver,
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"),
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]")
+            )
+            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"), By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]"))
         }
     }
 
     fun fillInfo(driver: AppiumDriver<MobileElement>, key: String, value: String?) {
-        val element =
-                DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
+        val element = DriverUtils.getWaiter(driver, 5)
+            .until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
         element.apply {
             if (isEnabled || driver is IOSDriver) {
                 DriverUtils.getWaiter(BaseAppiumTest.driver)
-                        .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
+                    .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
                     tapElementCenter()
                     if (driver.isKeyboardVisible()) {
@@ -168,11 +184,13 @@ internal object PaymentFlowsTestHelper {
     fun fillCardInfo(driver: AppiumDriver<MobileElement>, is3ds: Boolean = false) {
         if (driver is AndroidDriver) {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("cardNumber")))
-            driver.findElementById("cardNumber").sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
+            driver.findElementById("cardNumber")
+                .sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
             driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
             driver.findElementById("securityCode").sendKeys(AppiumTestConstants.CARD_CVV)
         } else {
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")))
+            DriverUtils.getWaiter(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")))
             driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")).apply {
                 tapElementCenter()
                 sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
@@ -191,12 +209,25 @@ internal object PaymentFlowsTestHelper {
     fun fillSmsCode(driver: AppiumDriver<MobileElement>) {
         // if there is authentication for sms code
         try {
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("authentication-ui")))
-            DriverUtils.getWaiter(driver)
+            if (driver is AndroidDriver) {
+                DriverUtils.getWaiter(driver)
+                    .until(ExpectedConditions.presenceOfElementLocated(By.id("authentication-ui")))
+                DriverUtils.getWaiter(driver)
                     .until(ExpectedConditions.presenceOfElementLocated(By.id("otp-intro-send-button")))
                     .click()
-            DriverUtils.getWaiter(driver)
-                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@type='tel']"))).sendKeys("123456")
+                DriverUtils.getWaiter(driver)
+                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@type='tel']")))
+                    .sendKeys("123456")
+            } else {
+                val otpButtonBy = By.xpath("//XCUIElementTypeButton[contains(@name,'code')]")
+                DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpButtonBy)).click()
+                val otpInputBy = By.xpath("//XCUIElementTypeTextField")
+                DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpInputBy)).apply {
+                    (this as MobileElement).longPressElementCenter()
+                    sendKeys("123456")
+                    driver.hideKeyboardCompat()
+                }
+            }
             DriverUtils.wait(driver, 2)
         } catch (t: Throwable) {
             // ignore
