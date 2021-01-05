@@ -1,8 +1,10 @@
-package com.testapp.tests.payments.flows.paynow
+package com.testapp.tests.payments.flows.sliceit
 
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.base.RetryRule
+import com.testapp.extensions.hideKeyboardCompat
+import com.testapp.extensions.tapElementCenter
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.BillingAddressTestHelper
 import com.testapp.utils.ByRnId
@@ -10,15 +12,13 @@ import com.testapp.utils.DriverUtils
 import com.testapp.utils.PaymentFlowsTestHelper
 import com.testapp.utils.SessionHelper
 import com.testapp.utils.WebViewTestHelper
+import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
-import io.appium.java_client.android.nativekey.AndroidKey
-import io.appium.java_client.android.nativekey.KeyEvent
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.openqa.selenium.By
-import org.openqa.selenium.Keys
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal class TestSliceItUK : BaseAppiumTest() {
@@ -53,28 +53,34 @@ internal class TestSliceItUK : BaseAppiumTest() {
         }
         val token = session.client_token
         initLoadSDK(token, PaymentCategory.SLICE_IT.value)
-        DriverUtils.switchContextToWebView(driver)
+        if (android()) {
+            DriverUtils.switchContextToWebView(driver)
 
-        val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
-        mainWindow?.let {
-            driver.switchTo().window(it)
-        } ?: Assert.fail("Main window wasn't found")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+            val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
+            mainWindow?.let {
+                driver.switchTo().window(it)
+            } ?: Assert.fail("Main window wasn't found")
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
 
-        DriverUtils.waitForPresence(driver, By.id("scheme-payment-selector"))
+            DriverUtils.waitForPresence(driver, By.id("scheme-payment-selector"))
 //
 //        PaymentFlowsTestHelper.fillCardInfo(driver)
 
-        DriverUtils.switchContextToNative(driver)
+            DriverUtils.switchContextToNative(driver)
+        } else {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+        }
 
-        driver.hideKeyboard()
+        driver.hideKeyboardCompat()
 
         PaymentFlowsTestHelper.dismissConsole()
 
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}")).click()
         } catch (t: Throwable) {
-            driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.SLICE_IT.value}\"))")
+            (driver as? AndroidDriver<*>)?.let { driver ->
+                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.SLICE_IT.value}\"))")
+            }
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}"))).click()
         }
 
@@ -86,19 +92,32 @@ internal class TestSliceItUK : BaseAppiumTest() {
 
         PaymentFlowsTestHelper.fillSmsCode(driver)
 
-        val key = BillingAddressTestHelper.BIRTHDAY_KEY_2
+        val key = BillingAddressTestHelper.getIdentifiers().birthday2
         val value = billing[key]
         PaymentFlowsTestHelper.fillInfo(driver, key, value)
-        PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//button[contains(@id,'purchase-approval-form-continue-button')]"), By.xpath("//div[contains(@id,'purchase-approval__footer-button-wrapper')]"))
+        if (android()) {
+            PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//button[contains(@id,'purchase-approval-form-continue-button')]"), By.xpath("//div[contains(@id,'purchase-approval__footer-button-wrapper')]"))
+        } else {
+            driver.hideKeyboardCompat()
+            PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]"), null)
+        }
 
         if (!success) {
-            DriverUtils.waitForPresence(
-                    driver,
-                    By.xpath("//h1[contains(text(),'Your application was declined')]")
-            )
+            if (android()) {
+                DriverUtils.waitForPresence(
+                        driver,
+                        By.xpath("//h1[contains(text(),'Your application was declined')]")
+                )
+            } else {
+                val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
+                val changePayment = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
+                (changePayment as MobileElement).tapElementCenter()
+                val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.SLICE_IT)
+                PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
+            }
         } else {
             DriverUtils.switchContextToNative(driver)
-            var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
+            val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.SLICE_IT)
 
             PaymentFlowsTestHelper.checkAuthorizeResponse(response, true)
         }

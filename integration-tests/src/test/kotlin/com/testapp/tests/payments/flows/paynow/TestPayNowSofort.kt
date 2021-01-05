@@ -3,6 +3,8 @@ package com.testapp.tests.payments.flows.paynow
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.base.RetryRule
+import com.testapp.extensions.hideKeyboardCompat
+import com.testapp.extensions.tapElementCenter
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.BillingAddressTestHelper
 import com.testapp.utils.ByRnId
@@ -10,15 +12,22 @@ import com.testapp.utils.DriverUtils
 import com.testapp.utils.PaymentFlowsTestHelper
 import com.testapp.utils.SessionHelper
 import com.testapp.utils.WebViewTestHelper
+import io.appium.java_client.MobileElement
+import io.appium.java_client.TouchAction
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.ios.IOSElement
+import io.appium.java_client.ios.IOSTouchAction
+import io.appium.java_client.touch.offset.PointOption.point
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.openqa.selenium.By
+import org.openqa.selenium.Point
+import org.openqa.selenium.interactions.touch.SingleTapAction
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal class TestPayNowSofort : BaseAppiumTest(){
+internal class TestPayNowSofort : BaseAppiumTest() {
     companion object {
 
         @JvmStatic
@@ -43,56 +52,76 @@ internal class TestPayNowSofort : BaseAppiumTest(){
         testPayNowSofort(false)
     }
 
-    private fun testPayNowSofort(success: Boolean){
+    private fun testPayNowSofort(success: Boolean) {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
-        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_NOW.value)){
+        if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_NOW.value)) {
             return
         }
         val token = session.client_token
         initLoadSDK(token, PaymentCategory.PAY_NOW.value)
-        DriverUtils.switchContextToWebView(driver)
 
-        val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
-        mainWindow?.let {
-            driver.switchTo().window(it)
-        } ?: Assert.fail("Main window wasn't found")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+        if (android()) {
+            DriverUtils.switchContextToWebView(driver)
+            val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
+            mainWindow?.let {
+                driver.switchTo().window(it)
+            } ?: Assert.fail("Main window wasn't found")
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
 
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
 
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
+
+        } else {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            val card: IOSElement = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
+            card.tapElementCenter()
+            DriverUtils.wait(driver, 5)
+        }
 
         PaymentFlowsTestHelper.fillCardInfo(driver)
 
         DriverUtils.switchContextToNative(driver)
 
-        driver.hideKeyboard()
+        driver.hideKeyboardCompat()
 
         PaymentFlowsTestHelper.dismissConsole()
 
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}")).click()
-        } catch (t: Throwable){
-            driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
+        } catch (t: Throwable) {
+            (driver as? AndroidDriver<*>)?.let { driver ->
+                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
+            }
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}"))).click()
         }
 
         val billing = BillingAddressTestHelper.getBillingInfoDE()
-        if(!success) {
+        if (!success) {
             BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
         }
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
 
-        if(!success) {
-            val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
-            val refusedText =
-                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
-            with(refusedText.text.toLowerCase()) {
-                assert(this.contains("sorry") || this.contains("unfortunately"))
+        if (!success) {
+            if (android()) {
+                val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
+                val refusedText =
+                        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
+                with(refusedText.text.toLowerCase()) {
+                    assert(this.contains("sorry") || this.contains("unfortunately"))
+                }
+            } else {
+                val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
+                val changePayment = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
+                (changePayment as MobileElement).tapElementCenter()
+                val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
+
+                PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }
+
         } else {
             DriverUtils.switchContextToNative(driver)
-            var response = PaymentFlowsTestHelper.readConsoleMessage(driver, "authToken")?.text
+            val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
 
             PaymentFlowsTestHelper.checkAuthorizeResponse(response, true)
         }

@@ -15,6 +15,11 @@ import { NativeModules } from 'react-native';
 
 export default class App extends Component {
 
+  constructor(props){
+    super(props);
+    this.state = {}
+  }
+
   actionButtons = (paymentMethod) => {
     return (
       <View style={styles.buttonsContainer}>
@@ -62,7 +67,10 @@ export default class App extends Component {
     )
   }
 
-  onEvent = (event) => {
+  onEvent = (event, paymentMethod) => {
+    const newState = this.state;
+    newState[paymentMethod] = JSON.stringify(event.nativeEvent);
+    this.setState(newState)
     window.console.warn(JSON.stringify(event.nativeEvent))
   }
 
@@ -94,11 +102,16 @@ export default class App extends Component {
                 category={paymentMethod}
                 ref={paymentMethod}
                 style={styles.paymentView}
-                onInitialized={this.onEvent}
-                onLoaded={this.onEvent}
-                onAuthorized={this.onEvent}
-                onError={this.onEvent} />
+                onInitialized={(event) => {this.onEvent(event, paymentMethod)}}
+                onLoaded={(event) => {this.onEvent(event, paymentMethod)}}
+                onAuthorized={(event) => {this.onEvent(event, paymentMethod)}}
+                onError={(event) => {this.onEvent(event, paymentMethod)}} />
               {this.actionButtons(paymentMethod)}
+              <Text
+                style={{ color: 'gray' }}
+                {...testProps('state_' + paymentMethod)}>
+                {this.state[paymentMethod]}
+                </Text>
             </View>
           )
         })}
@@ -169,5 +182,7 @@ const styles = StyleSheet.create({
 });
 
 export function testProps (id) {
-  return {testID: id, accessibilityLabel: id};
+  return Platform.OS === 'android'
+    ? { testID: id, accessibilityLabel: id }
+    : { testID: id }
 }

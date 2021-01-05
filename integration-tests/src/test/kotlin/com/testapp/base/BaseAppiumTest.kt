@@ -1,17 +1,17 @@
 package com.testapp.base
 
+import com.testapp.extensions.hideKeyboardCompat
+import com.testapp.extensions.removeWhitespace
 import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
 import com.testapp.utils.DriverUtils.getLocalDriver
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
 import org.junit.*
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal open class BaseAppiumTest {
@@ -21,9 +21,11 @@ internal open class BaseAppiumTest {
 
     companion object {
 
-        internal lateinit var driver: AndroidDriver<MobileElement>
+        internal lateinit var driver: AppiumDriver<MobileElement>
         private var appiumService: AppiumDriverLocalService? = null
         internal var testName: String? = null
+
+        val platform = Platform.getSystemConfiguration()
 
         @JvmStatic
         @BeforeClass
@@ -46,13 +48,14 @@ internal open class BaseAppiumTest {
                         }
                     }
                 }
-                driver = getLocalDriver(appiumService!!)
+                driver = getLocalDriver(appiumService!!, platform)
             } else {
                 try {
                     driver = getBrowserstackDriver(
                             browserstackUsername,
                             browserstackPassword,
-                            testName
+                            testName,
+                            platform
                     )
                 } catch (t: Throwable) {
                     Assume.assumeNoException(t)
@@ -74,16 +77,25 @@ internal open class BaseAppiumTest {
         DriverUtils.switchContextToNative(driver)
     }
 
+    fun android() = platform == Platform.ANDROID
+
+    fun ios() = platform == Platform.IOS
+
     fun initLoadSDK(token: String?, category: String){
         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
-            sendKeys(token)
-            Assert.assertEquals(token, text)
+            val trimmedToken = token?.removeWhitespace()
+            sendKeys(trimmedToken)
+            Assert.assertEquals(trimmedToken, text?.removeWhitespace())
         }
-        DriverUtils.getWaiter(BaseAppiumTest.driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category}"))).click()
+        driver.hideKeyboardCompat()
+        val initButton = DriverUtils.getWaiter(driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category}")))
+        initButton.click()
+        DriverUtils.wait(driver, 1)
+        initButton.click()
         //wait for init response
-        DriverUtils.wait(BaseAppiumTest.driver, 1)
-        BaseAppiumTest.driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
-        DriverUtils.wait(BaseAppiumTest.driver, 1)
-        BaseAppiumTest.driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
+        DriverUtils.wait(driver, 1)
+        driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
+        DriverUtils.wait(driver, 1)
+        driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
     }
 }

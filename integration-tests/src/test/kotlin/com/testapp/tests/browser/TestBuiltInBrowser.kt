@@ -33,94 +33,112 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
     @Test
     fun `test if the terms links open the built-in browser - pay later uk`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestUK())?.session
-        testLinks(session, PaymentCategory.PAY_LATER, By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.PAY_LATER, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - pay later sweden`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestSE())?.session
-        testLinks(session, PaymentCategory.PAY_LATER, By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.PAY_LATER, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - pay later germany`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
-        testLinks(session, PaymentCategory.PAY_LATER, By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.PAY_LATER, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - pay later norway`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestNO())?.session
-        testLinks(session, PaymentCategory.PAY_LATER, By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.PAY_LATER, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - pay later finland`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestFI())?.session
-        testLinks(session, PaymentCategory.PAY_LATER, By.xpath("//*[@id=\"pay-later-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.PAY_LATER, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - pay later austria`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestAT())?.session
-        testLinks(session, PaymentCategory.PAY_LATER, By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.PAY_LATER, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - pay now sweden`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestSE())?.session
-        testLinks(session, PaymentCategory.PAY_NOW, By.xpath("//*[@id=\"url-user_terms\"]"))
+        val by = if (android()) By.xpath("//*[@id=\"url-user_terms\"]") else By.xpath("//XCUIElementTypeLink[@name='Klarna Services Terms']")
+        testLinks(session, PaymentCategory.PAY_NOW, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - pay now germany`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
-        testLinks(session, PaymentCategory.PAY_NOW, By.xpath("//*[@id=\"url-user_terms\"]"))
+        val by = if (android()) By.xpath("//*[@id=\"url-user_terms\"]") else By.xpath("//XCUIElementTypeLink[@name='Klarna Services Terms']")
+        testLinks(session, PaymentCategory.PAY_NOW, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - slice it uk`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestUK())?.session
-        testLinks(session, PaymentCategory.SLICE_IT, By.xpath("//*[@id=\"pay-later-slice-it-slice-it-by-card-privacy-notice\"]/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"pay-later-slice-it-slice-it-by-card-privacy-notice\"]/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.SLICE_IT, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - slice it sweden`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestSE())?.session
-        testLinks(session, PaymentCategory.SLICE_IT, By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.SLICE_IT, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - slice it germany`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
-        testLinks(session, PaymentCategory.SLICE_IT, By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.SLICE_IT, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - slice it norway`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestNO())?.session
-        testLinks(session, PaymentCategory.SLICE_IT, By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.SLICE_IT, by)
     }
 
     @Test
     fun `test if the terms links open the built-in browser - slice it finland`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestFI())?.session
-        testLinks(session, PaymentCategory.SLICE_IT, By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]"))
+        val by = if (android()) By.xpath("//*[@id=\"base-account-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.SLICE_IT, by)
     }
 
     private fun testLinks(session: Session?, category: PaymentCategory, linkLocator: By) {
 
-        if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(category.value)){
+        if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(category.value)) {
             return
         }
         val token = session.client_token
         initLoadSDK(token, category.value)
-        DriverUtils.switchContextToWebView(driver)
-        val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
-        mainWindow?.let {
-            driver.switchTo().window(it)
-        } ?: Assert.fail("Main window wasn't found")
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+        if (android()) {
+            DriverUtils.switchContextToWebView(driver)
+            val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
+            mainWindow?.let {
+                driver.switchTo().window(it)
+            } ?: Assert.fail("Main window wasn't found")
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+        } else {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            DriverUtils.wait(driver, 5)
+        }
 
         var tries = 0
         var openedLink = false
@@ -130,12 +148,18 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
                 val links = DriverUtils.getWaiter(driver)
                         .until(ExpectedConditions.presenceOfAllElementsLocatedBy(linkLocator)).filter { !it.text.isNullOrEmpty() }
                 links.first().click()
-                DriverUtils.waitForActivity(driver, "com.klarna.mobile.sdk.core.natives.browser.ui.InternalBrowserActivity", 2)
-                DriverUtils.switchContextToNative(driver)
-                driver.findElement(MobileBy.id("closeIcon")).click()
-                DriverUtils.switchContextToWebView(driver)
+                if (android()) {
+                    DriverUtils.waitForActivity(driver, "com.klarna.mobile.sdk.core.natives.browser.ui.InternalBrowserActivity", 2)
+                    DriverUtils.switchContextToNative(driver)
+                    driver.findElement(MobileBy.id("closeIcon")).click()
+                    DriverUtils.switchContextToWebView(driver)
+                } else {
+                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeNavigationBar[@name='KlarnaMobileSDK.InAppBrowserView']")))
+                    driver.findElement(By.xpath("//XCUIElementTypeButton[@name='Stop']")).click()
+                }
+
                 openedLink = true
-            } catch (t: Throwable){
+            } catch (t: Throwable) {
                 tries++
             }
         } while (!openedLink && tries < 3)
