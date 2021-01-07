@@ -123,7 +123,7 @@ export default class App extends Component {
 
 let authToken = ''; // set your token here
 
-const paymentMethods = ['pay_now', 'pay_later', 'pay_over_time'];
+const paymentMethods = ['pay_now', 'pay_later', 'pay_over_time', 'pay_in_parts'];
 
 const styles = StyleSheet.create({
   outer: {
