@@ -92,9 +92,8 @@ internal class TestSliceItUK : BaseAppiumTest() {
 
         PaymentFlowsTestHelper.fillSmsCode(driver)
 
-        val key = BillingAddressTestHelper.getIdentifiers().birthday2
-        val value = billing[key]
-        PaymentFlowsTestHelper.fillInfo(driver, key, value)
+        PaymentFlowsTestHelper.fillInfo(driver, billing, billing.identifiers.birthday2, billing.options.birthday)
+
         if (android()) {
             PaymentFlowsTestHelper.submitAndConfirm(driver, By.xpath("//button[contains(@id,'purchase-approval-form-continue-button')]"), By.xpath("//div[contains(@id,'purchase-approval__footer-button-wrapper')]"))
         } else {

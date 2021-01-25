@@ -79,7 +79,7 @@ internal class TestPayLater : BaseAppiumTest() {
         testPayLater(false, session, BillingAddressTestHelper.getBillingInfoDE())
     }
 
-    private fun testPayLater(success: Boolean, session: Session?, billing: LinkedHashMap<String, String?>){
+    private fun testPayLater(success: Boolean, session: Session?, billing: BillingInfo){
         if(session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(PaymentCategory.PAY_LATER.value)){
             return
         }

@@ -21,7 +21,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal object PaymentFlowsTestHelper {
 
-    fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: LinkedHashMap<String, String?>) {
+    fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo) {
         if (driver is AndroidDriver) {
             DriverUtils.switchContextToWebView(BaseAppiumTest.driver)
             // switch to klarna payment billing address iframe
@@ -34,13 +34,13 @@ internal object PaymentFlowsTestHelper {
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
         }
 
-        for ((key, value) in billingInfo) {
+        for ((key, value) in billingInfo.linkedMap()) {
             value?.let {
                 try {
                     if (driver is IOSDriver) {
                         driver.scroll()
                     }
-                    fillInfo(driver, key, value)
+                    fillInfo(driver, billingInfo, key, value)
                     if (driver is AndroidDriver) {
                         driver.pressKey(KeyEvent(AndroidKey.ENTER))
                     } else {
@@ -75,12 +75,12 @@ internal object PaymentFlowsTestHelper {
         }
     }
 
-    fun fillInfo(driver: AppiumDriver<MobileElement>, key: String, value: String?) {
+    fun fillInfo(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo, key: String, value: String?) {
         val element = DriverUtils.getWaiter(driver, 5)
             .until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
         element.apply {
             if (isEnabled || driver is IOSDriver) {
-                DriverUtils.getWaiter(BaseAppiumTest.driver)
+                DriverUtils.getWaiter(driver)
                     .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
                     tapElementCenter()
@@ -88,6 +88,12 @@ internal object PaymentFlowsTestHelper {
                         sendKeys(value)
                     }
                 } else {
+                    if (billingInfo.identifiers.title == key) {
+                        DriverUtils.getWaiter(driver)
+                            .until(ExpectedConditions.presenceOfElementLocated(
+                                By.xpath("$key//option[@label=\"${value}\"]"))
+                            ).click()
+                    }
                     sendKeys(value)
                 }
             }
