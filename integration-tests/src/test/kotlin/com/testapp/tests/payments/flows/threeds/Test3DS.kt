@@ -59,7 +59,7 @@ internal class Test3DS : BaseAppiumTest() {
             } ?: Assert.fail("Main window wasn't found")
             DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]//iframe")))
         } else {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
             val card: IOSElement = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
@@ -109,7 +109,7 @@ internal class Test3DS : BaseAppiumTest() {
                 break
             } catch (t: Throwable) {
                 if (retryCount < retries - 1) {
-                    DriverUtils.wait(driver, 3)
+                    DriverUtils.wait(driver, 5)
                     retryCount++
                 } else {
                     throw t

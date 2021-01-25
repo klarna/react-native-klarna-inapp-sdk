@@ -70,7 +70,7 @@ internal class TestPayNowSofort : BaseAppiumTest() {
 
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
 
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]/iframe")))
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]//iframe")))
 
         } else {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
