@@ -71,7 +71,11 @@ internal object PaymentFlowsTestHelper {
                 By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"),
                 By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]")
             )
-            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"), By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]"))
+            submitAndConfirm(
+                driver,
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"),
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]")
+            )
         }
     }
 
@@ -84,14 +88,36 @@ internal object PaymentFlowsTestHelper {
                     .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
                     tapElementCenter()
+                    DriverUtils.wait(driver, 5)
+
+                    if (billingInfo.identifiers.title == key) {
+                        DriverUtils.getWaiter(driver)
+                            .until(
+                                ExpectedConditions.presenceOfElementLocated(
+                                    By.xpath("//XCUIElementTypePickerWheel")
+                                )
+                            ).sendKeys(value)
+                        try {
+                            DriverUtils.getWaiter(driver)
+                                .until(
+                                    ExpectedConditions.presenceOfElementLocated(
+                                        By.xpath("//XCUIElementTypeButton[@name='Done']")
+                                    )
+                                ).click()
+                        } catch (t: Throwable) {
+
+                        }
+                    }
                     if (driver.isKeyboardVisible()) {
                         sendKeys(value)
                     }
                 } else {
                     if (billingInfo.identifiers.title == key) {
                         DriverUtils.getWaiter(driver)
-                            .until(ExpectedConditions.presenceOfElementLocated(
-                                By.xpath("$key//option[@label=\"${value}\"]"))
+                            .until(
+                                ExpectedConditions.presenceOfElementLocated(
+                                    By.xpath("$key//option[@label=\"${value}\"]")
+                                )
                             ).click()
                     }
                     sendKeys(value)
