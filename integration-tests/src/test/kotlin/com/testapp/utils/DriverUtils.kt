@@ -74,6 +74,7 @@ internal object DriverUtils {
             username: String,
             password: String,
             testName: String?,
+            buildName: String?,
             platform: Platform
     ): AppiumDriver<MobileElement> {
         val caps = commonCapabilities
@@ -84,6 +85,13 @@ internal object DriverUtils {
         caps.setCapability("browserstack.deviceLogs", "true")
         caps.setCapability("project", "IN-APP RN MOBILE SDK INTEGRATION")
         caps.setCapability("name", testName)
+
+        val buildNameValue = if (buildName.isNullOrEmpty()) {
+            "${ScriptHelper.getGitBranch()}@${ScriptHelper.getGitCommit()}"
+        } else {
+            buildName
+        }
+        caps.setCapability("build", "InApp-RN-SDK/${buildNameValue}/${platform.platformName}")
 
         when (platform) {
             Platform.ANDROID -> {

@@ -38,6 +38,7 @@ internal open class BaseAppiumTest {
 
         val browserstackUsername = System.getProperty("browserstack.username")
         val browserstackPassword = System.getProperty("browserstack.password")
+        val buildName = System.getProperty("build.name")
 
         localAppiumTest = browserstackUsername == null || browserstackPassword == null
         if (localAppiumTest) {
@@ -59,6 +60,7 @@ internal open class BaseAppiumTest {
                     browserstackUsername,
                     browserstackPassword,
                     "${this.javaClass.simpleName} - ${name.methodName}",
+                    buildName,
                     platform
                 )
             } catch (t: Throwable) {

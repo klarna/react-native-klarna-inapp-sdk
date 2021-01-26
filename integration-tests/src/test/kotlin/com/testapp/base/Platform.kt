@@ -8,7 +8,7 @@ enum class Platform(val platformName: String) {
 
     companion object {
         fun getSystemConfiguration(): Platform {
-            return if ("ios".equals(System.getProperty("platform"), ignoreCase = true)) {
+            return if ("ios".equals(System.getProperty("build.platform"), ignoreCase = true)) {
                 IOS
             } else {
                 ANDROID

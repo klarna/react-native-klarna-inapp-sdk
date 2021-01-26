@@ -10,7 +10,8 @@ test {
     // tests will be executed on local Appium test if these properties are not provided
     systemProperty 'browserstack.username', System.getProperty('browserstack.username')
     systemProperty 'browserstack.password', System.getProperty('browserstack.password')
-    systemProperty 'platform', System.getProperty('platform')
+    systemProperty 'build.name', System.getProperty('build.name')
+    systemProperty 'build.platform', System.getProperty('build.platform')
 }
 
 repositories {
