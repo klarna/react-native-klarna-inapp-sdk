@@ -91,7 +91,7 @@ internal object DriverUtils {
         } else {
             buildName
         }
-        caps.setCapability("build", "InApp-RN-SDK/${buildNameValue}/${platform.platformName}")
+        caps.setCapability("build", "InApp-RN-SDK/${buildNameValue}")
 
         when (platform) {
             Platform.ANDROID -> {
