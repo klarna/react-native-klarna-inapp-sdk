@@ -12,90 +12,87 @@ import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
 import org.junit.*
+import org.junit.rules.TestName
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal open class BaseAppiumTest {
 
     protected val retryCount = 2
     protected val ignoreOnFailure = false
+    internal lateinit var driver: AppiumDriver<MobileElement>
+    private var appiumService: AppiumDriverLocalService? = null
 
-    companion object {
+    val platform = Platform.getSystemConfiguration()
 
-        internal lateinit var driver: AppiumDriver<MobileElement>
-        private var appiumService: AppiumDriverLocalService? = null
-        internal var testName: String? = null
+    @Rule
+    @JvmField
+    var retryRule = RetryRule(retryCount, ignoreOnFailure)
 
-        val platform = Platform.getSystemConfiguration()
+    @Rule
+    @JvmField
+    var name: TestName = TestName()
 
-        @JvmStatic
-        @BeforeClass
-        fun setup() {
-            val localAppiumTest: Boolean
+    @Before
+    fun setup() {
+        val localAppiumTest: Boolean
 
-            val browserstackUsername = System.getProperty("browserstack.username")
-            val browserstackPassword = System.getProperty("browserstack.password")
+        val browserstackUsername = System.getProperty("browserstack.username")
+        val browserstackPassword = System.getProperty("browserstack.password")
 
-            localAppiumTest = browserstackUsername == null || browserstackPassword == null
-            if (localAppiumTest) {
-                if (appiumService == null) {
-                    synchronized(AppiumDriverLocalService::class.java) {
-                        if (appiumService == null) {
-                            appiumService =
-                                    AppiumServiceBuilder().withArgument(GeneralServerFlag.LOG_LEVEL, "error").build()
-                                            .apply {
-                                                start()
-                                            }
-                        }
+        localAppiumTest = browserstackUsername == null || browserstackPassword == null
+        if (localAppiumTest) {
+            if (appiumService == null) {
+                synchronized(AppiumDriverLocalService::class.java) {
+                    if (appiumService == null) {
+                        appiumService =
+                            AppiumServiceBuilder().withArgument(GeneralServerFlag.LOG_LEVEL, "error").build()
+                                .apply {
+                                    start()
+                                }
                     }
                 }
-                driver = getLocalDriver(appiumService!!, platform)
-            } else {
-                try {
-                    driver = getBrowserstackDriver(
-                            browserstackUsername,
-                            browserstackPassword,
-                            testName,
-                            platform
-                    )
-                } catch (t: Throwable) {
-                    Assume.assumeNoException(t)
-                }
             }
-        }
-
-        @JvmStatic
-        @AfterClass
-        fun quit() {
-            driver.quit()
+            driver = getLocalDriver(appiumService!!, platform)
+        } else {
+            try {
+                driver = getBrowserstackDriver(
+                    browserstackUsername,
+                    browserstackPassword,
+                    "${this.javaClass.simpleName} - ${name.methodName}",
+                    platform
+                )
+            } catch (t: Throwable) {
+                Assume.assumeNoException(t)
+            }
         }
     }
 
-    @Before
-    fun reset() {
-        DriverUtils.switchContextToNative(driver)
-        driver.launchApp()
-        DriverUtils.switchContextToNative(driver)
+    @After
+    fun quit() {
+        driver.quit()
     }
 
     fun android() = platform == Platform.ANDROID
 
     fun ios() = platform == Platform.IOS
 
-    fun initLoadSDK(token: String?, category: String){
-        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
-            val trimmedToken = token?.removeWhitespace()
-            sendKeys(trimmedToken)
-            Assert.assertEquals(trimmedToken, text?.removeWhitespace())
-        }
+    fun initLoadSDK(token: String?, category: String) {
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
+                val trimmedToken = token?.removeWhitespace()
+                sendKeys(trimmedToken)
+                Assert.assertEquals(trimmedToken, text?.removeWhitespace())
+            }
         driver.hideKeyboardCompat()
-        val initButton = DriverUtils.getWaiter(driver).until(ExpectedConditions.elementToBeClickable(ByRnId(driver,"initButton_${category}")))
+        val initButton = DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "initButton_${category}")))
         initButton.click()
         DriverUtils.wait(driver, 1)
         initButton.click()
         //wait for init response
         DriverUtils.wait(driver, 1)
-        driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
+        driver.findElement(ByRnId(driver, "loadButton_${category}")).click()
         DriverUtils.wait(driver, 1)
-        driver.findElement(ByRnId(driver,"loadButton_${category}")).click()
+        driver.findElement(ByRnId(driver, "loadButton_${category}")).click()
     }
 }

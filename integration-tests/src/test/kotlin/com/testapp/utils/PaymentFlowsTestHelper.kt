@@ -1,6 +1,5 @@
 package com.testapp.utils
 
-import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.constants.AppiumTestConstants
 import com.testapp.extensions.*
@@ -23,7 +22,7 @@ internal object PaymentFlowsTestHelper {
 
     fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo) {
         if (driver is AndroidDriver) {
-            DriverUtils.switchContextToWebView(BaseAppiumTest.driver)
+            DriverUtils.switchContextToWebView(driver)
             // switch to klarna payment billing address iframe
             val billingWindow =
                 WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
@@ -87,7 +86,7 @@ internal object PaymentFlowsTestHelper {
                 DriverUtils.getWaiter(driver)
                     .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
-                    tapElementCenter()
+                    tapElementCenter(driver)
                     DriverUtils.wait(driver, 5)
 
                     if (billingInfo.identifiers.title == key) {
@@ -162,7 +161,7 @@ internal object PaymentFlowsTestHelper {
         } while (confirmPresent && retries > 0)
     }
 
-    fun readConsoleMessage(driver: AppiumDriver<MobileElement>, containText: String): WebElement? {
+    fun readConsoleMessage(driver: AppiumDriver<*>, containText: String): WebElement? {
         val by = if (driver is AndroidDriver) {
             By.xpath("//android.widget.TextView[contains(@text, '$containText')]")
         } else {
@@ -173,7 +172,7 @@ internal object PaymentFlowsTestHelper {
 
     fun readStateMessage(driver: AppiumDriver<MobileElement>, paymentCategory: PaymentCategory): String? {
         val id = "state_${paymentCategory.value}"
-        val by = ByRnId(BaseAppiumTest.driver, id)
+        val by = ByRnId(driver, id)
         val stateLabel: WebElement = try {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
         } catch (t: Throwable) {
@@ -224,15 +223,15 @@ internal object PaymentFlowsTestHelper {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")))
             driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")).apply {
-                tapElementCenter()
+                tapElementCenter(driver)
                 sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
             }
             driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='MM/YY']")).apply {
-                tapElementCenter()
+                tapElementCenter(driver)
                 sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
             }
             driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='CVC']")).apply {
-                tapElementCenter()
+                tapElementCenter(driver)
                 sendKeys(AppiumTestConstants.CARD_CVV)
             }
         }
@@ -255,7 +254,7 @@ internal object PaymentFlowsTestHelper {
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpButtonBy)).click()
                 val otpInputBy = By.xpath("//XCUIElementTypeTextField")
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpInputBy)).apply {
-                    (this as MobileElement).longPressElementCenter()
+                    (this as MobileElement).longPressElementCenter(driver)
                     sendKeys("123456")
                     driver.hideKeyboardCompat()
                 }
@@ -266,9 +265,9 @@ internal object PaymentFlowsTestHelper {
         }
     }
 
-    fun dismissConsole() {
+    fun dismissConsole(driver: AppiumDriver<*>) {
         try {
-            readConsoleMessage(BaseAppiumTest.driver, "Dismiss All")?.click()
+            readConsoleMessage(driver, "Dismiss All")?.click()
         } catch (t: Throwable) {
         }
     }

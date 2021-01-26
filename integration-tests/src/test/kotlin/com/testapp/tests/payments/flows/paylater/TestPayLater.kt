@@ -18,19 +18,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal class TestPayLater : BaseAppiumTest() {
 
-    companion object {
-        @JvmStatic
-        @BeforeClass
-        fun setup() {
-            testName = TestPayLater::class.java.simpleName
-            BaseAppiumTest.setup()
-        }
-    }
-
-    @Rule
-    @JvmField
-    var retryRule = RetryRule(retryCount, ignoreOnFailure)
-
     @Test
     fun `test payment pay later sweden successful flow`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestSE())?.session
@@ -98,7 +85,7 @@ internal class TestPayLater : BaseAppiumTest() {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
         }
 
-        PaymentFlowsTestHelper.dismissConsole()
+        PaymentFlowsTestHelper.dismissConsole(driver)
 
         try {
             driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}")).click()
@@ -126,11 +113,11 @@ internal class TestPayLater : BaseAppiumTest() {
                 try {
                     val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
                     val changePayment = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
-                    (changePayment as MobileElement).tapElementCenter()
+                    (changePayment as MobileElement).tapElementCenter(driver)
                 } catch (t:Throwable) {
                     val closeBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Close')]")
                     val close = DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(closeBy))
-                    (close as MobileElement).tapElementCenter()
+                    (close as MobileElement).tapElementCenter(driver)
                 }
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_LATER)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)

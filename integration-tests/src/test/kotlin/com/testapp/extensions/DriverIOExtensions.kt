@@ -43,7 +43,7 @@ fun AppiumDriver<*>.isKeyboardVisible(): Boolean {
 
 fun AppiumDriver<*>.selectAll(element: WebElement) {
     if (element is IOSElement) {
-        element.longPressElementCenter()
+        element.longPressElementCenter(this)
         try {
             findElement(By.xpath("//XCUIElementTypeMenuItem[@name=\"Select All\"]")).click()
         } catch (t: Throwable) {

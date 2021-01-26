@@ -1,7 +1,6 @@
 package com.testapp.utils
 
-import com.testapp.base.BaseAppiumTest
-import io.appium.java_client.android.AndroidDriver
+import com.testapp.base.Platform
 
 internal object BillingAddressTestHelper {
 
@@ -133,10 +132,9 @@ internal object BillingAddressTestHelper {
         android: BillingIdentifiers = BillingIdentifiers.ANDROID,
         ios: BillingIdentifiers = BillingIdentifiers.IOS
     ): BillingIdentifiers {
-        return if (BaseAppiumTest.driver is AndroidDriver) {
-            android
-        } else {
-            ios
+        return when (Platform.getSystemConfiguration()) {
+            Platform.ANDROID -> android
+            Platform.IOS -> ios
         }
     }
 }
