@@ -8,9 +8,9 @@ import com.testapp.tests.payments.flows.paylater.PayLaterDETest
 import com.testapp.tests.payments.flows.paylater.PayLaterFITest
 import com.testapp.tests.payments.flows.paylater.PayLaterNOTest
 import com.testapp.tests.payments.flows.paylater.PayLaterSETest
-import com.testapp.tests.payments.flows.paynow.TestPayNowSofort
-import com.testapp.tests.payments.flows.sliceit.TestSliceItUK
-import com.testapp.tests.payments.flows.threeds.Test3DS
+import com.testapp.tests.payments.flows.paynow.PayNowSofortTest
+import com.testapp.tests.payments.flows.sliceit.SliceItUKTest
+import com.testapp.tests.payments.flows.threeds.`3DSTest`
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -24,8 +24,8 @@ import org.junit.runners.Suite
     PayLaterFITest::class,
     PayLaterNOTest::class,
     PayLaterSETest::class,
-    TestPayNowSofort::class,
-    TestSliceItUK::class,
-    Test3DS::class
+    PayNowSofortTest::class,
+    SliceItUKTest::class,
+    `3DSTest`::class
 )
 internal class TestSuite

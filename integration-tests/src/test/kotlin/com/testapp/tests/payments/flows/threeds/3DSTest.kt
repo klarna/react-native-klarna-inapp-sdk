@@ -14,7 +14,7 @@ import org.junit.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal class Test3DS : BaseAppiumTest() {
+internal class `3DSTest` : BaseAppiumTest() {
 
     @Test
     fun `test 3ds successful flow`() {
