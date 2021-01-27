@@ -24,6 +24,12 @@ fun AppiumDriver<*>.hideKeyboardCompat() {
                 DriverUtils.wait(this, 1)
             }
             tryOptional {
+                if (isKeyboardVisible()){
+                    findElement(By.xpath("//XCUIElementTypeKeyboard//XCUIElementTypeButton[@name='Return']")).click()
+                }
+                DriverUtils.wait(this, 1)
+            }
+            tryOptional {
                 if (isKeyboardVisible()) {
                     hideKeyboard(HideKeyboardStrategy.PRESS_KEY, "Done")
                 }
