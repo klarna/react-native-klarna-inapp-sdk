@@ -82,7 +82,7 @@ internal class TestPayLater : BaseAppiumTest() {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
             DriverUtils.switchContextToNative(driver)
         } else {
-            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
         }
 
         PaymentFlowsTestHelper.dismissConsole(driver)

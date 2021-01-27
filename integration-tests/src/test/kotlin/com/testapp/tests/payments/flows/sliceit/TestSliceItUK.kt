@@ -50,7 +50,7 @@ internal class TestSliceItUK : BaseAppiumTest() {
             DriverUtils.switchContextToNative(driver)
         } else {
             DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
         }
 
         driver.hideKeyboardCompat()

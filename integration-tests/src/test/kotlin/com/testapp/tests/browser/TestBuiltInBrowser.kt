@@ -139,7 +139,7 @@ internal class TestBuiltInBrowser : BaseAppiumTest() {
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
         } else {
             DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
             DriverUtils.wait(driver, 5)
         }
 

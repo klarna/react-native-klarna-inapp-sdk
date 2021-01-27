@@ -96,15 +96,13 @@ internal object PaymentFlowsTestHelper {
                                     By.xpath("//XCUIElementTypePickerWheel")
                                 )
                             ).sendKeys(value)
-                        try {
+                        tryOptional {
                             DriverUtils.getWaiter(driver)
                                 .until(
                                     ExpectedConditions.presenceOfElementLocated(
                                         By.xpath("//XCUIElementTypeButton[@name='Done']")
                                     )
                                 ).click()
-                        } catch (t: Throwable) {
-
                         }
                     }
                     if (driver.isKeyboardVisible()) {
@@ -133,12 +131,11 @@ internal object PaymentFlowsTestHelper {
             DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(original)).click()
             submitButtonBy = original
         } catch (t: Throwable) {
-            try {
+            tryOptional {
                 alternative?.let {
                     DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(it)).click()
                     submitButtonBy = it
                 }
-            } catch (t: Throwable) {
             }
         }
 
@@ -239,7 +236,7 @@ internal object PaymentFlowsTestHelper {
 
     fun fillSmsCode(driver: AppiumDriver<MobileElement>) {
         // if there is authentication for sms code
-        try {
+        tryOptional {
             if (driver is AndroidDriver) {
                 DriverUtils.getWaiter(driver)
                     .until(ExpectedConditions.presenceOfElementLocated(By.id("authentication-ui")))
@@ -260,15 +257,12 @@ internal object PaymentFlowsTestHelper {
                 }
             }
             DriverUtils.wait(driver, 2)
-        } catch (t: Throwable) {
-            // ignore
         }
     }
 
     fun dismissConsole(driver: AppiumDriver<*>) {
-        try {
+        tryOptional {
             readConsoleMessage(driver, "Dismiss All")?.click()
-        } catch (t: Throwable) {
         }
     }
 }

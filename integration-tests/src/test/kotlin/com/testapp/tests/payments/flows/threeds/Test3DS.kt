@@ -4,6 +4,7 @@ import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.extensions.tapElementCenter
+import com.testapp.extensions.tryOptional
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
 import io.appium.java_client.android.AndroidDriver
@@ -50,7 +51,7 @@ internal class Test3DS : BaseAppiumTest() {
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]//iframe")))
         } else {
             DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
             val card: IOSElement = DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
             card.tapElementCenter(driver)
@@ -136,11 +137,10 @@ internal class Test3DS : BaseAppiumTest() {
                     assert(this.contains("sorry") || this.contains("unfortunately"))
                 }
             } else {
-                try {
+                tryOptional {
                     DriverUtils.getWaiter(driver)
                         .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeButton[@name='Close']")))
                         .click()
-                } catch (t: Throwable) {
                 }
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)

@@ -1,39 +1,40 @@
 package com.testapp.extensions
 
-import com.testapp.base.BaseAppiumTest
 import com.testapp.utils.DriverUtils
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.HasOnScreenKeyboard
-import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.ios.IOSElement
-import io.appium.java_client.ios.IOSTouchAction
 import io.appium.java_client.remote.HideKeyboardStrategy
-import io.appium.java_client.touch.offset.PointOption
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
 import org.openqa.selenium.WebElement
 
 fun AppiumDriver<*>.hideKeyboardCompat() {
-    try {
-        hideKeyboard()
-        DriverUtils.wait(this, 1)
+    tryOptional {
+        tryOptional {
+            hideKeyboard()
+            DriverUtils.wait(this, 1)
+        }
         if (this is IOSDriver) {
-            if (isKeyboardShown()) {
-                hideKeyboard(HideKeyboardStrategy.PRESS_KEY, "Done")
-                DriverUtils.wait(this, 1)
-                if (isKeyboardShown()) {
-                    hideKeyboard(HideKeyboardStrategy.TAP_OUTSIDE)
+            tryOptional {
+                if (isKeyboardVisible()) {
+                    findElement(By.xpath("//XCUIElementTypeButton[@name='Done']")).click()
                 }
                 DriverUtils.wait(this, 1)
-                if (isKeyboardShown()) {
-                    findElement(By.xpath("//XCUIElementTypeButton[@name='Done']")).click()
+            }
+            tryOptional {
+                if (isKeyboardVisible()) {
+                    hideKeyboard(HideKeyboardStrategy.PRESS_KEY, "Done")
+                }
+                DriverUtils.wait(this, 1)
+            }
+            tryOptional {
+                if (isKeyboardVisible()) {
+                    hideKeyboard(HideKeyboardStrategy.TAP_OUTSIDE)
                 }
             }
         }
-    } catch (e: Throwable) {
-
     }
 }
 
@@ -44,10 +45,8 @@ fun AppiumDriver<*>.isKeyboardVisible(): Boolean {
 fun AppiumDriver<*>.selectAll(element: WebElement) {
     if (element is IOSElement) {
         element.longPressElementCenter(this)
-        try {
+        tryOptional {
             findElement(By.xpath("//XCUIElementTypeMenuItem[@name=\"Select All\"]")).click()
-        } catch (t: Throwable) {
-
         }
     } else {
         element.sendKeys(Keys.chord(Keys.CONTROL, "a"))
@@ -56,9 +55,7 @@ fun AppiumDriver<*>.selectAll(element: WebElement) {
 
 fun AppiumDriver<*>.deleteAll(element: WebElement) {
     selectAll(element)
-    try {
+    tryOptional {
         element.sendKeys(Keys.DELETE)
-    } catch (t: Throwable) {
-
     }
 }
