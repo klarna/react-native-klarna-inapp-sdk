@@ -4,6 +4,7 @@ import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.extensions.tapElementCenter
+import com.testapp.extensions.tryOptional
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
 import io.appium.java_client.MobileElement
@@ -81,7 +82,9 @@ internal class SliceItUKTest : BaseAppiumTest() {
 
         PaymentFlowsTestHelper.fillSmsCode(driver)
 
-        PaymentFlowsTestHelper.fillInfo(driver, billing, billing.identifiers.birthday2, billing.options.birthday)
+        tryOptional {
+            PaymentFlowsTestHelper.fillInfo(driver, billing, billing.identifiers.birthday2, billing.options.birthday)
+        }
 
         if (android()) {
             PaymentFlowsTestHelper.submitAndConfirm(
