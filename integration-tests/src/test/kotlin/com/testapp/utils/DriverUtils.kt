@@ -22,7 +22,7 @@ import java.net.URL
 internal object DriverUtils {
     private const val CONTEXT_NATIVE = "NATIVE_APP"
     private const val CONTEXT_WEBVIEW = "WEBVIEW_"
-    private const val WAIT_TIME = 15
+    private const val WAIT_TIME = 20
 
     private val commonCapabilities: DesiredCapabilities
         get() {
@@ -74,6 +74,7 @@ internal object DriverUtils {
             username: String,
             password: String,
             testName: String?,
+            buildName: String?,
             platform: Platform
     ): AppiumDriver<MobileElement> {
         val caps = commonCapabilities
@@ -84,6 +85,13 @@ internal object DriverUtils {
         caps.setCapability("browserstack.deviceLogs", "true")
         caps.setCapability("project", "IN-APP RN MOBILE SDK INTEGRATION")
         caps.setCapability("name", testName)
+
+        val buildNameValue = if (buildName.isNullOrEmpty()) {
+            "${ScriptHelper.getGitBranch()}@${ScriptHelper.getGitCommit()}"
+        } else {
+            buildName
+        }
+        caps.setCapability("build", "InApp-RN-SDK/${buildNameValue}")
 
         when (platform) {
             Platform.ANDROID -> {

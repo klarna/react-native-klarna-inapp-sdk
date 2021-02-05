@@ -1,6 +1,7 @@
 package com.testapp.network
 
 import com.google.gson.Gson
+import com.testapp.extensions.tryOptional
 import com.testapp.model.Session
 import com.testapp.model.SessionInfoRequest
 import com.testapp.model.SessionInfoResponse
@@ -21,7 +22,7 @@ internal object KlarnaApi {
     private val sessionInfoUrl = "https://www.klarna.com/demo/klarna-api/sessions/session-get/"
 
     fun getSessionInfo(sessionRrequest: SessionRequest): SessionInfoResponse? {
-        try {
+        return tryOptional {
             val sessionResponse = createSession(sessionRrequest)
             return sessionResponse?.let {
                 val sessionInfo = getSessionInfo(SessionInfoRequest(
@@ -30,13 +31,11 @@ internal object KlarnaApi {
                 ))
                 sessionInfo
             }
-        } catch (t: Throwable){
-            return null
         }
     }
 
     private fun createSession(sessionRrequest: SessionRequest): SessionResponse? {
-        try {
+        return tryOptional {
             val request = Request.Builder().apply {
                 url(sessionRequestUrl)
                 method("POST", RequestBody.create(MediaType.parse("application/json"), gson.toJson(sessionRrequest)))
@@ -47,13 +46,11 @@ internal object KlarnaApi {
                 return gson.fromJson(response.body()!!.string(), SessionResponse::class.java)
             }
             return null
-        } catch (t: Throwable){
-            return null
         }
     }
 
     private fun getSessionInfo(sessionInfoRequest: SessionInfoRequest): SessionInfoResponse? {
-        try {
+        return tryOptional {
             val request = Request.Builder().apply {
                 url(sessionInfoUrl)
                 method("POST", RequestBody.create(MediaType.parse("application/json"), gson.toJson(sessionInfoRequest)))
@@ -66,8 +63,6 @@ internal object KlarnaApi {
                 val sessionObject = JSONObject(bodyObject.get("session").toString())
                 return SessionInfoResponse(gson.fromJson(sessionObject.toString(), Session::class.java))
             }
-            return null
-        } catch (t: Throwable){
             return null
         }
     }

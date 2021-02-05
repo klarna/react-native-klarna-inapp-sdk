@@ -1,6 +1,5 @@
 package com.testapp.utils
 
-import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.constants.AppiumTestConstants
 import com.testapp.extensions.*
@@ -21,9 +20,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal object PaymentFlowsTestHelper {
 
-    fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: LinkedHashMap<String, String?>) {
+    fun fillBillingAddress(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo) {
         if (driver is AndroidDriver) {
-            DriverUtils.switchContextToWebView(BaseAppiumTest.driver)
+            DriverUtils.switchContextToWebView(driver)
             // switch to klarna payment billing address iframe
             val billingWindow =
                 WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
@@ -34,13 +33,13 @@ internal object PaymentFlowsTestHelper {
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
         }
 
-        for ((key, value) in billingInfo) {
+        for ((key, value) in billingInfo.linkedMap()) {
             value?.let {
                 try {
                     if (driver is IOSDriver) {
                         driver.scroll()
                     }
-                    fillInfo(driver, key, value)
+                    fillInfo(driver, billingInfo, key, value)
                     if (driver is AndroidDriver) {
                         driver.pressKey(KeyEvent(AndroidKey.ENTER))
                     } else {
@@ -71,23 +70,53 @@ internal object PaymentFlowsTestHelper {
                 By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"),
                 By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]")
             )
-            submitAndConfirm(driver, By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"), By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]"))
+            submitAndConfirm(
+                driver,
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"),
+                By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]")
+            )
         }
     }
 
-    fun fillInfo(driver: AppiumDriver<MobileElement>, key: String, value: String?) {
+    fun fillInfo(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo, key: String, value: String?) {
         val element = DriverUtils.getWaiter(driver, 5)
             .until(ExpectedConditions.presenceOfElementLocated(By.xpath(key)))
         element.apply {
             if (isEnabled || driver is IOSDriver) {
-                DriverUtils.getWaiter(BaseAppiumTest.driver)
+                DriverUtils.getWaiter(driver)
                     .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
-                    tapElementCenter()
+                    tapElementCenter(driver)
+                    DriverUtils.wait(driver, 5)
+
+                    if (billingInfo.identifiers.title == key) {
+                        DriverUtils.getWaiter(driver)
+                            .until(
+                                ExpectedConditions.presenceOfElementLocated(
+                                    By.xpath("//XCUIElementTypePickerWheel")
+                                )
+                            ).sendKeys(value)
+                        tryOptional {
+                            DriverUtils.getWaiter(driver)
+                                .until(
+                                    ExpectedConditions.presenceOfElementLocated(
+                                        By.xpath("//XCUIElementTypeButton[@name='Done']")
+                                    )
+                                ).click()
+                        }
+                    }
                     if (driver.isKeyboardVisible()) {
                         sendKeys(value)
                     }
                 } else {
+                    if (billingInfo.identifiers.title == key) {
+                        DriverUtils.getWaiter(driver)
+                            .until(
+                                ExpectedConditions.presenceOfElementLocated(
+                                    By.xpath("$key//option[@label=\"${value}\"]")
+                                )
+                            ).click()
+                    }
                     sendKeys(value)
                 }
             }
@@ -102,12 +131,11 @@ internal object PaymentFlowsTestHelper {
             DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(original)).click()
             submitButtonBy = original
         } catch (t: Throwable) {
-            try {
+            tryOptional {
                 alternative?.let {
                     DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(it)).click()
                     submitButtonBy = it
                 }
-            } catch (t: Throwable) {
             }
         }
 
@@ -130,7 +158,7 @@ internal object PaymentFlowsTestHelper {
         } while (confirmPresent && retries > 0)
     }
 
-    fun readConsoleMessage(driver: AppiumDriver<MobileElement>, containText: String): WebElement? {
+    fun readConsoleMessage(driver: AppiumDriver<*>, containText: String): WebElement? {
         val by = if (driver is AndroidDriver) {
             By.xpath("//android.widget.TextView[contains(@text, '$containText')]")
         } else {
@@ -141,7 +169,7 @@ internal object PaymentFlowsTestHelper {
 
     fun readStateMessage(driver: AppiumDriver<MobileElement>, paymentCategory: PaymentCategory): String? {
         val id = "state_${paymentCategory.value}"
-        val by = ByRnId(BaseAppiumTest.driver, id)
+        val by = ByRnId(driver, id)
         val stateLabel: WebElement = try {
             DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
         } catch (t: Throwable) {
@@ -192,15 +220,15 @@ internal object PaymentFlowsTestHelper {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")))
             driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='Card Number']")).apply {
-                tapElementCenter()
+                tapElementCenter(driver)
                 sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
             }
             driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='MM/YY']")).apply {
-                tapElementCenter()
+                tapElementCenter(driver)
                 sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
             }
             driver.findElement(By.xpath("//XCUIElementTypeStaticText[@name='CVC']")).apply {
-                tapElementCenter()
+                tapElementCenter(driver)
                 sendKeys(AppiumTestConstants.CARD_CVV)
             }
         }
@@ -208,7 +236,7 @@ internal object PaymentFlowsTestHelper {
 
     fun fillSmsCode(driver: AppiumDriver<MobileElement>) {
         // if there is authentication for sms code
-        try {
+        tryOptional {
             if (driver is AndroidDriver) {
                 DriverUtils.getWaiter(driver)
                     .until(ExpectedConditions.presenceOfElementLocated(By.id("authentication-ui")))
@@ -223,21 +251,18 @@ internal object PaymentFlowsTestHelper {
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpButtonBy)).click()
                 val otpInputBy = By.xpath("//XCUIElementTypeTextField")
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpInputBy)).apply {
-                    (this as MobileElement).longPressElementCenter()
+                    (this as MobileElement).longPressElementCenter(driver)
                     sendKeys("123456")
                     driver.hideKeyboardCompat()
                 }
             }
             DriverUtils.wait(driver, 2)
-        } catch (t: Throwable) {
-            // ignore
         }
     }
 
-    fun dismissConsole() {
-        try {
-            readConsoleMessage(BaseAppiumTest.driver, "Dismiss All")?.click()
-        } catch (t: Throwable) {
+    fun dismissConsole(driver: AppiumDriver<*>) {
+        tryOptional {
+            readConsoleMessage(driver, "Dismiss All")?.click()
         }
     }
 }
