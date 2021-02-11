@@ -31,6 +31,14 @@ internal object PaymentFlowsTestHelper {
             } ?: Assert.fail("Billing address window wasn't found")
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+        } else {
+            tryOptional {
+                DriverUtils.getWaiter(driver)
+                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[contains(@name,'Please enter your')]")))
+            } ?: tryOptional {
+                DriverUtils.getWaiter(driver)
+                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[contains(@name,'Verify your details')]")))
+            }
         }
 
         for ((key, value) in billingInfo.linkedMap()) {

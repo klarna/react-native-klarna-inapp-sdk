@@ -52,6 +52,8 @@ internal class SliceItUKTest : BaseAppiumTest() {
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            DriverUtils.getWaiter(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
         }
 
         driver.hideKeyboardCompat()

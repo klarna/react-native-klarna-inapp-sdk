@@ -36,6 +36,8 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            DriverUtils.getWaiter(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
         }
 
         PaymentFlowsTestHelper.dismissConsole(driver)

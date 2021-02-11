@@ -22,7 +22,7 @@ import java.net.URL
 internal object DriverUtils {
     private const val CONTEXT_NATIVE = "NATIVE_APP"
     private const val CONTEXT_WEBVIEW = "WEBVIEW_"
-    private const val WAIT_TIME = 20
+    private const val WAIT_TIME = 30
 
     private val commonCapabilities: DesiredCapabilities
         get() {
