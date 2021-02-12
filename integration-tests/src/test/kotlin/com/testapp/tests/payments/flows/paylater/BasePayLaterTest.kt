@@ -5,7 +5,6 @@ import com.testapp.base.PaymentCategory
 import com.testapp.extensions.tapElementCenter
 import com.testapp.model.Session
 import com.testapp.utils.*
-import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.openqa.selenium.By
@@ -22,7 +21,7 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
         }
         val token = session.client_token
 
-        initLoadSDK(token, PaymentCategory.PAY_LATER.value)
+        initLoadSDK(token, PaymentCategory.PAY_LATER)
         if (android()) {
             DriverUtils.switchContextToWebView(driver)
             val mainWindow =
@@ -76,12 +75,12 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
                     val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
                     val changePayment = DriverUtils.getWaiter(driver)
                         .until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
-                    (changePayment as MobileElement).tapElementCenter(driver)
+                    changePayment.tapElementCenter(driver)
                 } catch (t: Throwable) {
                     val closeBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Close')]")
                     val close =
                         DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(closeBy))
-                    (close as MobileElement).tapElementCenter(driver)
+                    close.tapElementCenter(driver)
                 }
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_LATER)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)

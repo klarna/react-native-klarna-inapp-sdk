@@ -6,7 +6,6 @@ import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.extensions.tapElementCenter
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
-import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSElement
 import org.junit.Assert
@@ -33,7 +32,7 @@ internal class PayNowSofortTest : BaseAppiumTest() {
             return
         }
         val token = session.client_token
-        initLoadSDK(token, PaymentCategory.PAY_NOW.value)
+        initLoadSDK(token, PaymentCategory.PAY_NOW)
 
         if (android()) {
             DriverUtils.switchContextToWebView(driver)
@@ -101,7 +100,7 @@ internal class PayNowSofortTest : BaseAppiumTest() {
                 val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
                 val changePayment =
                     DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
-                (changePayment as MobileElement).tapElementCenter(driver)
+                changePayment.tapElementCenter(driver)
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
 
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)

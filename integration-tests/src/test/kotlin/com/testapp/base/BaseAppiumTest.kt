@@ -78,7 +78,7 @@ internal open class BaseAppiumTest {
 
     fun ios() = platform == Platform.IOS
 
-    fun initLoadSDK(token: String?, category: String) {
+    fun initLoadSDK(token: String?, category: PaymentCategory) {
         DriverUtils.getWaiter(driver)
             .until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
                 val trimmedToken = token?.removeWhitespace()
@@ -86,15 +86,23 @@ internal open class BaseAppiumTest {
                 Assert.assertEquals(trimmedToken, text?.removeWhitespace())
             }
         driver.hideKeyboardCompat()
-        val initButton = DriverUtils.getWaiter(driver)
-            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "initButton_${category}")))
-        initButton.click()
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "initButton_${category.value}")))
+            .click()
         DriverUtils.wait(driver, 1)
-        initButton.click()
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "initButton_${category.value}")))
+            .click()
+
         //wait for init response
+        DriverUtils.wait(driver, 10)
+
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "loadButton_${category.value}")))
+            .click()
         DriverUtils.wait(driver, 1)
-        driver.findElement(ByRnId(driver, "loadButton_${category}")).click()
-        DriverUtils.wait(driver, 1)
-        driver.findElement(ByRnId(driver, "loadButton_${category}")).click()
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "loadButton_${category.value}")))
+            .click()
     }
 }

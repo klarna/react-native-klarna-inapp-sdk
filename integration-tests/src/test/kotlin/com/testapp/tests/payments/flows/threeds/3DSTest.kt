@@ -34,7 +34,7 @@ internal class `3DSTest` : BaseAppiumTest() {
             return
         }
         val token = session.client_token
-        initLoadSDK(token, PaymentCategory.PAY_NOW.value)
+        initLoadSDK(token, PaymentCategory.PAY_NOW)
 
         if (android()) {
             DriverUtils.switchContextToWebView(driver)

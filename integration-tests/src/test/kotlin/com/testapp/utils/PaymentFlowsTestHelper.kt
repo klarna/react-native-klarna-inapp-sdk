@@ -259,7 +259,7 @@ internal object PaymentFlowsTestHelper {
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpButtonBy)).click()
                 val otpInputBy = By.xpath("//XCUIElementTypeTextField")
                 DriverUtils.getWaiter(driver, 5).until(ExpectedConditions.presenceOfElementLocated(otpInputBy)).apply {
-                    (this as MobileElement).longPressElementCenter(driver)
+                    longPressElementCenter(driver)
                     sendKeys("123456")
                     driver.hideKeyboardCompat()
                 }
