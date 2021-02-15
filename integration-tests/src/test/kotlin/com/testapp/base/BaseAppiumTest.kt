@@ -6,6 +6,7 @@ import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
 import com.testapp.utils.DriverUtils.getLocalDriver
+import com.testapp.utils.PaymentFlowsTestHelper
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.service.local.AppiumDriverLocalService
@@ -34,14 +35,11 @@ internal open class BaseAppiumTest {
 
     @Before
     fun setup() {
-        val localAppiumTest: Boolean
-
         val browserstackUsername = System.getProperty("browserstack.username")
         val browserstackPassword = System.getProperty("browserstack.password")
         val buildName = System.getProperty("build.name")
 
-        localAppiumTest = browserstackUsername == null || browserstackPassword == null
-        if (localAppiumTest) {
+        if (browserstackUsername == null || browserstackPassword == null) {
             if (appiumService == null) {
                 synchronized(AppiumDriverLocalService::class.java) {
                     if (appiumService == null) {
@@ -95,7 +93,7 @@ internal open class BaseAppiumTest {
             .click()
 
         //wait for init response
-        DriverUtils.wait(driver, 10)
+        PaymentFlowsTestHelper.waitStateMessage(driver, category, if (ios()) "target" else "{}")
 
         DriverUtils.getWaiter(driver)
             .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "loadButton_${category.value}")))

@@ -189,6 +189,28 @@ internal object PaymentFlowsTestHelper {
         return stateLabel.text
     }
 
+    fun waitStateMessage(
+        driver: AppiumDriver<MobileElement>,
+        paymentCategory: PaymentCategory,
+        containText: String
+    ): String? {
+        val id = "state_${paymentCategory.value}"
+        val by = if (driver is IOSDriver) {
+            By.xpath("//*[@name='$id' and contains(@label, '$containText')]")
+        } else {
+            By.xpath("//*[@content-desc='$id' and contains(@text, '$containText')]")
+        }
+        val stateLabel: WebElement = try {
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
+        } catch (t: Throwable) {
+            (driver as? AndroidDriver<*>)?.let { driver ->
+                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"$id\").textContains(\"$containText\"))")
+            }
+            DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(by))
+        }
+        return stateLabel.text
+    }
+
     fun checkAuthorizeResponse(response: String?, successful: Boolean) {
         assert(!response.isNullOrBlank())
         val json = JSONObject(response!!.substring(response.indexOf("{")))
