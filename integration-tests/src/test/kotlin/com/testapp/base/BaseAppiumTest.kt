@@ -18,7 +18,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal open class BaseAppiumTest {
 
-    protected val retryCount = 2
+    protected val retryCount = 3
     protected val ignoreOnFailure = false
     internal lateinit var driver: AppiumDriver<MobileElement>
     private var appiumService: AppiumDriverLocalService? = null

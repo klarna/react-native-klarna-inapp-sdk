@@ -52,6 +52,8 @@ internal class `3DSTest` : BaseAppiumTest() {
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            DriverUtils.getWaiter(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
             val card: IOSElement = DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
             card.tapElementCenter(driver)
