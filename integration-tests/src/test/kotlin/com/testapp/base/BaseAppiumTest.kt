@@ -6,6 +6,7 @@ import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
 import com.testapp.utils.DriverUtils.getLocalDriver
+import com.testapp.utils.PaymentFlowsTestHelper
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.service.local.AppiumDriverLocalService
@@ -17,7 +18,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal open class BaseAppiumTest {
 
-    protected val retryCount = 2
+    protected val retryCount = 3
     protected val ignoreOnFailure = false
     internal lateinit var driver: AppiumDriver<MobileElement>
     private var appiumService: AppiumDriverLocalService? = null
@@ -34,14 +35,11 @@ internal open class BaseAppiumTest {
 
     @Before
     fun setup() {
-        val localAppiumTest: Boolean
-
         val browserstackUsername = System.getProperty("browserstack.username")
         val browserstackPassword = System.getProperty("browserstack.password")
         val buildName = System.getProperty("build.name")
 
-        localAppiumTest = browserstackUsername == null || browserstackPassword == null
-        if (localAppiumTest) {
+        if (browserstackUsername == null || browserstackPassword == null) {
             if (appiumService == null) {
                 synchronized(AppiumDriverLocalService::class.java) {
                     if (appiumService == null) {
@@ -78,7 +76,7 @@ internal open class BaseAppiumTest {
 
     fun ios() = platform == Platform.IOS
 
-    fun initLoadSDK(token: String?, category: String) {
+    fun initLoadSDK(token: String?, category: PaymentCategory) {
         DriverUtils.getWaiter(driver)
             .until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "setTokenInput"))).apply {
                 val trimmedToken = token?.removeWhitespace()
@@ -86,15 +84,23 @@ internal open class BaseAppiumTest {
                 Assert.assertEquals(trimmedToken, text?.removeWhitespace())
             }
         driver.hideKeyboardCompat()
-        val initButton = DriverUtils.getWaiter(driver)
-            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "initButton_${category}")))
-        initButton.click()
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "initButton_${category.value}")))
+            .click()
         DriverUtils.wait(driver, 1)
-        initButton.click()
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "initButton_${category.value}")))
+            .click()
+
         //wait for init response
+        PaymentFlowsTestHelper.waitStateMessage(driver, category, if (ios()) "target" else "{}")
+
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "loadButton_${category.value}")))
+            .click()
         DriverUtils.wait(driver, 1)
-        driver.findElement(ByRnId(driver, "loadButton_${category}")).click()
-        DriverUtils.wait(driver, 1)
-        driver.findElement(ByRnId(driver, "loadButton_${category}")).click()
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "loadButton_${category.value}")))
+            .click()
     }
 }

@@ -22,7 +22,7 @@ import java.net.URL
 internal object DriverUtils {
     private const val CONTEXT_NATIVE = "NATIVE_APP"
     private const val CONTEXT_WEBVIEW = "WEBVIEW_"
-    private const val WAIT_TIME = 20
+    private const val WAIT_TIME = 30
 
     private val commonCapabilities: DesiredCapabilities
         get() {
@@ -71,11 +71,11 @@ internal object DriverUtils {
      * @return PlatformDriver instance
      */
     fun getBrowserstackDriver(
-            username: String,
-            password: String,
-            testName: String?,
-            buildName: String?,
-            platform: Platform
+        username: String,
+        password: String,
+        testName: String?,
+        buildName: String?,
+        platform: Platform
     ): AppiumDriver<MobileElement> {
         val caps = commonCapabilities
 //        caps.setCapability("browserstack.local", "true")
@@ -97,29 +97,30 @@ internal object DriverUtils {
             Platform.ANDROID -> {
                 caps.setCapability("app", "INAPP_RN_SDK_ANDROID_TEST_APP")
                 caps.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
-                caps.setCapability("deviceName", "Android Emulator")
                 caps.setCapability("platformName", platform.platformName)
+                caps.setCapability("device", "Google Pixel 5")
+                caps.setCapability("os_version", "11.0")
                 caps.setCapability("recreateChromeDriverSessions", "true")
-                caps.setCapability("device", "Samsung Galaxy S9")
 
                 return AndroidDriver(
-                        URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
-                        caps
+                    URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
+                    caps
                 )
             }
             Platform.IOS -> {
                 caps.setCapability("app", "INAPP_RN_SDK_IOS_TEST_APP")
                 caps.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
-                caps.setCapability("deviceName", "iPhone 12")
+                caps.setCapability("device", "iPhone 12")
+                caps.setCapability("os_version", "14")
                 caps.setCapability("platformName", platform.platformName)
-//                caps.setCapability("device", "iPhone 12")
                 caps.setCapability("bundleId", "com.klarna.entp.dinhouse.inapp.sdk.react.native.testapp")
                 caps.setCapability("appName", "TestApp")
                 caps.setCapability("fullContextList", true)
+                caps.setCapability("nativeWebTap", true)
                 caps.setCapability("webviewConnectTimeout", 10000)
                 return IOSDriver(
-                        URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
-                        caps
+                    URL("https://$username:$password@hub-cloud.browserstack.com/wd/hub"),
+                    caps
                 )
             }
         }

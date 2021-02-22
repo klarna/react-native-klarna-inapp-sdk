@@ -7,7 +7,6 @@ import com.testapp.extensions.tapElementCenter
 import com.testapp.extensions.tryOptional
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
-import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.junit.Test
@@ -33,7 +32,7 @@ internal class SliceItUKTest : BaseAppiumTest() {
             return
         }
         val token = session.client_token
-        initLoadSDK(token, PaymentCategory.SLICE_IT.value)
+        initLoadSDK(token, PaymentCategory.SLICE_IT)
         if (android()) {
             DriverUtils.switchContextToWebView(driver)
 
@@ -52,6 +51,8 @@ internal class SliceItUKTest : BaseAppiumTest() {
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+            DriverUtils.getWaiter(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
         }
 
         driver.hideKeyboardCompat()
@@ -111,7 +112,7 @@ internal class SliceItUKTest : BaseAppiumTest() {
                 val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
                 val changePayment =
                     DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
-                (changePayment as MobileElement).tapElementCenter(driver)
+                changePayment.tapElementCenter(driver)
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.SLICE_IT)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }

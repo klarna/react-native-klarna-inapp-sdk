@@ -19,7 +19,7 @@ internal abstract class BaseBuiltInBrowserTest : BaseAppiumTest() {
             return
         }
         val token = session.client_token
-        initLoadSDK(token, category.value)
+        initLoadSDK(token, category)
         if (android()) {
             DriverUtils.switchContextToWebView(driver)
             val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
@@ -31,7 +31,8 @@ internal abstract class BaseBuiltInBrowserTest : BaseAppiumTest() {
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
-            DriverUtils.wait(driver, 5)
+            DriverUtils.getWaiter(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
         }
 
         var tries = 0

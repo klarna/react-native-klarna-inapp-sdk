@@ -81,6 +81,7 @@ export default class App extends Component {
               style={styles.tokenInput}
               placeholder="Set token here..."
               multiline={true}
+              blurOnSubmit={true}
               {...testProps('setTokenInput')}
               onChangeText={(text) => {authToken = text;}}
           />

@@ -12,7 +12,7 @@ internal class BuiltInBrowserPayNowTest : BaseBuiltInBrowserTest() {
     fun `test if the terms links open the built-in browser - pay now sweden`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestSE())?.session
         val by =
-            if (android()) By.xpath("//*[@id=\"url-user_terms\"]") else By.xpath("//XCUIElementTypeLink[@name='Klarna Services Terms']")
+            if (android()) By.xpath("//*[@id=\"url-user_terms\"]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
         testLinks(session, PaymentCategory.PAY_NOW, by)
     }
 
@@ -20,7 +20,7 @@ internal class BuiltInBrowserPayNowTest : BaseBuiltInBrowserTest() {
     fun `test if the terms links open the built-in browser - pay now germany`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
         val by =
-            if (android()) By.xpath("//*[@id=\"url-user_terms\"]") else By.xpath("//XCUIElementTypeLink[@name='Klarna Services Terms']")
+            if (android()) By.xpath("//*[@id=\"url-user_terms\"]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
         testLinks(session, PaymentCategory.PAY_NOW, by)
     }
 }

@@ -45,3 +45,6 @@ buck-out/
 # pods nonsense
 ios/Pods
 ios/Podfile.lock
+
+# fastlane
+fastlane/report.xml

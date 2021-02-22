@@ -20,25 +20,25 @@ fun AppiumDriver<*>.hideKeyboardCompat() {
             tryOptional {
                 if (isKeyboardVisible()) {
                     findElement(By.xpath("//XCUIElementTypeButton[@name='Done']")).click()
-                }
+                } else return
                 DriverUtils.wait(this, 1)
             }
             tryOptional {
                 if (isKeyboardVisible()){
                     findElement(By.xpath("//XCUIElementTypeKeyboard//XCUIElementTypeButton[@name='Return']")).click()
-                }
+                } else return
                 DriverUtils.wait(this, 1)
             }
             tryOptional {
                 if (isKeyboardVisible()) {
                     hideKeyboard(HideKeyboardStrategy.PRESS_KEY, "Done")
-                }
+                } else return
                 DriverUtils.wait(this, 1)
             }
             tryOptional {
                 if (isKeyboardVisible()) {
                     hideKeyboard(HideKeyboardStrategy.TAP_OUTSIDE)
-                }
+                } else return
             }
         }
     }
