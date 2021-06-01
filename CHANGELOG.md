@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to React Native Klarna In-App SDK will be documented in this file.
 
+### [2.0.18] - 2021-05-31
+- Update Android SDK version to the latest (2.0.39)
+
 ### [2.0.17] - 2021-03-23
 - Update iOS SDK version to the latest (2.0.36)
 
