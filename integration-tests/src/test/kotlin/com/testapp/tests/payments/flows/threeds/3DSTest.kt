@@ -43,12 +43,10 @@ internal class `3DSTest` : BaseAppiumTest() {
             mainWindow?.let {
                 driver.switchTo().window(it)
             } ?: Assert.fail("Main window wasn't found")
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+            DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-main")
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]//iframe")))
+            DriverUtils.switchToIframe(driver, By.xpath("//*[@id=\"pay-now-card\"]//iframe"))
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
@@ -91,8 +89,7 @@ internal class `3DSTest` : BaseAppiumTest() {
             window?.let {
                 driver.switchTo().window(it)
             } ?: Assert.fail("3DS window wasn't found")
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+            DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-fullscreen")
             val frame = DriverUtils.waitForPresence(driver, By.id("3ds-dialog-iframe"))
             driver.switchTo().frame(frame)
             actionSelector = if (success) By.id("success") else By.id("rejected")
@@ -130,8 +127,7 @@ internal class `3DSTest` : BaseAppiumTest() {
             PaymentFlowsTestHelper.checkAuthorizeResponse(response, true)
         } else {
             if (android()) {
-                DriverUtils.getWaiter(driver)
-                    .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-fullscreen"))
+                DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-fullscreen")
                 val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
                 val refusedText =
                     DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
