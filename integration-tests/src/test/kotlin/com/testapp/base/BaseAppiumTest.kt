@@ -2,6 +2,7 @@ package com.testapp.base
 
 import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.extensions.removeWhitespace
+import com.testapp.extensions.tryOptional
 import com.testapp.utils.ByRnId
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.DriverUtils.getBrowserstackDriver
@@ -18,7 +19,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal open class BaseAppiumTest {
 
-    protected val retryCount = 3
+    protected val retryCount = 2
     protected val ignoreOnFailure = false
     internal lateinit var driver: AppiumDriver<MobileElement>
     private var appiumService: AppiumDriverLocalService? = null
@@ -99,8 +100,9 @@ internal open class BaseAppiumTest {
             .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "loadButton_${category.value}")))
             .click()
         DriverUtils.wait(driver, 1)
-        DriverUtils.getWaiter(driver)
-            .until(ExpectedConditions.elementToBeClickable(ByRnId(driver, "loadButton_${category.value}")))
-            .click()
+
+        tryOptional {
+            driver.findElement(ByRnId(driver, "loadButton_${category.value}")).click()
+        }
     }
 }

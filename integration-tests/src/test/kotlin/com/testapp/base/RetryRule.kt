@@ -14,7 +14,10 @@ class RetryRule(
     private val whiteListedExceptions = arrayListOf(
             "chrome not reachable",
             "session not created",
-            "Could not proxy"
+            "Could not proxy",
+            "Unable to create a new remote session",
+            "driver has not been initialized",
+            "disconnected: unable to connect to renderer"
     )
 
     override fun apply(base: Statement, description: Description): Statement {
@@ -32,7 +35,7 @@ class RetryRule(
                         return
                     } catch (t: Throwable) {
                         caughtThrowable = t
-                        System.err.println(description.getDisplayName().toString() + ": run " + (i + 1) + " failed.")
+                        System.err.println(description.getDisplayName().toString() + ": run " + (i + 1) + " failed. Error: ${t.message}")
                     }
                 }
                 System.err.println(description.getDisplayName().toString() + ": giving up after " + retryCount + " failures.")

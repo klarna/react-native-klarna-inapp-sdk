@@ -9,6 +9,7 @@ import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -21,6 +22,7 @@ internal class SliceItUKTest : BaseAppiumTest() {
     }
 
     @Test
+    @Ignore
     fun `test payment slice it UK failure flow`() {
         testSliceItUK(false)
     }
@@ -33,6 +35,7 @@ internal class SliceItUKTest : BaseAppiumTest() {
         }
         val token = session.client_token
         initLoadSDK(token, PaymentCategory.SLICE_IT)
+        val mainWindow = driver.windowHandle
         if (android()) {
             DriverUtils.switchContextToWebView(driver)
 
@@ -40,19 +43,15 @@ internal class SliceItUKTest : BaseAppiumTest() {
             mainWindow?.let {
                 driver.switchTo().window(it)
             } ?: Assert.fail("Main window wasn't found")
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
-
+            DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-main")
             DriverUtils.waitForPresence(driver, By.id("scheme-payment-selector"))
 //
 //        PaymentFlowsTestHelper.fillCardInfo(driver)
 
             DriverUtils.switchContextToNative(driver)
         } else {
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
+            DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypeOther[@name='Payment View']"))
+            DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']"))
         }
 
         driver.hideKeyboardCompat()
@@ -65,23 +64,35 @@ internal class SliceItUKTest : BaseAppiumTest() {
             (driver as? AndroidDriver<*>)?.let { driver ->
                 driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.SLICE_IT.value}\"))")
             }
-            DriverUtils.getWaiter(driver).until(
-                ExpectedConditions.presenceOfElementLocated(
-                    ByRnId(
-                        driver,
-                        "authorizeButton_${PaymentCategory.SLICE_IT.value}"
-                    )
-                )
-            ).click()
+            DriverUtils.waitForPresence(driver, ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}")).click()
         }
 
         val billing = BillingAddressTestHelper.getBillingInfoUK()
         if (!success) {
             BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
         }
-        PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
 
-        PaymentFlowsTestHelper.fillSmsCode(driver)
+        val verificationWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"), By.id("email_or_phone"))
+        verificationWindow?.let {
+            driver.switchTo().window(it)
+            DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-fullscreen")
+            DriverUtils.waitForPresence(driver, By.ById("email_or_phone")).sendKeys(billing.options.phone)
+            DriverUtils.waitForPresence(driver, By.ById("btn-continue")).click()
+            DriverUtils.waitForPresence(driver, By.ById("otp_field")).sendKeys("123456")
+            tryOptional {
+                DriverUtils.waitForPresence(driver, By.ById("email_or_phone"), 5).sendKeys(billing.options.email)
+                DriverUtils.waitForPresence(driver, By.ById("otp_field"), 5).sendKeys("123456")
+            }
+            DriverUtils.wait(driver, 1)
+        }
+
+        try {
+            DriverUtils.waitForPresence(driver, By.id("payinparts_kp-purchase-review-continue-button"), 5).click()
+        } catch (t: Throwable) {
+            PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
+        }
+
+        /*PaymentFlowsTestHelper.fillSmsCode(driver)
 
         tryOptional {
             PaymentFlowsTestHelper.fillInfo(driver, billing, billing.identifiers.birthday2, billing.options.birthday)
@@ -100,8 +111,9 @@ internal class SliceItUKTest : BaseAppiumTest() {
                 By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]"),
                 null
             )
-        }
+        }*/
 
+        driver.switchTo().window(mainWindow)
         if (!success) {
             if (android()) {
                 DriverUtils.waitForPresence(
@@ -110,8 +122,7 @@ internal class SliceItUKTest : BaseAppiumTest() {
                 )
             } else {
                 val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
-                val changePayment =
-                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(changePaymentBy))
+                val changePayment = DriverUtils.waitForPresence(driver, changePaymentBy)
                 changePayment.tapElementCenter(driver)
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.SLICE_IT)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
