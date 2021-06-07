@@ -35,11 +35,10 @@ internal class SliceItUKTest : BaseAppiumTest() {
         }
         val token = session.client_token
         initLoadSDK(token, PaymentCategory.SLICE_IT)
-        val mainWindow = driver.windowHandle
+        var mainWindow: String? = null
         if (android()) {
             DriverUtils.switchContextToWebView(driver)
-
-            val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
+            mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
             mainWindow?.let {
                 driver.switchTo().window(it)
             } ?: Assert.fail("Main window wasn't found")
@@ -81,6 +80,7 @@ internal class SliceItUKTest : BaseAppiumTest() {
             DriverUtils.waitForPresence(driver, By.ById("otp_field")).sendKeys("123456")
             tryOptional {
                 DriverUtils.waitForPresence(driver, By.ById("email_or_phone"), 5).sendKeys(billing.options.email)
+                DriverUtils.waitForPresence(driver, By.ById("btn-continue"), 5).click()
                 DriverUtils.waitForPresence(driver, By.ById("otp_field"), 5).sendKeys("123456")
             }
             DriverUtils.wait(driver, 1)
