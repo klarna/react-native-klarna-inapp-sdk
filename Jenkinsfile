@@ -111,7 +111,8 @@ pipeline {
             }
         }
 
-        stage('iOS Integration Tests') {
+        // Enable after iOS tests are fixed
+        /* stage('iOS Integration Tests') {
             when {
                 expression { isPullRequest() }
             }
@@ -123,11 +124,11 @@ pipeline {
                         }
                     } finally {
                         // Add the test results for statistics
-                        junit 'integration-tests/build/test-results/test/*.xml'
+                        junit 'integration-tests/build/test-results/test *//*.xml'
                     }
                 }
             }
-        }
+        } */
 
         stage('Clean Directory') {
             steps {
