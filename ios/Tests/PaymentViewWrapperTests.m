@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import <RCTComponent.h>
+#import <React/RCTComponent.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import "PaymentViewWrapper.h"
 

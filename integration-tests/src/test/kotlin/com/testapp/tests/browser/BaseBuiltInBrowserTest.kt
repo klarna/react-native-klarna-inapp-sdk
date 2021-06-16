@@ -26,8 +26,7 @@ internal abstract class BaseBuiltInBrowserTest : BaseAppiumTest() {
             mainWindow?.let {
                 driver.switchTo().window(it)
             } ?: Assert.fail("Main window wasn't found")
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+            DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-main")
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))

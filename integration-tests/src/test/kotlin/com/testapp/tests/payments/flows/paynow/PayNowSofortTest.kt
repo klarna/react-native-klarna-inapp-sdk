@@ -40,14 +40,12 @@ internal class PayNowSofortTest : BaseAppiumTest() {
             mainWindow?.let {
                 driver.switchTo().window(it)
             } ?: Assert.fail("Main window wasn't found")
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("klarna-some-hardcoded-instance-id-main"))
+            DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-main")
 
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
 
-            DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//*[@id=\"pay-now-card\"]//iframe")))
+            DriverUtils.switchToIframe(driver, By.xpath("//*[@id=\"pay-now-card\"]//iframe"))
 
         } else {
             DriverUtils.getWaiter(driver)

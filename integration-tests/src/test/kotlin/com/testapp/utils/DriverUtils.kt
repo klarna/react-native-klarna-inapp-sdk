@@ -41,7 +41,7 @@ internal object DriverUtils {
         val desiredCapabilities = commonCapabilities
         when (platform) {
             Platform.ANDROID -> {
-                //desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
+                desiredCapabilities.setCapability("chromedriverExecutable", "/Users/mahmoud.jafarinejad/Downloads/chromedriver") // TODO: Set accordingly if needed
                 desiredCapabilities.setCapability("automationName", AutomationName.ANDROID_UIAUTOMATOR2)
                 desiredCapabilities.setCapability("deviceName", "Android Emulator")
                 desiredCapabilities.setCapability("platformName", platform.platformName)
@@ -220,7 +220,7 @@ internal object DriverUtils {
      * @param timeOutInSeconds The timeout value for the waiter in seconds
      * @return The WebElement object found present
      */
-    fun waitForPresence(driver: AppiumDriver<MobileElement>?, by: By, timeOutInSeconds: Int = WAIT_TIME): WebElement {
+    fun waitForPresence(driver: AppiumDriver<*>?, by: By, timeOutInSeconds: Int = WAIT_TIME): WebElement {
         return getWaiter(driver, timeOutInSeconds).until(ExpectedConditions.presenceOfElementLocated(by))
     }
 
@@ -245,5 +245,25 @@ internal object DriverUtils {
                 fail("Couldn't find the activity: $activity")
             }
         }
+    }
+
+    /**
+     * Switch the given driver to the given iframe
+     *
+     * @param driver The driver that we want it to switch
+     * @param iframeName The iframe name we want to switch to
+     */
+    fun switchToIframe(driver: AppiumDriver<*>, iframeName: String) {
+        getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframeName))
+    }
+
+    /**
+     * Switch the given driver to the given iframe
+     *
+     * @param driver The driver that we want it to switch
+     * @param iframeBy The iframe by locator we want to switch to
+     */
+    fun switchToIframe(driver: AppiumDriver<*>, iframeBy: By) {
+        getWaiter(driver).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframeBy))
     }
 }

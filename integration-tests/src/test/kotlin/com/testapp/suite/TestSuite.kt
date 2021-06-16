@@ -1,6 +1,5 @@
 package com.testapp.suite
 
-import com.testapp.tests.appium.TestAppiumServer
 import com.testapp.tests.browser.BuiltInBrowserPayLaterTest
 import com.testapp.tests.browser.BuiltInBrowserPayNowTest
 import com.testapp.tests.browser.BuiltInBrowserSliceItTest
@@ -16,7 +15,6 @@ import org.junit.runners.Suite
 
 @RunWith(ParallelSuite::class)
 @Suite.SuiteClasses(
-    TestAppiumServer::class,
     BuiltInBrowserPayNowTest::class,
     BuiltInBrowserPayLaterTest::class,
     BuiltInBrowserSliceItTest::class,

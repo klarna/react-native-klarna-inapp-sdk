@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 class ParallelSuite(klass: Class<*>?, builder: RunnerBuilder) : Suite(klass, builder) {
 
-    private val threadCount = 4
+    private val threadCount = 5
 
     init {
         setScheduler(object : RunnerScheduler {
