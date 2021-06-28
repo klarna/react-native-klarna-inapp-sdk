@@ -130,11 +130,11 @@ pipeline {
             }
         } */
 
-        stage('Clean Directory') {
+        stage('Reset Directory') {
             steps {
                 script {
                     sh 'git reset --hard'
-                    sh 'git clean -d -x -f'
+                    //sh 'git clean -d -x -f'
                 }
             }
         }
