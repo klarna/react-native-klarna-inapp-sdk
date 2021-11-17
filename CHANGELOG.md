@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to React Native Klarna In-App SDK will be documented in this file.
 
+### [2.1.0] - 2021-11-16
+- Update Android SDK & iOS SDK version to the latest (2.1.0)
+
 ### [2.0.18] - 2021-05-31
 - Update Android SDK version to the latest (2.0.39)
 
@@ -10,7 +13,7 @@ All notable changes to React Native Klarna In-App SDK will be documented in this
 ### [2.0.16] - 2020-12-09
 
 ### [2.0.15] - 2020-12-01
-- Added arm64 in EXCLUDED_ARCHS for iOS. 
+- Added arm64 in EXCLUDED_ARCHS for iOS.
 
 ### [2.0.14] - 2020-10-30
 - Update iOS SDK version to the latest (2.0.28)
