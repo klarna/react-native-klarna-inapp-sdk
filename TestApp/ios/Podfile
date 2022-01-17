@@ -30,20 +30,43 @@ platform :ios, '10.0'
 		pod 'react-native-klarna-inapp-sdk', :path => '../../react-native-klarna-inapp-sdk.podspec'
 	end
 
-	post_install do |installer|
-        installer.pods_project.targets.each do |target|
 
-            # The following is needed to ensure the "archive" step works in XCode.
-            # It removes React & Yoga from the Pods project, as it is already included in the main project.
-            # Without this, you'd see errors when you archive like:
-            # "Multiple commands produce ... libReact.a"
-            # "Multiple commands produce ... libyoga.a"
+  post_install do |installer|
+      find_and_replace("../node_modules/react-native/React/CxxBridge/RCTCxxBridge.mm",
+          "_initializeModules:(NSArray<id<RCTBridgeModule>> *)modules", "_initializeModules:(NSArray<Class> *)modules")
+      find_and_replace("../node_modules/react-native/ReactCommon/turbomodule/core/platform/ios/RCTTurboModuleManager.mm",
+          "RCTBridgeModuleNameForClass(module))", "RCTBridgeModuleNameForClass(Class(module)))")
+    
+      find_and_replace("../node_modules/react-native/Libraries/fishhook/fishhook.c",
+      "indirect_symbol_bindings[i] = cur->rebindings[j].replacement;", "// indirect_symbol_bindings[i] = cur->rebindings[j].replacement ; // Temp fix for iOS 13+")
+    
+      installer.pods_project.targets.each do |target|
 
-            targets_to_ignore = %w(React yoga)
+          # The following is needed to ensure the "archive" step works in XCode.
+          # It removes React & Yoga from the Pods project, as it is already included in the main project.
+          # Without this, you'd see errors when you archive like:
+          # "Multiple commands produce ... libReact.a"
+          # "Multiple commands produce ... libyoga.a"
 
-            if targets_to_ignore.include? target.name
-                target.remove_from_project
-            end
+          targets_to_ignore = %w(React yoga)
 
+          if targets_to_ignore.include? target.name
+              target.remove_from_project
+          end
+
+      end
+  end
+
+  def find_and_replace(dir, findstr, replacestr)
+    Dir[dir].each do |name|
+        text = File.read(name)
+        replace = text.gsub(findstr,replacestr)
+        if text != replace
+            puts "Fix: " + name
+            File.open(name, "w") { |file| file.puts replace }
+            STDOUT.flush
         end
     end
+    Dir[dir + '*/'].each(&method(:find_and_replace))
+  end
+
