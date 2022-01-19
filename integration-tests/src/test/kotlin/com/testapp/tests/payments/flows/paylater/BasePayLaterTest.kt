@@ -3,6 +3,7 @@ package com.testapp.tests.payments.flows.paylater
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.extensions.tapElementCenter
+import com.testapp.extensions.tryOptional
 import com.testapp.model.Session
 import com.testapp.utils.*
 import io.appium.java_client.android.AndroidDriver
@@ -63,7 +64,7 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
 
         if (!success) {
             if (android()) {
-                val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
+                val refusedTextBy = By.xpath("//*[contains(@id,'message-component-root') or contains(text(),'Unfortunately') or contains(text(),'sorry')]")
                 val refusedText =
                     DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
                 with(refusedText.text.toLowerCase()) {
@@ -85,7 +86,7 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }
         } else {
-            if (android()) {
+            if (android()) tryOptional {
                 val submitButtonBy = By.xpath("//*[@id=\"confirmation__footer-button-wrapper\"]/div/button")
                 DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(submitButtonBy)).click()
             }

@@ -9,28 +9,14 @@ import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
 import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
-import org.junit.Ignore
-import org.junit.Test
 import org.openqa.selenium.By
-import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal class SliceItUKTest : BaseAppiumTest() {
+internal abstract class BaseSliceItTest : BaseAppiumTest() {
 
-    @Test
-    fun `test payment slice it UK successful flow`() {
-        testSliceItUK(true)
-    }
-
-    @Test
-    @Ignore
-    fun `test payment slice it UK failure flow`() {
-        testSliceItUK(false)
-    }
-
-    private fun testSliceItUK(success: Boolean) {
+    protected fun testSliceItUK(success: Boolean) {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestUK())?.session
         if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }
-                .contains(PaymentCategory.SLICE_IT.value)) {
+                        .contains(PaymentCategory.SLICE_IT.value)) {
             return
         }
         val token = session.client_token
@@ -117,8 +103,8 @@ internal class SliceItUKTest : BaseAppiumTest() {
         if (!success) {
             if (android()) {
                 DriverUtils.waitForPresence(
-                    driver,
-                    By.xpath("//h1[contains(text(),'Your application was declined')]")
+                        driver,
+                        By.xpath("//h1[contains(text(),'Your application was declined')]")
                 )
             } else {
                 val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")
