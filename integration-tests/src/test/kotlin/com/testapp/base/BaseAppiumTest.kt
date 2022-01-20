@@ -10,6 +10,7 @@ import com.testapp.utils.DriverUtils.getLocalDriver
 import com.testapp.utils.PaymentFlowsTestHelper
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
+import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.service.local.AppiumDriverLocalService
 import io.appium.java_client.service.local.AppiumServiceBuilder
 import io.appium.java_client.service.local.flags.GeneralServerFlag
@@ -106,5 +107,16 @@ internal open class BaseAppiumTest {
         tryOptional {
             driver.findElement(ByRnId(driver, "loadButton_${category.value}")).click()
         }
+    }
+
+    fun authorizeSDK(category: PaymentCategory) {
+        val id = "authorizeButton_${category.value}"
+        try {
+            driver.findElement(ByRnId(driver, id)).click()
+        } catch (t: Throwable) {
+            (driver as? AndroidDriver<*>)?.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"$id\"))")
+            DriverUtils.waitForPresence(driver, ByRnId(driver, id)).click()
+        }
+        DriverUtils.wait(driver, 2)
     }
 }

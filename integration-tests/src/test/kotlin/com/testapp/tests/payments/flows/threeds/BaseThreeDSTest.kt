@@ -7,7 +7,6 @@ import com.testapp.extensions.tapElementCenter
 import com.testapp.extensions.tryOptional
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
-import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSElement
 import org.junit.Assert
 import org.openqa.selenium.By
@@ -52,21 +51,8 @@ internal abstract class BaseThreeDSTest : BaseAppiumTest() {
         driver.hideKeyboardCompat()
         PaymentFlowsTestHelper.dismissConsole(driver)
 
-        try {
-            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}")).click()
-        } catch (t: Throwable) {
-            (driver as? AndroidDriver<*>)?.let { driver ->
-                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
-            }
-            DriverUtils.getWaiter(driver).until(
-                    ExpectedConditions.presenceOfElementLocated(
-                            ByRnId(
-                                    driver,
-                                    "authorizeButton_${PaymentCategory.PAY_NOW.value}"
-                            )
-                    )
-            ).click()
-        }
+        authorizeSDK(PaymentCategory.PAY_NOW)
+
         // enter billing address
         val billing = BillingAddressTestHelper.getBillingInfoDE()
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)

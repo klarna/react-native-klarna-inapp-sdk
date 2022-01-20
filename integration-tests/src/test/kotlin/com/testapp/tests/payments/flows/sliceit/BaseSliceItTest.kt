@@ -7,7 +7,6 @@ import com.testapp.extensions.tapElementCenter
 import com.testapp.extensions.tryOptional
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
-import io.appium.java_client.android.AndroidDriver
 import org.junit.Assert
 import org.openqa.selenium.By
 
@@ -43,14 +42,7 @@ internal abstract class BaseSliceItTest : BaseAppiumTest() {
 
         PaymentFlowsTestHelper.dismissConsole(driver)
 
-        try {
-            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}")).click()
-        } catch (t: Throwable) {
-            (driver as? AndroidDriver<*>)?.let { driver ->
-                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.SLICE_IT.value}\"))")
-            }
-            DriverUtils.waitForPresence(driver, ByRnId(driver, "authorizeButton_${PaymentCategory.SLICE_IT.value}")).click()
-        }
+        authorizeSDK(PaymentCategory.SLICE_IT)
 
         val billing = BillingAddressTestHelper.getBillingInfoUK()
         if (!success) {

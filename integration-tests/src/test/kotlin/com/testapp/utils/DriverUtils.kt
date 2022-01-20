@@ -143,13 +143,15 @@ internal object DriverUtils {
      * @param driver The driver we want its context to be switched to web view
      */
     fun switchContextToWebView(driver: AppiumDriver<MobileElement>) {
-        if (!driver.context.startsWith(CONTEXT_WEBVIEW)) {
-            val availableContexts: Set<*> = driver.contextHandles
+        val currentContext = driver.context
+        if (!currentContext.startsWith(CONTEXT_WEBVIEW)) {
+            var availableContexts: Set<*> = driver.contextHandles
             var webViewAvailable = false
             var retries = 4
             val sleepTime = 500L
             do {
                 try {
+                    availableContexts = driver.contextHandles
                     if (driver is AndroidDriver) {
                         driver.context(CONTEXT_WEBVIEW + driver.capabilities.getCapability("appPackage"))
                         webViewAvailable = true
@@ -173,7 +175,7 @@ internal object DriverUtils {
                 }
             } while (!webViewAvailable && retries > 0)
             if (!webViewAvailable) {
-                fail("Couldn't switch to the web view context. Available contexts: ${availableContexts.joinToString()}")
+                fail("Couldn't switch to the web view context. Current context: $currentContext available contexts: ${availableContexts.joinToString()}")
             }
         }
     }
