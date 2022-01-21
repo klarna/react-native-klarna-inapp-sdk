@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal abstract class BaseBuiltInBrowserTest : BaseAppiumTest() {
 
-    protected fun testLinks(session: Session?, category: PaymentCategory, linkLocator: By) {
+    protected fun testLinks(session: Session?, category: PaymentCategory, linkLocator: By, iframeBy: By? = By.id("klarna-some-hardcoded-instance-id-main")) {
 
         if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }
                 .contains(category.value)) {
@@ -22,11 +22,13 @@ internal abstract class BaseBuiltInBrowserTest : BaseAppiumTest() {
         initLoadSDK(token, category)
         if (android()) {
             DriverUtils.switchContextToWebView(driver)
-            val mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
-            mainWindow?.let {
-                driver.switchTo().window(it)
-            } ?: Assert.fail("Main window wasn't found")
-            DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-main")
+            iframeBy?.let {
+                val mainWindow = WebViewTestHelper.findWindowFor(driver, iframeBy)
+                mainWindow?.let {
+                    driver.switchTo().window(it)
+                } ?: Assert.fail("Main window wasn't found")
+                DriverUtils.switchToIframe(driver, iframeBy)
+            }
         } else {
             DriverUtils.getWaiter(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))

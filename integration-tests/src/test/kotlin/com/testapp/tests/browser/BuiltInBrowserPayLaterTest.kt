@@ -12,8 +12,8 @@ internal class BuiltInBrowserPayLaterTest : BaseBuiltInBrowserTest() {
     fun `test if the terms links open the built-in browser - pay later uk`() {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestUK())?.session
         val by =
-            if (android()) By.xpath("//*[@id=\"invoice-privacy-notice\"]/span/a[1]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
-        testLinks(session, PaymentCategory.PAY_LATER, by)
+            if (android()) By.xpath("//a[contains(@aria-label, 'Privacy Notice')]") else By.xpath("//XCUIElementTypeLink[@name='Privacy Notice']")
+        testLinks(session, PaymentCategory.PAY_LATER, by, null)
     }
 
     @Test

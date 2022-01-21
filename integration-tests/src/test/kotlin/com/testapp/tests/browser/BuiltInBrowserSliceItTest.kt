@@ -15,7 +15,7 @@ internal class BuiltInBrowserSliceItTest : BaseBuiltInBrowserTest() {
             if (android()) By.xpath("//*[@id=\"pay-later-slice-it-slice-it-by-card-privacy-notice\"]/a[1]") else By.xpath(
                 "//XCUIElementTypeLink[@name='Privacy Notice']"
             )
-        testLinks(session, PaymentCategory.SLICE_IT, by)
+        testLinks(session, PaymentCategory.SLICE_IT, by, By.id("klarna-pay-over-time-fullscreen"))
     }
 
     @Test
