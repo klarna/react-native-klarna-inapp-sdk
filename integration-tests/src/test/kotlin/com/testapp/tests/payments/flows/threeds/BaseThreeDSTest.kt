@@ -7,30 +7,17 @@ import com.testapp.extensions.tapElementCenter
 import com.testapp.extensions.tryOptional
 import com.testapp.network.KlarnaApi
 import com.testapp.utils.*
-import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSElement
 import org.junit.Assert
-import org.junit.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal class `3DSTest` : BaseAppiumTest() {
+internal abstract class BaseThreeDSTest : BaseAppiumTest() {
 
-    @Test
-    fun `test 3ds successful flow`() {
-        test3ds(true)
-    }
-
-    @Test
-    fun `test 3ds failure flow`() {
-        test3ds(false)
-    }
-
-
-    fun test3ds(success: Boolean) {
+    protected fun test3ds(success: Boolean) {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestDE())?.session
         if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }
-                .contains(PaymentCategory.SLICE_IT.value)) {
+                        .contains(PaymentCategory.SLICE_IT.value)) {
             return
         }
         val token = session.client_token
@@ -45,15 +32,15 @@ internal class `3DSTest` : BaseAppiumTest() {
             } ?: Assert.fail("Main window wasn't found")
             DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-main")
             DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
+                    .until(ExpectedConditions.presenceOfElementLocated(By.id("installments-card|-1"))).click()
             DriverUtils.switchToIframe(driver, By.xpath("//*[@id=\"pay-now-card\"]//iframe"))
         } else {
             DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
+                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeOther[@name='Payment View']")))
             DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
+                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='TESTDRIVE']")))
             val card: IOSElement = DriverUtils.getWaiter(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
+                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeStaticText[@name='Card']"))) as IOSElement
             card.tapElementCenter(driver)
         }
 
@@ -64,21 +51,8 @@ internal class `3DSTest` : BaseAppiumTest() {
         driver.hideKeyboardCompat()
         PaymentFlowsTestHelper.dismissConsole(driver)
 
-        try {
-            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_NOW.value}")).click()
-        } catch (t: Throwable) {
-            (driver as? AndroidDriver<*>)?.let { driver ->
-                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_NOW.value}\"))")
-            }
-            DriverUtils.getWaiter(driver).until(
-                ExpectedConditions.presenceOfElementLocated(
-                    ByRnId(
-                        driver,
-                        "authorizeButton_${PaymentCategory.PAY_NOW.value}"
-                    )
-                )
-            ).click()
-        }
+        authorizeSDK(PaymentCategory.PAY_NOW)
+
         // enter billing address
         val billing = BillingAddressTestHelper.getBillingInfoDE()
         PaymentFlowsTestHelper.fillBillingAddress(driver, billing)
@@ -94,14 +68,14 @@ internal class `3DSTest` : BaseAppiumTest() {
             driver.switchTo().frame(frame)
             actionSelector = if (success) By.id("success") else By.id("rejected")
             DriverUtils.getWaiter(driver).until(
-                ExpectedConditions.and(
-                    ExpectedConditions.visibilityOfElementLocated(actionSelector),
-                    ExpectedConditions.elementToBeClickable(actionSelector)
-                )
+                    ExpectedConditions.and(
+                            ExpectedConditions.visibilityOfElementLocated(actionSelector),
+                            ExpectedConditions.elementToBeClickable(actionSelector)
+                    )
             )
         } else {
             actionSelector =
-                if (success) By.xpath("//XCUIElementTypeButton[@name='Success']") else By.xpath("//XCUIElementTypeButton[@name='3DS failure']")
+                    if (success) By.xpath("//XCUIElementTypeButton[@name='Success']") else By.xpath("//XCUIElementTypeButton[@name='3DS failure']")
             DriverUtils.wait(driver, 5)
         }
 
@@ -130,15 +104,15 @@ internal class `3DSTest` : BaseAppiumTest() {
                 DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-fullscreen")
                 val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
                 val refusedText =
-                    DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
+                        DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
                 with(refusedText.text.toLowerCase()) {
                     assert(this.contains("sorry") || this.contains("unfortunately"))
                 }
             } else {
                 tryOptional {
                     DriverUtils.getWaiter(driver)
-                        .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeButton[@name='Close']")))
-                        .click()
+                            .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//XCUIElementTypeButton[@name='Close']")))
+                            .click()
                 }
                 val response = PaymentFlowsTestHelper.readStateMessage(driver, PaymentCategory.PAY_NOW)
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)

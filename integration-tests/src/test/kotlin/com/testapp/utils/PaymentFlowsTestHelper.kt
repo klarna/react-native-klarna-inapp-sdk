@@ -38,6 +38,21 @@ internal object PaymentFlowsTestHelper {
             }
         }
 
+        fillInfoAll(driver, billingInfo)
+        submitAndConfirm(driver)
+
+        tryOptional {
+            fillInfo(driver, billingInfo, billingInfo.options.idNumber)
+            submitAndConfirm(driver)
+        }
+
+        tryOptional {
+            fillInfo(driver, billingInfo, billingInfo.options.birthday)
+            submitAndConfirm(driver)
+        }
+    }
+
+    private fun fillInfoAll(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo) {
         for ((key, value) in billingInfo.linkedMap()) {
             value?.let {
                 try {
@@ -57,34 +72,30 @@ internal object PaymentFlowsTestHelper {
                 }
             }
         }
+    }
 
-        if (driver is AndroidDriver) {
-            submitAndConfirm(
-                    driver,
-                    By.id("identification-dialog__footer-button-wrapper"),
-                    By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"),
-                    By.id("btn-continue")
-            )
-        } else {
-            submitAndConfirm(
-                    driver,
-                    By.xpath("//XCUIElementTypeButton[contains(@name,'Submit')]"),
-                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]")
-            )
-            submitAndConfirm(
-                    driver,
-                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"),
-                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]")
-            )
-            submitAndConfirm(
-                    driver,
-                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"),
-                    By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]")
-            )
+    private fun fillInfo(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo, value: String?) {
+        tryOptional {
+            value?.let {
+                billingInfo.linkedMap().filterValues { it == value }.forEach { (fieldKey, fieldValue) ->
+                    try {
+                        fillInfo(driver, billingInfo, fieldKey, fieldValue)
+                        if (driver is AndroidDriver) {
+                            driver.pressKey(KeyEvent(AndroidKey.ENTER))
+                        } else {
+                            driver.hideKeyboardCompat()
+                        }
+                    } catch (t: TimeoutException) {
+                        // element is not visible (not required to fill)
+                    } catch (t: StaleElementReferenceException) {
+                        // element is not attached
+                    }
+                }
+            }
         }
     }
 
-    fun fillInfo(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo, key: String, value: String?) {
+    private fun fillInfo(driver: AppiumDriver<MobileElement>, billingInfo: BillingInfo, key: String, value: String?) {
         val element = DriverUtils.waitForPresence(driver, By.xpath(key), 5)
         element.apply {
             if (isEnabled || driver is IOSDriver) {
@@ -95,7 +106,7 @@ internal object PaymentFlowsTestHelper {
                     DriverUtils.wait(driver, 5)
 
                     if (billingInfo.identifiers.title == key) {
-                        DriverUtils.waitForPresence(driver,  By.xpath("//XCUIElementTypePickerWheel")).sendKeys(value)
+                        DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypePickerWheel")).sendKeys(value)
                         tryOptional {
                             DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypeButton[@name='Done']")).click()
                         }
@@ -113,7 +124,37 @@ internal object PaymentFlowsTestHelper {
         }
     }
 
-    fun submitAndConfirm(driver: AppiumDriver<MobileElement>, vararg submitLocators: By) {
+    private fun submitAndConfirm(driver: AppiumDriver<MobileElement>) {
+        tryOptional {
+            if (driver is AndroidDriver) {
+                submitAndConfirm(
+                        driver,
+                        By.id("identification-dialog__footer-button-wrapper"),
+                        By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"),
+                        By.id("invoice_kp-purchase-approval__footer-button-wrapper"),
+                        By.id("btn-continue")
+                )
+            } else {
+                submitAndConfirm(
+                        driver,
+                        By.xpath("//XCUIElementTypeButton[contains(@name,'Submit')]"),
+                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]")
+                )
+                submitAndConfirm(
+                        driver,
+                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"),
+                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]")
+                )
+                submitAndConfirm(
+                        driver,
+                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"),
+                        By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]")
+                )
+            }
+        }
+    }
+
+    private fun submitAndConfirm(driver: AppiumDriver<MobileElement>, vararg submitLocators: By) {
         // click on the submit button
         var submitButtonBy: By? = null
 

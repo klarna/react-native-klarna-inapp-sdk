@@ -3,6 +3,7 @@ package com.testapp.tests.payments.flows.paylater
 import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.extensions.tapElementCenter
+import com.testapp.extensions.tryOptional
 import com.testapp.model.Session
 import com.testapp.utils.*
 import io.appium.java_client.android.AndroidDriver
@@ -40,21 +41,7 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
 
         PaymentFlowsTestHelper.dismissConsole(driver)
 
-        try {
-            driver.findElement(ByRnId(driver, "authorizeButton_${PaymentCategory.PAY_LATER.value}")).click()
-        } catch (t: Throwable) {
-            (driver as? AndroidDriver<*>)?.let { driver ->
-                driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().description(\"authorizeButton_${PaymentCategory.PAY_LATER.value}\"))")
-            }
-            DriverUtils.getWaiter(driver).until(
-                ExpectedConditions.presenceOfElementLocated(
-                    ByRnId(
-                        driver,
-                        "authorizeButton_${PaymentCategory.PAY_LATER.value}"
-                    )
-                )
-            ).click()
-        }
+        authorizeSDK(PaymentCategory.PAY_LATER)
 
         if (!success) {
             BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
@@ -63,7 +50,7 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
 
         if (!success) {
             if (android()) {
-                val refusedTextBy = By.xpath("//*[@id=\"message-component-root\"]")
+                val refusedTextBy = By.xpath("//*[contains(@id,'message-component-root') or contains(text(),'Unfortunately') or contains(text(),'sorry')]")
                 val refusedText =
                     DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
                 with(refusedText.text.toLowerCase()) {
@@ -85,7 +72,7 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
                 PaymentFlowsTestHelper.checkAuthorizeResponse(response, false)
             }
         } else {
-            if (android()) {
+            if (android()) tryOptional {
                 val submitButtonBy = By.xpath("//*[@id=\"confirmation__footer-button-wrapper\"]/div/button")
                 DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(submitButtonBy)).click()
             }

@@ -5,13 +5,7 @@ import com.testapp.utils.BillingAddressTestHelper
 import com.testapp.utils.SessionHelper
 import org.junit.Test
 
-internal class PayLaterFITest : BasePayLaterTest() {
-
-    @Test
-    fun `test payment pay later finland successful flow`() {
-        val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestFI())?.session
-        testPayLater(true, session, BillingAddressTestHelper.getBillingInfoFI())
-    }
+internal class PayLaterFIFailureTest: BasePayLaterTest() {
 
     @Test
     fun `test payment pay later finland failure flow`() {
