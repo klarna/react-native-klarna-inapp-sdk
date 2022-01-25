@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		43E5A6E09ADAB49930DC3A4D /* libPods-KlarnaInAppSDK-KlarnaInAppSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 66650B59FAE015E8D19EBBFE /* libPods-KlarnaInAppSDK-KlarnaInAppSDKTests.a */; };
+		7693377E96E52696E396720A /* libPods-KlarnaInAppSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED2213AA1F7BA305CB7539F /* libPods-KlarnaInAppSDK.a */; };
 		7917D755255C45FB00E16799 /* PaymentViewWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */; };
 		7917D757255C45FB00E16799 /* libKlarnaInAppSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */; };
-		9A45DC1583D4687CCBD0A97F /* Pods_KlarnaInAppSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D30AFFFD5C48286C170CF7C /* Pods_KlarnaInAppSDK.framework */; };
 		9CDEDC2C23475BB6006C9C97 /* PaymentViewWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */; };
-		A09845BAB3E4444C6C559FED /* Pods_KlarnaInAppSDK_KlarnaInAppSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D66CD0C7E50962E5888A0D /* Pods_KlarnaInAppSDK_KlarnaInAppSDKTests.framework */; };
 		B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentView.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* KlarnaPaymentView.m */; };
 /* End PBXBuildFile section */
 
@@ -41,17 +41,17 @@
 		134814201AA4EA6300B7C361 /* libKlarnaInAppSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKlarnaInAppSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DF52E0283B9572452488D7F /* Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.release.xcconfig"; path = "Target Support Files/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		64D2921168A909AB18C918C7 /* Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.debug.xcconfig"; path = "Target Support Files/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
+		66650B59FAE015E8D19EBBFE /* libPods-KlarnaInAppSDK-KlarnaInAppSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KlarnaInAppSDK-KlarnaInAppSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6ED2213AA1F7BA305CB7539F /* libPods-KlarnaInAppSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KlarnaInAppSDK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7917D752255C45FB00E16799 /* KlarnaInAppSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KlarnaInAppSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapperTests.m; sourceTree = "<group>"; };
 		7917D756255C45FB00E16799 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D30AFFFD5C48286C170CF7C /* Pods_KlarnaInAppSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KlarnaInAppSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CDEDC2A23475BAC006C9C97 /* PaymentViewWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapper.m; sourceTree = "<group>"; };
 		9CDEDC2B23475BAC006C9C97 /* PaymentViewWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentViewWrapper.h; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* KlarnaPaymentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KlarnaPaymentView.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* KlarnaPaymentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KlarnaPaymentView.m; sourceTree = "<group>"; };
 		D2932AAB02C28EBC1B3F6454 /* Pods-KlarnaInAppSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KlarnaInAppSDK.debug.xcconfig"; path = "Target Support Files/Pods-KlarnaInAppSDK/Pods-KlarnaInAppSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		E3F9C4C08AF77E4A39BDE46A /* Pods-KlarnaInAppSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KlarnaInAppSDK.release.xcconfig"; path = "Target Support Files/Pods-KlarnaInAppSDK/Pods-KlarnaInAppSDK.release.xcconfig"; sourceTree = "<group>"; };
-		F5D66CD0C7E50962E5888A0D /* Pods_KlarnaInAppSDK_KlarnaInAppSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KlarnaInAppSDK_KlarnaInAppSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A45DC1583D4687CCBD0A97F /* Pods_KlarnaInAppSDK.framework in Frameworks */,
+				7693377E96E52696E396720A /* libPods-KlarnaInAppSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,7 +68,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7917D757255C45FB00E16799 /* libKlarnaInAppSDK.a in Frameworks */,
-				A09845BAB3E4444C6C559FED /* Pods_KlarnaInAppSDK_KlarnaInAppSDKTests.framework in Frameworks */,
+				43E5A6E09ADAB49930DC3A4D /* libPods-KlarnaInAppSDK-KlarnaInAppSDKTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,8 +153,8 @@
 		CE954ABC354059DF5E32C8CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8D30AFFFD5C48286C170CF7C /* Pods_KlarnaInAppSDK.framework */,
-				F5D66CD0C7E50962E5888A0D /* Pods_KlarnaInAppSDK_KlarnaInAppSDKTests.framework */,
+				6ED2213AA1F7BA305CB7539F /* libPods-KlarnaInAppSDK.a */,
+				66650B59FAE015E8D19EBBFE /* libPods-KlarnaInAppSDK-KlarnaInAppSDKTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -277,55 +277,11 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests/Pods-KlarnaInAppSDK-KlarnaInAppSDKTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
-				"${BUILT_PRODUCTS_DIR}/FBReactNativeSpec/FBReactNativeSpec.framework",
-				"${BUILT_PRODUCTS_DIR}/Folly/folly.framework",
-				"${PODS_ROOT}/KlarnaMobileSDK/ios/xcode-12.3-fat/KlarnaMobileSDK.framework",
-				"${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework",
-				"${BUILT_PRODUCTS_DIR}/React-Core/React.framework",
-				"${BUILT_PRODUCTS_DIR}/React-CoreModules/CoreModules.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTAnimation/RCTAnimation.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTBlob/RCTBlob.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTImage/RCTImage.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTLinking/RCTLinking.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTNetwork/RCTNetwork.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTSettings/RCTSettings.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTText/RCTText.framework",
-				"${BUILT_PRODUCTS_DIR}/React-RCTVibration/RCTVibration.framework",
-				"${BUILT_PRODUCTS_DIR}/React-cxxreact/cxxreact.framework",
-				"${BUILT_PRODUCTS_DIR}/React-jsi/jsi.framework",
-				"${BUILT_PRODUCTS_DIR}/React-jsiexecutor/jsireact.framework",
-				"${BUILT_PRODUCTS_DIR}/React-jsinspector/jsinspector.framework",
-				"${BUILT_PRODUCTS_DIR}/ReactCommon/ReactCommon.framework",
-				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
-				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
-				"${BUILT_PRODUCTS_DIR}/OCMock/OCMock.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/full/KlarnaMobileSDK.framework/KlarnaMobileSDK",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBReactNativeSpec.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/folly.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaMobileSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTTypeSafety.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CoreModules.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTAnimation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTBlob.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTLinking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTNetwork.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTSettings.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTText.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTVibration.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/cxxreact.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/jsi.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/jsireact.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/jsinspector.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactCommon.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OCMock.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
