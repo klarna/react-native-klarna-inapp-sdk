@@ -61,7 +61,7 @@ pipeline {
 
         stage('Pod Install TestApp') {
             steps {
-                bash 'cd TestApp/ios && pod install --repo-update && cd ../..'
+                bash 'cd TestApp/ios && pod install --repo-update && pod update KlarnaMobileSDK && cd ../..'
             }
         }
 
