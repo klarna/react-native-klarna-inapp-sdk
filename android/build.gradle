@@ -15,7 +15,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 // Matches values in recent template from React Native (0.59)
 // https://github.com/facebook/react-native/blob/0.59-stable/template/android/build.gradle#L5-L9
@@ -130,13 +130,24 @@ afterEvaluate { project ->
         archives androidJavadocJar
     }
 
-    task installArchives(type: Upload) {
-        configuration = configurations.archives
-        repositories.mavenDeployer {
-            // Deploy to react-native-event-bridge/maven, ready to publish to npm
-            repository url: "file://${projectDir}/../android/maven"
+    publishing {
+        publications {
+            sdkDefaultRelease(MavenPublication) {
+                def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
+                groupId "com.klarna"
+                artifactId packageJson.name
+                version packageJson.version
+                description packageJson.description
 
-            configureReactNativePom pom
+                artifact(androidSourcesJar)
+                artifact(androidJavadocJar)
+            }
+        }
+
+        repositories {
+            maven {
+                url = uri("file://${projectDir}/../android/maven")
+            }
         }
     }
 }
