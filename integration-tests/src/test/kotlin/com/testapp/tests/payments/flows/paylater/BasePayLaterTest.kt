@@ -1,17 +1,16 @@
 package com.testapp.tests.payments.flows.paylater
 
-import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.extensions.tapElementCenter
 import com.testapp.extensions.tryOptional
 import com.testapp.model.Session
+import com.testapp.tests.payments.base.BasePaymentsTest
 import com.testapp.utils.*
-import io.appium.java_client.android.AndroidDriver
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal abstract class BasePayLaterTest : BaseAppiumTest() {
+internal abstract class BasePayLaterTest : BasePaymentsTest() {
 
     protected fun testPayLater(success: Boolean, session: Session?, billing: BillingInfo) {
         if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }.contains(
@@ -29,7 +28,7 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
                 WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
             mainWindow?.let {
                 driver.switchTo().window(it)
-            } ?: Assert.fail("Main window wasn't found")
+            } ?: Assertions.fail("Main window wasn't found")
             DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-fullscreen")
             DriverUtils.switchContextToNative(driver)
         } else {
@@ -50,7 +49,8 @@ internal abstract class BasePayLaterTest : BaseAppiumTest() {
 
         if (!success) {
             if (android()) {
-                val refusedTextBy = By.xpath("//*[contains(@id,'message-component-root') or contains(text(),'Unfortunately') or contains(text(),'sorry')]")
+                val refusedTextBy =
+                    By.xpath("//*[contains(@id,'message-component-root') or contains(text(),'Unfortunately') or contains(text(),'sorry')]")
                 val refusedText =
                     DriverUtils.getWaiter(driver).until(ExpectedConditions.presenceOfElementLocated(refusedTextBy))
                 with(refusedText.text.toLowerCase()) {

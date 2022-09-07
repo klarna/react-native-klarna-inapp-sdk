@@ -7,7 +7,7 @@ import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AutomationName
 import io.appium.java_client.service.local.AppiumDriverLocalService
-import org.junit.Assert.fail
+import org.junit.jupiter.api.Assertions
 import org.openqa.selenium.By
 import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebElement
@@ -175,7 +175,7 @@ internal object DriverUtils {
                 }
             } while (!webViewAvailable && retries > 0)
             if (!webViewAvailable) {
-                fail("Couldn't switch to the web view context. Current context: $currentContext available contexts: ${availableContexts.joinToString()}")
+                Assertions.fail<Any>("Couldn't switch to the web view context. Current context: $currentContext available contexts: ${availableContexts.joinToString()}")
             }
         }
     }
@@ -244,7 +244,7 @@ internal object DriverUtils {
                 }
             }
             if (!found) {
-                fail("Couldn't find the activity: $activity")
+                Assertions.fail<Any>("Couldn't find the activity: $activity")
             }
         }
     }

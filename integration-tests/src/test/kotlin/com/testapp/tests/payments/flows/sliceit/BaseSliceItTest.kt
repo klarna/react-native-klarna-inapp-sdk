@@ -1,21 +1,21 @@
 package com.testapp.tests.payments.flows.sliceit
 
-import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.extensions.hideKeyboardCompat
 import com.testapp.extensions.tapElementCenter
 import com.testapp.extensions.tryOptional
 import com.testapp.network.KlarnaApi
+import com.testapp.tests.payments.base.BasePaymentsTest
 import com.testapp.utils.*
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.openqa.selenium.By
 
-internal abstract class BaseSliceItTest : BaseAppiumTest() {
+internal abstract class BaseSliceItTest : BasePaymentsTest() {
 
     protected fun testSliceItUK(success: Boolean) {
         val session = KlarnaApi.getSessionInfo(SessionHelper.getRequestUK())?.session
         if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }
-                        .contains(PaymentCategory.SLICE_IT.value)) {
+                .contains(PaymentCategory.SLICE_IT.value)) {
             return
         }
         val token = session.client_token
@@ -26,7 +26,7 @@ internal abstract class BaseSliceItTest : BaseAppiumTest() {
             mainWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-main"))
             mainWindow?.let {
                 driver.switchTo().window(it)
-            } ?: Assert.fail("Main window wasn't found")
+            } ?: Assertions.fail("Main window wasn't found")
             DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-main")
             DriverUtils.waitForPresence(driver, By.id("scheme-payment-selector"))
 //
@@ -49,7 +49,11 @@ internal abstract class BaseSliceItTest : BaseAppiumTest() {
             BillingAddressTestHelper.setEmailFlag(billing, BillingAddressTestHelper.EMAIL_FLAG_REJECTED)
         }
 
-        val verificationWindow = WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"), By.id("email_or_phone"))
+        val verificationWindow = WebViewTestHelper.findWindowFor(
+            driver,
+            By.id("klarna-some-hardcoded-instance-id-fullscreen"),
+            By.id("email_or_phone")
+        )
         verificationWindow?.let {
             driver.switchTo().window(it)
             DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-fullscreen")
@@ -95,8 +99,8 @@ internal abstract class BaseSliceItTest : BaseAppiumTest() {
         if (!success) {
             if (android()) {
                 DriverUtils.waitForPresence(
-                        driver,
-                        By.xpath("//h1[contains(text(),'Your application was declined')]")
+                    driver,
+                    By.xpath("//h1[contains(text(),'Your application was declined')]")
                 )
             } else {
                 val changePaymentBy = By.xpath("//XCUIElementTypeButton[contains(@name, 'Change payment method')]")

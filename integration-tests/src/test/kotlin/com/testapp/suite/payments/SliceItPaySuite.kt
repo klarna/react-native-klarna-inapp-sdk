@@ -1,14 +1,16 @@
 package com.testapp.suite.payments
 
-import com.testapp.suite.ParallelSuite
 import com.testapp.tests.payments.flows.sliceit.SliceItUKFailureTest
 import com.testapp.tests.payments.flows.sliceit.SliceItUKSuccessTest
-import org.junit.runner.RunWith
-import org.junit.runners.Suite
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
+import org.junit.platform.suite.api.SelectClasses
+import org.junit.platform.suite.api.Suite
 
-@RunWith(ParallelSuite::class)
-@Suite.SuiteClasses(
-        SliceItUKSuccessTest::class,
-        SliceItUKFailureTest::class
+@Execution(ExecutionMode.CONCURRENT)
+@Suite
+@SelectClasses(
+    SliceItUKSuccessTest::class,
+    SliceItUKFailureTest::class
 )
 internal class SliceItPaySuite

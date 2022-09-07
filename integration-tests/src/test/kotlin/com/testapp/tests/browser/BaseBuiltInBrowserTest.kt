@@ -1,18 +1,23 @@
 package com.testapp.tests.browser
 
-import com.testapp.base.BaseAppiumTest
 import com.testapp.base.PaymentCategory
 import com.testapp.model.Session
+import com.testapp.tests.payments.base.BasePaymentsTest
 import com.testapp.utils.DriverUtils
 import com.testapp.utils.WebViewTestHelper
 import io.appium.java_client.MobileBy
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 
-internal abstract class BaseBuiltInBrowserTest : BaseAppiumTest() {
+internal abstract class BaseBuiltInBrowserTest : BasePaymentsTest() {
 
-    protected fun testLinks(session: Session?, category: PaymentCategory, linkLocator: By, iframeBy: By? = By.id("klarna-some-hardcoded-instance-id-main")) {
+    protected fun testLinks(
+        session: Session?,
+        category: PaymentCategory,
+        linkLocator: By,
+        iframeBy: By? = By.id("klarna-some-hardcoded-instance-id-main")
+    ) {
 
         if (session?.client_token == null || !session.payment_method_categories.map { it.identifier }
                 .contains(category.value)) {
@@ -26,7 +31,7 @@ internal abstract class BaseBuiltInBrowserTest : BaseAppiumTest() {
                 val mainWindow = WebViewTestHelper.findWindowFor(driver, iframeBy)
                 mainWindow?.let {
                     driver.switchTo().window(it)
-                } ?: Assert.fail("Main window wasn't found")
+                } ?: Assertions.fail("Main window wasn't found")
                 DriverUtils.switchToIframe(driver, iframeBy)
             }
         } else {

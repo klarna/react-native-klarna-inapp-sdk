@@ -1,14 +1,16 @@
 package com.testapp.suite.payments
 
-import com.testapp.suite.ParallelSuite
 import com.testapp.tests.payments.flows.threeds.ThreeDSFailureTest
 import com.testapp.tests.payments.flows.threeds.ThreeDSSuccessTest
-import org.junit.runner.RunWith
-import org.junit.runners.Suite
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
+import org.junit.platform.suite.api.SelectClasses
+import org.junit.platform.suite.api.Suite
 
-@RunWith(ParallelSuite::class)
-@Suite.SuiteClasses(
-        ThreeDSSuccessTest::class,
-        ThreeDSFailureTest::class
+@Execution(ExecutionMode.CONCURRENT)
+@Suite
+@SelectClasses(
+    ThreeDSSuccessTest::class,
+    ThreeDSFailureTest::class
 )
 internal class ThreeDSTestSuite
