@@ -1,12 +1,13 @@
 package com.testapp.tests.payments.flows.threeds
 
-import org.junit.Ignore
-import org.junit.Test
+import com.testapp.constants.AppiumTestConstants
+import io.github.artsok.RepeatedIfExceptionsTest
+import org.junit.jupiter.api.Disabled
 
 internal class ThreeDSSuccessTest : BaseThreeDSTest() {
 
-    @Test
-    @Ignore
+    @RepeatedIfExceptionsTest(repeats = AppiumTestConstants.DEFAULT_RETRY_COUNT)
+    @Disabled
     fun `test 3ds successful flow`() {
         test3ds(true)
     }

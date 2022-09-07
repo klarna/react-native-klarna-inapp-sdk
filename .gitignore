@@ -48,3 +48,6 @@ ios/Podfile.lock
 
 # fastlane
 fastlane/report.xml
+
+# CUSTOM
+local-scripts

@@ -11,7 +11,7 @@ import io.appium.java_client.android.nativekey.KeyEvent
 import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.ios.IOSElement
 import org.json.JSONObject
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.openqa.selenium.By
 import org.openqa.selenium.StaleElementReferenceException
 import org.openqa.selenium.TimeoutException
@@ -25,16 +25,22 @@ internal object PaymentFlowsTestHelper {
             DriverUtils.switchContextToWebView(driver)
             // switch to klarna payment billing address iframe
             val billingWindow =
-                    WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
+                WebViewTestHelper.findWindowFor(driver, By.id("klarna-some-hardcoded-instance-id-fullscreen"))
             billingWindow?.let {
                 driver.switchTo().window(it)
-            } ?: Assert.fail("Billing address window wasn't found")
+            } ?: Assertions.fail("Billing address window wasn't found")
             DriverUtils.switchToIframe(driver, "klarna-some-hardcoded-instance-id-fullscreen")
         } else {
             tryOptional {
-                DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypeOther[contains(@name,'Please enter your')]"))
+                DriverUtils.waitForPresence(
+                    driver,
+                    By.xpath("//XCUIElementTypeOther[contains(@name,'Please enter your')]")
+                )
             } ?: tryOptional {
-                DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypeOther[contains(@name,'Verify your details')]"))
+                DriverUtils.waitForPresence(
+                    driver,
+                    By.xpath("//XCUIElementTypeOther[contains(@name,'Verify your details')]")
+                )
             }
         }
 
@@ -100,7 +106,7 @@ internal object PaymentFlowsTestHelper {
         element.apply {
             if (isEnabled || driver is IOSDriver) {
                 DriverUtils.getWaiter(driver)
-                        .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
+                    .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
                 if (this is IOSElement) {
                     tapElementCenter(driver)
                     DriverUtils.wait(driver, 5)
@@ -108,7 +114,8 @@ internal object PaymentFlowsTestHelper {
                     if (billingInfo.identifiers.title == key) {
                         DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypePickerWheel")).sendKeys(value)
                         tryOptional {
-                            DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypeButton[@name='Done']")).click()
+                            DriverUtils.waitForPresence(driver, By.xpath("//XCUIElementTypeButton[@name='Done']"))
+                                .click()
                         }
                     }
                     if (driver.isKeyboardVisible()) {
@@ -128,27 +135,27 @@ internal object PaymentFlowsTestHelper {
         tryOptional {
             if (driver is AndroidDriver) {
                 submitAndConfirm(
-                        driver,
-                        By.id("identification-dialog__footer-button-wrapper"),
-                        By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"),
-                        By.id("invoice_kp-purchase-approval__footer-button-wrapper"),
-                        By.id("btn-continue")
+                    driver,
+                    By.id("identification-dialog__footer-button-wrapper"),
+                    By.id("payinparts_kp-address-collection-dialog__footer-button-wrapper"),
+                    By.id("invoice_kp-purchase-approval__footer-button-wrapper"),
+                    By.id("btn-continue")
                 )
             } else {
                 submitAndConfirm(
-                        driver,
-                        By.xpath("//XCUIElementTypeButton[contains(@name,'Submit')]"),
-                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]")
+                    driver,
+                    By.xpath("//XCUIElementTypeButton[contains(@name,'Submit')]"),
+                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]")
                 )
                 submitAndConfirm(
-                        driver,
-                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"),
-                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]")
+                    driver,
+                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue anyway')]"),
+                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]")
                 )
                 submitAndConfirm(
-                        driver,
-                        By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"),
-                        By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]")
+                    driver,
+                    By.xpath("//XCUIElementTypeButton[contains(@name,'Continue')]"),
+                    By.xpath("//XCUIElementTypeButton[contains(@name,'Confirm')]")
                 )
             }
         }
@@ -210,9 +217,9 @@ internal object PaymentFlowsTestHelper {
     }
 
     fun waitStateMessage(
-            driver: AppiumDriver<MobileElement>,
-            paymentCategory: PaymentCategory,
-            containText: String
+        driver: AppiumDriver<MobileElement>,
+        paymentCategory: PaymentCategory,
+        containText: String
     ): String? {
         val id = "state_${paymentCategory.value}"
         val by = if (driver is IOSDriver) {
@@ -241,19 +248,21 @@ internal object PaymentFlowsTestHelper {
                     assert(!this.isBlank() && this != "null")
                 }
             } catch (exception: Exception) {
-                Assert.fail("Null authorization token.")
+                Assertions.fail<Any>("Null authorization token.")
             }
         } else {
             when {
                 json.has("approved") -> {
-                    Assert.assertFalse(json.getBoolean("approved"))
+                    Assertions.assertFalse(json.getBoolean("approved"))
                 }
+
                 json.has("error") -> {
                     val errorJson = json.getJSONObject("error")
-                    Assert.assertEquals("Authorize", errorJson.getString("action"))
+                    Assertions.assertEquals("Authorize", errorJson.getString("action"))
                 }
+
                 else -> {
-                    Assert.assertTrue(false)
+                    Assertions.assertTrue(false)
                 }
             }
         }
@@ -263,7 +272,7 @@ internal object PaymentFlowsTestHelper {
         if (driver is AndroidDriver) {
             DriverUtils.waitForPresence(driver, By.id("cardNumber"))
             driver.findElementById("cardNumber")
-                    .sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
+                .sendKeys(if (is3ds) AppiumTestConstants.CARD_NUMBER_3DS else AppiumTestConstants.CARD_NUMBER)
             driver.findElementById("expire").sendKeys(AppiumTestConstants.CARD_EXPIREDATE)
             driver.findElementById("securityCode").sendKeys(AppiumTestConstants.CARD_CVV)
         } else {

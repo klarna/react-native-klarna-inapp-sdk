@@ -1,16 +1,18 @@
 package com.testapp.suite.browser
 
-import com.testapp.suite.ParallelSuite
 import com.testapp.tests.browser.BuiltInBrowserPayLaterTest
 import com.testapp.tests.browser.BuiltInBrowserPayNowTest
 import com.testapp.tests.browser.BuiltInBrowserSliceItTest
-import org.junit.runner.RunWith
-import org.junit.runners.Suite
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
+import org.junit.platform.suite.api.SelectClasses
+import org.junit.platform.suite.api.Suite
 
-@RunWith(ParallelSuite::class)
-@Suite.SuiteClasses(
-        BuiltInBrowserPayNowTest::class,
-        BuiltInBrowserPayLaterTest::class,
-        BuiltInBrowserSliceItTest::class
+@Execution(ExecutionMode.CONCURRENT)
+@Suite
+@SelectClasses(
+    BuiltInBrowserPayNowTest::class,
+    BuiltInBrowserPayLaterTest::class,
+    BuiltInBrowserSliceItTest::class
 )
 internal class BuiltInBrowserTestSuite
