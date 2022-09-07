@@ -105,8 +105,8 @@ internal object PaymentFlowsTestHelper {
         val element = DriverUtils.waitForPresence(driver, By.xpath(key), 5)
         element.apply {
             if (isEnabled || driver is IOSDriver) {
-                DriverUtils.getWaiter(driver)
-                    .until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")))
+                val loadingLocator = By.id("loading-overlay")
+                DriverUtils.getWaiter(driver).until(ExpectedConditions.invisibilityOfElementLocated(loadingLocator))
                 if (this is IOSElement) {
                     tapElementCenter(driver)
                     DriverUtils.wait(driver, 5)
@@ -124,6 +124,11 @@ internal object PaymentFlowsTestHelper {
                 } else {
                     if (billingInfo.identifiers.title == key) {
                         DriverUtils.waitForPresence(driver, By.xpath("$key//option[@label=\"${value}\"]")).click()
+                    } else {
+                        tryOptional {
+                            this.click()
+                        }
+                        DriverUtils.getWaiter(driver).until(ExpectedConditions.invisibilityOfElementLocated(loadingLocator))
                     }
                     sendKeys(value)
                 }
