@@ -5,14 +5,16 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "postinstall": "node ../scripts/examples_postinstall.js"
+    "postinstall": "node ../scripts/examples_postinstall.js",
+    "bundle:android": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "bundle:ios": "react-native bundle --platform ios --dev true --entry-file index.js --bundle-output ios/main.jsbundle"
   },
   "dependencies": {
     "acorn": "^6.4.1",
-    "minimist": "^1.2.5",
     "lodash": "^4.17.20",
-    "react": "16.8.3",
-    "react-native": "0.59",
+    "minimist": "^1.2.5",
+    "react": "17.0.1",
+    "react-native": "0.64.0",
     "react-native-klarna-inapp-sdk": "file:../"
   },
   "devDependencies": {
