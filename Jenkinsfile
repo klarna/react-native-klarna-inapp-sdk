@@ -77,6 +77,7 @@ pipeline {
 
         stage('Build iOS TestApp') {
             steps {
+                bash 'cd TestApp && yarn bundle:ios && cd ..'
                 bash 'bundle exec fastlane ios build_test_apps'
             }
         }
