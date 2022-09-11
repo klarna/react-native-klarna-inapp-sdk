@@ -65,10 +65,14 @@ pipeline {
             }
         }
 
+        stage('Post Install TestApp') {
+            steps {
+                bash 'cd TestApp && yarn postinstall && cd ..'
+            }
+        }
+
         stage('Build Android TestApp') {
             steps {
-                sh 'cd TestApp && npx mkdirp android/app/src/main/assets/ && cd ..'
-                sh 'cd TestApp && npx react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd ..'
                 sh 'cd TestApp/android && ./gradlew clean && ./gradlew app:assembleDebug && cd ../..'
                 // apk location: TestApp/android/app/build/outputs/apk/debug/app-debug.apk
                 // TODO : Upload apk
