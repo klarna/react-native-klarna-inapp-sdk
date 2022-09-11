@@ -30,10 +30,5 @@
     "react": "17.0.1",
     "react-native": "0.64.0"
   },
-  "dependencies": {
-    "kind-of": "^6.0.3",
-    "lodash": "^4.17.20",
-    "logkitty": "^0.7.1",
-    "minimist": "^1.2.5"
-  }
+  "dependencies": {}
 }

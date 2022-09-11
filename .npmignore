@@ -1,6 +1,9 @@
 # Sample App
 TestApp
 
+# Integrations Tests
+integtation-tests
+
 # npm
 .npmrc
 npm-debug.log
