@@ -6,144 +6,205 @@
  * react-native init example
  *
  * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
  */
 
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, TextInput, View, Button, ScrollView } from 'react-native';
+import {Node} from 'react';
+import React, {useRef, useState} from 'react';
+import {
+  Button,
+  NativeModules,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  useColorScheme,
+  View,
+} from 'react-native';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import KlarnaPaymentView from 'react-native-klarna-inapp-sdk';
-import { NativeModules } from 'react-native';
 
-export default class App extends Component {
+const App: () => Node = () => {
+  const [state, setState] = useState({});
 
-  constructor(props){
-    super(props);
-    this.state = {}
-  }
+  const paymentViewRefs = [];
 
-  actionButtons = (paymentMethod) => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  const actionButtons = paymentMethodName => {
     return (
       <View style={styles.buttonsContainer}>
         <Button
           onPress={() => {
-            this.refs[paymentMethod].initialize(authToken, 'returnUrl://')
+            paymentViewRefs[paymentMethodName].current.initialize(
+              authToken,
+              'returnUrl://',
+            );
 
             //You can skip this line, it's for integration testing purposes by Klarna.
             if (Platform.OS === 'android') {
-              NativeModules.DebugWebViewModule.enable()
+              NativeModules.DebugWebViewModule.enable();
             }
           }}
           title="Init."
-          {...testProps('initButton_' + paymentMethod)}
-          style={styles.button} />
+          {...testProps('initButton_' + paymentMethodName)}
+          style={styles.button}
+        />
         <Button
           onPress={() => {
-            this.refs[paymentMethod].load()
+            paymentViewRefs[paymentMethodName].current.load();
           }}
           title="Load"
-          {...testProps('loadButton_' + paymentMethod)}
-          style={styles.button} />
+          {...testProps('loadButton_' + paymentMethodName)}
+          style={styles.button}
+        />
         <Button
           onPress={() => {
-            this.refs[paymentMethod].authorize()
+            paymentViewRefs[paymentMethodName].current.authorize();
           }}
           title="Authorize"
-          {...testProps('authorizeButton_' + paymentMethod)}
-          style={styles.button} />
+          {...testProps('authorizeButton_' + paymentMethodName)}
+          style={styles.button}
+        />
         <Button
           onPress={() => {
-            this.refs[paymentMethod].reauthorize()
+            paymentViewRefs[paymentMethodName].current.reauthorize();
           }}
           title="Reauthorize"
-          {...testProps('reauthorizeButton_' + paymentMethod)}
-          style={styles.button} />
+          {...testProps('reauthorizeButton_' + paymentMethodName)}
+          style={styles.button}
+        />
         <Button
           onPress={() => {
-            this.refs[paymentMethod].finalize()
+            paymentViewRefs[paymentMethodName].current.finalize();
           }}
           title="Finalize"
-          {...testProps('finalizeButton_' + paymentMethod)}
-          style={styles.button} />
-      </View>
-    )
-  }
-
-  onEvent = (event, paymentMethod) => {
-    const newState = this.state;
-    newState[paymentMethod] = JSON.stringify(event.nativeEvent);
-    this.setState(newState)
-    window.console.warn(JSON.stringify(event.nativeEvent))
-  }
-
-  renderSetTokenInput(){
-    if(authToken==''){
-      return(
-          <TextInput
-              style={styles.tokenInput}
-              placeholder="Set token here..."
-              multiline={true}
-              blurOnSubmit={true}
-              {...testProps('setTokenInput')}
-              onChangeText={(text) => {authToken = text;}}
-          />
-      );
-    }
-  }
-
-  render = () => {
-    return (
-      <View style={styles.outer}>
-      <ScrollView vertical style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
-        <Text style={styles.header}>☆Klarna Payments Test App</Text>
-        {this.renderSetTokenInput()}
-        {paymentMethods.map(paymentMethod => {
-          return (
-            <View style={styles.container} key={paymentMethod}>
-              <Text style={styles.title}>{paymentMethod}</Text>
-              <KlarnaPaymentView
-                category={paymentMethod}
-                ref={paymentMethod}
-                style={styles.paymentView}
-                onInitialized={(event) => {this.onEvent(event, paymentMethod)}}
-                onLoaded={(event) => {this.onEvent(event, paymentMethod)}}
-                onAuthorized={(event) => {this.onEvent(event, paymentMethod)}}
-                onError={(event) => {this.onEvent(event, paymentMethod)}} />
-              {this.actionButtons(paymentMethod)}
-              <Text
-                style={{ color: 'gray' }}
-                {...testProps('state_' + paymentMethod)}>
-                {this.state[paymentMethod]}
-                </Text>
-            </View>
-          )
-        })}
-      </ScrollView>
+          {...testProps('finalizeButton_' + paymentMethodName)}
+          style={styles.button}
+        />
       </View>
     );
-  }
-}
+  };
+
+  const onEvent = (event, paymentMethodName) => {
+    const newState = state;
+    newState[paymentMethodName] = JSON.stringify(event.nativeEvent);
+    setState(newState);
+    window.console.warn(JSON.stringify(event.nativeEvent));
+  };
+
+  const renderSetTokenInput = () => {
+    if (authToken === '') {
+      return (
+        <TextInput
+          style={styles.tokenInput}
+          placeholder="Set token here..."
+          multiline={true}
+          blurOnSubmit={true}
+          {...testProps('setTokenInput')}
+          onChangeText={text => {
+            authToken = text;
+          }}
+        />
+      );
+    }
+  };
+
+  const renderPaymentMethod = paymentMethodName => {
+    const paymentMethod = useRef();
+    paymentViewRefs[paymentMethodName] = paymentMethod;
+    return (
+      <View style={styles.container} key={paymentMethodName}>
+        <Text style={styles.title}>{paymentMethodName}</Text>
+        <KlarnaPaymentView
+          ref={paymentMethod}
+          style={styles.paymentView}
+          category={paymentMethodName}
+          onInitialized={event => {
+            onEvent(event, paymentMethodName);
+          }}
+          onLoaded={event => {
+            onEvent(event, paymentMethodName);
+          }}
+          onAuthorized={event => {
+            onEvent(event, paymentMethodName);
+          }}
+          onReauthorized={event => {
+            onEvent(event, paymentMethodName);
+          }}
+          onFinalized={event => {
+            onEvent(event, paymentMethodName);
+          }}
+          onError={event => {
+            onEvent(event, paymentMethodName);
+          }}
+        />
+        {actionButtons(paymentMethodName)}
+        <Text
+          style={{color: 'gray'}}
+          {...testProps('state_' + paymentMethodName)}>
+          {state[paymentMethodName]}
+        </Text>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}>
+        <View
+          style={{
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          }}>
+          <Text style={styles.header}>☆Klarna Payments Test App</Text>
+          {renderSetTokenInput()}
+          {paymentMethods.map(paymentMethod => {
+            return renderPaymentMethod(paymentMethod);
+          })}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 let authToken = ''; // set your token here
 
-const paymentMethods = ['pay_now', 'pay_later', 'pay_over_time', 'pay_in_parts'];
+const paymentMethods = [
+  'pay_now',
+  'pay_later',
+  'pay_over_time',
+  'pay_in_parts',
+];
 
 const styles = StyleSheet.create({
   outer: {
     flex: 1,
-    flexGrow: 1
+    flexGrow: 1,
   },
   scrollView: {
     flex: 1,
-    flexGrow: 1
-    },
-  scrollViewContentContainer: {
-    justifyContent: 'space-between'
+    flexGrow: 1,
   },
-
+  scrollViewContentContainer: {
+    justifyContent: 'space-between',
+  },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-    width: "100%"
+    width: '100%',
   },
   header: {
     fontSize: 20,
@@ -151,8 +212,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   paymentView: {
-    width: "100%",
-    flexGrow: 1
+    width: '100%',
+    flexGrow: 1,
   },
   title: {
     textAlign: 'center',
@@ -160,30 +221,48 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    margin: 10
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    margin: 10,
   },
   tokenInput: {
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     borderColor: 'gray',
     height: 40,
     borderWidth: 1,
     padding: 10,
     marginLeft: 20,
     marginRight: 20,
-    marginBottom: 10
+    marginBottom: 10,
   },
   button: {
-    height: 10
+    height: 10,
+  },
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
   },
 });
 
-export function testProps (id) {
+export default App;
+
+export function testProps(id) {
   return Platform.OS === 'android'
-    ? { testID: id, accessibilityLabel: id }
-    : { testID: id }
+    ? {testID: id, accessibilityLabel: id}
+    : {testID: id};
 }
