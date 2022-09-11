@@ -10,7 +10,7 @@ buildscript {
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath("com.android.tools.build:gradle:4.2.0")
@@ -31,10 +31,16 @@ allprojects {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
         }
+        google()
+        mavenCentral {
+            // We don't want to fetch react-native from Maven Central as there are
+            // older versions over there.
+            content {
+                excludeGroup "com.facebook.react"
+            }
+        }
         maven {
             url 'https://x.klarnacdn.net/mobile-sdk/'
         }
-        google()
-        jcenter()
     }
 }
