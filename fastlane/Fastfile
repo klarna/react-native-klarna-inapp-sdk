@@ -31,7 +31,7 @@ platform :ios do
     sh "rm -rf build/*"
   end
 
-  lane :build_test_apps do
+  lane :build_test_app_release do
     clean_test_apps_build_dir
 
     build_time_start = DateTime.now
@@ -43,6 +43,22 @@ platform :ios do
       clean: true,
       output_directory: "TestApp/build/",
       configuration: "Release",
+      export_method: "enterprise",
+    )
+  end
+
+  lane :build_test_app_debug do
+    clean_test_apps_build_dir
+
+    build_time_start = DateTime.now
+
+    xcversion(version: ">= 12.1")
+    gym(
+      workspace: "TestApp/ios/TestApp.xcworkspace",
+      scheme: "TestApp",
+      clean: true,
+      output_directory: "TestApp/build/",
+      configuration: "Debug",
       export_method: "enterprise",
     )
   end

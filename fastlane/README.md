@@ -31,10 +31,18 @@ Description of what the lane does
 
 
 
-### ios build_test_apps
+### ios build_test_app_release
 
 ```sh
-[bundle exec] fastlane ios build_test_apps
+[bundle exec] fastlane ios build_test_app_release
+```
+
+
+
+### ios build_test_app_debug
+
+```sh
+[bundle exec] fastlane ios build_test_app_debug
 ```
 
 
