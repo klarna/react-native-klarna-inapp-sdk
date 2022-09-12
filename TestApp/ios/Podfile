@@ -1,92 +1,31 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
 platform :ios, '10.0'
 
-    def shared_pods
-        rn_path = '../node_modules/react-native'
-	
-		pod 'Yoga', path: "#{rn_path}/ReactCommon/yoga/yoga.podspec"
-		pod 'DoubleConversion', :podspec => "#{rn_path}/third-party-podspecs/DoubleConversion.podspec"
-		pod 'RCT-Folly', :podspec => "#{rn_path}/third-party-podspecs/RCT-Folly.podspec"
-		pod 'glog', :podspec => "#{rn_path}/third-party-podspecs/GLog.podspec"
+target 'TestApp' do
+  pod 'react-native-klarna-inapp-sdk', :path => '../../react-native-klarna-inapp-sdk.podspec'
 
-        pod 'React', :path => '../node_modules/react-native/'
-        pod 'React-Core', :path => '../node_modules/react-native/'
-        pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
-        pod 'React-Core/DevSupport', :path => '../node_modules/react-native/'
-        pod 'React-RCTActionSheet', :path => '../node_modules/react-native/Libraries/ActionSheetIOS'
-        pod 'React-RCTAnimation', :path => '../node_modules/react-native/Libraries/NativeAnimation'
-        pod 'React-RCTBlob', :path => '../node_modules/react-native/Libraries/Blob'
-        pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
-        pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
-        pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
-        pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
-        pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
-        pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
-        pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
-        pod 'React-RCTPushNotification', :path => '../node_modules/react-native/Libraries/PushNotificationIOS'
+  config = use_native_modules!
 
-        pod 'FBReactNativeSpec', :path => '../node_modules/react-native/React/FBReactNativeSpec'
-        pod 'ReactCommon/turbomodule/core', :path => '../node_modules/react-native/ReactCommon'
-        pod 'RCTRequired', :path => '../node_modules/react-native/Libraries/RCTRequired'
-        pod 'RCTTypeSafety', :path => '../node_modules/react-native/Libraries/TypeSafety'
-        pod 'FBLazyVector', :path => '../node_modules/react-native/Libraries/FBLazyVector'
-        pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
-        pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
-        pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
-        pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
-        pod 'ReactCommon/turbomodule/core', :path => '../node_modules/react-native/ReactCommon'
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => false
+  )
 
-        pod 'React-callinvoker', :path => '../node_modules/react-native/ReactCommon/callinvoker'
-        pod 'React-perflogger', :path => '../node_modules/react-native/ReactCommon/reactperflogger'
-        pod 'React-runtimeexecutor', :path => '../node_modules/react-native/ReactCommon/runtimeexecutor'
-	
-		pod 'react-native-klarna-inapp-sdk', :path => '../../react-native-klarna-inapp-sdk.podspec'
-    end
+  target 'TestAppTests' do
+    inherit! :complete
+    # Pods for testing
+  end
 
-	target 'TestApp' do
-		shared_pods
-	end
-
-    target 'TestAppTests' do
-		shared_pods
-	end
-
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable the next line.
+#   use_flipper!()
 
   post_install do |installer|
-      find_and_replace("../node_modules/react-native/React/CxxBridge/RCTCxxBridge.mm",
-          "_initializeModules:(NSArray<id<RCTBridgeModule>> *)modules", "_initializeModules:(NSArray<Class> *)modules")
-      find_and_replace("../node_modules/react-native/ReactCommon/turbomodule/core/platform/ios/RCTTurboModuleManager.mm",
-          "RCTBridgeModuleNameForClass(module))", "RCTBridgeModuleNameForClass(Class(module)))")
-    
-      find_and_replace("../node_modules/react-native/Libraries/fishhook/fishhook.c",
-      "indirect_symbol_bindings[i] = cur->rebindings[j].replacement;", "// indirect_symbol_bindings[i] = cur->rebindings[j].replacement ; // Temp fix for iOS 13+")
-    
-      installer.pods_project.targets.each do |target|
-
-          # The following is needed to ensure the "archive" step works in XCode.
-          # It removes React & Yoga from the Pods project, as it is already included in the main project.
-          # Without this, you'd see errors when you archive like:
-          # "Multiple commands produce ... libReact.a"
-          # "Multiple commands produce ... libyoga.a"
-
-          targets_to_ignore = %w(React yoga)
-
-          if targets_to_ignore.include? target.name
-              target.remove_from_project
-          end
-
-      end
+    react_native_post_install(installer)
   end
-
-  def find_and_replace(dir, findstr, replacestr)
-    Dir[dir].each do |name|
-        text = File.read(name)
-        replace = text.gsub(findstr,replacestr)
-        if text != replace
-            puts "Fix: " + name
-            File.open(name, "w") { |file| file.puts replace }
-            STDOUT.flush
-        end
-    end
-    Dir[dir + '*/'].each(&method(:find_and_replace))
-  end
-
+end
