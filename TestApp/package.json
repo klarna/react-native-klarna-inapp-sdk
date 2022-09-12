@@ -12,7 +12,7 @@
     "minimist": "^1.2.5",
     "lodash": "^4.17.20",
     "react": "16.8.3",
-    "react-native": "0.59",
+    "react-native": "0.62",
     "react-native-klarna-inapp-sdk": "file:../"
   },
   "devDependencies": {
