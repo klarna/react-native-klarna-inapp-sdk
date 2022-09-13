@@ -11,80 +11,33 @@
  * @flow strict-local
  */
 
-import React, {Node, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import PaymentsContainer from './src/payments/PaymentsContainer';
-import styles from './src/Styles';
-import testProps from './src/TestProps';
+import React, {Node} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import HomeScreen from './src/home/HomeScreen';
+import PaymentsScreen from './src/payments/PaymentsScreen';
 
 const App: () => Node = () => {
-  const [clientToken, setClientToken] = useState(authToken);
+  const AppStack = () => {
+    const Stack = createNativeStackNavigator();
 
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  const renderSetTokenInput = () => {
-    if (clientToken === '') {
-      return (
-        <TextInput
-          style={styles.tokenInput}
-          placeholder="Set token here..."
-          multiline={true}
-          blurOnSubmit={true}
-          {...testProps('setTokenInput')}
-          onChangeText={text => {
-            setClientToken(text);
-          }}
+    return (
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{title: 'Home'}}
         />
-      );
-    }
+        <Stack.Screen name="Payments" component={PaymentsScreen} />
+      </Stack.Navigator>
+    );
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Text style={styles.header}>☆Klarna Payments Test App</Text>
-          {renderSetTokenInput()}
-          {paymentMethods.map(paymentMethod => {
-            return (
-              <PaymentsContainer
-                clientToken={clientToken}
-                paymentMethodName={paymentMethod}
-              />
-            );
-          })}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <AppStack />
+    </NavigationContainer>
   );
 };
-
-let authToken = ''; // set your token here
-
-const paymentMethods = [
-  'pay_now',
-  'pay_later',
-  'pay_over_time',
-  'pay_in_parts',
-];
 
 export default App;

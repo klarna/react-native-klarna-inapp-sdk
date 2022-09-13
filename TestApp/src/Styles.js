@@ -1,5 +1,20 @@
 import {StyleSheet} from 'react-native';
 
+export const backgroundStyle = isDarkMode => {
+  return {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+};
+
+export const Colors = {
+  white: '#FFF',
+  lighter: '#F3F3F3',
+  light: '#DAE1E7',
+  dark: '#444',
+  darker: '#222',
+  black: '#000',
+}
+
 const styles = StyleSheet.create({
   outer: {
     flex: 1,
@@ -15,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: Colors.light,
     width: '100%',
   },
   header: {
@@ -33,6 +48,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   buttonsContainer: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -46,12 +62,11 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     padding: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    marginBottom: 10,
+    margin: 20,
   },
   button: {
     height: 10,
+    margin: 10,
   },
   sectionContainer: {
     marginTop: 32,
@@ -68,6 +83,11 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  navMenuItem: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 20,
   },
 });
 

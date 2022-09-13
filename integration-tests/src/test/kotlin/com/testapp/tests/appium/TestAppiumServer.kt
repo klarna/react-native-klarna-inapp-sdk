@@ -12,6 +12,6 @@ internal class TestAppiumServer : BaseAppiumMethodTest() {
     @RepeatedIfExceptionsTest(repeats = AppiumTestConstants.DEFAULT_RETRY_COUNT)
     fun testAppiumServer() {
         DriverUtils.getWaiter(driver)
-            .until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "initButton_pay_now"))).click()
+            .until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "navKlarnaPayments"))).click()
     }
 }
