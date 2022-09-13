@@ -65,12 +65,6 @@ pipeline {
             }
         }
 
-        stage('Post Install TestApp') {
-            steps {
-                bash 'cd TestApp && yarn postinstall && cd ..'
-            }
-        }
-
         stage('Build Android TestApp') {
             steps {
                 sh 'cd TestApp/android && ./gradlew clean && ./gradlew app:assembleDebug && cd ../..'
@@ -81,8 +75,7 @@ pipeline {
 
         stage('Build iOS TestApp') {
             steps {
-                bash 'cd TestApp && yarn bundle:ios-dev && cd ..'
-                bash 'bundle exec fastlane ios build_test_apps'
+                bash 'bundle exec fastlane ios build_test_app_release'
             }
         }
 
