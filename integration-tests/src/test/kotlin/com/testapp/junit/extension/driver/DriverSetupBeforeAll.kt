@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
 class DriverSetupBeforeAll : BeforeAllCallback {
-    override fun beforeAll(context: ExtensionContext?) {
-        context?.setDriver(BaseAppiumTest.setupDriver(context.displayName))
+    override fun beforeAll(context: ExtensionContext) {
+        context.setDriver(BaseAppiumTest.setupDriver(context.displayName))
     }
 }
