@@ -100,16 +100,19 @@ def configureReactNativePom(def pom) {
 
 afterEvaluate { project ->
 
-    task androidJavadoc(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += files(android.bootClasspath)
-        classpath += files(project.getConfigurations().getByName('compile').asList())
-        include '**/*.java'
+    task androidJavadocs(type: Javadoc) {
+	    source = android.sourceSets.main.java.srcDirs
+	    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+	    android.libraryVariants.all { variant ->
+            if (variant.name == 'release') {
+                owner.classpath += variant.javaCompileProvider.get().classpath
+            }
+        }
     }
 
-    task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
-        classifier = 'javadoc'
-        from androidJavadoc.destinationDir
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        archiveClassifier.set('javadoc')
+        from androidJavadocs.destinationDir
     }
 
     task androidSourcesJar(type: Jar) {
@@ -127,7 +130,7 @@ afterEvaluate { project ->
 
     artifacts {
         archives androidSourcesJar
-        archives androidJavadocJar
+        archives androidJavadocsJar
     }
 
     publishing {
@@ -140,7 +143,7 @@ afterEvaluate { project ->
                 description packageJson.description
 
                 artifact(androidSourcesJar)
-                artifact(androidJavadocJar)
+                artifact(androidJavadocsJar)
             }
         }
 
