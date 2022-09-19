@@ -50,6 +50,7 @@ internal object DriverUtils {
                 desiredCapabilities.setCapability("noReset", "true")
                 return AndroidDriver(appiumService.url, desiredCapabilities)
             }
+
             Platform.IOS -> {
                 desiredCapabilities.setCapability("automationName", AutomationName.IOS_XCUI_TEST)
                 desiredCapabilities.setCapability("deviceName", "iPhone 12")
@@ -73,8 +74,8 @@ internal object DriverUtils {
     fun getBrowserstackDriver(
         username: String,
         password: String,
-        testName: String?,
-        buildName: String?,
+        testName: String,
+        buildName: String,
         platform: Platform
     ): AppiumDriver<MobileElement> {
         val caps = commonCapabilities
@@ -86,12 +87,7 @@ internal object DriverUtils {
         caps.setCapability("project", "IN-APP RN MOBILE SDK INTEGRATION")
         caps.setCapability("name", testName)
 
-        val buildNameValue = if (buildName.isNullOrEmpty()) {
-            "${ScriptHelper.getGitBranch()}@${ScriptHelper.getGitCommit()}"
-        } else {
-            buildName
-        }
-        caps.setCapability("build", "InApp-RN-SDK/${buildNameValue}")
+        caps.setCapability("build", "InApp-RN-SDK/${buildName}")
 
         when (platform) {
             Platform.ANDROID -> {
@@ -107,6 +103,7 @@ internal object DriverUtils {
                     caps
                 )
             }
+
             Platform.IOS -> {
                 caps.setCapability("app", "INAPP_RN_SDK_IOS_TEST_APP")
                 caps.setCapability("automationName", AutomationName.IOS_XCUI_TEST)

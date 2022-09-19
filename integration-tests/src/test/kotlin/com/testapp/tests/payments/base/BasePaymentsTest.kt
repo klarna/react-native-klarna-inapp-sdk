@@ -10,9 +10,18 @@ import com.testapp.utils.DriverUtils
 import com.testapp.utils.PaymentFlowsTestHelper
 import io.appium.java_client.android.AndroidDriver
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.TestInfo
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 internal abstract class BasePaymentsTest : BaseAppiumMethodTest() {
+
+    @BeforeEach
+    fun setup(testInfo: TestInfo) {
+        DriverUtils.getWaiter(driver)
+            .until(ExpectedConditions.presenceOfElementLocated(ByRnId(driver, "navKlarnaPayments")))
+            .click()
+    }
 
     fun initLoadSDK(token: String?, category: PaymentCategory) {
         DriverUtils.getWaiter(driver)

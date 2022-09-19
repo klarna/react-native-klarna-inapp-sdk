@@ -11,6 +11,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.ReactChoreographer;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.events.EventDispatcher;
+import com.facebook.react.uimanager.events.EventDispatcherImpl;
 import com.facebook.react.uimanager.events.EventDispatcherListener;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
@@ -63,7 +64,7 @@ public class KlarnaPaymentEventTest {
         catalystInstance = mock(CatalystInstance.class);
 
         uiManagerModuleMock = mock(UIManagerModule.class);
-        eventDispatcherMock = new EventDispatcher(reactContext);
+        eventDispatcherMock = new EventDispatcherImpl(reactContext);
         when(uiManagerModuleMock.getEventDispatcher())
                 .thenReturn(eventDispatcherMock);
 

@@ -68,7 +68,7 @@ We strongly encourage you to use CocoaPods to manage the library and follow the 
     ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
     ```
-    compile project(':react-native-klarna-inapp-sdk')
+    implementation project(':react-native-klarna-inapp-sdk')
     ```
     
 **Note:** If you encounter any build failure errors regarding the `androidx.annotations` package missing, you should enable `react-native-jetifier` in the `gradle.properties` file inside your project. See how to enable this [here](https://github.com/jumpn/react-native-jetifier).
@@ -87,11 +87,21 @@ You can do it by adding the lines between the comments below:
 allprojects {
     repositories {
         mavenLocal()
-        google()
-        jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
+            url("$rootDir/../node_modules/react-native/android")
+        }
+        maven {
+            // Android JSC is installed from npm
+            url("$rootDir/../node_modules/jsc-android/dist")
+        }
+        google()
+        mavenCentral {
+            // We don't want to fetch react-native from Maven Central as there are
+            // older versions over there.
+            content {
+                excludeGroup "com.facebook.react"
+            }
         }
         // Add the lines below vvv
         maven {

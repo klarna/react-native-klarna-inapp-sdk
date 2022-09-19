@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {Component}from 'react';
 import { requireNativeComponent, UIManager, findNodeHandle } from 'react-native';
 import PropTypes from 'prop-types';
 
-class KlarnaReactPaymentView extends React.Component {
+class KlarnaReactPaymentView extends Component {
 
     render() {
         return <KlarnaPaymentView {...this.props} />

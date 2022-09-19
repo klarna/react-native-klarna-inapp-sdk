@@ -1,72 +1,31 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
 platform :ios, '10.0'
 
-	target 'TestApp' do
-		rn_path = '../node_modules/react-native'
-	
-		pod 'yoga', path: "#{rn_path}/ReactCommon/yoga/yoga.podspec"
-		pod 'DoubleConversion', :podspec => "#{rn_path}/third-party-podspecs/DoubleConversion.podspec"
-		pod 'Folly', :podspec => "#{rn_path}/third-party-podspecs/Folly.podspec"
-		pod 'glog', :podspec => "#{rn_path}/third-party-podspecs/GLog.podspec"
-		pod 'React', path: rn_path, subspecs: [
-			'Core',
-			'CxxBridge',
-			'RCTAnimation',
-			'RCTActionSheet',
-			'RCTImage',
-			'RCTLinkingIOS',
-			'RCTNetwork',
-			'RCTSettings',
-			'RCTText',
-			'RCTVibration',
-			'RCTWebSocket',
-			'RCTPushNotification',
-			'RCTCameraRoll',
-			'RCTSettings',
-			'RCTBlob',
-			'RCTGeolocation',
-			'DevSupport'
-		]
-	
-		pod 'react-native-klarna-inapp-sdk', :path => '../../react-native-klarna-inapp-sdk.podspec'
-	end
+target 'TestApp' do
+  pod 'react-native-klarna-inapp-sdk', :path => '../../react-native-klarna-inapp-sdk.podspec'
 
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => false
+  )
+
+  target 'TestAppTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable the next line.
+#   use_flipper!()
 
   post_install do |installer|
-      find_and_replace("../node_modules/react-native/React/CxxBridge/RCTCxxBridge.mm",
-          "_initializeModules:(NSArray<id<RCTBridgeModule>> *)modules", "_initializeModules:(NSArray<Class> *)modules")
-      find_and_replace("../node_modules/react-native/ReactCommon/turbomodule/core/platform/ios/RCTTurboModuleManager.mm",
-          "RCTBridgeModuleNameForClass(module))", "RCTBridgeModuleNameForClass(Class(module)))")
-    
-      find_and_replace("../node_modules/react-native/Libraries/fishhook/fishhook.c",
-      "indirect_symbol_bindings[i] = cur->rebindings[j].replacement;", "// indirect_symbol_bindings[i] = cur->rebindings[j].replacement ; // Temp fix for iOS 13+")
-    
-      installer.pods_project.targets.each do |target|
-
-          # The following is needed to ensure the "archive" step works in XCode.
-          # It removes React & Yoga from the Pods project, as it is already included in the main project.
-          # Without this, you'd see errors when you archive like:
-          # "Multiple commands produce ... libReact.a"
-          # "Multiple commands produce ... libyoga.a"
-
-          targets_to_ignore = %w(React yoga)
-
-          if targets_to_ignore.include? target.name
-              target.remove_from_project
-          end
-
-      end
+    react_native_post_install(installer)
   end
-
-  def find_and_replace(dir, findstr, replacestr)
-    Dir[dir].each do |name|
-        text = File.read(name)
-        replace = text.gsub(findstr,replacestr)
-        if text != replace
-            puts "Fix: " + name
-            File.open(name, "w") { |file| file.puts replace }
-            STDOUT.flush
-        end
-    end
-    Dir[dir + '*/'].each(&method(:find_and_replace))
-  end
-
+end

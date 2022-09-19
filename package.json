@@ -23,17 +23,12 @@
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "^16.5.0",
-    "react-native": ">=0.57.0-rc.0 <1.0.x"
+    "react": ">=16.5.0",
+    "react-native": ">=0.57.0 <1.0.x"
   },
   "devDependencies": {
-    "react": "^16.5.0",
-    "react-native": "^0.62.1"
+    "react": "17.0.1",
+    "react-native": "0.64.0"
   },
-  "dependencies": {
-    "kind-of": "^6.0.3",
-    "logkitty": "^0.7.1",
-    "minimist": "^1.2.5",
-    "lodash": "^4.17.20"
-  }
+  "dependencies": {}
 }
