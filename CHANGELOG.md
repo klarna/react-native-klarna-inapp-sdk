@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to React Native Klarna In-App SDK will be documented in this file.
 
+### [2.1.9] - 2022-10-04
+- Update Android native SDK version to the latest (2.3.1)
+
 ### [2.1.8] - 2022-09-20
 - Fix react peer dependency (>=16.5.0)
 - Add Gradle 7 compatibility
