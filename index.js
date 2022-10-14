@@ -2,6 +2,7 @@ import React, {Component}from 'react';
 import { requireNativeComponent, UIManager, findNodeHandle } from 'react-native';
 import PropTypes from 'prop-types';
 
+// Testing something :)
 class KlarnaReactPaymentView extends Component {
 
     render() {
