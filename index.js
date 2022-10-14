@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 // Testing something :)
 class KlarnaReactPaymentView extends Component {
-
+// and again
     render() {
         return <KlarnaPaymentView {...this.props} />
     }
