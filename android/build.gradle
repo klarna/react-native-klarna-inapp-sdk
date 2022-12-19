@@ -55,7 +55,7 @@ repositories {
 
 dependencies {
     implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
-    implementation 'com.klarna.mobile:sdk:2.4.1'
+    implementation 'com.klarna.mobile:sdk:2.4.2'
 
     testImplementation "junit:junit:4.13"
     testImplementation 'androidx.test:core:1.2.0'
