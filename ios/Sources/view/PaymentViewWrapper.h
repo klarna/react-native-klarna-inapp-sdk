@@ -4,13 +4,21 @@
 //
 //  Created by Gabriel Banfalvi on 2019-07-24.
 //
+#import <React/RCTUIManager.h>
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import <React/RCTViewComponentView.h>
+#import <UIKit/UIKit.h>
+#else
 #import <UIKit/UIKit.h>
 #import <React/RCTView.h>
-#import <React/RCTUIManager.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
+#ifdef RCT_NEW_ARCH_ENABLED
+@interface PaymentViewWrapper : RCTViewComponentView
+#else
 @interface PaymentViewWrapper : UIView
 
 @property (nonatomic, copy) RCTDirectEventBlock onInitialized;
@@ -20,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onReauthorized;
 @property (nonatomic, copy) RCTDirectEventBlock onFinalized;
 @property (nonatomic, copy) RCTDirectEventBlock onError;
+
+#endif
 
 @property (nonatomic, strong) NSString* category;
 

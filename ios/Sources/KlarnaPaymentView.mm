@@ -1,3 +1,4 @@
+#import <AVFoundation/AVFoundation.h>
 #import "KlarnaPaymentView.h"
 
 #import <React/RCTUIManager.h>
@@ -8,7 +9,12 @@
 
 @implementation KlarnaPaymentView
 
+#ifdef RCT_NEW_ARCH_ENABLED
+RCT_EXPORT_MODULE(RNKlarnaPaymentView)
+#else
 RCT_EXPORT_MODULE()
+#endif
+
 
 #pragma mark - View
 

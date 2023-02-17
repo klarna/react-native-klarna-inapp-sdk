@@ -36,6 +36,8 @@ build/
 .gradle
 local.properties
 *.iml
+*.hprof
+.cxx/
 
 # BUCK
 buck-out/
@@ -45,9 +47,13 @@ buck-out/
 # pods nonsense
 ios/Pods
 ios/Podfile.lock
+/vendor/bundle/
 
 # fastlane
 fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
 
 # CUSTOM
 local-scripts
