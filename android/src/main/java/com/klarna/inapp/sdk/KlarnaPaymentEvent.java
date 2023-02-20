@@ -7,10 +7,6 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.Event;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A `KlarnaPaymentEvent` builds the event that will be eventually sent via `on<event>`.
@@ -21,20 +17,27 @@ import java.util.Map;
 public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
 
     public static final String EVENT_NAME_ON_INITIALIZE = "onInitialized";
+    public static final String EVENT_TYPE_NAME_ON_INITIALIZE = "topOnInitialized";
     public static final String EVENT_NAME_ON_LOAD = "onLoaded";
+    public static final String EVENT_TYPE_NAME_ON_LOAD = "topOnLoaded";
     public static final String EVENT_NAME_ON_LOAD_PAYMENT_REVIEW = "onLoadedPaymentReview";
+    public static final String EVENT_TYPE_NAME_ON_LOAD_PAYMENT_REVIEW = "topOnLoadedPaymentReview";
     public static final String EVENT_NAME_ON_AUTHORIZE = "onAuthorized";
+    public static final String EVENT_TYPE_NAME_ON_AUTHORIZE = "topOnAuthorized";
     public static final String EVENT_NAME_ON_REAUTHORIZE = "onReauthorized";
+    public static final String EVENT_TYPE_NAME_ON_REAUTHORIZE = "topOnReauthorized";
     public static final String EVENT_NAME_ON_FINALIZE = "onFinalized";
+    public static final String EVENT_TYPE_NAME_ON_FINALIZE = "topOnFinalized";
     public static final String EVENT_NAME_ON_ERROR = "onError";
+    public static final String EVENT_TYPE_NAME_ON_ERROR = "topOnError";
 
     @NonNull
     private final String eventName;
 
     @Nullable
-    private final Map<String, Object> additionalParams;
+    private final WritableMap additionalParams;
 
-    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String eventName, @Nullable Map<String, Object> additionalParams) {
+    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String eventName, @Nullable WritableMap additionalParams) {
         super(viewId);
         this.eventName = eventName;
         this.additionalParams = additionalParams;
@@ -45,19 +48,13 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
         return eventName;
     }
 
-    /**
-     * Composes and sends the event JSON object being sent up to JS.
-     * @param rctEventEmitter
-     */
+    @Nullable
     @Override
-    public void dispatch(RCTEventEmitter rctEventEmitter) {
-        Map<String, Object> map = new HashMap<>();
-
-        if (additionalParams != null) {
-            map.putAll(additionalParams);
+    protected WritableMap getEventData() {
+        if(additionalParams != null){
+            return additionalParams;
         }
-
-        WritableMap eventData = Arguments.makeNativeMap(map);
-        rctEventEmitter.receiveEvent(getViewTag(), getEventName(), eventData);
+        return Arguments.createMap();
     }
+
 }

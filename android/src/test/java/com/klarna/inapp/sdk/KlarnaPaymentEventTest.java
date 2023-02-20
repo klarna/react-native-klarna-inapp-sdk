@@ -118,12 +118,13 @@ public class KlarnaPaymentEventTest {
         EventDispatcherListener listener = mock(EventDispatcherListener.class);
         eventDispatcherMock.addListener(listener);
 
+        WritableMap params = Arguments.createMap();
+        params.putString("testKey", "testValue");
+
         KlarnaPaymentEvent event = new KlarnaPaymentEvent(
                 23,
                 "testEventName",
-                new HashMap<String, Object>() {{
-                    put("testKey", "testValue");
-                }}
+                params
         );
 
         eventDispatcherMock.dispatchEvent(event);
@@ -133,18 +134,17 @@ public class KlarnaPaymentEventTest {
 
     @Test
     public void testDispatch() {
-        Map<String, Object> additionalParams = Collections.singletonMap("testKey", (Object) "testValue");
+        WritableMap params = Arguments.createMap();
+        params.putString("testKey", "testValue");
         KlarnaPaymentEvent event = new KlarnaPaymentEvent(
                 23,
                 "testEventName",
-                additionalParams
+                params
         );
-
-        WritableMap eventData = Arguments.makeNativeMap(additionalParams);
 
         RCTEventEmitter emitter = mock(RCTEventEmitter.class);
         event.dispatch(emitter);
         Mockito.verify(emitter, Mockito.times(1))
-                .receiveEvent(event.getViewTag(), "testEventName", eventData);
+                .receiveEvent(event.getViewTag(), "testEventName", params);
     }
 }

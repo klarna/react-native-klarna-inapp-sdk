@@ -71,6 +71,7 @@ public class PaymentViewWrapper extends LinearLayout implements HeightListener.H
             final int width = getParentViewWidth();
             final float contentHeight = Float.parseFloat(height);
             final float scaledHeight = contentHeight * displayDensity;
+            // TODO: it doesn't update Fabric view
             getReactAppContext().runOnNativeModulesQueueThread(new GuardedRunnable(getReactAppContext()) {
                 @Override
                 public void runGuarded() {
