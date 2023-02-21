@@ -78,7 +78,7 @@ using namespace facebook::react;
 }
 
 - (void)loadPaymentViewWithSessionData:(NSString*)sessionData {
-    [self.actualPaymentView loadWithJsonData:sessionData];
+    [self.actualPaymentView loadWithJsonData:sessionData.length > 0 ? sessionData : nil];
 }
 
 - (void)loadPaymentReview {
@@ -87,15 +87,16 @@ using namespace facebook::react;
 
 
 - (void)authorizePaymentViewWithAutoFinalize:(BOOL)autoFinalize sessionData:(NSString*)sessionData {
-    [self.actualPaymentView authorizeWithAutoFinalize:autoFinalize jsonData:sessionData];
+    // TODO: Find out if it's possible to dclare string | null type in codegen
+    [self.actualPaymentView authorizeWithAutoFinalize:autoFinalize jsonData:sessionData.length > 0 ? sessionData : nil];
 }
 
 - (void)reauthorizePaymentViewWithSessionData:(NSString*)sessionData {
-    [self.actualPaymentView reauthorizeWithJsonData:sessionData];
+    [self.actualPaymentView reauthorizeWithJsonData:sessionData.length > 0 ? sessionData : nil];
 }
 
 - (void)finalizePaymentViewWithSessionData:(NSString*)sessionData {
-    [self.actualPaymentView finaliseWithJsonData:sessionData];
+    [self.actualPaymentView finaliseWithJsonData:sessionData.length > 0 ? sessionData : nil];
     
 }
 
@@ -300,14 +301,14 @@ Class<RCTComponentViewProtocol> RNKlarnaPaymentViewCls(void)
     RCTRNKlarnaPaymentViewHandleCommand(self, commandName, args);
 }
 
-// TODO: Find out if it's possible to dclare string | null type in codegen
+
 - (void)authorize:(BOOL)autoFinalize sessionData:(nonnull NSString *)sessionData {
-    [self authorizePaymentViewWithAutoFinalize: autoFinalize sessionData:sessionData.length > 0 ? sessionData : nil];
+    [self authorizePaymentViewWithAutoFinalize: autoFinalize sessionData:sessionData];
 }
 
 
 - (void)finalize:(nonnull NSString *)sessionData {
-    [self finalizePaymentViewWithSessionData:sessionData.length > 0 ? sessionData : nil];
+    [self finalizePaymentViewWithSessionData:sessionData];
 }
 
 
@@ -317,12 +318,12 @@ Class<RCTComponentViewProtocol> RNKlarnaPaymentViewCls(void)
 
 
 - (void)load:(nonnull NSString *)sessionData {
-    [self loadPaymentViewWithSessionData:sessionData.length > 0 ? sessionData : nil];
+    [self loadPaymentViewWithSessionData:sessionData];
 }
 
 
 - (void)reauthorize:(nonnull NSString *)sessionData {
-    [self reauthorizePaymentViewWithSessionData:sessionData.length > 0 ? sessionData : nil];
+    [self reauthorizePaymentViewWithSessionData:sessionData];
 }
 
 #endif
