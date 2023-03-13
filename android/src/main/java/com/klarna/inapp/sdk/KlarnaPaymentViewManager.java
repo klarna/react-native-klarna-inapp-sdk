@@ -243,7 +243,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
         requestLayout(paymentView);
         WritableMap params = Arguments.createMap();
         params.putBoolean("approved", approved);
-        params.putString("authToken", authToken);
+        params.putString("authToken", authToken == null ? "" : authToken);
         params.putBoolean("finalizeRequired", finalizeRequired);
         postEventForView(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_AUTHORIZE,
                 params,
@@ -255,7 +255,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
         requestLayout(paymentView);
         WritableMap params = Arguments.createMap();
         params.putBoolean("approved", approved);
-        params.putString("authToken", authToken);
+        params.putString("authToken", authToken == null ? "" : authToken);
         postEventForView(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_REAUTHORIZE,
                 params,
                 paymentView);
@@ -266,7 +266,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
         requestLayout(paymentView);
         WritableMap params = Arguments.createMap();
         params.putBoolean("approved", approved);
-        params.putString("authToken", authToken);
+        params.putString("authToken", authToken == null ? "" : authToken);
         postEventForView(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_FINALIZE,
                 params,
                 paymentView);

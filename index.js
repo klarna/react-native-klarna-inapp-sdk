@@ -4,9 +4,24 @@ import KlarnaPaymentView, {
   Commands,
 } from "./specs/KlarnaPaymentViewNativeComponent";
 
+const returnNullIfEmptyString = (prop) => {
+  if (typeof prop === "string" && prop?.length === 0) {
+    return null;
+  }
+  return prop;
+};
+
 class KlarnaReactPaymentView extends Component {
   render() {
-    return <KlarnaPaymentView {...this.props} ref={this._assignRoot} />;
+    const nativeProps = {
+      ...this.props,
+      onAuthorized: this._onAuthorized,
+      onReauthorized: this._onReauthorized,
+      onFinalized: this._onFinalized,
+      onError: this._onError,
+    };
+
+    return <KlarnaPaymentView {...nativeProps} ref={this._assignRoot} />;
   }
 
   _assignRoot = (component) => {
@@ -46,6 +61,56 @@ class KlarnaReactPaymentView extends Component {
   finalize = (sessionData) => {
     if (this._root != null) {
       Commands.finalize(this._root, sessionData || "");
+    }
+  };
+
+  _onAuthorized = (event) => {
+    if (this.props.onAuthorized) {
+      this.props.onAuthorized({
+        ...event,
+        nativeEvent: {
+          ...event.nativeEvent,
+          authToken: returnNullIfEmptyString(event.nativeEvent?.authToken),
+        },
+      });
+    }
+  };
+
+  _onReauthorized = (event) => {
+    if (this.props.onReauthorized) {
+      this.props.onReauthorized({
+        ...event,
+        nativeEvent: {
+          ...event.nativeEvent,
+          authToken: returnNullIfEmptyString(event.nativeEvent?.authToken),
+        },
+      });
+    }
+  };
+
+  _onFinalized = (event) => {
+    if (this.props.onFinalized) {
+      this.props.onFinalized({
+        ...event,
+        nativeEvent: {
+          ...event.nativeEvent,
+          authToken: returnNullIfEmptyString(event.nativeEvent?.authToken),
+        },
+      });
+    }
+  };
+
+  _onError = (event) => {
+    if (this.props.onError) {
+      this.props.onError({
+        ...event,
+        nativeEvent: {
+          ...event.nativeEvent,
+          action: returnNullIfEmptyString(event.nativeEvent?.action),
+          message: returnNullIfEmptyString(event.nativeEvent?.message),
+          name: returnNullIfEmptyString(event.nativeEvent?.name),
+        },
+      });
     }
   };
 }

@@ -157,7 +157,6 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onAuthorized(RNKlarnaPaymentViewEventEmitter::OnAuthorized{
             .approved = approved,
-            // TODO: Find out if it's possible to dclare string | null type in codegen
             .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
             .finalizeRequired = finalizeRequired
         });
@@ -182,7 +181,6 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onReauthorized(RNKlarnaPaymentViewEventEmitter::OnReauthorized{
             .approved = approved,
-            // TODO: Find out if it's possible to dclare string | null type in codegen
             .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
         });
     }
@@ -205,7 +203,6 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onFinalized(RNKlarnaPaymentViewEventEmitter::OnFinalized{
             .approved = approved,
-            // TODO: Find out if it's possible to dclare string | null type in codegen
             .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
         });
     }
@@ -228,10 +225,10 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onError(RNKlarnaPaymentViewEventEmitter::OnError{
             .error = {
-                .action = std::string([error.action UTF8String]),
+                .action = error.action == nil ? "" : std::string([error.action UTF8String]),
                 .isFatal = error.isFatal,
-                .message = std::string([error.message UTF8String]),
-                .name = std::string([error.name UTF8String]),
+                .message = error.message == nil ? "" : std::string([error.message UTF8String]),
+                .name = error.message == nil ? "" : std::string([error.name UTF8String]),
             }
         });
     }
