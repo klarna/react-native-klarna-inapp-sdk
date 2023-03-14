@@ -250,8 +250,16 @@ using namespace facebook::react;
 }
 
 - (void)klarnaResizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView to:(CGFloat)newHeight {
-    
+#ifdef RCT_NEW_ARCH_ENABLED
+    if(_eventEmitter){
+        std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
+        ->onWebviewHeightChanged(RNKlarnaPaymentViewEventEmitter::OnWebviewHeightChanged{
+            .height = static_cast<int>(newHeight)
+        });
+    }
+#else
     [self.uiManager setIntrinsicContentSize:CGSizeMake(UIViewNoIntrinsicMetric, newHeight) forView:self];
+#endif
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
