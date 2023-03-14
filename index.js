@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { StyleSheet } from "react-native";
 import KlarnaPaymentView, {
   Commands,
 } from "./specs/KlarnaPaymentViewNativeComponent";
@@ -25,7 +26,10 @@ class KlarnaReactPaymentView extends Component {
       onFinalized: this._onFinalized,
       onWebviewHeightChanged: this._onWebviewHeightChanged,
       onError: this._onError,
-      style: { height: this.state.height, ...this?.props?.style },
+      style: StyleSheet.flatten([
+        { height: this.state.height },
+        this?.props?.style,
+      ]),
     };
 
     return <KlarnaPaymentView {...nativeProps} ref={this._assignRoot} />;
