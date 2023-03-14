@@ -30,6 +30,8 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
     public static final String EVENT_TYPE_NAME_ON_FINALIZE = "topOnFinalized";
     public static final String EVENT_NAME_ON_ERROR = "onError";
     public static final String EVENT_TYPE_NAME_ON_ERROR = "topOnError";
+    public static final String EVENT_NAME_ON_WEBVIEW_HEIGHT_CHANGE = "onWebviewHeightChanged";
+    public static final String EVENT_TYPE_NAME_ON_WEBVIEW_HEIGHT_CHANGE = "topOnWebviewHeightChanged";
 
     @NonNull
     private final String eventName;

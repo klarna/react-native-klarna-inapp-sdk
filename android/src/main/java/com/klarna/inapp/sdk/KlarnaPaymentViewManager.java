@@ -61,7 +61,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
     @Override
     public PaymentViewWrapper createViewInstance(ThemedReactContext context) {
-        PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null);
+        PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null, this);
 
         // Each view has its own event dispatcher.
         EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), view.getId());
@@ -137,15 +137,16 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     @Nullable
     @Override
     public Map getExportedCustomDirectEventTypeConstants() {
-        return MapBuilder.of(
-                KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_INITIALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE),
-                KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_LOAD, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD),
-                KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_LOAD_PAYMENT_REVIEW, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW),
-                KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_AUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE),
-                KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_REAUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE),
-                KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_FINALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE),
-                KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_ERROR, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_ERROR)
-        );
+        Map map = MapBuilder.of();
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_INITIALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE));
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_LOAD, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD));
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_LOAD_PAYMENT_REVIEW, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW));
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_AUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE));
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_REAUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE));
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_FINALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE));
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_WEBVIEW_HEIGHT_CHANGE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_WEBVIEW_HEIGHT_CHANGE));
+        map.put(KlarnaPaymentEvent.EVENT_TYPE_NAME_ON_ERROR, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_ERROR));
+        return map;
     }
 
     /**
@@ -156,8 +157,10 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
      */
     @ReactProp(name = "category")
     public void setCategory(PaymentViewWrapper view, String category) {
-        view.paymentView.registerPaymentViewCallback(this);
-        view.paymentView.setCategory(category);
+        if(view.paymentView.getCategory() == null){
+            view.paymentView.registerPaymentViewCallback(this);
+            view.paymentView.setCategory(category);
+        }
     }
 
     @Override

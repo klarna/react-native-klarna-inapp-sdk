@@ -67,6 +67,11 @@ type NativeProps = $ReadOnly<{|
       authToken?: ?string,
     |}>
   >,
+  onWebviewHeightChanged: ?DirectEventHandler<
+    $ReadOnly<{|
+      height: Int32,
+    |}>
+  >,
   onError: ?DirectEventHandler<
     $ReadOnly<{|
       error: $ReadOnly<{|

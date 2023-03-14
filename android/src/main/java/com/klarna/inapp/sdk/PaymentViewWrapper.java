@@ -5,24 +5,21 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 
-import com.facebook.react.bridge.GuardedRunnable;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.UIManagerModule;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 
 /***
  * Wraps the KlarnaPaymentView so we can see when a requestLayout() has been triggered.
  */
 public class PaymentViewWrapper extends LinearLayout implements HeightListener.HeightListenerCallback {
-    private float displayDensity = 1;
     public KlarnaPaymentView paymentView;
     private boolean loadCalled = false;
     private HeightListener heightListener;
+    private KlarnaPaymentViewManager manager;
 
-    public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs) {
+    public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs, KlarnaPaymentViewManager manager) {
         super(context, attrs);
-        // Get density for resizing.
-        displayDensity = context.getResources().getDisplayMetrics().density;
+        this.manager = manager;
         // Add KlarnaPaymentView
         LinearLayout.LayoutParams webViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         paymentView = new KlarnaPaymentView(getReactAppContext().getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
@@ -70,15 +67,7 @@ public class PaymentViewWrapper extends LinearLayout implements HeightListener.H
         try {
             final int width = getParentViewWidth();
             final float contentHeight = Float.parseFloat(height);
-            final float scaledHeight = contentHeight * displayDensity;
-            // TODO: it doesn't update Fabric view
-            getReactAppContext().runOnNativeModulesQueueThread(new GuardedRunnable(getReactAppContext()) {
-                @Override
-                public void runGuarded() {
-                    UIManagerModule uimm = getReactAppContext().getNativeModule(UIManagerModule.class);
-                    uimm.updateNodeSize(getId(), width, (int) scaledHeight);
-                }
-            });
+            manager.updateNodeSize((int) contentHeight, width, getId(), getReactAppContext());
         } catch (Throwable t) {
         }
     }

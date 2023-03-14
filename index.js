@@ -12,13 +12,20 @@ const returnNullIfEmptyString = (prop) => {
 };
 
 class KlarnaReactPaymentView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { height: props?.style?.height };
+  }
+
   render() {
     const nativeProps = {
       ...this.props,
       onAuthorized: this._onAuthorized,
       onReauthorized: this._onReauthorized,
       onFinalized: this._onFinalized,
+      onWebviewHeightChanged: this._onWebviewHeightChanged,
       onError: this._onError,
+      style: { height: this.state.height, ...this?.props?.style },
     };
 
     return <KlarnaPaymentView {...nativeProps} ref={this._assignRoot} />;
@@ -96,6 +103,14 @@ class KlarnaReactPaymentView extends Component {
           ...event.nativeEvent,
           authToken: returnNullIfEmptyString(event.nativeEvent?.authToken),
         },
+      });
+    }
+  };
+
+  _onWebviewHeightChanged = (event) => {
+    if (event.nativeEvent.height != null) {
+      this.setState({
+        height: event.nativeEvent.height,
       });
     }
   };
