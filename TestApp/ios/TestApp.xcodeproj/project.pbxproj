@@ -508,7 +508,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.klarnaltd.msdk.dist.reactnative;
 				PRODUCT_NAME = TestApp;
-				PROVISIONING_PROFILE_SPECIFIER = "InApp SDK React Native Test App Debug";
+				PROVISIONING_PROFILE_SPECIFIER = "MSDK DEV React Native Test App Distribution";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MSDK DEV React Native Test App Distribution";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -539,7 +539,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.klarnaab.msdk.dist.reactnative;
 				PRODUCT_NAME = TestApp;
-				PROVISIONING_PROFILE_SPECIFIER = "InApp SDK React Native Test App Release";
+				PROVISIONING_PROFILE_SPECIFIER = "MSDK ENT React Native Test App Distribution";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MSDK ENT React Native Test App Distribution";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
