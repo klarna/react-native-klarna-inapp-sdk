@@ -25,6 +25,7 @@ class MappableKlarnaPaymentsSDKError implements Mappable {
                 .put("message", klarnaPaymentsSDKError.getMessage())
                 .put("name", klarnaPaymentsSDKError.getName())
                 .put("invalidFields", klarnaPaymentsSDKError.getInvalidFields())
+                .put("sessionId", klarnaPaymentsSDKError.getSessionId())
                 .build();
     }
 }
