@@ -1,10 +1,10 @@
-name: Android Build
+name: Android Test & Build
 
 on: push
 
 jobs:
   android-build:
-    name: Android Build
+    name: Android Test & Build
     runs-on: ubuntu-latest
 
     steps:
