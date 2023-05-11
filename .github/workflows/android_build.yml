@@ -18,8 +18,12 @@ jobs:
         with:
           java-version: 1.8
 
-      - uses: actions/setup-node@master
-      - uses: c-hive/gha-yarn-cache@v1
+      # setup node environment
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.17.0'
+          cache: 'yarn'
 
       # install project dependencies
       - name: Install dependencies for lib
