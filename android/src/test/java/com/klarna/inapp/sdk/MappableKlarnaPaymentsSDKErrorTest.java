@@ -19,7 +19,8 @@ public class MappableKlarnaPaymentsSDKErrorTest {
                 "testMessage",
                 false,
                 "testAction",
-                Collections.singletonList("testInvalidField")
+                Collections.singletonList("testInvalidField"),
+                "testSessionId"
         );
 
         MappableKlarnaPaymentsSDKError writableError = new MappableKlarnaPaymentsSDKError(error);
@@ -39,5 +40,6 @@ public class MappableKlarnaPaymentsSDKErrorTest {
         Assert.assertEquals(1, invalidFields.size());
         Assert.assertEquals("testInvalidField", new ArrayList(invalidFields).get(0));
 
+        Assert.assertEquals("testSessionId", map.get("sessionId"));
     }
 }
