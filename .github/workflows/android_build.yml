@@ -21,12 +21,12 @@ jobs:
       - uses: actions/setup-node@master
       - uses: c-hive/gha-yarn-cache@v1
 
-      - name: Install node modules
-        run: yarn install
-
       # install project dependencies
-      - name: Install dependencies
+      - name: Install dependencies for lib
         run: yarn install --frozen-lockfile
+        
+      - name: Install dependencies for TestApp
+        run: cd TestApp && yarn install --frozen-lockfile && cd ..
 
       ## configure cache for gradle
       - name: Cache Gradle Wrapper
