@@ -22,9 +22,10 @@ jobs:
 
       # setup JDK environment
       - name: Set up our JDK environment
-        uses: actions/setup-java@v1.4.3
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: temurin
+          java-version: 11
 
       # setup node environment
       - name: Install NodeJS
@@ -36,7 +37,7 @@ jobs:
       # install project dependencies
       - name: Install dependencies for lib
         run: yarn install --frozen-lockfile
-        
+
       - name: Install dependencies for TestApp
         run: cd TestApp && yarn install --frozen-lockfile && cd ..
 
@@ -59,9 +60,12 @@ jobs:
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
 
+      - name: Bundle JS for Android
+        run: cd TestApp && mkdir android/app/src/main/assets && yarn bundle:android-dev && cd ..
+
       - name: Build Android Test App
         run: cd TestApp/android && ./gradlew clean && ./gradlew app:assembleDebug
-        
+
       ## make gradlew executable in ci
       - name: Make Gradlew Executable
         run: cd integration-tests && chmod +x ./gradlew
@@ -72,7 +76,7 @@ jobs:
           BROWSERSTACK_PASSWORD: ${{ secrets.BROWSERSTACK_PASSWORD }}
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
         run: curl -u $BROWSERSTACK_USER:$BROWSERSTACK_PASSWORD -X POST https://api-cloud.browserstack.com/app-automate/upload -F file=@TestApp/android/app/build/outputs/apk/debug/app-debug.apk -F "data={\"custom_id\":\"INAPP_RN_SDK_ANDROID_TEST_APP\"}"
-        
+
       - name: Run Android Integration Tests
         env:
           BROWSERSTACK_USER: ${{ secrets.BROWSERSTACK_USER }}
