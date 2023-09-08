@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Button, NativeModules, Platform, Text, View} from 'react-native';
-import KlarnaPaymentView from 'react-native-klarna-inapp-sdk';
+import { KlarnaPaymentView } from 'react-native-klarna-inapp-sdk';
 import styles from '../Styles';
 import testProps from '../TestProps';
 

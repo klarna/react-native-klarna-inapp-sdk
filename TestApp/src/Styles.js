@@ -13,7 +13,7 @@ export const Colors = {
   dark: '#444',
   darker: '#222',
   black: '#000',
-}
+};
 
 const styles = StyleSheet.create({
   outer: {
