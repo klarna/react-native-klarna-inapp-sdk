@@ -14,14 +14,9 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
   const paymentViewRef = useRef<KlarnaPaymentView>(null);
   const [eventState, setEventState] = useState<string>();
 
-  const onEvent = (event: string, data: any | undefined = undefined) => {
-    console.log('onEvent', event, data);
-    if (data !== undefined && data !== null && data.nativeEvent) {
-      console.log('nativeEvent', event, data.nativeEvent);
-      const eventString = JSON.stringify(data.nativeEvent);
-      setEventState(eventString);
-      console.log('eventString', event, eventString);
-    }
+  const onEvent = (...params: Array<string | boolean | undefined>) => {
+    console.log('onEvent', params);
+    setEventState(params.join(', '));
   };
 
   const actionButtons = () => {
@@ -87,23 +82,23 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
             ref={paymentViewRef}
             style={styles.paymentView}
             category={props.paymentMethodName}
-            onInitialized={event => {
-              onEvent('onInitialized', event);
+            onInitialized={() => {
+              onEvent('onInitialized');
             }}
-            onLoaded={event => {
-              onEvent('onLoaded', event);
+            onLoaded={() => {
+              onEvent('onLoaded');
             }}
-            onAuthorized={event => {
-              onEvent('onAuthorized', event);
+            onAuthorized={(approved, authToken, finalizeRequired) => {
+              onEvent('onAuthorized', approved, authToken, finalizeRequired);
             }}
-            onReauthorized={event => {
-              onEvent('onReauthorized', event);
+            onReauthorized={(approved, authToken) => {
+              onEvent('onReauthorized', approved, authToken);
             }}
-            onFinalized={event => {
-              onEvent('onFinalized', event);
+            onFinalized={(approved, authToken) => {
+              onEvent('onFinalized', approved, authToken);
             }}
             onError={error => {
-              onEvent('onError', error);
+              onEvent('onError', JSON.stringify(error));
             }}
           />
         </View>

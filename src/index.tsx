@@ -1,27 +1,74 @@
-import React, { Component } from 'react';
+import React, { Component, type SyntheticEvent } from 'react';
 import {
   findNodeHandle,
   Platform,
   requireNativeComponent,
   UIManager,
+  type ViewStyle,
 } from 'react-native';
-import type { ViewProps } from 'react-native/Libraries/Components/View/ViewPropTypes';
 
 const ComponentName = 'KlarnaPaymentView';
 
-interface KlarnaReactPaymentViewProps extends ViewProps {
+interface KlarnaPaymentViewProps {
+  style: ViewStyle;
   category: string;
-  onInitialized: (event: any) => void;
-  onLoaded: (event: any) => void;
-  onAuthorized: (event: any) => void;
-  onReauthorized: (event: any) => void;
-  onFinalized: (event: any) => void;
-  onError: (event: any) => void;
+  onInitialized: () => void;
+  onLoaded: () => void;
+  onAuthorized: (
+    approved: boolean,
+    authToken: string | undefined,
+    finalizeRequired: boolean | undefined
+  ) => void;
+  onReauthorized: (approved: boolean, authToken: string | undefined) => void;
+  onFinalized: (approved: boolean, authToken: string | undefined) => void;
+  onError: (error: KlarnaPaymentsSDKError) => void;
 }
 
-export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
+export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
   render() {
-    return <KlarnaReactPaymentView {...this.props} />;
+    // @ts-ignore
+    return (
+      <KlarnaReactPaymentView
+        style={this.props.style}
+        category={this.props.category}
+        onInitialized={(_event: SyntheticEvent) => {
+          this.props.onInitialized();
+        }}
+        onLoaded={(_event: SyntheticEvent) => {
+          this.props.onLoaded();
+        }}
+        onAuthorized={(event: SyntheticEvent) => {
+          const data = this._getNativeEvent(event);
+          this.props.onAuthorized(
+            data?.approved,
+            data?.authToken,
+            data?.finalizeRequired
+          );
+        }}
+        onReauthorized={(event: SyntheticEvent) => {
+          const data = this._getNativeEvent(event);
+          this.props.onReauthorized(data?.approved, data?.authToken);
+        }}
+        onFinalized={(event: SyntheticEvent) => {
+          const data = this._getNativeEvent(event);
+          this.props.onFinalized(data?.approved, data?.authToken);
+        }}
+        onError={(event: SyntheticEvent) => {
+          const data = this._getNativeEvent(event);
+          this.props.onError(data?.error);
+        }}
+      />
+    );
+  }
+
+  _getNativeEvent(event: SyntheticEvent): any | undefined {
+    if (event !== undefined && event !== null && event.nativeEvent) {
+      if (__DEV__) {
+        console.log('nativeEvent', event, event.nativeEvent);
+      }
+      return event.nativeEvent;
+    }
+    return undefined;
   }
 
   _viewManager() {
@@ -80,6 +127,26 @@ export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   };
 }
 
+interface KlarnaPaymentsSDKError {
+  action: string;
+  isFatal: boolean;
+  message: string;
+  name: string;
+  invalidFields: Array<string>;
+  sessionId: string;
+}
+
+interface KlarnaReactPaymentViewProps {
+  style: ViewStyle;
+  category: string;
+  onInitialized: (event: SyntheticEvent) => void;
+  onLoaded: (event: SyntheticEvent) => void;
+  onAuthorized: (event: SyntheticEvent) => void;
+  onReauthorized: (event: SyntheticEvent) => void;
+  onFinalized: (event: SyntheticEvent) => void;
+  onError: (event: SyntheticEvent) => void;
+}
+
 const LINKING_ERROR =
   `The package 'react-native-awesome-library' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
@@ -88,10 +155,9 @@ const LINKING_ERROR =
 
 const KlarnaReactPaymentView =
   UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent(ComponentName)
+    ? requireNativeComponent<KlarnaReactPaymentViewProps>(ComponentName)
     : () => {
         throw new Error(LINKING_ERROR);
       };
 
-export { KlarnaReactPaymentView };
 export default KlarnaPaymentView;
