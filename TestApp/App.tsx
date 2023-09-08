@@ -11,9 +11,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/home/HomeScreen';
 import PaymentsScreen from './src/payments/PaymentsScreen';
 
-const AppStack = () => {
-  const Stack = createNativeStackNavigator<AppStackParamList>();
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
+const AppStack = () => {
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen

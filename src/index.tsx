@@ -24,7 +24,7 @@ type KlarnaReactPaymentViewProps = {
 
 export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   render() {
-    return <KlarnaPaymentView {...this.props} />;
+    return <KlarnaReactPaymentView {...this.props} />;
   }
 
   _viewManager() {
@@ -91,11 +91,7 @@ const LINKING_ERROR =
 
 const KlarnaReactPaymentView =
   UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent(
-        ComponentName,
-        // @ts-ignore
-        KlarnaPaymentView
-      )
+    ? requireNativeComponent(ComponentName)
     : () => {
         throw new Error(LINKING_ERROR);
       };

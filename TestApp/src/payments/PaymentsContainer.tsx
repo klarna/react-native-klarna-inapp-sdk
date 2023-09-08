@@ -5,12 +5,12 @@ import styles from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button';
 
-interface PaymentsProps {
+interface PaymentsContainerProps {
   clientToken: string;
   paymentMethodName: string;
 }
 
-const PaymentsContainer = (props: PaymentsProps) => {
+export default function PaymentsContainer(props: PaymentsContainerProps) {
   const paymentViewRef = useRef<KlarnaPaymentView>(null);
   const [eventState, setEventState] = useState<string>();
 
@@ -31,7 +31,10 @@ const PaymentsContainer = (props: PaymentsProps) => {
             );
 
             //You can skip this line, it's for integration testing purposes by Klarna.
-            if (Platform.OS === 'android') {
+            if (
+              Platform.OS === 'android' &&
+              NativeModules.DebugWebViewModule !== undefined
+            ) {
               NativeModules.DebugWebViewModule.enable();
             }
           }}
@@ -107,6 +110,4 @@ const PaymentsContainer = (props: PaymentsProps) => {
   };
 
   return renderPaymentMethod();
-};
-
-export default PaymentsContainer;
+}

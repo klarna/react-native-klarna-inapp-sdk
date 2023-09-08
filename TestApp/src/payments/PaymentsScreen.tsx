@@ -3,21 +3,10 @@ import {ScrollView, TextInput, useColorScheme, View} from 'react-native';
 import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import PaymentsContainer from './PaymentsContainer';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import type {AppStackParamList} from '../../App';
 
 let authToken = ''; // set your token here
 
-type PaymentsNavigationProp = NativeStackNavigationProp<
-  AppStackParamList,
-  'Home'
->;
-
-type Props = {
-  navigation: PaymentsNavigationProp;
-};
-
-const PaymentsScreen = ({}: Props) => {
+export default function PaymentsScreen() {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [clientToken, setClientToken] = useState(authToken);
@@ -70,6 +59,4 @@ const PaymentsScreen = ({}: Props) => {
       </View>
     </ScrollView>
   );
-};
-
-export default PaymentsScreen;
+}

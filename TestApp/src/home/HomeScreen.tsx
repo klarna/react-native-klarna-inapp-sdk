@@ -4,14 +4,12 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import type {AppStackParamList} from '../../App';
+import {useNavigation} from '@react-navigation/native';
 
 type HomeNavigationProp = NativeStackNavigationProp<AppStackParamList, 'Home'>;
 
-type Props = {
-  navigation: HomeNavigationProp;
-};
-
-const HomeScreen = ({navigation}: Props) => {
+export default function HomeScreen() {
+  const navigation = useNavigation<HomeNavigationProp>();
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
@@ -34,6 +32,4 @@ const HomeScreen = ({navigation}: Props) => {
       </View>
     </ScrollView>
   );
-};
-
-export default HomeScreen;
+}
