@@ -5,22 +5,19 @@ import {
   requireNativeComponent,
   UIManager,
 } from 'react-native';
+import type { ViewProps } from 'react-native/Libraries/Components/View/ViewPropTypes';
 
 const ComponentName = 'KlarnaPaymentView';
 
-type KlarnaReactPaymentViewProps = {
+interface KlarnaReactPaymentViewProps extends ViewProps {
   category: string;
-  onInitialized: () => void;
-  onLoaded: () => void;
-  onAuthorized: (
-    authorized: boolean,
-    authToken: string | undefined,
-    finalizeRequired: boolean | undefined
-  ) => void;
-  onReauthorized: (authorized: boolean, authToken: string | undefined) => void;
-  onFinalized: (authorized: boolean, authToken: string | undefined) => void;
-  onError: (error: any) => void;
-};
+  onInitialized: (event: any) => void;
+  onLoaded: (event: any) => void;
+  onAuthorized: (event: any) => void;
+  onReauthorized: (event: any) => void;
+  onFinalized: (event: any) => void;
+  onError: (event: any) => void;
+}
 
 export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   render() {
@@ -34,7 +31,7 @@ export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   initialize = (sessionToken: string, returnUrl: string) => {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this),
-      this._viewManager().Commands.initialize!!.toString(),
+      this._viewManager().Commands.initialize!!,
       [sessionToken, returnUrl]
     );
   };
@@ -42,7 +39,7 @@ export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   load = (sessionData: string | undefined = undefined) => {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this),
-      this._viewManager().Commands.load!!.toString(),
+      this._viewManager().Commands.load!!,
       [sessionData || null]
     );
   };
@@ -50,7 +47,7 @@ export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   loadPaymentReview = () => {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this),
-      this._viewManager().Commands.loadPaymentReview!!.toString(),
+      this._viewManager().Commands.loadPaymentReview!!,
       []
     );
   };
@@ -61,7 +58,7 @@ export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   ) => {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this),
-      this._viewManager().Commands.authorize!!.toString(),
+      this._viewManager().Commands.authorize!!,
       [autoFinalize || true, sessionData || null]
     );
   };
@@ -69,7 +66,7 @@ export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   reauthorize = (sessionData: string | undefined = undefined) => {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this),
-      this._viewManager().Commands.reauthorize!!.toString(),
+      this._viewManager().Commands.reauthorize!!,
       [sessionData || null]
     );
   };
@@ -77,7 +74,7 @@ export class KlarnaPaymentView extends Component<KlarnaReactPaymentViewProps> {
   finalize = (sessionData: string | undefined = undefined) => {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this),
-      this._viewManager().Commands.finalize!!.toString(),
+      this._viewManager().Commands.finalize!!,
       [sessionData || null]
     );
   };

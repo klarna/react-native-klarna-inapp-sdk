@@ -41,7 +41,7 @@ export default function PaymentsScreen() {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      style={backgroundStyle(isDarkMode)}>
+      style={backgroundStyle(styles.scrollView, isDarkMode)}>
       <View
         style={{
           backgroundColor: isDarkMode ? Colors.black : Colors.white,

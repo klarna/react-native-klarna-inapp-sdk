@@ -1,6 +1,10 @@
 import {StyleSheet} from 'react-native';
 
-export function backgroundStyle(isDarkMode: boolean) {
+export function backgroundStyle(style: any, isDarkMode: boolean) {
+  return [style, background(isDarkMode)];
+}
+
+export function background(isDarkMode: boolean) {
   return {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -13,30 +17,35 @@ export const Colors = {
   dark: '#444',
   darker: '#222',
   black: '#000',
+  pink: '#ffc0cb',
 };
 
 const styles = StyleSheet.create({
-  outer: {
-    flex: 1,
-    flexGrow: 1,
-  },
   scrollView: {
     flex: 1,
     flexGrow: 1,
   },
-  scrollViewContentContainer: {
-    justifyContent: 'space-between',
+  tokenInput: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderColor: 'gray',
+    height: 40,
+    borderWidth: 1,
+    padding: 10,
+    margin: 20,
   },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.light,
     width: '100%',
   },
-  header: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  paymentContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.pink,
+    padding: 10,
+    width: '100%',
   },
   paymentView: {
     width: '100%',
@@ -54,44 +63,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
-  tokenInput: {
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderColor: 'gray',
-    height: 40,
-    borderWidth: 1,
-    padding: 10,
-    margin: 20,
-  },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical: 7,
+    paddingHorizontal: 10,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: '#ffc0cb',
+    backgroundColor: Colors.pink,
   },
   buttonText: {
     textAlign: 'center',
-    color: '#FFFFFF',
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+    color: Colors.white,
   },
   navMenuItem: {
     fontSize: 20,

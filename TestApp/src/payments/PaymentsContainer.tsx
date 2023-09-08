@@ -14,10 +14,14 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
   const paymentViewRef = useRef<KlarnaPaymentView>(null);
   const [eventState, setEventState] = useState<string>();
 
-  const onEvent = (event: any | undefined) => {
-    const eventString = JSON.stringify(event.nativeEvent);
-    setEventState(eventString);
-    console.warn(eventString);
+  const onEvent = (event: string, data: any | undefined = undefined) => {
+    console.log('onEvent', event, data);
+    if (data !== undefined && data !== null && data.nativeEvent) {
+      console.log('nativeEvent', event, data.nativeEvent);
+      const eventString = JSON.stringify(data.nativeEvent);
+      setEventState(eventString);
+      console.log('eventString', event, eventString);
+    }
   };
 
   const actionButtons = () => {
@@ -33,7 +37,8 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
             //You can skip this line, it's for integration testing purposes by Klarna.
             if (
               Platform.OS === 'android' &&
-              NativeModules.DebugWebViewModule !== undefined
+              NativeModules.DebugWebViewModule !== undefined &&
+              NativeModules.DebugWebViewModule !== null
             ) {
               NativeModules.DebugWebViewModule.enable();
             }
@@ -77,28 +82,31 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
     return (
       <View style={styles.container} key={props.paymentMethodName}>
         <Text style={styles.title}>{props.paymentMethodName}</Text>
-        <KlarnaPaymentView
-          ref={paymentViewRef}
-          category={props.paymentMethodName}
-          onInitialized={() => {
-            onEvent(undefined);
-          }}
-          onLoaded={() => {
-            onEvent(undefined);
-          }}
-          onAuthorized={(authorized, authToken, finalizeRequired) => {
-            onEvent(authorized);
-          }}
-          onReauthorized={(authorized, authToken) => {
-            onEvent(authorized);
-          }}
-          onFinalized={(authorized, authToken) => {
-            onEvent(authorized);
-          }}
-          onError={error => {
-            onEvent(error);
-          }}
-        />
+        <View style={styles.paymentContainer}>
+          <KlarnaPaymentView
+            ref={paymentViewRef}
+            style={styles.paymentView}
+            category={props.paymentMethodName}
+            onInitialized={event => {
+              onEvent('onInitialized', event);
+            }}
+            onLoaded={event => {
+              onEvent('onLoaded', event);
+            }}
+            onAuthorized={event => {
+              onEvent('onAuthorized', event);
+            }}
+            onReauthorized={event => {
+              onEvent('onReauthorized', event);
+            }}
+            onFinalized={event => {
+              onEvent('onFinalized', event);
+            }}
+            onError={error => {
+              onEvent('onError', error);
+            }}
+          />
+        </View>
         {actionButtons()}
         <Text
           style={{color: 'gray'}}
