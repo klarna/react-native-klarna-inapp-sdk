@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const backgroundStyle = isDarkMode => {
+export const backgroundStyle = (isDarkMode: boolean) => {
   return {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -67,6 +67,11 @@ const styles = StyleSheet.create({
   button: {
     height: 10,
     margin: 10,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#333333',
+    margin: 5,
   },
   sectionContainer: {
     marginTop: 32,

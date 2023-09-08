@@ -1,9 +1,17 @@
 import React from 'react';
 import {ScrollView, Text, useColorScheme, View} from 'react-native';
-import styles, {backgroundStyle, Colors} from '../Styles';
-import testProps from '../TestProps';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
+import testProps from '../common/util/TestProps';
+import type {AppStackParamList} from '../../App';
 
-const HomeScreen = ({navigation}) => {
+type HomeNavigationProp = NativeStackNavigationProp<AppStackParamList, 'Home'>;
+
+type Props = {
+  navigation: HomeNavigationProp;
+};
+
+const HomeScreen = ({navigation}: Props) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
@@ -17,7 +25,10 @@ const HomeScreen = ({navigation}) => {
         <Text
           style={styles.navMenuItem}
           {...testProps('navKlarnaPayments')}
-          onPress={() => navigation.navigate('Payments')}>
+          onPress={() => {
+            console.log('Navigating to Payments');
+            navigation.navigate('Payments');
+          }}>
           Klarna Payments
         </Text>
       </View>

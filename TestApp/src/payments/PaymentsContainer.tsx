@@ -1,8 +1,9 @@
 import React, {useRef, useState} from 'react';
-import {Button, NativeModules, Platform, Text, View} from 'react-native';
-import { KlarnaPaymentView } from 'react-native-klarna-inapp-sdk';
-import styles from '../Styles';
-import testProps from '../TestProps';
+import {NativeModules, Platform, Text, View} from 'react-native';
+import {KlarnaPaymentView} from 'react-native-klarna-inapp-sdk';
+import styles from '../common/ui/Styles';
+import testProps from '../common/util/TestProps';
+import Button from '../common/ui/view/Button';
 
 interface PaymentsProps {
   clientToken: string;
@@ -10,13 +11,13 @@ interface PaymentsProps {
 }
 
 const PaymentsContainer = (props: PaymentsProps) => {
-  const paymentViewRef = useRef();
-  const [eventState, setEventState] = useState();
+  const paymentViewRef = useRef<KlarnaPaymentView>(null);
+  const [eventState, setEventState] = useState<string>();
 
-  const onEvent = event => {
+  const onEvent = (event: any | undefined) => {
     const eventString = JSON.stringify(event.nativeEvent);
     setEventState(eventString);
-    window.console.warn(eventString);
+    console.warn(eventString);
   };
 
   const actionButtons = () => {
@@ -24,7 +25,7 @@ const PaymentsContainer = (props: PaymentsProps) => {
       <View style={styles.buttonsContainer}>
         <Button
           onPress={() => {
-            paymentViewRef.current.initialize(
+            paymentViewRef.current?.initialize(
               props.clientToken,
               'returnUrl://',
             );
@@ -36,39 +37,34 @@ const PaymentsContainer = (props: PaymentsProps) => {
           }}
           title="Init."
           {...testProps('initButton_' + props.paymentMethodName)}
-          style={styles.button}
         />
         <Button
           onPress={() => {
-            paymentViewRef.current.load();
+            paymentViewRef.current?.load();
           }}
           title="Load"
           {...testProps('loadButton_' + props.paymentMethodName)}
-          style={styles.button}
         />
         <Button
           onPress={() => {
-            paymentViewRef.current.authorize();
+            paymentViewRef.current?.authorize();
           }}
           title="Authorize"
           {...testProps('authorizeButton_' + props.paymentMethodName)}
-          style={styles.button}
         />
         <Button
           onPress={() => {
-            paymentViewRef.current.reauthorize();
+            paymentViewRef.current?.reauthorize();
           }}
           title="Reauthorize"
           {...testProps('reauthorizeButton_' + props.paymentMethodName)}
-          style={styles.button}
         />
         <Button
           onPress={() => {
-            paymentViewRef.current.finalize();
+            paymentViewRef.current?.finalize();
           }}
           title="Finalize"
           {...testProps('finalizeButton_' + props.paymentMethodName)}
-          style={styles.button}
         />
       </View>
     );
@@ -80,25 +76,24 @@ const PaymentsContainer = (props: PaymentsProps) => {
         <Text style={styles.title}>{props.paymentMethodName}</Text>
         <KlarnaPaymentView
           ref={paymentViewRef}
-          style={styles.paymentView}
           category={props.paymentMethodName}
-          onInitialized={event => {
-            onEvent(event);
+          onInitialized={() => {
+            onEvent(undefined);
           }}
-          onLoaded={event => {
-            onEvent(event);
+          onLoaded={() => {
+            onEvent(undefined);
           }}
-          onAuthorized={event => {
-            onEvent(event);
+          onAuthorized={(authorized, authToken, finalizeRequired) => {
+            onEvent(authorized);
           }}
-          onReauthorized={event => {
-            onEvent(event);
+          onReauthorized={(authorized, authToken) => {
+            onEvent(authorized);
           }}
-          onFinalized={event => {
-            onEvent(event);
+          onFinalized={(authorized, authToken) => {
+            onEvent(authorized);
           }}
-          onError={event => {
-            onEvent(event);
+          onError={error => {
+            onEvent(error);
           }}
         />
         {actionButtons()}
