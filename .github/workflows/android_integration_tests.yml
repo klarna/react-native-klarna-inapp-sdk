@@ -60,6 +60,9 @@ jobs:
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
 
+      - name: Bundle JS for Android
+        run: cd TestApp && mkdir android/app/src/main/assets && yarn bundle:android-dev && cd ..
+
       - name: Build Android Test App
         run: cd TestApp/android && ./gradlew clean && ./gradlew app:assembleDebug
 

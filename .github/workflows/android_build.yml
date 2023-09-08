@@ -55,5 +55,8 @@ jobs:
       - name: Run Android library unit tests
         run: cd android && ./gradlew clean && ./gradlew testDebugUnitTest && cd ..
 
+      - name: Bundle JS for Android
+        run: cd TestApp && mkdir android/app/src/main/assets && yarn bundle:android-dev && cd ..
+
       - name: Build Android Test App
         run: cd TestApp/android && ./gradlew clean && ./gradlew app:assembleDebug && cd ../..
