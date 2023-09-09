@@ -1,4 +1,4 @@
-package com.klarna.inapp.sdk;
+package com.klarna.mobile.sdk.reactnative;
 
 import android.os.SystemClock;
 
@@ -34,13 +34,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.klarna.inapp.sdk.KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE;
-import static com.klarna.inapp.sdk.KlarnaPaymentEvent.EVENT_NAME_ON_ERROR;
-import static com.klarna.inapp.sdk.KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE;
-import static com.klarna.inapp.sdk.KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE;
-import static com.klarna.inapp.sdk.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD;
-import static com.klarna.inapp.sdk.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW;
-import static com.klarna.inapp.sdk.KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentEvent.EVENT_NAME_ON_ERROR;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 

@@ -35,21 +35,21 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/klarna/react-native-klarna-inapp-sdk.git",
-    "baseUrl": "https://github.com/klarna/react-native-klarna-inapp-sdk"
-  },
   "keywords": [
     "react-native",
     "klarna",
     "sdk"
   ],
-  "author": {
-    "name": "Mobile SDK @ Klarna",
-    "email": "mobile.sdk@klarna.com"
-  },
+  "repository": "https://github.com/NMGuner/react-native-awesome-library",
+  "author": "Mobile SDK <mobile.sdk@klarna.com>",
   "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/NMGuner/react-native-awesome-library/issues"
+  },
+  "homepage": "https://github.com/NMGuner/react-native-awesome-library#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
@@ -72,6 +72,7 @@
     "prettier": "^3.0.3",
     "react": "18.2.0",
     "react-native": "0.72.4",
+    "turbo": "^1.10.7",
     "typescript": "^5.0.2"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-package com.klarna.inapp.sdk;
+package com.klarna.mobile.sdk.reactnative;
 
 import android.app.Application;
 
@@ -22,12 +22,12 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.Map;
 
-import static com.klarna.inapp.sdk.KlarnaPaymentViewManager.COMMAND_AUTHORIZE;
-import static com.klarna.inapp.sdk.KlarnaPaymentViewManager.COMMAND_FINALIZE;
-import static com.klarna.inapp.sdk.KlarnaPaymentViewManager.COMMAND_INITIALIZE;
-import static com.klarna.inapp.sdk.KlarnaPaymentViewManager.COMMAND_LOAD;
-import static com.klarna.inapp.sdk.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
-import static com.klarna.inapp.sdk.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_AUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_FINALIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_INITIALIZE;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_LOAD;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
+import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
 
 @PrepareForTest()
 @RunWith(RobolectricTestRunner.class)

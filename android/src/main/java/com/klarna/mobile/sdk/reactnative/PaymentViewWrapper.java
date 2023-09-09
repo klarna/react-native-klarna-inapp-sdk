@@ -1,4 +1,4 @@
-package com.klarna.inapp.sdk;
+package com.klarna.mobile.sdk.reactnative;
 
 import android.util.AttributeSet;
 import android.view.View;
