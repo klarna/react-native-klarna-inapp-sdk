@@ -26,8 +26,6 @@ if linkage != nil
 end
 
 target 'TestApp' do
-  pod 'react-native-klarna-inapp-sdk', :path => '../../react-native-klarna-inapp-sdk.podspec'
-
   config = use_native_modules!
 
   # Flags change depending on the env values.
