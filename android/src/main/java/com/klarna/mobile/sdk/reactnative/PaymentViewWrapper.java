@@ -9,6 +9,7 @@ import com.facebook.react.bridge.GuardedRunnable;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
+import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
 
 /***
  * Wraps the KlarnaPaymentView so we can see when a requestLayout() has been triggered.
@@ -19,13 +20,14 @@ public class PaymentViewWrapper extends LinearLayout implements HeightListener.H
     private boolean loadCalled = false;
     private HeightListener heightListener;
 
-    public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs) {
+    public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs, KlarnaPaymentViewCallback paymentViewCallback) {
         super(context, attrs);
         // Get density for resizing.
         displayDensity = context.getResources().getDisplayMetrics().density;
         // Add KlarnaPaymentView
         LinearLayout.LayoutParams webViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         paymentView = new KlarnaPaymentView(getReactAppContext().getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
+        paymentView.registerPaymentViewCallback(paymentViewCallback);
         addView(paymentView, webViewParams);
         heightListener = new HeightListener(getPaymentViewWebView(), this);
     }

@@ -2,10 +2,12 @@ package com.klarna.mobile.sdk.reactnative;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
-import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -13,6 +15,7 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
+import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaPaymentViewSpec;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,28 +23,25 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * Wraps the Payment Views being exposed to JS.
  */
-public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapper> implements KlarnaPaymentViewCallback {
+public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentViewWrapper> implements KlarnaPaymentViewCallback {
 
     // Commands that can be triggered from RN
-    public static final int COMMAND_INITIALIZE = 1;
-    public static final int COMMAND_LOAD = 2;
-    public static final int COMMAND_LOAD_PAYMENT_REVIEW = 3;
-    public static final int COMMAND_AUTHORIZE = 4;
-    public static final int COMMAND_REAUTHORIZE = 5;
-    public static final int COMMAND_FINALIZE = 6;
+    public static final String COMMAND_INITIALIZE = "initialize";
+    public static final String COMMAND_LOAD = "load";
+    public static final String COMMAND_LOAD_PAYMENT_REVIEW = "loadPaymentReview";
+    public static final String COMMAND_AUTHORIZE = "authorize";
+    public static final String COMMAND_REAUTHORIZE = "reauthorize";
+    public static final String COMMAND_FINALIZE = "finalize";
 
-    public static final String REACT_CLASS = "KlarnaPaymentView";
+    public static final String REACT_CLASS = "RNKlarnaPaymentView";
 
     private final ReactApplicationContext reactAppContext;
 
     // Store a list of views to event dispatchers so we send up events via the right views.
-    private Map<WeakReference<PaymentViewWrapper>, EventDispatcher> viewToDispatcher;
+    private final Map<WeakReference<PaymentViewWrapper>, EventDispatcher> viewToDispatcher;
 
     KlarnaPaymentViewManager(ReactApplicationContext reactApplicationContext, Application app) {
         super();
@@ -49,39 +49,22 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
         this.reactAppContext = reactApplicationContext;
     }
 
+    @NonNull
     @Override
     public String getName() {
         return REACT_CLASS;
     }
 
+    @NonNull
     @Override
     public PaymentViewWrapper createViewInstance(ThemedReactContext context) {
-        PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null);
+        PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null, this);
 
         // Each view has its own event dispatcher.
         EventDispatcher dispatcher = context.getNativeModule(UIManagerModule.class).getEventDispatcher();
         viewToDispatcher.put(new WeakReference<>(view), dispatcher);
 
         return view;
-    }
-
-    /**
-     * Commads are methods that RN will expose on the JS side for a view. They can be called via
-     * `UIManager.dispatchViewManagerCommand` from react.
-     *
-     * @return a map of command names to command IDs
-     */
-    @Nullable
-    @Override
-    public Map<String, Integer> getCommandsMap() {
-        return MapBuilder.of(
-                "initialize", COMMAND_INITIALIZE,
-                "load", COMMAND_LOAD,
-                "loadPaymentReview", COMMAND_LOAD_PAYMENT_REVIEW,
-                "authorize", COMMAND_AUTHORIZE,
-                "reauthorize", COMMAND_REAUTHORIZE,
-                "finalize", COMMAND_FINALIZE
-        );
     }
 
     /**
@@ -92,18 +75,14 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
      * @param args
      */
     @Override
-    public void receiveCommand(@Nonnull PaymentViewWrapper root, int commandId, @Nullable ReadableArray args) {
+    public void receiveCommand(@NonNull PaymentViewWrapper root, String commandId, @Nullable ReadableArray args) {
         String sessionData = null;
 
         switch (commandId) {
             case COMMAND_INITIALIZE:
                 if (args != null) {
                     final String token = args.getString(0);
-                    final String returnUrl = args.getString(1);
-
-                    if (token != null && returnUrl != null) {
-                        root.paymentView.initialize(token, returnUrl);
-                    }
+                    initialize(root, token);
                 }
                 break;
 
@@ -111,43 +90,43 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
                 if (args != null) {
                     sessionData = args.getString(0);
                 }
-                root.load(sessionData);
+                load(root, sessionData);
                 break;
 
             case COMMAND_LOAD_PAYMENT_REVIEW:
-                root.paymentView.loadPaymentReview();
+                loadPaymentReview(root);
                 break;
 
             case COMMAND_AUTHORIZE:
+                boolean autoFinalize = true;
                 if (args != null) {
-                    final boolean autoFinalize = args.getBoolean(0);
+                    autoFinalize = args.getBoolean(0);
                     sessionData = args.getString(1);
-
-                    root.paymentView.authorize(autoFinalize, sessionData);
                 }
+                authorize(root, autoFinalize, sessionData);
                 break;
 
             case COMMAND_REAUTHORIZE:
                 if (args != null) {
                     sessionData = args.getString(0);
                 }
-                root.paymentView.reauthorize(sessionData);
+                reauthorize(root, sessionData);
                 break;
 
             case COMMAND_FINALIZE:
                 if (args != null) {
                     sessionData = args.getString(0);
                 }
-                root.paymentView.finalize(sessionData);
+                finalize(root, sessionData);
                 break;
         }
     }
 
     /**
      * Exposes direct event types that will be accessible as prop "callbacks" from RN.
-     *
+     * <p>
      * Structure must follow:
-     *   { "<eventName>": {"registrationName": "<eventName>"} }
+     * { "<eventName>": {"registrationName": "<eventName>"} }
      */
     @Nullable
     @Override
@@ -170,13 +149,50 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
      * @param category
      */
     @ReactProp(name = "category")
+    @Override
     public void setCategory(PaymentViewWrapper view, String category) {
-        view.paymentView.registerPaymentViewCallback(this);
         view.paymentView.setCategory(category);
+    }
+
+    @ReactProp(name = "returnUrl")
+    @Override
+    public void setReturnUrl(PaymentViewWrapper view, @Nullable String value) {
+        view.paymentView.setReturnURL(value);
+    }
+
+    @Override
+    public void initialize(PaymentViewWrapper view, String clientToken) {
+        view.paymentView.initialize(clientToken);
+    }
+
+    @Override
+    public void load(PaymentViewWrapper view, String sessionData) {
+        view.load(sessionData);
+    }
+
+    @Override
+    public void loadPaymentReview(PaymentViewWrapper view) {
+        view.paymentView.loadPaymentReview();
+    }
+
+    @Override
+    public void authorize(PaymentViewWrapper view, boolean autoFinalize, String sessionData) {
+        view.paymentView.authorize(autoFinalize, sessionData);
+    }
+
+    @Override
+    public void reauthorize(PaymentViewWrapper view, String sessionData) {
+        view.paymentView.reauthorize(sessionData);
+    }
+
+    @Override
+    public void finalize(PaymentViewWrapper view, String sessionData) {
+        view.paymentView.finalize(sessionData);
     }
 
     /**
      * Creates an event from event name and a map of params. Sends it via the right dispatcher.
+     *
      * @param eventName
      * @param additionalParams
      * @param view
@@ -196,6 +212,7 @@ public class KlarnaPaymentViewManager extends SimpleViewManager<PaymentViewWrapp
 
     /**
      * Calls requestLayout on the wrapper to fetch height of the contents.
+     *
      * @param view
      */
     private void requestLayout(KlarnaPaymentView view) {

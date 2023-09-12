@@ -79,5 +79,13 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "codegenConfig": {
+    "name": "react-native-klarna-inapp-sdk",
+    "type": "all",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.klarna.mobile.sdk.reactnative"
+    }
   }
 }
