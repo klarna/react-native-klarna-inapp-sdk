@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.payments;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.JavaOnlyArray;
@@ -6,6 +6,7 @@ import com.facebook.react.bridge.JavaOnlyMap;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
+import com.klarna.mobile.sdk.reactnative.MappableKlarnaPaymentsSDKError;
 
 import org.junit.After;
 import org.junit.Assert;

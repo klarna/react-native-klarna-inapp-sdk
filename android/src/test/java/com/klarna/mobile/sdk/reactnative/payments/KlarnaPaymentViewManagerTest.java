@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.payments;
 
 import android.app.Application;
 
@@ -20,14 +20,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
-import java.util.Map;
-
-import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_AUTHORIZE;
-import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_FINALIZE;
-import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_INITIALIZE;
-import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_LOAD;
-import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
-import static com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_AUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_FINALIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_INITIALIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
 
 @PrepareForTest()
 @RunWith(RobolectricTestRunner.class)

@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.payments;
 
 import android.app.Application;
 
@@ -7,6 +7,7 @@ import androidx.test.core.app.ApplicationProvider;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewPackage;
 
 import org.junit.Assert;
 import org.junit.Before;

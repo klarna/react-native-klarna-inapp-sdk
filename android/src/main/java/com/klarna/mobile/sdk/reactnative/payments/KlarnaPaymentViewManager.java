@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.payments;
 
 import android.app.Application;
 
@@ -46,7 +46,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     // Store a list of views to event dispatchers so we send up events via the right views.
     private final Map<WeakReference<PaymentViewWrapper>, EventDispatcher> viewToDispatcher;
 
-    KlarnaPaymentViewManager(ReactApplicationContext reactApplicationContext, Application app) {
+    public KlarnaPaymentViewManager(ReactApplicationContext reactApplicationContext, Application app) {
         super();
         this.viewToDispatcher = new HashMap<>();
         this.reactAppContext = reactApplicationContext;

@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.payments;
 
 import androidx.annotation.NonNull;
 
@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
+import com.klarna.mobile.sdk.reactnative.common.Mappable;
 
 import java.util.List;
 

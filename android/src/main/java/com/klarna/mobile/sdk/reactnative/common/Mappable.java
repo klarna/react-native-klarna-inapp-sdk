@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.common;
 
 import androidx.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReadableMap;
 
 import java.util.Map;
 
-interface Mappable {
+public interface Mappable {
     @NonNull
     ReadableMap buildMap();
 }

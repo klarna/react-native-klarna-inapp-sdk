@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.common;
 
 import android.os.Build;
 import android.webkit.JavascriptInterface;
@@ -16,7 +16,7 @@ public class HeightListener {
     private final AtomicBoolean attachedEventObserver = new AtomicBoolean(false);
     private WeakReference<HeightListenerCallback> callback;
 
-    HeightListener(WebView webView, HeightListenerCallback callback) {
+    public HeightListener(WebView webView, HeightListenerCallback callback) {
         this.callback = new WeakReference<>(callback);
         webView.addJavascriptInterface(this, "AndroidEventObserver");
     }
@@ -26,7 +26,7 @@ public class HeightListener {
      *
      * @param webView The web view instance to inject the script into
      */
-    void injectListener(WebView webView) {
+    public void injectListener(WebView webView) {
         injectScript(webView, getHeightFuncScript());
     }
 
@@ -36,7 +36,7 @@ public class HeightListener {
      *
      * @param webView The web view to fetch its height value
      */
-    void fetchHeight(final WebView webView) {
+    public void fetchHeight(final WebView webView) {
         if (webView == null) {
             return;
         }

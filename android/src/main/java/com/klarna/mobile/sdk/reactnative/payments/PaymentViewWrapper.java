@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative;
+package com.klarna.mobile.sdk.reactnative.payments;
 
 import android.util.AttributeSet;
 import android.view.View;
@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
+import com.klarna.mobile.sdk.reactnative.common.HeightListener;
 
 /***
  * Wraps the KlarnaPaymentView so we can see when a requestLayout() has been triggered.
