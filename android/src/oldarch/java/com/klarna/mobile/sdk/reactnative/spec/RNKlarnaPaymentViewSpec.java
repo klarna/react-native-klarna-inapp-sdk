@@ -11,7 +11,7 @@ public abstract class RNKlarnaPaymentViewSpec<T extends View> extends SimpleView
 
     public abstract void setReturnUrl(T view, @Nullable String value);
 
-    public abstract void initialize(T view, String clientToken);
+    public abstract void initialize(T view, String clientToken, String returnUrl);
 
     public abstract void load(T view, String sessionData);
 

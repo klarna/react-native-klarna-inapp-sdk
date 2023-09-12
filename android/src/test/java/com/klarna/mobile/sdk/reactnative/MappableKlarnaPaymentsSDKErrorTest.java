@@ -1,16 +1,45 @@
 package com.klarna.mobile.sdk.reactnative;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.JavaOnlyArray;
+import com.facebook.react.bridge.JavaOnlyMap;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
+@PrepareForTest({Arguments.class})
+@RunWith(RobolectricTestRunner.class)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*", "com.android.*"})
 public class MappableKlarnaPaymentsSDKErrorTest {
+
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+
+    @Before
+    public void setup() {
+        PowerMockito.mockStatic(Arguments.class);
+        PowerMockito.when(Arguments.createArray()).thenAnswer(invocation -> new JavaOnlyArray());
+        PowerMockito.when(Arguments.createMap()).thenAnswer(invocation -> new JavaOnlyMap());
+    }
+
+    @After
+    public void teardown() {
+
+    }
 
     @Test
     public void testMapFieldsAndValues() {
@@ -25,21 +54,18 @@ public class MappableKlarnaPaymentsSDKErrorTest {
 
         MappableKlarnaPaymentsSDKError writableError = new MappableKlarnaPaymentsSDKError(error);
 
-        Map map = writableError.buildMap();
+        ReadableMap map = writableError.buildMap();
 
-        Assert.assertEquals("testName", map.get("name"));
-        Assert.assertEquals("testMessage", map.get("message"));
-        Assert.assertEquals(false, map.get("isFatal"));
-        Assert.assertEquals("testAction", map.get("action"));
+        Assert.assertEquals("testName", map.getString("name"));
+        Assert.assertEquals("testMessage", map.getString("message"));
+        Assert.assertFalse(map.getBoolean("isFatal"));
+        Assert.assertEquals("testAction", map.getString("action"));
 
-        Object inv = map.get("invalidFields");
-        Assert.assertTrue(inv instanceof Collection);
-        Collection invalidFields = (Collection) inv;
-
+        ReadableArray invalidFields = map.getArray("invalidFields");
         Assert.assertNotNull(invalidFields);
         Assert.assertEquals(1, invalidFields.size());
-        Assert.assertEquals("testInvalidField", new ArrayList(invalidFields).get(0));
+        Assert.assertEquals("testInvalidField", invalidFields.getString(0));
 
-        Assert.assertEquals("testSessionId", map.get("sessionId"));
+        Assert.assertEquals("testSessionId", map.getString("sessionId"));
     }
 }

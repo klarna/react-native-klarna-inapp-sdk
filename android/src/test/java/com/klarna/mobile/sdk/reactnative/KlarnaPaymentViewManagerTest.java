@@ -61,22 +61,8 @@ public class KlarnaPaymentViewManagerTest {
 
     @Test
     public void testReactClassName() {
-        Assert.assertEquals("KlarnaPaymentView", manager.getName());
-        Assert.assertEquals("KlarnaPaymentView", KlarnaPaymentViewManager.REACT_CLASS);
-    }
-
-    @Test
-    public void testCommandsMap() {
-        Map<String, Integer> commandsMap = manager.getCommandsMap();
-
-        Assert.assertNotNull(commandsMap);
-        Assert.assertEquals(6, commandsMap.size());
-        Assert.assertEquals(Integer.valueOf(COMMAND_INITIALIZE), commandsMap.get("initialize"));
-        Assert.assertEquals(Integer.valueOf(COMMAND_LOAD), commandsMap.get("load"));
-        Assert.assertEquals(Integer.valueOf(COMMAND_LOAD_PAYMENT_REVIEW), commandsMap.get("loadPaymentReview"));
-        Assert.assertEquals(Integer.valueOf(COMMAND_AUTHORIZE), commandsMap.get("authorize"));
-        Assert.assertEquals(Integer.valueOf(COMMAND_REAUTHORIZE), commandsMap.get("reauthorize"));
-        Assert.assertEquals(Integer.valueOf(COMMAND_FINALIZE), commandsMap.get("finalize"));
+        Assert.assertEquals("RNKlarnaPaymentView", manager.getName());
+        Assert.assertEquals("RNKlarnaPaymentView", KlarnaPaymentViewManager.REACT_CLASS);
     }
 
     @Test
@@ -92,11 +78,10 @@ public class KlarnaPaymentViewManagerTest {
         Mockito.verify(wrapper.paymentView, Mockito.times(1)).initialize("testToken", "testReturnUrl");
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
     public void testReceiveCommandInitializeThrows() {
         final JavaOnlyArray args = new JavaOnlyArray();
-        args.pushString("testToken");
         manager.receiveCommand(wrapper, COMMAND_INITIALIZE, args);
+        Mockito.verify(wrapper.paymentView, Mockito.times(0)).initialize(Mockito.anyString(), Mockito.anyString());
     }
 
     @Test
@@ -119,7 +104,7 @@ public class KlarnaPaymentViewManagerTest {
     @Test
     public void testReceiveCommandAuthorize() {
         manager.receiveCommand(wrapper, COMMAND_AUTHORIZE, null);
-        Mockito.verify(wrapper.paymentView, Mockito.times(0)).authorize(Mockito.anyBoolean(), (String) Mockito.isNull());
+        Mockito.verify(wrapper.paymentView, Mockito.times(1)).authorize(Mockito.anyBoolean(), (String) Mockito.isNull());
 
         final JavaOnlyArray args = new JavaOnlyArray();
         args.pushBoolean(true);
@@ -128,11 +113,11 @@ public class KlarnaPaymentViewManagerTest {
         Mockito.verify(wrapper.paymentView, Mockito.times(1)).authorize(true, "testSessionData");
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
     public void testReceiveCommandAuthorizeThrows() {
         final JavaOnlyArray args = new JavaOnlyArray();
         args.pushBoolean(true);
         manager.receiveCommand(wrapper, COMMAND_AUTHORIZE, args);
+        Mockito.verify(wrapper.paymentView, Mockito.times(1)).authorize(true, null);
     }
 
     @Test

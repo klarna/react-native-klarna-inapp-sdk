@@ -83,14 +83,18 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
         switch (commandId) {
             case COMMAND_INITIALIZE:
-                if (args != null) {
+                if (args != null && args.size() > 0) {
                     final String token = args.getString(0);
-                    initialize(root, token);
+                    String returnUrl = null;
+                    if (args.size() > 1) {
+                        returnUrl = args.getString(1);
+                    }
+                    initialize(root, token, returnUrl);
                 }
                 break;
 
             case COMMAND_LOAD:
-                if (args != null) {
+                if (args != null && args.size() > 0) {
                     sessionData = args.getString(0);
                 }
                 load(root, sessionData);
@@ -102,22 +106,24 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
             case COMMAND_AUTHORIZE:
                 boolean autoFinalize = true;
-                if (args != null) {
+                if (args != null && args.size() > 0) {
                     autoFinalize = args.getBoolean(0);
-                    sessionData = args.getString(1);
+                    if (args.size() > 1) {
+                        sessionData = args.getString(1);
+                    }
                 }
                 authorize(root, autoFinalize, sessionData);
                 break;
 
             case COMMAND_REAUTHORIZE:
-                if (args != null) {
+                if (args != null && args.size() > 0) {
                     sessionData = args.getString(0);
                 }
                 reauthorize(root, sessionData);
                 break;
 
             case COMMAND_FINALIZE:
-                if (args != null) {
+                if (args != null && args.size() > 0) {
                     sessionData = args.getString(0);
                 }
                 finalize(root, sessionData);
@@ -164,8 +170,8 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     }
 
     @Override
-    public void initialize(PaymentViewWrapper view, String clientToken) {
-        view.paymentView.initialize(clientToken);
+    public void initialize(PaymentViewWrapper view, String clientToken, String returnUrl) {
+        view.paymentView.initialize(clientToken, returnUrl);
     }
 
     @Override

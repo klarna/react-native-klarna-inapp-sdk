@@ -46,7 +46,8 @@ type KlarnaPaymentViewNativeComponentType = HostComponent<NativeProps>;
 interface NativeCommands {
   initialize: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
-    clientToken: string
+    clientToken: string,
+    returnUrl?: string | undefined
   ) => void;
   load: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
