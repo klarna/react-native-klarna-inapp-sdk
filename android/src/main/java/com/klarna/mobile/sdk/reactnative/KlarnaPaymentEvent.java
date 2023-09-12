@@ -32,9 +32,9 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
     private final String eventName;
 
     @Nullable
-    private final Map<String, Object> additionalParams;
+    private final WritableMap additionalParams;
 
-    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String eventName, @Nullable Map<String, Object> additionalParams) {
+    public KlarnaPaymentEvent(@IdRes int viewId, @NonNull String eventName, @Nullable WritableMap additionalParams) {
         super(viewId);
         this.eventName = eventName;
         this.additionalParams = additionalParams;
@@ -45,19 +45,12 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
         return eventName;
     }
 
-    /**
-     * Composes and sends the event JSON object being sent up to JS.
-     * @param rctEventEmitter
-     */
+    @Nullable
     @Override
-    public void dispatch(RCTEventEmitter rctEventEmitter) {
-        Map<String, Object> map = new HashMap<>();
-
-        if (additionalParams != null) {
-            map.putAll(additionalParams);
+    protected WritableMap getEventData() {
+        if(additionalParams != null){
+            return additionalParams;
         }
-
-        WritableMap eventData = Arguments.makeNativeMap(map);
-        rctEventEmitter.receiveEvent(getViewTag(), getEventName(), eventData);
+        return Arguments.createMap();
     }
 }

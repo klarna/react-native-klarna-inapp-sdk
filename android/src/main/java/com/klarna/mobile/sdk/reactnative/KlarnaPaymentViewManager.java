@@ -5,11 +5,14 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.UIManagerModule;
+import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
@@ -57,11 +60,11 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
     @NonNull
     @Override
-    public PaymentViewWrapper createViewInstance(ThemedReactContext context) {
+    public PaymentViewWrapper createViewInstance(@NonNull ThemedReactContext context) {
         PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null, this);
 
         // Each view has its own event dispatcher.
-        EventDispatcher dispatcher = context.getNativeModule(UIManagerModule.class).getEventDispatcher();
+        EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), view.getId());
         viewToDispatcher.put(new WeakReference<>(view), dispatcher);
 
         return view;
@@ -197,17 +200,15 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
      * @param additionalParams
      * @param view
      */
-    private void postEventForView(String eventName, Map additionalParams, KlarnaPaymentView view) {
+    private void postEventForView(String eventName, WritableMap additionalParams, KlarnaPaymentView view) {
         PaymentViewWrapper wrapper = wrapperForPaymentView(view);
-        EventDispatcher foundDispatcher = null;
-        for (WeakReference<PaymentViewWrapper> wrapperRef : viewToDispatcher.keySet()) {
-            if (wrapperRef.get() == wrapper) {
-                foundDispatcher = viewToDispatcher.get(wrapperRef);
+        if (wrapper != null) {
+            KlarnaPaymentEvent event = new KlarnaPaymentEvent(wrapper.getId(), eventName, additionalParams);
+            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) wrapper.getContext(), wrapper.getId());
+            if (eventDispatcher != null) {
+                eventDispatcher.dispatchEvent(event);
             }
         }
-
-        KlarnaPaymentEvent event = new KlarnaPaymentEvent(wrapper.getId(), eventName, additionalParams);
-        foundDispatcher.dispatchEvent(event);
     }
 
     /**
@@ -248,41 +249,38 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     @Override
     public void onAuthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken, @org.jetbrains.annotations.Nullable Boolean finalizeRequired) {
         requestLayout(paymentView);
-        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE,
-                MapBuilder.<String, Object>of(
-                        "approved", approved,
-                        "authToken", authToken,
-                        "finalizeRequired", finalizeRequired),
-                paymentView);
+        WritableMap params = Arguments.createMap();
+        params.putBoolean("approved", approved);
+        params.putString("authToken", authToken);
+        params.putBoolean("finalizeRequired", finalizeRequired);
+        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE, params, paymentView);
     }
 
     @Override
     public void onReauthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
         requestLayout(paymentView);
-        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE,
-                MapBuilder.<String, Object>of(
-                        "approved", approved,
-                        "authToken", authToken),
-                paymentView);
+        WritableMap params = Arguments.createMap();
+        params.putBoolean("approved", approved);
+        params.putString("authToken", authToken);
+        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE, params, paymentView);
     }
 
     @Override
     public void onFinalized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
         requestLayout(paymentView);
-        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE,
-                MapBuilder.<String, Object>of(
-                        "approved", approved,
-                        "authToken", authToken),
-                paymentView);
+        WritableMap params = Arguments.createMap();
+        params.putBoolean("approved", approved);
+        params.putString("authToken", authToken);
+        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE, params, paymentView);
     }
 
     @Override
     public void onErrorOccurred(@NotNull KlarnaPaymentView klarnaPaymentView, @NotNull KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
         requestLayout(klarnaPaymentView);
         MappableKlarnaPaymentsSDKError sdkError = new MappableKlarnaPaymentsSDKError(klarnaPaymentsSDKError);
-        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR,
-                MapBuilder.<String, Object>of("error", sdkError.buildMap()),
-                klarnaPaymentView);
+        WritableMap params = Arguments.createMap();
+        params.putMap("error", sdkError.buildMap());
+        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR, params, klarnaPaymentView);
     }
 
     private PaymentViewWrapper wrapperForPaymentView(KlarnaPaymentView paymentView) {
