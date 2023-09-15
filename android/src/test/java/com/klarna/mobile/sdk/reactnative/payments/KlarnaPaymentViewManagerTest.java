@@ -6,7 +6,10 @@ import androidx.test.core.app.ApplicationProvider;
 
 import com.facebook.react.bridge.JavaOnlyArray;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
+import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -26,6 +29,8 @@ import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManage
 import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD;
 import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
 import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
+
+import java.util.Collections;
 
 @PrepareForTest()
 @RunWith(RobolectricTestRunner.class)
@@ -61,6 +66,18 @@ public class KlarnaPaymentViewManagerTest {
     public void testReactClassName() {
         Assert.assertEquals("RNKlarnaPaymentView", manager.getName());
         Assert.assertEquals("RNKlarnaPaymentView", KlarnaPaymentViewManager.REACT_CLASS);
+    }
+
+    @Test
+    public void testSetCategory() {
+        manager.setCategory(wrapper, "testCategory");
+        Mockito.verify(wrapper.paymentView).setCategory("testCategory");
+    }
+
+    @Test
+    public void testSetReturnUrl() {
+        manager.setReturnUrl(wrapper, "testReturnUrl://");
+        Mockito.verify(wrapper.paymentView).setReturnURL("testReturnUrl://");
     }
 
     @Test
@@ -141,8 +158,28 @@ public class KlarnaPaymentViewManagerTest {
     }
 
     @Test
-    public void testSetCategory() {
-        manager.setCategory(wrapper, "testCategory");
-        Mockito.verify(wrapper.paymentView).setCategory("testCategory");
+    public void testErrorMapFieldsAndValues() {
+        KlarnaPaymentsSDKError error = new KlarnaPaymentsSDKError(
+                "testName",
+                "testMessage",
+                false,
+                "testAction",
+                Collections.singletonList("testInvalidField"),
+                "testSessionId"
+        );
+
+        ReadableMap map = manager.buildErrorMap(error);
+
+        Assert.assertEquals("testName", map.getString("name"));
+        Assert.assertEquals("testMessage", map.getString("message"));
+        Assert.assertFalse(map.getBoolean("isFatal"));
+        Assert.assertEquals("testAction", map.getString("action"));
+
+        ReadableArray invalidFields = map.getArray("invalidFields");
+        Assert.assertNotNull(invalidFields);
+        Assert.assertEquals(1, invalidFields.size());
+        Assert.assertEquals("testInvalidField", invalidFields.getString(0));
+
+        Assert.assertEquals("testSessionId", map.getString("sessionId"));
     }
 }

@@ -9,6 +9,8 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -283,10 +286,33 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     @Override
     public void onErrorOccurred(@NotNull KlarnaPaymentView klarnaPaymentView, @NotNull KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
         requestLayout(klarnaPaymentView);
-        MappableKlarnaPaymentsSDKError sdkError = new MappableKlarnaPaymentsSDKError(klarnaPaymentsSDKError);
+        ReadableMap sdkError = buildErrorMap(klarnaPaymentsSDKError);
         WritableMap params = Arguments.createMap();
-        params.putMap("error", sdkError.buildMap());
+        params.putMap("error", sdkError);
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR, params, klarnaPaymentView);
+    }
+
+    ReadableMap buildErrorMap(KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
+        WritableMap map = Arguments.createMap();
+        map.putString("action", klarnaPaymentsSDKError.getAction());
+        map.putBoolean("isFatal", klarnaPaymentsSDKError.isFatal());
+        map.putString("message", klarnaPaymentsSDKError.getMessage());
+        map.putString("name", klarnaPaymentsSDKError.getName());
+        map.putString("sessionId", klarnaPaymentsSDKError.getSessionId());
+
+        WritableArray invalidFields = Arguments.createArray();
+        List<String> errorInvalidFields = klarnaPaymentsSDKError.getInvalidFields();
+        if (errorInvalidFields != null && errorInvalidFields.size() > 0) {
+            for (int i = 0; i < errorInvalidFields.size(); i++) {
+                String field = errorInvalidFields.get(i);
+                if (field != null) {
+                    invalidFields.pushString(field);
+                }
+            }
+        }
+        map.putArray("invalidFields", invalidFields);
+
+        return map;
     }
 
     private PaymentViewWrapper wrapperForPaymentView(KlarnaPaymentView paymentView) {
