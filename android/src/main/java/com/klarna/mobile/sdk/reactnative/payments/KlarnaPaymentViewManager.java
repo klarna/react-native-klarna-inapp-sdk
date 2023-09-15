@@ -5,12 +5,10 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -20,13 +18,13 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
+import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaPaymentViewSpec;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -252,28 +250,37 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     @Override
     public void onAuthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken, @org.jetbrains.annotations.Nullable Boolean finalizeRequired) {
         requestLayout(paymentView);
-        WritableMap params = Arguments.createMap();
-        params.putBoolean("approved", approved);
-        params.putString("authToken", authToken);
-        params.putBoolean("finalizeRequired", finalizeRequired);
+        WritableMap params = ArgumentsUtil.createMap(
+                new HashMap<>() {{
+                    put("approved", approved);
+                    put("authToken", authToken);
+                    put("finalizeRequired", finalizeRequired);
+                }}
+        );
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE, params, paymentView);
     }
 
     @Override
     public void onReauthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
         requestLayout(paymentView);
-        WritableMap params = Arguments.createMap();
-        params.putBoolean("approved", approved);
-        params.putString("authToken", authToken);
+        WritableMap params = ArgumentsUtil.createMap(
+                new HashMap<>() {{
+                    put("approved", approved);
+                    put("authToken", authToken);
+                }}
+        );
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE, params, paymentView);
     }
 
     @Override
     public void onFinalized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
         requestLayout(paymentView);
-        WritableMap params = Arguments.createMap();
-        params.putBoolean("approved", approved);
-        params.putString("authToken", authToken);
+        WritableMap params = ArgumentsUtil.createMap(
+                new HashMap<>() {{
+                    put("approved", approved);
+                    put("authToken", authToken);
+                }}
+        );
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE, params, paymentView);
     }
 
@@ -281,32 +288,25 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     public void onErrorOccurred(@NotNull KlarnaPaymentView klarnaPaymentView, @NotNull KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
         requestLayout(klarnaPaymentView);
         ReadableMap sdkError = buildErrorMap(klarnaPaymentsSDKError);
-        WritableMap params = Arguments.createMap();
-        params.putMap("error", sdkError);
+        WritableMap params = ArgumentsUtil.createMap(
+                new HashMap<>() {{
+                    put("error", sdkError);
+                }}
+        );
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR, params, klarnaPaymentView);
     }
 
     ReadableMap buildErrorMap(KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
-        WritableMap map = Arguments.createMap();
-        map.putString("action", klarnaPaymentsSDKError.getAction());
-        map.putBoolean("isFatal", klarnaPaymentsSDKError.isFatal());
-        map.putString("message", klarnaPaymentsSDKError.getMessage());
-        map.putString("name", klarnaPaymentsSDKError.getName());
-        map.putString("sessionId", klarnaPaymentsSDKError.getSessionId());
-
-        WritableArray invalidFields = Arguments.createArray();
-        List<String> errorInvalidFields = klarnaPaymentsSDKError.getInvalidFields();
-        if (errorInvalidFields != null && errorInvalidFields.size() > 0) {
-            for (int i = 0; i < errorInvalidFields.size(); i++) {
-                String field = errorInvalidFields.get(i);
-                if (field != null) {
-                    invalidFields.pushString(field);
-                }
-            }
-        }
-        map.putArray("invalidFields", invalidFields);
-
-        return map;
+        return ArgumentsUtil.createMap(
+                new HashMap<>() {{
+                    put("action", klarnaPaymentsSDKError.getAction());
+                    put("isFatal", klarnaPaymentsSDKError.isFatal());
+                    put("message", klarnaPaymentsSDKError.getMessage());
+                    put("name", klarnaPaymentsSDKError.getName());
+                    put("sessionId", klarnaPaymentsSDKError.getSessionId());
+                    put("invalidFields", ArgumentsUtil.createArray(klarnaPaymentsSDKError.getInvalidFields()));
+                }}
+        );
     }
 
     private PaymentViewWrapper wrapperForPaymentView(KlarnaPaymentView paymentView) {
