@@ -2,6 +2,7 @@ package com.klarna.mobile.sdk.reactnative.payments;
 
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 
@@ -19,14 +20,14 @@ public class PaymentViewWrapper extends LinearLayout implements HeightListener.H
     private float displayDensity = 1;
     public KlarnaPaymentView paymentView;
     private boolean loadCalled = false;
-    private HeightListener heightListener;
+    private final HeightListener heightListener;
 
     public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs, KlarnaPaymentViewCallback paymentViewCallback) {
         super(context, attrs);
         // Get density for resizing.
         displayDensity = context.getResources().getDisplayMetrics().density;
         // Add KlarnaPaymentView
-        LinearLayout.LayoutParams webViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams webViewParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         paymentView = new KlarnaPaymentView(getReactAppContext().getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
         paymentView.registerPaymentViewCallback(paymentViewCallback);
         addView(paymentView, webViewParams);
@@ -78,10 +79,13 @@ public class PaymentViewWrapper extends LinearLayout implements HeightListener.H
                 @Override
                 public void runGuarded() {
                     UIManagerModule uimm = getReactAppContext().getNativeModule(UIManagerModule.class);
-                    uimm.updateNodeSize(getId(), width, (int) scaledHeight);
+                    if (uimm != null) {
+                        uimm.updateNodeSize(getId(), width, (int) scaledHeight);
+                    }
                 }
             });
         } catch (Throwable t) {
+            // ignore
         }
     }
 

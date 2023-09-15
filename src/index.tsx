@@ -48,7 +48,7 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
           this.props.onLoaded();
         }}
         onLoadedPaymentReview={(_event: NativeSyntheticEvent<any>) => {
-          this.props.onLoaded();
+          this.props.onLoadedPaymentReview();
         }}
         onAuthorized={(
           event: NativeSyntheticEvent<

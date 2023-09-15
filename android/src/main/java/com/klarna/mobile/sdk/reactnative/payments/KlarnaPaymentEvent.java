@@ -10,7 +10,7 @@ import com.facebook.react.uimanager.events.Event;
 
 /**
  * A `KlarnaPaymentEvent` builds the event that will be eventually sent via `on<event>`.
- *
+ * <p>
  * It consists of a flat JSON object with a single `name` parameter for the event name as well as
  * other, optional parameters depending on the function that was called.
  */
@@ -44,7 +44,7 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
     @Nullable
     @Override
     protected WritableMap getEventData() {
-        if(additionalParams != null){
+        if (additionalParams != null) {
             return additionalParams;
         }
         return Arguments.createMap();

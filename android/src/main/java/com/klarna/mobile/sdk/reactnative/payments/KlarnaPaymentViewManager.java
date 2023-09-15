@@ -76,9 +76,9 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     /**
      * Handles commands received from RN to a specific view.
      *
-     * @param root
-     * @param commandId
-     * @param args
+     * @param root      view receiving the command
+     * @param commandId identifier of the command
+     * @param args      array of command arguments
      */
     @Override
     public void receiveCommand(@NonNull PaymentViewWrapper root, String commandId, @Nullable ReadableArray args) {
@@ -154,12 +154,6 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
         );
     }
 
-    /**
-     * Payment View's payment method category (e.g: "pay_later", "pay_over_time").
-     *
-     * @param view
-     * @param category
-     */
     @ReactProp(name = "category")
     @Override
     public void setCategory(PaymentViewWrapper view, String category) {
@@ -205,9 +199,9 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     /**
      * Creates an event from event name and a map of params. Sends it via the right dispatcher.
      *
-     * @param eventName
-     * @param additionalParams
-     * @param view
+     * @param eventName        name of the event should match getExportedCustomDirectEventTypeConstants
+     * @param additionalParams payload of the event
+     * @param view             source native view
      */
     private void postEventForView(String eventName, WritableMap additionalParams, KlarnaPaymentView view) {
         PaymentViewWrapper wrapper = wrapperForPaymentView(view);
@@ -223,7 +217,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     /**
      * Calls requestLayout on the wrapper to fetch height of the contents.
      *
-     * @param view
+     * @param view native view
      */
     private void requestLayout(KlarnaPaymentView view) {
         if (view != null) {
