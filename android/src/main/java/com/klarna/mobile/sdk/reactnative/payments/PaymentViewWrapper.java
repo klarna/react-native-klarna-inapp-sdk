@@ -8,43 +8,38 @@ import android.widget.LinearLayout;
 
 import com.facebook.react.bridge.GuardedRunnable;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
-import com.klarna.mobile.sdk.reactnative.common.HeightListener;
+import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
 
 /***
  * Wraps the KlarnaPaymentView so we can see when a requestLayout() has been triggered.
  */
-public class PaymentViewWrapper extends LinearLayout implements HeightListener.HeightListenerCallback {
-    private float displayDensity = 1;
+public class PaymentViewWrapper extends LinearLayout implements WebViewResizeObserver.WebViewResizeObserverCallback {
     public KlarnaPaymentView paymentView;
-    private boolean loadCalled = false;
-    private final HeightListener heightListener;
+    private final WebViewResizeObserver resizeObserver;
 
     public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs, KlarnaPaymentViewCallback paymentViewCallback) {
         super(context, attrs);
-        // Get density for resizing.
-        displayDensity = context.getResources().getDisplayMetrics().density;
         // Add KlarnaPaymentView
         ViewGroup.LayoutParams webViewParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         paymentView = new KlarnaPaymentView(getReactAppContext().getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
         paymentView.registerPaymentViewCallback(paymentViewCallback);
         addView(paymentView, webViewParams);
-        heightListener = new HeightListener(getPaymentViewWebView(), this);
+        resizeObserver = new WebViewResizeObserver(this);
+        WebView webView = getPaymentViewWebView();
+        if (webView != null) {
+            resizeObserver.addInterface(webView);
+        }
     }
 
     public void load(String sessionData) {
         paymentView.load(sessionData);
-        loadCalled = true;
-        heightListener.injectListener(getPaymentViewWebView());
-    }
-
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-        if (isReady() && loadCalled) {
-            heightListener.fetchHeight(getPaymentViewWebView());
+        WebView webView = getPaymentViewWebView();
+        if (webView != null) {
+            resizeObserver.injectListener(webView);
         }
     }
 
@@ -67,20 +62,16 @@ public class PaymentViewWrapper extends LinearLayout implements HeightListener.H
      * <p>
      * The width will be whatever the parent component's width is.
      */
-    private void setHeight(String height) {
-        if (height == null || height.equals("null") || height.equals("undefined")) {
-            return;
-        }
+    private void setHeight(int height) {
         try {
             final int width = getParentViewWidth();
-            final float contentHeight = Float.parseFloat(height);
-            final float scaledHeight = contentHeight * displayDensity;
+            final int scaledHeight = (int) PixelUtil.toPixelFromDIP(height);
             getReactAppContext().runOnNativeModulesQueueThread(new GuardedRunnable(getReactAppContext()) {
                 @Override
                 public void runGuarded() {
                     UIManagerModule uimm = getReactAppContext().getNativeModule(UIManagerModule.class);
                     if (uimm != null) {
-                        uimm.updateNodeSize(getId(), width, (int) scaledHeight);
+                        uimm.updateNodeSize(getId(), width, scaledHeight);
                     }
                 }
             });
@@ -132,7 +123,7 @@ public class PaymentViewWrapper extends LinearLayout implements HeightListener.H
     }
 
     @Override
-    public void onNewHeight(String value) {
+    public void onResized(int value) {
         setHeight(value);
     }
 }
