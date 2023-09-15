@@ -82,11 +82,15 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
             ref={paymentViewRef}
             style={styles.paymentView}
             category={props.paymentMethodName}
+            returnUrl={'returnUrl://'}
             onInitialized={() => {
               onEvent('onInitialized');
             }}
             onLoaded={() => {
               onEvent('onLoaded');
+            }}
+            onLoadedPaymentReview={() => {
+              onEvent('onLoadedPaymentReview');
             }}
             onAuthorized={(approved, authToken, finalizeRequired) => {
               onEvent('onAuthorized', approved, authToken, finalizeRequired);

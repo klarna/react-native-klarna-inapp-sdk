@@ -81,7 +81,7 @@
     "node": ">=16"
   },
   "codegenConfig": {
-    "name": "react-native-klarna-inapp-sdk",
+    "name": "RNKlarnaMobileSDK",
     "type": "all",
     "jsSrcsDir": "specs",
     "android": {

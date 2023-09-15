@@ -1,19 +1,21 @@
-import React, { Component, type SyntheticEvent } from 'react';
-import {
-  findNodeHandle,
-  Platform,
-  requireNativeComponent,
-  UIManager,
-  type ViewStyle,
+import React, { Component, type RefObject } from 'react';
+import type {
+  NativeMethods,
+  NativeSyntheticEvent,
+  ViewStyle,
 } from 'react-native';
-
-const ComponentName = 'KlarnaPaymentView';
+import RNKlarnaPaymentView, {
+  Commands,
+  type NativeProps,
+} from '../specs/KlarnaPaymentViewNativeComponent';
 
 interface KlarnaPaymentViewProps {
   style: ViewStyle;
   category: string;
+  returnUrl: string;
   onInitialized: () => void;
   onLoaded: () => void;
+  onLoadedPaymentReview: () => void;
   onAuthorized: (
     approved: boolean,
     authToken: string | undefined,
@@ -25,139 +27,143 @@ interface KlarnaPaymentViewProps {
 }
 
 export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
+  paymentViewRef: RefObject<Component<NativeProps> & Readonly<NativeMethods>>;
+
+  constructor(props: KlarnaPaymentViewProps) {
+    super(props);
+    this.paymentViewRef = React.createRef();
+  }
+
   render() {
-    // @ts-ignore
     return (
-      <KlarnaReactPaymentView
+      <RNKlarnaPaymentView
+        ref={this.paymentViewRef}
         style={this.props.style}
         category={this.props.category}
-        onInitialized={(_event: SyntheticEvent) => {
+        returnUrl={this.props.returnUrl}
+        onInitialized={(_event: NativeSyntheticEvent<any>) => {
           this.props.onInitialized();
         }}
-        onLoaded={(_event: SyntheticEvent) => {
+        onLoaded={(_event: NativeSyntheticEvent<any>) => {
           this.props.onLoaded();
         }}
-        onAuthorized={(event: SyntheticEvent) => {
-          const data = this._getNativeEvent(event);
+        onLoadedPaymentReview={(_event: NativeSyntheticEvent<any>) => {
+          this.props.onLoaded();
+        }}
+        onAuthorized={(
+          event: NativeSyntheticEvent<
+            Readonly<{
+              readonly approved: boolean;
+              readonly authToken?: string;
+              readonly finalizeRequired: boolean;
+            }>
+          >
+        ) => {
           this.props.onAuthorized(
-            data?.approved,
-            data?.authToken,
-            data?.finalizeRequired
+            event.nativeEvent.approved,
+            event.nativeEvent.authToken,
+            event.nativeEvent.finalizeRequired
           );
         }}
-        onReauthorized={(event: SyntheticEvent) => {
-          const data = this._getNativeEvent(event);
-          this.props.onReauthorized(data?.approved, data?.authToken);
+        onReauthorized={(
+          event: NativeSyntheticEvent<
+            Readonly<{
+              readonly approved: boolean;
+              readonly authToken?: string;
+            }>
+          >
+        ) => {
+          this.props.onReauthorized(
+            event.nativeEvent.approved,
+            event.nativeEvent.authToken
+          );
         }}
-        onFinalized={(event: SyntheticEvent) => {
-          const data = this._getNativeEvent(event);
-          this.props.onFinalized(data?.approved, data?.authToken);
+        onFinalized={(
+          event: NativeSyntheticEvent<
+            Readonly<{
+              readonly approved: boolean;
+              readonly authToken?: string;
+            }>
+          >
+        ) => {
+          this.props.onFinalized(
+            event.nativeEvent.approved,
+            event.nativeEvent.authToken
+          );
         }}
-        onError={(event: SyntheticEvent) => {
-          const data = this._getNativeEvent(event);
-          this.props.onError(data?.error);
+        onError={(
+          event: NativeSyntheticEvent<
+            Readonly<{
+              readonly error: Readonly<{
+                readonly action: string;
+                readonly isFatal: boolean;
+                readonly message: string;
+                readonly name: string;
+                // readonly invalidFields: Array<string>;
+                readonly sessionId: string;
+              }>;
+            }>
+          >
+        ) => {
+          this.props.onError(event.nativeEvent.error);
         }}
       />
     );
   }
 
-  _getNativeEvent(event: SyntheticEvent): any | undefined {
-    if (event !== undefined && event !== null && event.nativeEvent) {
-      if (__DEV__) {
-        console.log('nativeEvent', event, event.nativeEvent);
-      }
-      return event.nativeEvent;
-    }
-    return undefined;
-  }
-
-  _viewManager() {
-    return UIManager.getViewManagerConfig(ComponentName);
-  }
-
   initialize = (sessionToken: string, returnUrl: string) => {
-    UIManager.dispatchViewManagerCommand(
-      findNodeHandle(this),
-      this._viewManager().Commands.initialize!!,
-      [sessionToken, returnUrl]
-    );
+    const view = this.paymentViewRef.current;
+    if (view != null) {
+      Commands.initialize(view, sessionToken, returnUrl);
+    }
   };
 
   load = (sessionData: string | undefined = undefined) => {
-    UIManager.dispatchViewManagerCommand(
-      findNodeHandle(this),
-      this._viewManager().Commands.load!!,
-      [sessionData || null]
-    );
+    const view = this.paymentViewRef.current;
+    if (view != null) {
+      Commands.load(view, sessionData);
+    }
   };
 
   loadPaymentReview = () => {
-    UIManager.dispatchViewManagerCommand(
-      findNodeHandle(this),
-      this._viewManager().Commands.loadPaymentReview!!,
-      []
-    );
+    const view = this.paymentViewRef.current;
+    if (view != null) {
+      Commands.loadPaymentReview(view);
+    }
   };
 
   authorize = (
     autoFinalize: boolean | undefined = undefined,
     sessionData: string | undefined = undefined
   ) => {
-    UIManager.dispatchViewManagerCommand(
-      findNodeHandle(this),
-      this._viewManager().Commands.authorize!!,
-      [autoFinalize || true, sessionData || null]
-    );
+    const view = this.paymentViewRef.current;
+    if (view != null) {
+      Commands.authorize(view, autoFinalize || true, sessionData);
+    }
   };
 
   reauthorize = (sessionData: string | undefined = undefined) => {
-    UIManager.dispatchViewManagerCommand(
-      findNodeHandle(this),
-      this._viewManager().Commands.reauthorize!!,
-      [sessionData || null]
-    );
+    const view = this.paymentViewRef.current;
+    if (view != null) {
+      Commands.reauthorize(view, sessionData);
+    }
   };
 
   finalize = (sessionData: string | undefined = undefined) => {
-    UIManager.dispatchViewManagerCommand(
-      findNodeHandle(this),
-      this._viewManager().Commands.finalize!!,
-      [sessionData || null]
-    );
+    const view = this.paymentViewRef.current;
+    if (view != null) {
+      Commands.finalize(view, sessionData);
+    }
   };
 }
 
 interface KlarnaPaymentsSDKError {
-  action: string;
-  isFatal: boolean;
-  message: string;
-  name: string;
-  invalidFields: Array<string>;
-  sessionId: string;
+  readonly action: string;
+  readonly isFatal: boolean;
+  readonly message: string;
+  readonly name: string;
+  // readonly invalidFields: Array<string>;
+  readonly sessionId: string;
 }
-
-interface KlarnaReactPaymentViewProps {
-  style: ViewStyle;
-  category: string;
-  onInitialized: (event: SyntheticEvent) => void;
-  onLoaded: (event: SyntheticEvent) => void;
-  onAuthorized: (event: SyntheticEvent) => void;
-  onReauthorized: (event: SyntheticEvent) => void;
-  onFinalized: (event: SyntheticEvent) => void;
-  onError: (event: SyntheticEvent) => void;
-}
-
-const LINKING_ERROR =
-  `The package 'react-native-awesome-library' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
-const KlarnaReactPaymentView =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<KlarnaReactPaymentViewProps>(ComponentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };
 
 export default KlarnaPaymentView;

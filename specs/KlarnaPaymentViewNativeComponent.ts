@@ -12,9 +12,9 @@ export interface NativeProps extends ViewProps {
   readonly onLoadedPaymentReview: DirectEventHandler<null>;
   readonly onAuthorized: DirectEventHandler<
     Readonly<{
-      readonly approved: string;
+      readonly approved: boolean;
       readonly authToken?: string;
-      readonly finalizeRequired: string;
+      readonly finalizeRequired: boolean;
     }>
   >;
   readonly onReauthorized: DirectEventHandler<
@@ -36,6 +36,9 @@ export interface NativeProps extends ViewProps {
         readonly isFatal: boolean;
         readonly message: string;
         readonly name: string;
+        // not supported yet https://github.com/facebook/react-native/issues/36817#issuecomment-1697107218
+        // readonly invalidFields: Array<string>;
+        readonly sessionId: string;
       }>;
     }>
   >;
