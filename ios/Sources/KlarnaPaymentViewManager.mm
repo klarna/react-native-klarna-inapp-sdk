@@ -1,14 +1,18 @@
-#import "KlarnaPaymentView.h"
+#import "KlarnaPaymentViewManager.h"
 
 #import <React/RCTUIManager.h>
 #import <React/RCTLog.h>
 
-#import "view/PaymentViewWrapper.h"
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import "view/newarch/PaymentViewWrapper.h"
+#else
+#import "view/oldarch/PaymentViewWrapper.h"
+#endif
 
-@implementation KlarnaPaymentView
+@implementation KlarnaPaymentViewManager
 
-RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE(RNKlarnaPaymentView)
 
 #pragma mark - View
 

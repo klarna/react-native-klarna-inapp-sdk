@@ -13,20 +13,20 @@ export interface NativeProps extends ViewProps {
   readonly onAuthorized: DirectEventHandler<
     Readonly<{
       readonly approved: boolean;
-      readonly authToken?: string;
+      readonly authToken: string | null;
       readonly finalizeRequired: boolean;
     }>
   >;
   readonly onReauthorized: DirectEventHandler<
     Readonly<{
       readonly approved: boolean;
-      readonly authToken?: string;
+      readonly authToken: string | null;
     }>
   >;
   readonly onFinalized: DirectEventHandler<
     Readonly<{
       readonly approved: boolean;
-      readonly authToken?: string;
+      readonly authToken: string | null;
     }>
   >;
   readonly onError: DirectEventHandler<
@@ -50,11 +50,11 @@ interface NativeCommands {
   initialize: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
     clientToken: string,
-    returnUrl?: string | undefined
+    returnUrl: string | null
   ) => void;
   load: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
-    sessionData: string | undefined
+    sessionData: string | null
   ) => void;
   loadPaymentReview: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>
@@ -62,15 +62,15 @@ interface NativeCommands {
   authorize: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
     autoFinalize: boolean,
-    sessionData: string | undefined
+    sessionData: string | null
   ) => void;
   reauthorize: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
-    sessionData: string | undefined
+    sessionData: string | null
   ) => void;
   finalize: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
-    sessionData: string | undefined
+    sessionData: string | null
   ) => void;
 }
 

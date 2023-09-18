@@ -1,9 +1,6 @@
-//
-//  PaymentViewWrapper.h
-//  react-native-klarna-payment-view
-//
-//  Created by Gabriel Banfalvi on 2019-07-24.
-//
+#if !RCT_NEW_ARCH_ENABLED
+
+#import <React/RCTUIManager.h>
 
 #import <UIKit/UIKit.h>
 #import <React/RCTView.h>
@@ -30,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
 
-- (void) initializePaymentViewWithClientToken:(NSString*)clientToken withReturnUrl:(NSString*)returnUrl;
+- (void)initializePaymentViewWithClientToken:(NSString*)clientToken withReturnUrl:(NSString*)returnUrl;
 
 - (void)loadPaymentViewWithSessionData:(nullable NSString*)sessionData;
 
@@ -45,3 +42,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

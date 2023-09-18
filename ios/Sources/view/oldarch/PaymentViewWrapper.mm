@@ -1,9 +1,4 @@
-//
-//  PaymentViewWrapper.m
-//  react-native-klarna-payment-view
-//
-//  Created by Gabriel Banfalvi on 2019-07-24.
-//
+#if !RCT_NEW_ARCH_ENABLED
 
 #import "PaymentViewWrapper.h"
 
@@ -40,13 +35,11 @@
     [self addSubview:self.actualPaymentView];
 
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
-        [self.actualPaymentView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [self.actualPaymentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-        [self.actualPaymentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [self.actualPaymentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
-    ]];
-    
-
+                                             [self.actualPaymentView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                             [self.actualPaymentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                             [self.actualPaymentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                                             [self.actualPaymentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
+                                            ]];
 }
 
 - (void)layoutSubviews {
@@ -151,11 +144,11 @@
 }
 
 - (void)klarnaFailedInPaymentView:(KlarnaPaymentView * _Nonnull)paymentView withError:(KlarnaPaymentError * _Nonnull)error {
-       if (!self.onError) {
+    if (!self.onError) {
         RCTLog(@"Missing 'onError' callback prop.");
         return;
     }
-
+    
     self.onError(@{
         @"error": @{
             @"action": error.action,
@@ -167,8 +160,9 @@
 }
 
 - (void)klarnaResizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView to:(CGFloat)newHeight {
-
     [self.uiManager setIntrinsicContentSize:CGSizeMake(UIViewNoIntrinsicMetric, newHeight) forView:self];
 }
 
 @end
+
+#endif

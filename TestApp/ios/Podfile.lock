@@ -1200,7 +1200,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
-  - react-native-klarna-inapp-sdk (from `../../react-native-klarna-inapp-sdk.podspec`)
+  - react-native-klarna-inapp-sdk (from `../..`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1290,7 +1290,7 @@ EXTERNAL SOURCES:
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-klarna-inapp-sdk:
-    :path: "../../react-native-klarna-inapp-sdk.podspec"
+    :path: "../.."
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-NativeModulesApple:
@@ -1396,6 +1396,6 @@ SPEC CHECKSUMS:
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: f99c39854869734a256aad561f5632de91351425
+PODFILE CHECKSUM: 5f146ddb62f4ae63c85ec80898f0a94176f8ed53
 
 COCOAPODS: 1.12.1

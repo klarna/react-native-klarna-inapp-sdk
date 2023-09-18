@@ -18,11 +18,11 @@ interface KlarnaPaymentViewProps {
   onLoadedPaymentReview: () => void;
   onAuthorized: (
     approved: boolean,
-    authToken: string | undefined,
-    finalizeRequired: boolean | undefined
+    authToken: string | null,
+    finalizeRequired: boolean | null
   ) => void;
-  onReauthorized: (approved: boolean, authToken: string | undefined) => void;
-  onFinalized: (approved: boolean, authToken: string | undefined) => void;
+  onReauthorized: (approved: boolean, authToken: string | null) => void;
+  onFinalized: (approved: boolean, authToken: string | null) => void;
   onError: (error: KlarnaPaymentsSDKError) => void;
 }
 
@@ -54,7 +54,7 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
           event: NativeSyntheticEvent<
             Readonly<{
               readonly approved: boolean;
-              readonly authToken?: string;
+              readonly authToken: string | null;
               readonly finalizeRequired: boolean;
             }>
           >
@@ -69,7 +69,7 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
           event: NativeSyntheticEvent<
             Readonly<{
               readonly approved: boolean;
-              readonly authToken?: string;
+              readonly authToken: string | null;
             }>
           >
         ) => {
@@ -82,7 +82,7 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
           event: NativeSyntheticEvent<
             Readonly<{
               readonly approved: boolean;
-              readonly authToken?: string;
+              readonly authToken: string | null;
             }>
           >
         ) => {
@@ -118,7 +118,7 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
     }
   };
 
-  load = (sessionData: string | undefined = undefined) => {
+  load = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
       Commands.load(view, sessionData);
@@ -133,8 +133,8 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
   };
 
   authorize = (
-    autoFinalize: boolean | undefined = undefined,
-    sessionData: string | undefined = undefined
+    autoFinalize: boolean | null = true,
+    sessionData: string | null = null
   ) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
@@ -142,14 +142,14 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
     }
   };
 
-  reauthorize = (sessionData: string | undefined = undefined) => {
+  reauthorize = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
       Commands.reauthorize(view, sessionData);
     }
   };
 
-  finalize = (sessionData: string | undefined = undefined) => {
+  finalize = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
       Commands.finalize(view, sessionData);
