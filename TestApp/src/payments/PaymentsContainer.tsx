@@ -14,7 +14,7 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
   const paymentViewRef = useRef<KlarnaPaymentView>(null);
   const [eventState, setEventState] = useState<string>();
 
-  const onEvent = (...params: Array<string | boolean | undefined>) => {
+  const onEvent = (...params: Array<string | boolean | null>) => {
     console.log('onEvent', params);
     setEventState(params.join(', '));
   };
