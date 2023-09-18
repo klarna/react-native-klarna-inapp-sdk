@@ -154,7 +154,6 @@ using namespace facebook::react;
 }
 
 - (void)klarnaResizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView to:(CGFloat)newHeight {
-    [self.uiManager setIntrinsicContentSize:CGSizeMake(UIViewNoIntrinsicMetric, newHeight) forView:self];
     if(_eventEmitter){
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onResized(RNKlarnaPaymentViewEventEmitter::OnResized{
