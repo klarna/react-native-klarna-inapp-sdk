@@ -22,13 +22,13 @@ platform :ios do
     clean_lib_build_dir
 
     xcversion(version: ">= 12.1")
-    run_tests(workspace: "ios/KlarnaInAppSDK.xcworkspace",
-        output_directory: "build/KlarnaInAppSDK",
-        scheme: "KlarnaInAppSDK")
+    run_tests(workspace: "ios/RNKlarnaMobileSDK.xcworkspace",
+        output_directory: "ios/build/RNKlarnaMobileSDK",
+        scheme: "RNKlarnaMobileSDK")
   end
 
   lane :clean_lib_build_dir do
-    sh "rm -rf build/*"
+    sh "rm -rf ios/build/*"
   end
 
   lane :build_test_app_release do

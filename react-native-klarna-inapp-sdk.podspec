@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/Sources/**/*.{h,m,mm,swift}"
   s.requires_arc = true
 
-  s.test_spec 'KlarnaInAppSDKTests' do |test_spec|
+  s.test_spec 'RNKlarnaMobileSDKTests' do |test_spec|
     test_spec.source_files = 'ios/Tests/**/*.{h,m,mm,swift}'
     test_spec.dependency 'OCMock'
   end

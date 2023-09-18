@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-               BuildableName = "libKlarnaInAppSDK.a"
-               BlueprintName = "KlarnaInAppSDK"
-               ReferencedContainer = "container:KlarnaInAppSDK.xcodeproj">
+               BuildableName = "libRNKlarnaMobileSDK.a"
+               BlueprintName = "RNKlarnaMobileSDK"
+               ReferencedContainer = "container:RNKlarnaMobileSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7917D751255C45FB00E16799"
-               BuildableName = "KlarnaInAppSDKTests.xctest"
-               BlueprintName = "KlarnaInAppSDKTests"
-               ReferencedContainer = "container:KlarnaInAppSDK.xcodeproj">
+               BuildableName = "RNKlarnaMobileSDKTests.xctest"
+               BlueprintName = "RNKlarnaMobileSDKTests"
+               ReferencedContainer = "container:RNKlarnaMobileSDK.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -61,9 +61,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58B511DA1A9E6C8500147676"
-            BuildableName = "libKlarnaInAppSDK.a"
-            BlueprintName = "KlarnaInAppSDK"
-            ReferencedContainer = "container:KlarnaInAppSDK.xcodeproj">
+            BuildableName = "libRNKlarnaMobileSDK.a"
+            BlueprintName = "RNKlarnaMobileSDK"
+            ReferencedContainer = "container:RNKlarnaMobileSDK.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

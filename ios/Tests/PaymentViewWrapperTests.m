@@ -10,13 +10,17 @@
 #import <OCMock/OCMock.h>
 #import <React/RCTComponent.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
-#import "PaymentViewWrapper.h"
+#import "../Sources/KlarnaPaymentViewManager.h"
+
+#ifdef RCT_NEW_ARCH_ENABLED
+#import "../Sources/view/newarch/PaymentViewWrapper.h"
+#else
+#import "../Sources/view/oldarch/PaymentViewWrapper.h"
+#endif
 
 @interface PaymentViewWrapperTests : XCTestCase
 
 @property (nonatomic, strong) PaymentViewWrapper* paymentViewWrapper;
-
-@property (nonatomic, strong) RCTUIManager* rctUIManagerMock;
 
 @property (nonatomic, strong) KlarnaPaymentView* actualPaymentViewMock;
 
@@ -27,9 +31,6 @@
 - (void)setUp {
     PaymentViewWrapper *wrapper = [PaymentViewWrapper new];
     self.paymentViewWrapper = OCMPartialMock(wrapper);
-    
-    self.rctUIManagerMock = OCMClassMock([RCTUIManager class]);
-    self.paymentViewWrapper.uiManager = self.rctUIManagerMock;
 
     id mockPaymentView = OCMClassMock([KlarnaPaymentView class]);
     OCMStub([mockPaymentView alloc]).andReturn(mockPaymentView);
@@ -44,8 +45,6 @@
 - (void)tearDown {
     self.paymentViewWrapper = NULL;
     self.actualPaymentViewMock = NULL;
-    self.rctUIManagerMock = NULL;
-    
 }
 
 - (void)test_categoryIsSet {
@@ -316,14 +315,13 @@
         ._andDo(^(NSInvocation *invocation) {
             [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaResizedWithPaymentView:self.actualPaymentViewMock to:size];
         });
-    OCMExpect([self.rctUIManagerMock setIntrinsicContentSize:CGSizeMake(UIViewNoIntrinsicMetric, size) forView:OCMOCK_ANY]).ignoringNonObjectArgs();
 
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper loadPaymentViewWithSessionData:NULL];
     
     // THEN
-    OCMVerifyAll(self.rctUIManagerMock);
+    OCMVerify([self.paymentViewWrapper onResized]);
 }
 
 @end

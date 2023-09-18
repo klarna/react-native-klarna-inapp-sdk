@@ -17,9 +17,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7917D751255C45FB00E16799"
-               BuildableName = "KlarnaInAppSDKTests.xctest"
-               BlueprintName = "KlarnaInAppSDKTests"
-               ReferencedContainer = "container:KlarnaInAppSDK.xcodeproj">
+               BuildableName = "RNKlarnaMobileSDKTests.xctest"
+               BlueprintName = "RNKlarnaMobileSDKTests"
+               ReferencedContainer = "container:RNKlarnaMobileSDK.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
