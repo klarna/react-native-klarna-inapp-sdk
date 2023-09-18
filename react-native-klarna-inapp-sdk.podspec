@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   end
 
   s.dependency "React"
-  s.dependency 'KlarnaMobileSDK', '2.6.4'
+  s.dependency 'KlarnaMobileSDK', '2.6.10'
   # s.dependency "..."
 
 end
