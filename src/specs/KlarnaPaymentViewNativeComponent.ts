@@ -3,8 +3,9 @@ import type { HostComponent } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTypes';
+import React from 'react';
 
-export interface NativeProps extends ViewProps {
+export interface RNKlarnaPaymentViewProps extends ViewProps {
   readonly category: string;
   readonly returnUrl: string;
   readonly onInitialized: DirectEventHandler<null>;
@@ -50,9 +51,10 @@ export interface NativeProps extends ViewProps {
   >;
 }
 
-type KlarnaPaymentViewNativeComponentType = HostComponent<NativeProps>;
+type KlarnaPaymentViewNativeComponentType =
+  HostComponent<RNKlarnaPaymentViewProps>;
 
-interface NativeCommands {
+interface RNKlarnaPaymentViewNativeCommands {
   initialize: (
     viewRef: React.ElementRef<KlarnaPaymentViewNativeComponentType>,
     clientToken: string,
@@ -80,17 +82,18 @@ interface NativeCommands {
   ) => void;
 }
 
-export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
-  supportedCommands: [
-    'initialize',
-    'load',
-    'loadPaymentReview',
-    'authorize',
-    'reauthorize',
-    'finalize',
-  ],
-});
+export const RNKlarnaPaymentViewCommands: RNKlarnaPaymentViewNativeCommands =
+  codegenNativeCommands<RNKlarnaPaymentViewNativeCommands>({
+    supportedCommands: [
+      'initialize',
+      'load',
+      'loadPaymentReview',
+      'authorize',
+      'reauthorize',
+      'finalize',
+    ],
+  });
 
-export default codegenNativeComponent<NativeProps>(
+export default codegenNativeComponent<RNKlarnaPaymentViewProps>(
   'RNKlarnaPaymentView'
-) as HostComponent<NativeProps>;
+) as KlarnaPaymentViewNativeComponentType;

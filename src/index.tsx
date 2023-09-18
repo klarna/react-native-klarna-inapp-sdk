@@ -5,9 +5,9 @@ import type {
   ViewStyle,
 } from 'react-native';
 import RNKlarnaPaymentView, {
-  Commands,
-  type NativeProps,
-} from '../specs/KlarnaPaymentViewNativeComponent';
+  RNKlarnaPaymentViewCommands,
+  type RNKlarnaPaymentViewProps,
+} from './specs/KlarnaPaymentViewNativeComponent';
 
 interface KlarnaPaymentViewProps {
   style: ViewStyle;
@@ -34,7 +34,9 @@ export class KlarnaPaymentView extends Component<
   KlarnaPaymentViewProps,
   KlarnaPaymentViewState
 > {
-  paymentViewRef: RefObject<Component<NativeProps> & Readonly<NativeMethods>>;
+  paymentViewRef: RefObject<
+    Component<RNKlarnaPaymentViewProps> & Readonly<NativeMethods>
+  >;
 
   constructor(props: KlarnaPaymentViewProps) {
     super(props);
@@ -140,21 +142,25 @@ export class KlarnaPaymentView extends Component<
   initialize = (sessionToken: string, returnUrl: string | null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.initialize(view, sessionToken, returnUrl || '');
+      RNKlarnaPaymentViewCommands.initialize(
+        view,
+        sessionToken,
+        returnUrl || ''
+      );
     }
   };
 
   load = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.load(view, sessionData || '');
+      RNKlarnaPaymentViewCommands.load(view, sessionData || '');
     }
   };
 
   loadPaymentReview = () => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.loadPaymentReview(view);
+      RNKlarnaPaymentViewCommands.loadPaymentReview(view);
     }
   };
 
@@ -164,21 +170,25 @@ export class KlarnaPaymentView extends Component<
   ) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.authorize(view, autoFinalize || true, sessionData || '');
+      RNKlarnaPaymentViewCommands.authorize(
+        view,
+        autoFinalize || true,
+        sessionData || ''
+      );
     }
   };
 
   reauthorize = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.reauthorize(view, sessionData || '');
+      RNKlarnaPaymentViewCommands.reauthorize(view, sessionData || '');
     }
   };
 
   finalize = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.finalize(view, sessionData || '');
+      RNKlarnaPaymentViewCommands.finalize(view, sessionData || '');
     }
   };
 }

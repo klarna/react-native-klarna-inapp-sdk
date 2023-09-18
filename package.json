@@ -83,7 +83,7 @@
   "codegenConfig": {
     "name": "RNKlarnaMobileSDK",
     "type": "all",
-    "jsSrcsDir": "specs",
+    "jsSrcsDir": "src/specs",
     "android": {
       "javaPackageName": "com.klarna.mobile.sdk.reactnative"
     }
