@@ -24,6 +24,7 @@ RCT_EXPORT_VIEW_PROPERTY(onAuthorized, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onReauthorized, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFinalized, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onError, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onResized, RCTDirectEventBlock)
 
 - (UIView *)view
 {

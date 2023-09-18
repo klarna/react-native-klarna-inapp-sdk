@@ -42,6 +42,12 @@ export interface NativeProps extends ViewProps {
       }>;
     }>
   >;
+  readonly onResized: DirectEventHandler<
+    Readonly<{
+      // number not supported for events
+      readonly height: string;
+    }>
+  >;
 }
 
 type KlarnaPaymentViewNativeComponentType = HostComponent<NativeProps>;

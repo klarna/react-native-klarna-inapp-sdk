@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onReauthorized;
 @property (nonatomic, copy) RCTDirectEventBlock onFinalized;
 @property (nonatomic, copy) RCTDirectEventBlock onError;
+@property (nonatomic, copy) RCTDirectEventBlock onResized;
 
 @property (nonatomic, strong) NSString* category;
 

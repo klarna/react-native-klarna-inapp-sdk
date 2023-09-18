@@ -41,7 +41,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   paymentContainer: {
-    justifyContent: 'center',
+    flex: 1,
+    flexDirection: 'column',
+    flexWrap: 'wrap',
     alignItems: 'center',
     backgroundColor: Colors.pink,
     padding: 10,

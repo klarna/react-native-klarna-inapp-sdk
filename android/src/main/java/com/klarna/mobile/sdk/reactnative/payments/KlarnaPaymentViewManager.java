@@ -19,6 +19,7 @@ import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
 import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
+import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaPaymentViewSpec;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,11 +27,12 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Wraps the Payment Views being exposed to JS.
  */
-public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentViewWrapper> implements KlarnaPaymentViewCallback {
+public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentViewWrapper> implements KlarnaPaymentViewCallback, PaymentViewWrapper.OnResizedListener {
 
     // Commands that can be triggered from RN
     public static final String COMMAND_INITIALIZE = "initialize";
@@ -62,7 +64,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     @NonNull
     @Override
     public PaymentViewWrapper createViewInstance(@NonNull ThemedReactContext context) {
-        PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null, this);
+        PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null, this, this);
 
         // Each view has its own event dispatcher.
         EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), view.getId());
@@ -140,28 +142,33 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
      */
     @Nullable
     @Override
-    public Map getExportedCustomDirectEventTypeConstants() {
-        return MapBuilder.of(
-                KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE),
-                KlarnaPaymentEvent.EVENT_NAME_ON_LOAD, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD),
-                KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW),
-                KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE),
-                KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE),
-                KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE),
-                KlarnaPaymentEvent.EVENT_NAME_ON_ERROR, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_ERROR)
-        );
+    public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
+        MapBuilder.Builder<String, Object> builder = MapBuilder.builder();
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE));
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_LOAD, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD));
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW));
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE));
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE));
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE));
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_ERROR));
+        builder.put(KlarnaPaymentEvent.EVENT_NAME_ON_RESIZED, MapBuilder.of("registrationName", KlarnaPaymentEvent.EVENT_NAME_ON_RESIZED));
+        return builder.build();
     }
 
     @ReactProp(name = "category")
     @Override
     public void setCategory(PaymentViewWrapper view, String category) {
-        view.paymentView.setCategory(category);
+        if (!Objects.equals(category, view.paymentView.getCategory())) {
+            view.paymentView.setCategory(category);
+        }
     }
 
     @ReactProp(name = "returnUrl")
     @Override
     public void setReturnUrl(PaymentViewWrapper view, @Nullable String value) {
-        view.paymentView.setReturnURL(value);
+        if (!Objects.equals(value, view.paymentView.getReturnURL())) {
+            view.paymentView.setReturnURL(value);
+        }
     }
 
     @Override
@@ -203,6 +210,12 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
      */
     private void postEventForView(String eventName, WritableMap additionalParams, KlarnaPaymentView view) {
         PaymentViewWrapper wrapper = wrapperForPaymentView(view);
+        if (wrapper != null) {
+            postEventForView(eventName, additionalParams, wrapper);
+        }
+    }
+
+    private void postEventForView(String eventName, WritableMap additionalParams, PaymentViewWrapper wrapper) {
         if (wrapper != null) {
             KlarnaPaymentEvent event = new KlarnaPaymentEvent(wrapper.getId(), eventName, additionalParams);
             EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) wrapper.getContext(), wrapper.getId());
@@ -294,6 +307,16 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
                 }}
         );
         postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_ERROR, params, klarnaPaymentView);
+    }
+
+    @Override
+    public void onResized(PaymentViewWrapper paymentViewWrapper, int value) {
+        WritableMap params = ArgumentsUtil.createMap(
+                new HashMap<>() {{
+                    put("height", String.valueOf(value));
+                }}
+        );
+        postEventForView(KlarnaPaymentEvent.EVENT_NAME_ON_RESIZED, params, paymentViewWrapper);
     }
 
     ReadableMap buildErrorMap(KlarnaPaymentsSDKError klarnaPaymentsSDKError) {

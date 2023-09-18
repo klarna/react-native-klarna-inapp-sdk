@@ -18,11 +18,19 @@ import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
  * Wraps the KlarnaPaymentView so we can see when a requestLayout() has been triggered.
  */
 public class PaymentViewWrapper extends LinearLayout implements WebViewResizeObserver.WebViewResizeObserverCallback {
+
+    public interface OnResizedListener {
+        void onResized(PaymentViewWrapper paymentViewWrapper, int value);
+    }
+
     public KlarnaPaymentView paymentView;
     private final WebViewResizeObserver resizeObserver;
 
-    public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs, KlarnaPaymentViewCallback paymentViewCallback) {
+    private final OnResizedListener onResizedListener;
+
+    public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs, KlarnaPaymentViewCallback paymentViewCallback, OnResizedListener onResizedListener) {
         super(context, attrs);
+        this.onResizedListener = onResizedListener;
         // Add KlarnaPaymentView
         ViewGroup.LayoutParams webViewParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         paymentView = new KlarnaPaymentView(getReactAppContext().getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
@@ -124,6 +132,9 @@ public class PaymentViewWrapper extends LinearLayout implements WebViewResizeObs
 
     @Override
     public void onResized(int value) {
+        if (onResizedListener != null) {
+            onResizedListener.onResized(this, value);
+        }
         setHeight(value);
     }
 }

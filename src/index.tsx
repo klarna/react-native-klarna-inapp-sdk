@@ -26,11 +26,21 @@ interface KlarnaPaymentViewProps {
   onError: (error: KlarnaPaymentsSDKError) => void;
 }
 
-export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
+interface KlarnaPaymentViewState {
+  nativeViewHeight: number;
+}
+
+export class KlarnaPaymentView extends Component<
+  KlarnaPaymentViewProps,
+  KlarnaPaymentViewState
+> {
   paymentViewRef: RefObject<Component<NativeProps> & Readonly<NativeMethods>>;
 
   constructor(props: KlarnaPaymentViewProps) {
     super(props);
+    this.state = {
+      nativeViewHeight: 0,
+    };
     this.paymentViewRef = React.createRef();
   }
 
@@ -38,7 +48,10 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
     return (
       <RNKlarnaPaymentView
         ref={this.paymentViewRef}
-        style={this.props.style}
+        style={{
+          width: '100%',
+          height: this.state.nativeViewHeight,
+        }}
         category={this.props.category}
         returnUrl={this.props.returnUrl}
         onInitialized={(_event: NativeSyntheticEvent<any>) => {
@@ -106,6 +119,19 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
           >
         ) => {
           this.props.onError(event.nativeEvent.error);
+        }}
+        onResized={(
+          event: NativeSyntheticEvent<
+            Readonly<{
+              readonly height: string;
+            }>
+          >
+        ) => {
+          const newHeight = Number(event.nativeEvent.height);
+          if (newHeight !== this.state.nativeViewHeight) {
+            console.log('onResized', newHeight);
+            this.setState({ nativeViewHeight: newHeight });
+          }
         }}
       />
     );

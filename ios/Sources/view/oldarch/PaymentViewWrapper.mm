@@ -160,6 +160,14 @@
 
 - (void)klarnaResizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView to:(CGFloat)newHeight {
     [self.uiManager setIntrinsicContentSize:CGSizeMake(UIViewNoIntrinsicMetric, newHeight) forView:self];
+    if (!self.onResized) {
+        RCTLog(@"Missing 'onResized' callback prop.");
+        return;
+    }
+    
+    self.onResized(@{
+        @"height": [[NSNumber numberWithFloat:newHeight] stringValue]
+    });
 }
 
 @end

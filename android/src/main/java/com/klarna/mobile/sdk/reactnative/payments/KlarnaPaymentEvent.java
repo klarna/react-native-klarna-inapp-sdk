@@ -23,6 +23,7 @@ public class KlarnaPaymentEvent extends Event<KlarnaPaymentEvent> {
     public static final String EVENT_NAME_ON_REAUTHORIZE = "onReauthorized";
     public static final String EVENT_NAME_ON_FINALIZE = "onFinalized";
     public static final String EVENT_NAME_ON_ERROR = "onError";
+    public static final String EVENT_NAME_ON_RESIZED = "onResized";
 
     @NonNull
     private final String eventName;
