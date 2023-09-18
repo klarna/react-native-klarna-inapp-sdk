@@ -111,17 +111,17 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
     );
   }
 
-  initialize = (sessionToken: string, returnUrl: string) => {
+  initialize = (sessionToken: string, returnUrl: string | null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.initialize(view, sessionToken, returnUrl);
+      Commands.initialize(view, sessionToken, returnUrl || '');
     }
   };
 
   load = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.load(view, sessionData);
+      Commands.load(view, sessionData || '');
     }
   };
 
@@ -138,21 +138,21 @@ export class KlarnaPaymentView extends Component<KlarnaPaymentViewProps> {
   ) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.authorize(view, autoFinalize || true, sessionData);
+      Commands.authorize(view, autoFinalize || true, sessionData || '');
     }
   };
 
   reauthorize = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.reauthorize(view, sessionData);
+      Commands.reauthorize(view, sessionData || '');
     }
   };
 
   finalize = (sessionData: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
-      Commands.finalize(view, sessionData);
+      Commands.finalize(view, sessionData || '');
     }
   };
 }

@@ -62,12 +62,11 @@ using namespace facebook::react;
 #pragma mark - Payment View Methods
 
 - (void)initializePaymentViewWithClientToken:(NSString *)clientToken withReturnUrl:(NSString *)returnUrl{
-    NSURL* url = [NSURL URLWithString:returnUrl];
-    [self.actualPaymentView initializeWithClientToken:clientToken returnUrl:url];
+    [self.actualPaymentView initializeWithClientToken:clientToken returnUrl:returnUrl.length > 0 ? [NSURL URLWithString:returnUrl] : nil];
 }
 
 - (void)loadPaymentViewWithSessionData:(NSString*)sessionData {
-    [self.actualPaymentView loadWithJsonData:sessionData];
+    [self.actualPaymentView loadWithJsonData:sessionData.length > 0 ? sessionData : nil];
 }
 
 - (void)loadPaymentReviewPaymentView {
@@ -75,15 +74,15 @@ using namespace facebook::react;
 }
 
 - (void)authorizePaymentViewWithAutoFinalize:(BOOL)autoFinalize sessionData:(NSString*)sessionData {
-    [self.actualPaymentView authorizeWithAutoFinalize:autoFinalize jsonData:sessionData];
+    [self.actualPaymentView authorizeWithAutoFinalize:autoFinalize jsonData:sessionData.length > 0 ? sessionData : nil];
 }
 
 - (void)reauthorizePaymentViewWithSessionData:(NSString*)sessionData {
-    [self.actualPaymentView reauthorizeWithJsonData:sessionData];
+    [self.actualPaymentView reauthorizeWithJsonData:sessionData.length > 0 ? sessionData : nil];
 }
 
 - (void)finalizePaymentViewWithSessionData:(NSString*)sessionData {
-    [self.actualPaymentView finaliseWithJsonData:sessionData];
+    [self.actualPaymentView finaliseWithJsonData:sessionData.length > 0 ? sessionData : nil];
 
 }
 
