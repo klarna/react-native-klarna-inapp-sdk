@@ -28,6 +28,7 @@
     "!**/.*"
   ],
   "scripts": {
+    "prepack": "bob build",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
@@ -72,6 +73,7 @@
     "prettier": "^3.0.3",
     "react": "18.2.0",
     "react-native": "0.72.4",
+    "react-native-builder-bob": "^0.20.0",
     "turbo": "^1.10.7",
     "typescript": "^5.0.2"
   },
@@ -79,6 +81,15 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
   },
   "codegenConfig": {
     "name": "RNKlarnaMobileSDK",
