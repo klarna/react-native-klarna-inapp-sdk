@@ -173,12 +173,12 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
     @Override
     public void initialize(PaymentViewWrapper view, String clientToken, String returnUrl) {
-        view.paymentView.initialize(clientToken, returnUrl.length() > 0 ? returnUrl : null);
+        view.paymentView.initialize(clientToken, returnUrl != null && returnUrl.length() > 0 ? returnUrl : null);
     }
 
     @Override
     public void load(PaymentViewWrapper view, String sessionData) {
-        view.load(sessionData.length() > 0 ? sessionData : null);
+        view.load(sessionData != null && sessionData.length() > 0 ? sessionData : null);
     }
 
     @Override
@@ -188,17 +188,17 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
     @Override
     public void authorize(PaymentViewWrapper view, boolean autoFinalize, String sessionData) {
-        view.paymentView.authorize(autoFinalize, sessionData.length() > 0 ? sessionData : null);
+        view.paymentView.authorize(autoFinalize, sessionData != null && sessionData.length() > 0 ? sessionData : null);
     }
 
     @Override
     public void reauthorize(PaymentViewWrapper view, String sessionData) {
-        view.paymentView.reauthorize(sessionData.length() > 0 ? sessionData : null);
+        view.paymentView.reauthorize(sessionData != null && sessionData.length() > 0 ? sessionData : null);
     }
 
     @Override
     public void finalize(PaymentViewWrapper view, String sessionData) {
-        view.paymentView.finalize(sessionData.length() > 0 ? sessionData : null);
+        view.paymentView.finalize(sessionData != null && sessionData.length() > 0 ? sessionData : null);
     }
 
     /**

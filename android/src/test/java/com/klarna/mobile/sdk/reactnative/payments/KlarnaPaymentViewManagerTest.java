@@ -4,7 +4,9 @@ import android.app.Application;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.JavaOnlyArray;
+import com.facebook.react.bridge.JavaOnlyMap;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -18,6 +20,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -32,7 +37,7 @@ import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManage
 
 import java.util.Collections;
 
-@PrepareForTest()
+@PrepareForTest({Arguments.class})
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*", "com.android.*"})
 public class KlarnaPaymentViewManagerTest {
@@ -55,6 +60,24 @@ public class KlarnaPaymentViewManagerTest {
 
         wrapper = Mockito.mock(PaymentViewWrapper.class);
         wrapper.paymentView = Mockito.mock(KlarnaPaymentView.class);
+
+        PowerMockito.mockStatic(Arguments.class);
+        PowerMockito.when(Arguments.createArray())
+                .thenAnswer(
+                        new Answer<Object>() {
+                            @Override
+                            public Object answer(InvocationOnMock invocation) throws Throwable {
+                                return new JavaOnlyArray();
+                            }
+                        });
+        PowerMockito.when(Arguments.createMap())
+                .thenAnswer(
+                        new Answer<Object>() {
+                            @Override
+                            public Object answer(InvocationOnMock invocation) throws Throwable {
+                                return new JavaOnlyMap();
+                            }
+                        });
     }
 
     @After
