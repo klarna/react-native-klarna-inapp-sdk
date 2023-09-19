@@ -25,7 +25,6 @@ def isNewArchitectureEnabled() {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
 
 def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
 
@@ -126,95 +125,10 @@ dependencies {
     testImplementation "org.powermock:powermock-classloading-xstream:2.0.7"
 }
 
-def configureReactNativePom(def pom) {
-    def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
-
-    pom.project {
-        name packageJson.title
-        artifactId packageJson.name
-        version = packageJson.version
-        group = "com.klarna"
-        description packageJson.description
-        url packageJson.repository.baseUrl
-
-        licenses {
-            license {
-                name packageJson.license
-                url packageJson.repository.baseUrl + '/blob/master/' + packageJson.licenseFilename
-                distribution 'repo'
-            }
-        }
-
-        developers {
-            developer {
-                id packageJson.author.username
-                name packageJson.author.name
-            }
-        }
-    }
-}
-
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
     libraryName = "react-native-klarna-inapp-sdk"
     codegenJavaPackageName = "com.klarna.mobile.sdk.reactnative"
   }
-}
-
-afterEvaluate { project ->
-
-    task androidJavadocs(type: Javadoc) {
-	    source = android.sourceSets.main.java.srcDirs
-	    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-	    android.libraryVariants.all { variant ->
-            if (variant.name == 'release') {
-                owner.classpath += variant.javaCompileProvider.get().classpath
-            }
-        }
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        archiveClassifier.set('javadoc')
-        from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        archiveClassifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-        include '**/*.java'
-    }
-
-    android.libraryVariants.all { variant ->
-        def name = variant.name.capitalize()
-        task "jar${name}"(type: Jar, dependsOn: variant.javaCompile) {
-            from variant.javaCompile.destinationDir
-        }
-    }
-
-    artifacts {
-        archives androidSourcesJar
-        archives androidJavadocsJar
-    }
-
-    publishing {
-        publications {
-            sdkDefaultRelease(MavenPublication) {
-                def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
-                groupId "com.klarna"
-                artifactId packageJson.name
-                version packageJson.version
-                description packageJson.description
-
-                artifact(androidSourcesJar)
-                artifact(androidJavadocsJar)
-            }
-        }
-
-        repositories {
-            maven {
-                url = uri("file://${projectDir}/../android/maven")
-            }
-        }
-    }
 }
