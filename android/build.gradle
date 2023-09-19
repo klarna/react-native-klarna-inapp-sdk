@@ -14,8 +14,6 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:${getExtOrDefault('gradlePluginVersion')}"
-        // noinspection DifferentKotlinGradleVersion
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
     }
 }
 
@@ -109,7 +107,6 @@ dependencies {
     // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:${getExtOrFallback('reactnativeVersion', '+')}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${getExtOrDefault('kotlinVersion')}"
 
     implementation 'com.klarna.mobile:sdk:2.6.8'
 
