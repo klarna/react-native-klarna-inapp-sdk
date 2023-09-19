@@ -125,10 +125,12 @@ dependencies {
     testImplementation "org.powermock:powermock-classloading-xstream:2.0.7"
 }
 
+// removed from the docs but we can keep it
+// https://reactnative.dev/docs/0.71/new-architecture-library-intro
 if (isNewArchitectureEnabled()) {
   react {
-    jsRootDir = file("../src/")
-    libraryName = "react-native-klarna-inapp-sdk"
+    jsRootDir = file("../src/specs")
+    libraryName = "RNKlarnaMobileSDK"
     codegenJavaPackageName = "com.klarna.mobile.sdk.reactnative"
   }
 }

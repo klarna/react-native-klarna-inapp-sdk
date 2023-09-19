@@ -1,4 +1,4 @@
-# React Native Klarna Mobile SDK
+# Klarna Mobile SDK React Native
 
 [![NPM][npm-badge]][npm-url]
 [![React Native][dependency-badge]][dependency-url]
