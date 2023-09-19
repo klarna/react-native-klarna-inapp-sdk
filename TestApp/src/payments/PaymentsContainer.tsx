@@ -1,6 +1,9 @@
 import React, {useRef, useState} from 'react';
 import {NativeModules, Platform, Text, View} from 'react-native';
-import {KlarnaPaymentView} from 'react-native-klarna-inapp-sdk';
+import {
+  KlarnaPaymentsSDKError,
+  KlarnaPaymentView,
+} from 'react-native-klarna-inapp-sdk';
 import styles from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button';
@@ -101,7 +104,7 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
             onFinalized={(approved, authToken) => {
               onEvent('onFinalized', approved, authToken);
             }}
-            onError={error => {
+            onError={(error: KlarnaPaymentsSDKError) => {
               onEvent('onError', JSON.stringify(error));
             }}
           />

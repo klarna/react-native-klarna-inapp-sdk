@@ -9,36 +9,56 @@ import RNKlarnaPaymentView, {
   type RNKlarnaPaymentViewProps,
 } from './specs/KlarnaPaymentViewNativeComponent';
 
-interface KlarnaPaymentViewProps {
+export interface KlarnaPaymentViewProps {
   style: ViewStyle;
-  category: string;
-  returnUrl: string;
-  onInitialized: () => void;
-  onLoaded: () => void;
-  onLoadedPaymentReview: () => void;
-  onAuthorized: (
+  readonly category: string;
+  readonly returnUrl: string;
+  readonly onInitialized: () => void;
+  readonly onLoaded: () => void;
+  readonly onLoadedPaymentReview: () => void;
+  readonly onAuthorized: (
     approved: boolean,
     authToken: string | null,
     finalizeRequired: boolean | null
   ) => void;
-  onReauthorized: (approved: boolean, authToken: string | null) => void;
-  onFinalized: (approved: boolean, authToken: string | null) => void;
-  onError: (error: KlarnaPaymentsSDKError) => void;
+  readonly onReauthorized: (
+    approved: boolean,
+    authToken: string | null
+  ) => void;
+  readonly onFinalized: (approved: boolean, authToken: string | null) => void;
+  readonly onError: (error: KlarnaPaymentsSDKError) => void;
 }
+
+interface KlarnaReactPaymentViewOldProps {
+  style: ViewStyle;
+  readonly category: string;
+  readonly returnUrl?: string;
+  readonly onInitialized?: (event: any) => void;
+  readonly onLoaded?: (event: any) => void;
+  readonly onLoadedPaymentReview?: (event: any) => void;
+  readonly onAuthorized?: (event: any) => void;
+  readonly onReauthorized?: (event: any) => void;
+  readonly onFinalized?: (event: any) => void;
+  readonly onError?: (event: any) => void;
+}
+
+type KlarnaPaymentViewPropsAny =
+  | KlarnaPaymentViewProps
+  | KlarnaReactPaymentViewOldProps;
 
 interface KlarnaPaymentViewState {
   nativeViewHeight: number;
 }
 
 export class KlarnaPaymentView extends Component<
-  KlarnaPaymentViewProps,
+  KlarnaPaymentViewPropsAny,
   KlarnaPaymentViewState
 > {
   paymentViewRef: RefObject<
     Component<RNKlarnaPaymentViewProps> & Readonly<NativeMethods>
   >;
 
-  constructor(props: KlarnaPaymentViewProps) {
+  constructor(props: KlarnaPaymentViewPropsAny) {
     super(props);
     this.state = {
       nativeViewHeight: 0,
@@ -50,20 +70,60 @@ export class KlarnaPaymentView extends Component<
     return (
       <RNKlarnaPaymentView
         ref={this.paymentViewRef}
+        /* eslint-disable-next-line react-native/no-inline-styles */
         style={{
           width: '100%',
           height: this.state.nativeViewHeight,
         }}
-        category={this.props.category}
-        returnUrl={this.props.returnUrl}
+        category={this.props.category || ''}
+        returnUrl={this.props.returnUrl || ''}
         onInitialized={(_event: NativeSyntheticEvent<any>) => {
-          this.props.onInitialized();
+          if (this.props.onInitialized != null) {
+            /**
+             * if props is the old spec {@link KlarnaReactPaymentViewOldProps}
+             */
+            if (
+              typeof this.props.onInitialized === 'function' &&
+              this.props.onInitialized.length === 1
+            ) {
+              this.props.onInitialized(_event);
+            } else {
+              // @ts-ignore
+              this.props.onInitialized();
+            }
+          }
         }}
         onLoaded={(_event: NativeSyntheticEvent<any>) => {
-          this.props.onLoaded();
+          if (this.props.onLoaded != null) {
+            /**
+             * if props is the old spec {@link KlarnaReactPaymentViewOldProps}
+             */
+            if (
+              typeof this.props.onLoaded === 'function' &&
+              this.props.onLoaded.length === 1
+            ) {
+              this.props.onLoaded(_event);
+            } else {
+              // @ts-ignore
+              this.props.onLoaded();
+            }
+          }
         }}
         onLoadedPaymentReview={(_event: NativeSyntheticEvent<any>) => {
-          this.props.onLoadedPaymentReview();
+          if (this.props.onLoadedPaymentReview != null) {
+            /**
+             * if props is the old spec {@link KlarnaReactPaymentViewOldProps}
+             */
+            if (
+              typeof this.props.onLoadedPaymentReview === 'function' &&
+              this.props.onLoadedPaymentReview.length === 1
+            ) {
+              this.props.onLoadedPaymentReview(_event);
+            } else {
+              // @ts-ignore
+              this.props.onLoadedPaymentReview();
+            }
+          }
         }}
         onAuthorized={(
           event: NativeSyntheticEvent<
@@ -74,11 +134,24 @@ export class KlarnaPaymentView extends Component<
             }>
           >
         ) => {
-          this.props.onAuthorized(
-            event.nativeEvent.approved,
-            event.nativeEvent.authToken,
-            event.nativeEvent.finalizeRequired
-          );
+          if (this.props.onAuthorized != null) {
+            /**
+             * if props is the old spec {@link KlarnaReactPaymentViewOldProps}
+             */
+            if (
+              typeof this.props.onAuthorized === 'function' &&
+              this.props.onAuthorized.length === 1
+            ) {
+              // @ts-ignore
+              this.props.onAuthorized(event);
+            } else {
+              this.props.onAuthorized(
+                event.nativeEvent.approved,
+                event.nativeEvent.authToken,
+                event.nativeEvent.finalizeRequired
+              );
+            }
+          }
         }}
         onReauthorized={(
           event: NativeSyntheticEvent<
@@ -88,10 +161,23 @@ export class KlarnaPaymentView extends Component<
             }>
           >
         ) => {
-          this.props.onReauthorized(
-            event.nativeEvent.approved,
-            event.nativeEvent.authToken
-          );
+          if (this.props.onReauthorized != null) {
+            /**
+             * if props is the old spec {@link KlarnaReactPaymentViewOldProps}
+             */
+            if (
+              typeof this.props.onReauthorized === 'function' &&
+              this.props.onReauthorized.length === 1
+            ) {
+              // @ts-ignore
+              this.props.onReauthorized(event);
+            } else {
+              this.props.onReauthorized(
+                event.nativeEvent.approved,
+                event.nativeEvent.authToken
+              );
+            }
+          }
         }}
         onFinalized={(
           event: NativeSyntheticEvent<
@@ -101,10 +187,23 @@ export class KlarnaPaymentView extends Component<
             }>
           >
         ) => {
-          this.props.onFinalized(
-            event.nativeEvent.approved,
-            event.nativeEvent.authToken
-          );
+          if (this.props.onFinalized != null) {
+            /**
+             * if props is the old spec {@link KlarnaReactPaymentViewOldProps}
+             */
+            if (
+              typeof this.props.onFinalized === 'function' &&
+              this.props.onFinalized.length === 1
+            ) {
+              // @ts-ignore
+              this.props.onFinalized(event);
+            } else {
+              this.props.onFinalized(
+                event.nativeEvent.approved,
+                event.nativeEvent.authToken
+              );
+            }
+          }
         }}
         onError={(
           event: NativeSyntheticEvent<
@@ -120,7 +219,20 @@ export class KlarnaPaymentView extends Component<
             }>
           >
         ) => {
-          this.props.onError(event.nativeEvent.error);
+          if (this.props.onError != null) {
+            /**
+             * if props is the old spec {@link KlarnaReactPaymentViewOldProps}
+             */
+            if (
+              typeof this.props.onAuthorized === 'function' &&
+              this.props.onAuthorized.length === 1
+            ) {
+              // @ts-ignore
+              this.props.onError(event);
+            } else {
+              this.props.onError(event.nativeEvent.error);
+            }
+          }
         }}
         onResized={(
           event: NativeSyntheticEvent<
@@ -193,7 +305,7 @@ export class KlarnaPaymentView extends Component<
   };
 }
 
-interface KlarnaPaymentsSDKError {
+export interface KlarnaPaymentsSDKError {
   readonly action: string;
   readonly isFatal: boolean;
   readonly message: string;
