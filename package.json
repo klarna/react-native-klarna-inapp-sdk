@@ -40,13 +40,13 @@
     "klarna",
     "sdk"
   ],
-  "repository": "https://github.com/NMGuner/react-native-awesome-library",
+  "repository": "https://github.com/klarna/react-native-klarna-inapp-sdk",
   "author": "Mobile SDK <mobile.sdk@klarna.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/NMGuner/react-native-awesome-library/issues"
+    "url": "https://github.com/klarna/react-native-klarna-inapp-sdk/issues"
   },
-  "homepage": "https://github.com/NMGuner/react-native-awesome-library#readme",
+  "homepage": "https://github.com/klarna/react-native-klarna-inapp-sdk#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
