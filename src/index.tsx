@@ -251,12 +251,12 @@ export class KlarnaPaymentView extends Component<
     );
   }
 
-  initialize = (sessionToken: string, returnUrl: string | null) => {
+  initialize = (clientToken: string, returnUrl: string | null = null) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
       RNKlarnaPaymentViewCommands.initialize(
         view,
-        sessionToken,
+        clientToken,
         returnUrl || ''
       );
     }

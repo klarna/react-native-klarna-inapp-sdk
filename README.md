@@ -160,9 +160,9 @@ supplied a payment method category.
 
 ##### Parameters
 
-| Name | Type     | Description |
-|------|----------| ----------- |
-| client    | `string` | The session token you get from Klarna.|
+| Name    | Type     | Description                                      |
+|---------|----------|--------------------------------------------------|
+| clientToken | `string` | The client token you get from Klarna Payments API. |
 
 ---
 

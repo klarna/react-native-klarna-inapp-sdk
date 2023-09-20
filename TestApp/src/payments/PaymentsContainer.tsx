@@ -27,10 +27,7 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
       <View style={styles.buttonsContainer}>
         <Button
           onPress={() => {
-            paymentViewRef.current?.initialize(
-              props.clientToken,
-              'returnUrl://',
-            );
+            paymentViewRef.current?.initialize(props.clientToken);
 
             //You can skip this line, it's for integration testing purposes by Klarna.
             if (
