@@ -27,19 +27,12 @@ using namespace facebook::react;
 
 #pragma mark - React Native Overrides
 
-- (void) setCategory:(NSString *)category {
-    _category = category;
-    [self evaluateProps];
-}
-
-- (void) evaluateProps {
-    if (self.category != nil) {
-        [self initializeActualPaymentView];
+- (void) initializeActualPaymentView:(NSString*)category withReturnUrl:(NSString*)returnUrl {
+    if (returnUrl.length > 0) {
+        self.actualPaymentView = [[KlarnaPaymentView alloc] initWithCategory:category returnUrl:[NSURL URLWithString:returnUrl]  eventListener:self];
+    } else {
+        self.actualPaymentView = [[KlarnaPaymentView alloc] initWithCategory:category eventListener:self];
     }
-}
-
-- (void) initializeActualPaymentView {
-    self.actualPaymentView = [[KlarnaPaymentView alloc] initWithCategory:self.category eventListener:self];
     self.actualPaymentView.translatesAutoresizingMaskIntoConstraints = NO;
         
     
@@ -193,14 +186,21 @@ Class<RCTComponentViewProtocol> RNKlarnaPaymentViewCls(void)
     const auto &oldViewProps = *std::static_pointer_cast<RNKlarnaPaymentViewProps const>(_props);
     const auto &newViewProps = *std::static_pointer_cast<RNKlarnaPaymentViewProps const>(props);
     
-    if (oldViewProps.category != newViewProps.category) {
+    if (self.actualPaymentView == nil && newViewProps.category.length() > 0) {
         NSString * categoryConver = [[NSString alloc] initWithUTF8String: newViewProps.category.c_str()];
-        [self setCategory: categoryConver];
-    }
-    
-    if (oldViewProps.returnUrl != newViewProps.returnUrl) {
         NSString * returnUrlConver = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
-        self.actualPaymentView.returnURL = [NSURL URLWithString:returnUrlConver];
+        [self initializeActualPaymentView:categoryConver withReturnUrl:returnUrlConver];
+    } else {
+        if (oldViewProps.category != newViewProps.category) {
+                NSString * categoryConver = [[NSString alloc] initWithUTF8String: newViewProps.category.c_str()];
+        //        not supported
+        //        self.actualPaymentView.category = newViewProps.category
+        }
+        
+        if (oldViewProps.returnUrl != newViewProps.returnUrl) {
+            NSString * returnUrlConver = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
+            self.actualPaymentView.returnURL = [NSURL URLWithString:returnUrlConver];
+        }
     }
     
     

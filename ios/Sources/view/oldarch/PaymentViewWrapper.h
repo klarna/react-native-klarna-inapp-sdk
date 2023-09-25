@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onResized;
 
 @property (nonatomic, strong) NSString* category;
+@property (nonatomic, strong) NSString* returnUrl;
 
 #pragma mark - React Native Overrides
 - (void) setCategory:(NSString *)category;

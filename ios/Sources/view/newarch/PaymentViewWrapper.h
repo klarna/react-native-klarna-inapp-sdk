@@ -8,12 +8,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PaymentViewWrapper : RCTViewComponentView
 
-@property (nonatomic, strong) NSString* category;
-
 #pragma mark - React Native Overrides
-- (void) setCategory:(NSString *)category;
-- (void) evaluateProps;
-- (void) initializeActualPaymentView;
+- (void) initializeActualPaymentView:(NSString*)category withReturnUrl:(NSString*)returnUrl;
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
 

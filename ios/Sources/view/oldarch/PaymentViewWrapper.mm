@@ -22,6 +22,13 @@
     [self evaluateProps];
 }
 
+- (void) setReturnUrl:(NSString *)returnUrl {
+    _returnUrl = returnUrl;
+    if (returnUrl.length > 0) {
+        self.actualPaymentView.returnURL = [NSURL URLWithString:self.returnUrl];
+    }
+}
+
 - (void) evaluateProps {
     if (self.category != nil) {
         [self initializeActualPaymentView];
@@ -29,7 +36,11 @@
 }
 
 - (void) initializeActualPaymentView {
-    self.actualPaymentView = [[KlarnaPaymentView alloc] initWithCategory:self.category eventListener:self];
+    if (self.returnUrl != nil && self.returnUrl.length > 0) {
+        self.actualPaymentView = [[KlarnaPaymentView alloc] initWithCategory:self.category returnUrl:[NSURL URLWithString:self.returnUrl]  eventListener:self];
+    } else {
+        self.actualPaymentView = [[KlarnaPaymentView alloc] initWithCategory:self.category eventListener:self];
+    }
     self.actualPaymentView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self addSubview:self.actualPaymentView];
