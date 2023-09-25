@@ -51,7 +51,11 @@
 #pragma mark - Payment View Methods
 
 - (void)initializePaymentViewWithClientToken:(NSString *)clientToken withReturnUrl:(NSString *)returnUrl{
-    [self.actualPaymentView initializeWithClientToken:clientToken returnUrl:returnUrl.length > 0 ? [NSURL URLWithString:returnUrl] : nil];
+    if (returnUrl.length > 0) {
+        [self.actualPaymentView initializeWithClientToken:clientToken returnUrl:[NSURL URLWithString:returnUrl]];
+    } else {
+        [self.actualPaymentView initializeWithClientToken:clientToken];
+    }
 }
 
 - (void)loadPaymentViewWithSessionData:(NSString*)sessionData {

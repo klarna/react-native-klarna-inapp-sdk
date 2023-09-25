@@ -17,6 +17,7 @@ RCT_EXPORT_MODULE(RNKlarnaPaymentView)
 #pragma mark - View
 
 RCT_EXPORT_VIEW_PROPERTY(category, NSString)
+RCT_EXPORT_VIEW_PROPERTY(returnUrl, NSString)
 RCT_EXPORT_VIEW_PROPERTY(onInitialized, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoaded, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadedPaymentReview, RCTDirectEventBlock)
