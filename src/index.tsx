@@ -147,7 +147,9 @@ export class KlarnaPaymentView extends Component<
             } else {
               this.props.onAuthorized(
                 event.nativeEvent.approved,
-                event.nativeEvent.authToken,
+                event.nativeEvent.authToken === ''
+                  ? null
+                  : event.nativeEvent.authToken,
                 event.nativeEvent.finalizeRequired
               );
             }
@@ -174,7 +176,9 @@ export class KlarnaPaymentView extends Component<
             } else {
               this.props.onReauthorized(
                 event.nativeEvent.approved,
-                event.nativeEvent.authToken
+                event.nativeEvent.authToken === ''
+                  ? null
+                  : event.nativeEvent.authToken
               );
             }
           }
@@ -200,7 +204,9 @@ export class KlarnaPaymentView extends Component<
             } else {
               this.props.onFinalized(
                 event.nativeEvent.approved,
-                event.nativeEvent.authToken
+                event.nativeEvent.authToken === ''
+                  ? null
+                  : event.nativeEvent.authToken
               );
             }
           }

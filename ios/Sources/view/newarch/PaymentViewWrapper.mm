@@ -114,7 +114,7 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onAuthorized(RNKlarnaPaymentViewEventEmitter::OnAuthorized{
             .approved = approved,
-            .authToken = authToken == nil ? nil : std::string([authToken UTF8String]),
+            .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
             .finalizeRequired = finalizeRequired
         });
     }
@@ -124,7 +124,7 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onReauthorized(RNKlarnaPaymentViewEventEmitter::OnReauthorized{
             .approved = approved,
-            .authToken = authToken == nil ? nil : std::string([authToken UTF8String]),
+            .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
         });
     }
 }
@@ -134,7 +134,7 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onFinalized(RNKlarnaPaymentViewEventEmitter::OnFinalized{
             .approved = approved,
-            .authToken = authToken == nil ? nil : std::string([authToken UTF8String]),
+            .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
         });
     }
 }
