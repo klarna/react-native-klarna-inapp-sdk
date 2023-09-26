@@ -23,7 +23,7 @@ jobs:
       - name: Install NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: '16.17.0'
+          node-version: '18.17.1'
           cache: 'yarn'
 
       # install project dependencies
@@ -52,8 +52,8 @@ jobs:
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
 
-      - name: Run Android library unit tests
-        run: cd android && ./gradlew clean && ./gradlew testDebugUnitTest && cd ..
+      - name: Run Android unit tests
+        run: cd TestApp/android && ./gradlew clean && ./gradlew testDebugUnitTest && cd ../..
 
       - name: Bundle JS for Android
         run: cd TestApp && mkdir android/app/src/main/assets && yarn bundle:android-dev && cd ..

@@ -11,22 +11,22 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/home/HomeScreen';
 import PaymentsScreen from './src/payments/PaymentsScreen';
 
-function App(): JSX.Element {
-  const AppStack = () => {
-    const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
-    return (
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{title: 'Klarna MSDK TestApp'}}
-        />
-        <Stack.Screen name="Payments" component={PaymentsScreen} />
-      </Stack.Navigator>
-    );
-  };
+const AppStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{title: 'Klarna MSDK TestApp'}}
+      />
+      <Stack.Screen name="Payments" component={PaymentsScreen} />
+    </Stack.Navigator>
+  );
+};
 
+export default function App(): JSX.Element {
   return (
     <NavigationContainer>
       <AppStack />
@@ -34,4 +34,9 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+type AppStackParamList = {
+  Home: undefined;
+  Payments: undefined;
+};
+
+export type {AppStackParamList};

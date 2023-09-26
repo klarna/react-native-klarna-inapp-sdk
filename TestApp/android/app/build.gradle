@@ -70,13 +70,6 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    // removed in react native 0.65.0
-    // https://react-native-community.github.io/upgrade-helper/?from=0.64.4&to=0.65.0#RnDiffApp-android-app-build.gradle
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     namespace "com.klarna.mobile.sdk.reactnative.testapp"
     defaultConfig {
         applicationId "com.klarna.mobile.sdk.reactnative.testapp"

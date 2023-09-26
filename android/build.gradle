@@ -1,51 +1,100 @@
 buildscript {
-    ext.safeExtGet = {prop, fallback ->
-        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    ext.getExtOrFallback = { name, fallback ->
+        rootProject.ext.has(name) ? rootProject.ext.get(name) : fallback
     }
+
+    ext.getExtOrDefault = { name ->
+        getExtOrFallback(name, project.properties["lib_" + name])
+    }
+
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        // Matches recent template from React Native (0.64)
-        // https://github.com/facebook/react-native/blob/0.64-stable/template/android/build.gradle#L16
-        classpath("com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '4.2.0')}")
+        classpath "com.android.tools.build:gradle:${getExtOrDefault('gradlePluginVersion')}"
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
+def isNewArchitectureEnabled() {
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
+}
 
-// Matches or updates values in template from React Native (0.64)
-// https://github.com/facebook/react-native/blob/0.64-stable/template/android/build.gradle#L5-L9
-def DEFAULT_COMPILE_SDK_VERSION = 30
-def DEFAULT_BUILD_TOOLS_VERSION = "30.0.2"
-def DEFAULT_MIN_SDK_VERSION = 21
-def DEFAULT_TARGET_SDK_VERSION = 30
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+
+if (isNewArchitectureEnabled()) {
+  apply plugin: "com.facebook.react"
+}
+
+def getExtOrDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["lib_" + name]
+}
+
+def getExtOrIntegerDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["lib_" + name]).toInteger()
+}
+
+def supportsNamespace() {
+  def parsed = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')
+  def major = parsed[0].toInteger()
+  def minor = parsed[1].toInteger()
+
+  // Namespace support was added in 7.3.0
+  if (major == 7 && minor >= 3) {
+    return true
+  }
+
+  return major >= 8
+}
 
 android {
-    compileSdkVersion safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
-    buildToolsVersion safeExtGet('buildToolsVersion', DEFAULT_BUILD_TOOLS_VERSION)
+    if (supportsNamespace()) {
+        namespace "com.klarna.mobile.sdk.reactnative"
+
+        sourceSets {
+            main {
+              manifest.srcFile "src/main/AndroidManifestNew.xml"
+            }
+        }
+     }
+    compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
     defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', DEFAULT_MIN_SDK_VERSION)
-        targetSdkVersion safeExtGet('targetSdkVersion', DEFAULT_TARGET_SDK_VERSION)
+        minSdkVersion getExtOrIntegerDefault("minSdkVersion")
+        targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
         versionCode 1
         versionName "1.0"
     }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
     lintOptions {
         abortOnError false
+        disable "GradleCompatible"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main {
+            if (isNewArchitectureEnabled()) {
+                java.srcDirs += ["src/newarch/java"]
+            } else {
+                java.srcDirs += ["src/oldarch/java"]
+            }
+        }
     }
 }
 
 repositories {
-    maven {
-        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-        // Matches recent template from React Native (0.59)
-        // https://github.com/facebook/react-native/blob/0.59-stable/template/android/build.gradle#L30
-        url "$projectDir/../node_modules/react-native/android"
-    }
     mavenCentral()
     google()
     maven {
@@ -54,7 +103,11 @@ repositories {
 }
 
 dependencies {
-    implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
+    // For < 0.71, this will be from the local maven repo
+    // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
+    //noinspection GradleDynamicVersion
+    implementation "com.facebook.react:react-native:${getExtOrFallback('reactnativeVersion', '+')}"
+
     implementation 'com.klarna.mobile:sdk:2.6.8'
 
     testImplementation "junit:junit:4.13"
@@ -69,87 +122,12 @@ dependencies {
     testImplementation "org.powermock:powermock-classloading-xstream:2.0.7"
 }
 
-def configureReactNativePom(def pom) {
-    def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
-
-    pom.project {
-        name packageJson.title
-        artifactId packageJson.name
-        version = packageJson.version
-        group = "com.klarna"
-        description packageJson.description
-        url packageJson.repository.baseUrl
-
-        licenses {
-            license {
-                name packageJson.license
-                url packageJson.repository.baseUrl + '/blob/master/' + packageJson.licenseFilename
-                distribution 'repo'
-            }
-        }
-
-        developers {
-            developer {
-                id packageJson.author.username
-                name packageJson.author.name
-            }
-        }
-    }
-}
-
-afterEvaluate { project ->
-
-    task androidJavadocs(type: Javadoc) {
-	    source = android.sourceSets.main.java.srcDirs
-	    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-	    android.libraryVariants.all { variant ->
-            if (variant.name == 'release') {
-                owner.classpath += variant.javaCompileProvider.get().classpath
-            }
-        }
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        archiveClassifier.set('javadoc')
-        from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        archiveClassifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-        include '**/*.java'
-    }
-
-    android.libraryVariants.all { variant ->
-        def name = variant.name.capitalize()
-        task "jar${name}"(type: Jar, dependsOn: variant.javaCompile) {
-            from variant.javaCompile.destinationDir
-        }
-    }
-
-    artifacts {
-        archives androidSourcesJar
-        archives androidJavadocsJar
-    }
-
-    publishing {
-        publications {
-            sdkDefaultRelease(MavenPublication) {
-                def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
-                groupId "com.klarna"
-                artifactId packageJson.name
-                version packageJson.version
-                description packageJson.description
-
-                artifact(androidSourcesJar)
-                artifact(androidJavadocsJar)
-            }
-        }
-
-        repositories {
-            maven {
-                url = uri("file://${projectDir}/../android/maven")
-            }
-        }
-    }
+// removed from the docs but we can keep it
+// https://reactnative.dev/docs/0.71/new-architecture-library-intro
+if (isNewArchitectureEnabled()) {
+  react {
+    jsRootDir = file("../src/specs")
+    libraryName = "RNKlarnaMobileSDK"
+    codegenJavaPackageName = "com.klarna.mobile.sdk.reactnative"
+  }
 }
