@@ -10,6 +10,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/home/HomeScreen';
 import PaymentsScreen from './src/payments/PaymentsScreen';
+import StandaloneWebViewScreen from './src/standalonewebview/StandaloneWebViewScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -22,6 +23,7 @@ const AppStack = () => {
         options={{title: 'Klarna MSDK TestApp'}}
       />
       <Stack.Screen name="Payments" component={PaymentsScreen} />
+      <Stack.Screen name="StandaloneWebView" component={StandaloneWebViewScreen} />
     </Stack.Navigator>
   );
 };
@@ -37,6 +39,7 @@ export default function App(): JSX.Element {
 type AppStackParamList = {
   Home: undefined;
   Payments: undefined;
+  StandaloneWebView: undefined;
 };
 
 export type {AppStackParamList};

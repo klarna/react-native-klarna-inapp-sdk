@@ -1,10 +1,10 @@
 import React from 'react';
-import {ScrollView, Text, useColorScheme, View} from 'react-native';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
+import { ScrollView, Text, useColorScheme, View } from 'react-native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import styles, { backgroundStyle, Colors } from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
-import type {AppStackParamList} from '../../App';
-import {useNavigation} from '@react-navigation/native';
+import type { AppStackParamList } from '../../App';
+import { useNavigation } from '@react-navigation/native';
 
 type HomeNavigationProp = NativeStackNavigationProp<AppStackParamList, 'Home'>;
 
@@ -14,7 +14,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView
-      contentInsetAdjustmentBehavior="automatic"
+      contentInsetAdjustmentBehavior='automatic'
       style={backgroundStyle(styles.scrollView, isDarkMode)}>
       <View
         style={{
@@ -28,6 +28,20 @@ export default function HomeScreen() {
             navigation.navigate('Payments');
           }}>
           Klarna Payments
+        </Text>
+      </View>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}>
+        <Text
+          style={styles.navMenuItem}
+          {...testProps('navKlarnaStandaloneWebView')}
+          onPress={() => {
+            console.log('Navigating to StandaloneWebView');
+            navigation.navigate('StandaloneWebView');
+          }}>
+          Klarna Standalone WebView
         </Text>
       </View>
     </ScrollView>
