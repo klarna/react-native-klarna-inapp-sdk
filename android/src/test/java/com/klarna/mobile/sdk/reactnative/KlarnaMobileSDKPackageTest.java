@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative.payments;
+package com.klarna.mobile.sdk.reactnative;
 
 import android.app.Application;
 
@@ -7,7 +7,9 @@ import androidx.test.core.app.ApplicationProvider;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.klarna.mobile.sdk.reactnative.KlarnaPaymentViewPackage;
+import com.klarna.mobile.sdk.reactnative.KlarnaMobileSDKPackage;
+import com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager;
+import com.klarna.mobile.sdk.reactnative.standalonewebview.KlarnaStandaloneWebViewManager;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,7 +20,7 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
-public class KlarnaPaymentViewPackageTest {
+public class KlarnaMobileSDKPackageTest {
 
     private Application application;
     private ReactApplicationContext reactContext;
@@ -31,7 +33,7 @@ public class KlarnaPaymentViewPackageTest {
 
     @Test
     public void testCreateNativeModules() {
-        KlarnaPaymentViewPackage paymentViewPackage = new KlarnaPaymentViewPackage();
+        KlarnaMobileSDKPackage paymentViewPackage = new KlarnaMobileSDKPackage();
         List<NativeModule> nativeModules = paymentViewPackage.createNativeModules(reactContext);
         Assert.assertNotNull(nativeModules);
         Assert.assertTrue(nativeModules.isEmpty());
@@ -39,10 +41,12 @@ public class KlarnaPaymentViewPackageTest {
 
     @Test
     public void testCreateViewManagers() {
-        KlarnaPaymentViewPackage paymentViewPackage = new KlarnaPaymentViewPackage();
+        KlarnaMobileSDKPackage paymentViewPackage = new KlarnaMobileSDKPackage();
         List<ViewManager> nativeModules = paymentViewPackage.createViewManagers(reactContext);
         Assert.assertNotNull(nativeModules);
         Assert.assertFalse(nativeModules.isEmpty());
+        Assert.assertEquals(2, nativeModules.size());
         Assert.assertTrue(nativeModules.get(0) instanceof KlarnaPaymentViewManager);
+        Assert.assertTrue(nativeModules.get(1) instanceof KlarnaStandaloneWebViewManager);
     }
 }
