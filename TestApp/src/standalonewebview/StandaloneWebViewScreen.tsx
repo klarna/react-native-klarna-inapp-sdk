@@ -1,5 +1,5 @@
-import { ScrollView, useColorScheme, View } from 'react-native';
-import styles, { backgroundStyle, Colors } from '../common/ui/Styles';
+import { useColorScheme, View } from 'react-native';
+import { Colors } from '../common/ui/Styles';
 import React from 'react';
 import { KlarnaStandaloneWebView } from 'react-native-klarna-inapp-sdk';
 
@@ -9,19 +9,18 @@ export default function StandaloneWebViewScreen() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <ScrollView
-      contentInsetAdjustmentBehavior='automatic'
-      style={backgroundStyle(styles.scrollView, isDarkMode)}>
-      <View
+    <View
+      style={{
+        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+      }}>
+      <KlarnaStandaloneWebView
         style={{
-          backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        }}>
-        <KlarnaStandaloneWebView
-          style={styles.container}
-          returnUrl={"returnUrl://"}
-        />
-      </View>
-    </ScrollView>
+          width: '100%',
+          height: '100%',
+        }}
+        returnUrl={'returnUrl://'}
+      />
+    </View>
   );
 
 }
