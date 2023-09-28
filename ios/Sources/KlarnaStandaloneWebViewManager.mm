@@ -5,9 +5,9 @@
 
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "view/newarch/KlarnaStandaloneWebView.h"
+#import "view/newarch/KlarnaStandaloneWebViewWrapper.h"
 #else
-#import "view/oldarch/KlarnaStandaloneWebView.h"
+#import "view/oldarch/KlarnaStandaloneWebViewWrapper.h"
 #endif
 
 @implementation KlarnaStandaloneWebViewManager

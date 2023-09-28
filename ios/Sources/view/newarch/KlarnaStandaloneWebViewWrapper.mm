@@ -1,6 +1,6 @@
 #if RCT_NEW_ARCH_ENABLED
 
-#import "KlarnaStandaloneWebView.h"
+#import "KlarnaStandaloneWebViewWrapper.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
@@ -15,11 +15,13 @@
 
 using namespace facebook::react;
 
-@interface KlarnaStandaloneWebView ()
+@interface KlarnaStandaloneWebViewWrapper ()
 
 @end
 
-@implementation KlarnaStandaloneWebView
+@implementation KlarnaStandaloneWebViewWrapper
+
+@end
 
 #endif
 

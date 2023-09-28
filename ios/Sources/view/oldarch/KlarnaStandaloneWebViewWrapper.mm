@@ -1,17 +1,17 @@
 #if !RCT_NEW_ARCH_ENABLED
 
-#import "KlarnaStandaloneWebView.h"
+#import "KlarnaStandaloneWebViewWrapper.h"
 
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>
 
-@interface KlarnaStandaloneWebView ()
+@interface KlarnaStandaloneWebViewWrapper ()
 
 @property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
 
 @end
 
-@implementation KlarnaStandaloneWebView
+@implementation KlarnaStandaloneWebViewWrapper
 
 #pragma mark - React Native Overrides
 

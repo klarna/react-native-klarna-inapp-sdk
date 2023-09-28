@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface KlarnaStandaloneWebView : UIView
+@interface KlarnaStandaloneWebViewWrapper : UIView
 
 @property (nonatomic, strong) NSString* returnUrl;
 

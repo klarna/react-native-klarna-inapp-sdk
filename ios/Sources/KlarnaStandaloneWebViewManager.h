@@ -1,5 +1,5 @@
 #import <React/RCTViewManager.h>
 
-@interface KlarnaStandaloneWebViewManager : RCTViewComponentView
+@interface KlarnaStandaloneWebViewManager : RCTViewManager
 
 @end
