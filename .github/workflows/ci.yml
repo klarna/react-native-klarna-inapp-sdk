@@ -101,7 +101,7 @@ jobs:
 
       - name: Build TestApp for Android
         run: |
-          yarn TestApp turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+          yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios:
     runs-on: macos-latest
@@ -153,4 +153,4 @@ jobs:
 
       - name: Build TestApp for iOS
         run: |
-          yarn TestApp run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+          yarn run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
