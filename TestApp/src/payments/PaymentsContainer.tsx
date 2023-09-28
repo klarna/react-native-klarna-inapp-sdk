@@ -107,9 +107,7 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
           />
         </View>
         {actionButtons()}
-        <Text
-          style={{color: 'gray'}}
-          {...testProps('state_' + props.paymentMethodName)}>
+        <Text {...testProps('state_' + props.paymentMethodName)}>
           {eventState}
         </Text>
       </View>
