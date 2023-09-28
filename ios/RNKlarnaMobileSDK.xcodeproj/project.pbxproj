@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42BC05FF2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BC05FE2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.m */; };
+		42BC06032AC586C50044A9FE /* KlarnaStandaloneWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BC06022AC586C50044A9FE /* KlarnaStandaloneWebView.m */; };
+		42BC06052AC588180044A9FE /* KlarnaStandaloneWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BC06042AC588180044A9FE /* KlarnaStandaloneWebView.m */; };
 		7917D755255C45FB00E16799 /* PaymentViewWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */; };
 		7917D757255C45FB00E16799 /* libRNKlarnaMobileSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libRNKlarnaMobileSDK.a */; };
 		792F67C02AB8AD7D00675E18 /* PaymentViewWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 792F67BB2AB8AD7D00675E18 /* PaymentViewWrapper.mm */; };
@@ -42,6 +45,12 @@
 		134814201AA4EA6300B7C361 /* libRNKlarnaMobileSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNKlarnaMobileSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		19C9876CD048B49EB4361DB8 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		3FC0A2F5614F1B06C1249CA3 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
+		42BC05FD2AC57D950044A9FE /* KlarnaStandaloneWebViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaStandaloneWebViewManager.h; sourceTree = "<group>"; };
+		42BC05FE2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KlarnaStandaloneWebViewManager.m; sourceTree = "<group>"; };
+		42BC06002AC585950044A9FE /* KlarnaStandaloneWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaStandaloneWebView.h; sourceTree = "<group>"; };
+		42BC06012AC5866B0044A9FE /* KlarnaStandaloneWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaStandaloneWebView.h; sourceTree = "<group>"; };
+		42BC06022AC586C50044A9FE /* KlarnaStandaloneWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KlarnaStandaloneWebView.m; sourceTree = "<group>"; };
+		42BC06042AC588180044A9FE /* KlarnaStandaloneWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KlarnaStandaloneWebView.m; sourceTree = "<group>"; };
 		7917D752255C45FB00E16799 /* RNKlarnaMobileSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RNKlarnaMobileSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapperTests.m; sourceTree = "<group>"; };
 		7917D756255C45FB00E16799 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -115,6 +124,8 @@
 			children = (
 				B3E7B5881CC2AC0600A0062D /* KlarnaPaymentViewManager.h */,
 				B3E7B5891CC2AC0600A0062D /* KlarnaPaymentViewManager.mm */,
+				42BC05FD2AC57D950044A9FE /* KlarnaStandaloneWebViewManager.h */,
+				42BC05FE2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.m */,
 				9CDEDC2923475BAC006C9C97 /* view */,
 			);
 			path = Sources;
@@ -149,6 +160,8 @@
 			children = (
 				792F67BB2AB8AD7D00675E18 /* PaymentViewWrapper.mm */,
 				792F67BC2AB8AD7D00675E18 /* PaymentViewWrapper.h */,
+				42BC06012AC5866B0044A9FE /* KlarnaStandaloneWebView.h */,
+				42BC06022AC586C50044A9FE /* KlarnaStandaloneWebView.m */,
 			);
 			path = newarch;
 			sourceTree = "<group>";
@@ -158,6 +171,8 @@
 			children = (
 				792F67BE2AB8AD7D00675E18 /* PaymentViewWrapper.mm */,
 				792F67BF2AB8AD7D00675E18 /* PaymentViewWrapper.h */,
+				42BC06002AC585950044A9FE /* KlarnaStandaloneWebView.h */,
+				42BC06042AC588180044A9FE /* KlarnaStandaloneWebView.m */,
 			);
 			path = oldarch;
 			sourceTree = "<group>";
@@ -365,8 +380,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42BC06032AC586C50044A9FE /* KlarnaStandaloneWebView.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentViewManager.mm in Sources */,
 				792F67C02AB8AD7D00675E18 /* PaymentViewWrapper.mm in Sources */,
+				42BC06052AC588180044A9FE /* KlarnaStandaloneWebView.m in Sources */,
+				42BC05FF2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.m in Sources */,
 				792F67C12AB8AD7D00675E18 /* PaymentViewWrapper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
