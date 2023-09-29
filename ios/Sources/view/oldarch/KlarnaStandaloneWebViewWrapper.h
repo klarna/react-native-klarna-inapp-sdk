@@ -14,12 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString* returnUrl;
 
 #pragma mark - React Native Overrides
-- (void) setReturnUrl:(NSString *)returnUrl;
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
+
+- (void)initializeStandaloneWebViewWithReturnUrl:(NSString*)returnUrl;
 
 @end
 
 NS_ASSUME_NONNULL_END
 
 #endif
+

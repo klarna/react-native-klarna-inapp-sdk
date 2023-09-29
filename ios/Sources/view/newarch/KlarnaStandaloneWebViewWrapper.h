@@ -8,7 +8,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KlarnaStandaloneWebViewWrapper : RCTViewComponentView
 
+#pragma mark - React Native Overrides
+
 @property (nonatomic, weak) RCTUIManager* uiManager;
+
+- (void)initializeStandaloneWebViewWithReturnUrl:(NSString*)returnUrl;
 
 @end
 
