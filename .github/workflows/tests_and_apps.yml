@@ -59,7 +59,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Bundle JS for Android
+      - name: Run Unit Tests for Android
+        run: yarn test:android
+
+      - name: Bundle TestApp JS for Android
         run: mkdir TestApp/android/app/src/main/assets && yarn TestApp bundle:android
 
       - name: Build TestApp for Android
@@ -93,24 +96,44 @@ jobs:
             echo "turbo_cache_hit=1" >> $GITHUB_ENV
           fi
 
-      - name: Cache cocoapods
+      - name: Cache Lib cocoapods
+        if: env.turbo_cache_hit != 1
+        id: cocoapods-cache-lib
+        uses: actions/cache@v3
+        with:
+          path: |
+            ios/Pods
+          key: ${{ runner.os }}-cocoapods-${{ hashFiles('ios/Podfile') }}
+          restore-keys: |
+            ${{ runner.os }}-cocoapods-
+
+      - name: Install Lib cocoapods
+        run: |
+          yarn pods
+        env:
+          NO_FLIPPER: 1
+
+      - name: Run Unit Tests for iOS
+        run: yarn test:ios
+
+      - name: Cache TestApp cocoapods
         if: env.turbo_cache_hit != 1
         id: cocoapods-cache
         uses: actions/cache@v3
         with:
           path: |
-            **/ios/Pods
+            TestApp/**/ios/Pods
           key: ${{ runner.os }}-cocoapods-${{ hashFiles('TestApp/ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-cocoapods-
 
-      - name: Install cocoapods
+      - name: Install TestApp cocoapods
         run: |
           yarn TestApp pods
         env:
           NO_FLIPPER: 1
 
-      - name: Bundle JS for iOS
+      - name: Bundle TestApp JS for iOS
         run: yarn TestApp bundle:ios
 
       - name: Build TestApp for iOS
