@@ -24,6 +24,7 @@ using namespace facebook::react;
 @implementation KlarnaStandaloneWebViewWrapper
 
 - (id) init {
+    self = [super init];
     [self initializeKlarnaStandaloneWebView];
     return self;
 }

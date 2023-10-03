@@ -13,6 +13,7 @@
 @implementation KlarnaStandaloneWebViewWrapper
 
 - (id) init {
+    self = [super init];
     [self initializeKlarnaStandaloneWebView];
     return self;
 }
