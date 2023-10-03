@@ -23,6 +23,11 @@ using namespace facebook::react;
 
 @implementation KlarnaStandaloneWebViewWrapper
 
+- (id) init {
+    [self initializeKlarnaStandaloneWebView];
+    return self;
+}
+
 #pragma mark - React Native Overrides
 
 - (void) initializeKlarnaStandaloneWebView:(NSString*)returnUrl {

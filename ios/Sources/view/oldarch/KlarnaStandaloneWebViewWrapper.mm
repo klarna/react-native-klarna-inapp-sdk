@@ -12,6 +12,11 @@
 
 @implementation KlarnaStandaloneWebViewWrapper
 
+- (id) init {
+    [self initializeKlarnaStandaloneWebView];
+    return self;
+}
+
 #pragma mark - React Native Overrides
 
 - (void) setReturnUrl:(NSString *)returnUrl {
@@ -26,7 +31,9 @@
         self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl]];
         [self.klarnaStandaloneWebView loadURL:[NSURL URLWithString:@"https://google.com"]];
     } else {
-        // TODO what should we do here?
+        // TODO Temporary code. Remove it later!
+        self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:@"returnUrl://"]];
+        [self.klarnaStandaloneWebView loadURL:[NSURL URLWithString:@"https://google.com"]];
     }
     self.klarnaStandaloneWebView.translatesAutoresizingMaskIntoConstraints = NO;
 
