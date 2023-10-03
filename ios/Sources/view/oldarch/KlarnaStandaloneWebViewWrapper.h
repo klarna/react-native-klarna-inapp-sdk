@@ -15,13 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - React Native Overrides
 
-@property (nonatomic, weak) RCTUIManager* uiManager;
+- (void) initializeKlarnaStandaloneWebView;
 
-- (void)initializeStandaloneWebViewWithReturnUrl:(NSString*)returnUrl;
+@property (nonatomic, weak) RCTUIManager* uiManager;
 
 @end
 
 NS_ASSUME_NONNULL_END
 
 #endif
+
 

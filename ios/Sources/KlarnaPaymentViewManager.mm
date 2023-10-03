@@ -3,7 +3,6 @@
 #import <React/RCTUIManager.h>
 #import <React/RCTLog.h>
 
-
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "view/newarch/PaymentViewWrapper.h"
 #else

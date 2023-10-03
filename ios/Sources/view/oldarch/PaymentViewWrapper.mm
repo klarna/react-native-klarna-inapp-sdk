@@ -9,7 +9,6 @@
 
 @property (nonatomic, strong) KlarnaPaymentView* actualPaymentView;
 
-
 @end
 
 
