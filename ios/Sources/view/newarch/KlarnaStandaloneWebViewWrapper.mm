@@ -79,6 +79,19 @@ Class<RCTComponentViewProtocol> RNKlarnaStandaloneWebViewCls(void)
   return KlarnaStandaloneWebViewWrapper.class;
 }
 
+- (void) updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<RNKlarnaStandaloneWebViewProps const>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<RNKlarnaStandaloneWebViewProps const>(props);
+    
+    if (oldViewProps.returnUrl != newViewProps.returnUrl) {
+        NSString * newReturnUrl = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
+        self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:newReturnUrl];
+    }
+    
+    [super updateProps:props oldProps:oldProps];
+}
+
 @end
 
 #endif
