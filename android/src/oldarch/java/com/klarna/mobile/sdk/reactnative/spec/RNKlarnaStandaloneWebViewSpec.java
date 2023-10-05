@@ -8,4 +8,6 @@ import com.facebook.react.uimanager.SimpleViewManager;
 
 public abstract class RNKlarnaStandaloneWebViewSpec<T extends View> extends SimpleViewManager<T> {
     public abstract void setReturnUrl(T view, @Nullable String returnUrl);
+
+    public abstract void load(T view, String url);
 }

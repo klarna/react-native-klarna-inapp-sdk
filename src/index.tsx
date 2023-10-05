@@ -1,10 +1,15 @@
 import React, { Component, type RefObject } from 'react';
-import type { NativeMethods, NativeSyntheticEvent, ViewStyle } from 'react-native';
+import type {
+  NativeMethods,
+  NativeSyntheticEvent,
+  ViewStyle,
+} from 'react-native';
 import RNKlarnaPaymentView, {
   RNKlarnaPaymentViewCommands,
   type RNKlarnaPaymentViewProps,
 } from './specs/KlarnaPaymentViewNativeComponent';
 import RNKlarnaStandaloneWebView, {
+  RNKlarnaStandaloneWebViewCommands,
   type RNKlarnaStandaloneWebViewProps,
 } from './specs/KlarnaStandaloneWebViewNativeComponent';
 
@@ -18,11 +23,11 @@ export interface KlarnaPaymentViewProps {
   readonly onAuthorized: (
     approved: boolean,
     authToken: string | null,
-    finalizeRequired: boolean | null,
+    finalizeRequired: boolean | null
   ) => void;
   readonly onReauthorized: (
     approved: boolean,
-    authToken: string | null,
+    authToken: string | null
   ) => void;
   readonly onFinalized: (approved: boolean, authToken: string | null) => void;
   readonly onError: (error: KlarnaPaymentsSDKError) => void;
@@ -131,7 +136,7 @@ export class KlarnaPaymentView extends Component<
               readonly authToken: string | null;
               readonly finalizeRequired: boolean;
             }>
-          >,
+          >
         ) => {
           if (this.props.onAuthorized != null) {
             /**
@@ -149,7 +154,7 @@ export class KlarnaPaymentView extends Component<
                 event.nativeEvent.authToken === ''
                   ? null
                   : event.nativeEvent.authToken,
-                event.nativeEvent.finalizeRequired,
+                event.nativeEvent.finalizeRequired
               );
             }
           }
@@ -160,7 +165,7 @@ export class KlarnaPaymentView extends Component<
               readonly approved: boolean;
               readonly authToken: string | null;
             }>
-          >,
+          >
         ) => {
           if (this.props.onReauthorized != null) {
             /**
@@ -177,7 +182,7 @@ export class KlarnaPaymentView extends Component<
                 event.nativeEvent.approved,
                 event.nativeEvent.authToken === ''
                   ? null
-                  : event.nativeEvent.authToken,
+                  : event.nativeEvent.authToken
               );
             }
           }
@@ -188,7 +193,7 @@ export class KlarnaPaymentView extends Component<
               readonly approved: boolean;
               readonly authToken: string | null;
             }>
-          >,
+          >
         ) => {
           if (this.props.onFinalized != null) {
             /**
@@ -205,7 +210,7 @@ export class KlarnaPaymentView extends Component<
                 event.nativeEvent.approved,
                 event.nativeEvent.authToken === ''
                   ? null
-                  : event.nativeEvent.authToken,
+                  : event.nativeEvent.authToken
               );
             }
           }
@@ -222,7 +227,7 @@ export class KlarnaPaymentView extends Component<
                 readonly sessionId: string;
               }>;
             }>
-          >,
+          >
         ) => {
           if (this.props.onError != null) {
             /**
@@ -244,7 +249,7 @@ export class KlarnaPaymentView extends Component<
             Readonly<{
               readonly height: string;
             }>
-          >,
+          >
         ) => {
           const newHeight = Number(event.nativeEvent.height);
           if (newHeight !== this.state.nativeViewHeight) {
@@ -262,7 +267,7 @@ export class KlarnaPaymentView extends Component<
       RNKlarnaPaymentViewCommands.initialize(
         view,
         clientToken,
-        returnUrl || '',
+        returnUrl || ''
       );
     }
   };
@@ -283,14 +288,14 @@ export class KlarnaPaymentView extends Component<
 
   authorize = (
     autoFinalize: boolean | null = true,
-    sessionData: string | null = null,
+    sessionData: string | null = null
   ) => {
     const view = this.paymentViewRef.current;
     if (view != null) {
       RNKlarnaPaymentViewCommands.authorize(
         view,
         autoFinalize || true,
-        sessionData || '',
+        sessionData || ''
       );
     }
   };
@@ -322,12 +327,16 @@ export interface KlarnaPaymentsSDKError {
 export default KlarnaPaymentView;
 
 export interface KlarnaStandaloneWebViewProps {
-  style: ViewStyle;
+  style?: ViewStyle;
   readonly returnUrl: string;
+  readonly onBeforeLoad?: () => void;
+  readonly onLoad?: () => void;
 }
 
-export class KlarnaStandaloneWebView extends Component<KlarnaStandaloneWebViewProps, any> {
-
+export class KlarnaStandaloneWebView extends Component<
+  KlarnaStandaloneWebViewProps,
+  any
+> {
   standaloneWebViewRef: RefObject<
     Component<RNKlarnaStandaloneWebViewProps> & Readonly<NativeMethods>
   >;
@@ -341,13 +350,26 @@ export class KlarnaStandaloneWebView extends Component<KlarnaStandaloneWebViewPr
     return (
       <RNKlarnaStandaloneWebView
         ref={this.standaloneWebViewRef}
-        style={{
-          width: '100%',
-          height: '100%',
-        }}
+        style={this.props.style}
         returnUrl={this.props.returnUrl || ''}
+        onBeforeLoad={(_event: NativeSyntheticEvent<any>) => {
+          if (this.props.onBeforeLoad != null) {
+            this.props.onBeforeLoad();
+          }
+        }}
+        onLoad={(_event: NativeSyntheticEvent<any>) => {
+          if (this.props.onLoad != null) {
+            this.props.onLoad();
+          }
+        }}
       />
     );
   }
 
+  load = (url: string) => {
+    const view = this.standaloneWebViewRef.current;
+    if (view != null) {
+      RNKlarnaStandaloneWebViewCommands.load(view, url);
+    }
+  };
 }

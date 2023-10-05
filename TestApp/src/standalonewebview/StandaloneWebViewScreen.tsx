@@ -1,26 +1,75 @@
-import { useColorScheme, View } from 'react-native';
-import { Colors } from '../common/ui/Styles';
-import React from 'react';
-import { KlarnaStandaloneWebView } from 'react-native-klarna-inapp-sdk';
+import {TextInput, useColorScheme, View} from 'react-native';
+import styles, {Colors} from '../common/ui/Styles';
+import React, {useRef, useState} from 'react';
+import {KlarnaStandaloneWebView} from 'react-native-klarna-inapp-sdk';
+import Button from '../common/ui/view/Button';
+import {Keyboard} from 'react-native';
 
 // TODO pass the required props
 export default function StandaloneWebViewScreen() {
-
+  const klarnaStandaloneWebViewRef = useRef<KlarnaStandaloneWebView>(null);
   const isDarkMode = useColorScheme() === 'dark';
+  const [url, setUrl] = useState('');
+
+  const renderUrlTextInput = () => {
+    return (
+      <TextInput
+        style={styles.urlInput}
+        defaultValue={url}
+        placeholder='Enter the URL to load...'
+        onChangeText={text => {
+          setUrl(text);
+        }}
+      />
+    );
+  };
+
+  const renderLoadUrlButton = () => {
+    return (
+      <View>
+        <Button
+          onPress={() => {
+            klarnaStandaloneWebViewRef.current?.load(url);
+            Keyboard.dismiss();
+          }}
+          title='Load URL'
+        />
+      </View>
+    );
+  };
 
   return (
     <View
       style={{
         backgroundColor: isDarkMode ? Colors.black : Colors.white,
       }}>
+      <View
+        /* eslint-disable-next-line react-native/no-inline-styles */
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          alignItems: 'center',
+          padding: 10,
+          backgroundColor: Colors.lightGray,
+        }}>
+        {renderUrlTextInput()}
+        {renderLoadUrlButton()}
+      </View>
       <KlarnaStandaloneWebView
+        ref={klarnaStandaloneWebViewRef}
+        /* eslint-disable-next-line react-native/no-inline-styles */
         style={{
           width: '100%',
           height: '100%',
         }}
         returnUrl={'returnUrl://'}
+        onBeforeLoad={() => {
+          console.log('onEvent: onBeforeLoad');
+        }}
+        onLoad={() => {
+          console.log('onEvent: onLoad');
+        }}
       />
     </View>
   );
-
 }
