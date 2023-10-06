@@ -40,13 +40,6 @@ project.xcworkspace
 local.properties
 android.iml
 
-# Cocoapods
-#
-example/ios/Pods
-
-# Ruby
-example/vendor/
-
 # node.js
 #
 node_modules/
@@ -78,3 +71,6 @@ ios/Podfile.lock
 # fastlane
 fastlane/report.xml
 local-scripts
+
+# coverage
+coverage
