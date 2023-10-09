@@ -1,9 +1,8 @@
-import {TextInput, useColorScheme, View} from 'react-native';
+import {Keyboard, TextInput, useColorScheme, View} from 'react-native';
 import styles, {Colors} from '../common/ui/Styles';
 import React, {useRef, useState} from 'react';
 import {KlarnaStandaloneWebView} from 'react-native-klarna-inapp-sdk';
 import Button from '../common/ui/view/Button';
-import {Keyboard} from 'react-native';
 
 // TODO pass the required props
 export default function StandaloneWebViewScreen() {
@@ -14,9 +13,12 @@ export default function StandaloneWebViewScreen() {
   const renderUrlTextInput = () => {
     return (
       <TextInput
+        keyboardType={`url`}
+        autoCorrect={false}
+        autoCapitalize={'none'}
         style={styles.urlInput}
         defaultValue={url}
-        placeholder='Enter the URL to load...'
+        placeholder="Enter the URL to load..."
         onChangeText={text => {
           setUrl(text);
         }}
@@ -29,10 +31,12 @@ export default function StandaloneWebViewScreen() {
       <View>
         <Button
           onPress={() => {
-            klarnaStandaloneWebViewRef.current?.load(url);
+            if (url !== '') {
+              klarnaStandaloneWebViewRef.current?.load(url);
+            }
             Keyboard.dismiss();
           }}
-          title='Load URL'
+          title="Load URL"
         />
       </View>
     );
