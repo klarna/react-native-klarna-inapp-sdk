@@ -11,7 +11,6 @@
 
 @end
 
-
 @implementation PaymentViewWrapper
 
 #pragma mark - React Native Overrides
@@ -91,7 +90,6 @@
 
 #pragma mark - Klarna PaymentEventListener
 
-
 - (void)klarnaInitializedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView {
     if (!self.onInitialized) {
         RCTLog(@"Missing 'onInitialized' callback prop.");
@@ -132,6 +130,7 @@
     });
 
 }
+
 - (void)klarnaReauthorizedWithPaymentView:(KlarnaPaymentView * _Nonnull)paymentView approved:(BOOL)approved authToken:(NSString * _Nullable)authToken {
     if (!self.onReauthorized) {
         RCTLog(@"Missing 'onReauthorized' callback prop.");

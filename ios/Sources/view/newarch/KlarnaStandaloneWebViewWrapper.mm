@@ -23,7 +23,7 @@ using namespace facebook::react;
 
 @implementation KlarnaStandaloneWebViewWrapper
 
-- (id) init {
+- (id)init {
     self = [super init];
     // TODO: What should we pass here for 'returnUrl'?
     [self initializeKlarnaStandaloneWebView: nil];
@@ -33,7 +33,7 @@ using namespace facebook::react;
 
 #pragma mark - React Native Overrides
 
-- (void) initializeKlarnaStandaloneWebView:(nullable NSString*)returnUrl {
+- (void)initializeKlarnaStandaloneWebView:(nullable NSString*)returnUrl {
     if (returnUrl != nil && returnUrl.length > 0) {
         self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl]];
     } else {
@@ -52,7 +52,7 @@ using namespace facebook::react;
                                             ]];
 }
 
-- (void) layoutSubviews {
+- (void)layoutSubviews {
     [super layoutSubviews];
     self.klarnaStandaloneWebView.frame = self.bounds;
     [self.klarnaStandaloneWebView layoutSubviews];
@@ -60,7 +60,7 @@ using namespace facebook::react;
 
 #pragma mark - Klarna Standalone Web View Methods
 
-- (instancetype) initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -76,12 +76,12 @@ using namespace facebook::react;
     return concreteComponentDescriptorProvider<RNKlarnaStandaloneWebViewComponentDescriptor>();
 }
 
-Class<RCTComponentViewProtocol> RNKlarnaStandaloneWebViewCls(void)
+Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 {
     return KlarnaStandaloneWebViewWrapper.class;
 }
 
-- (void) updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
     const auto &oldViewProps = *std::static_pointer_cast<RNKlarnaStandaloneWebViewProps const>(_props);
     const auto &newViewProps = *std::static_pointer_cast<RNKlarnaStandaloneWebViewProps const>(props);

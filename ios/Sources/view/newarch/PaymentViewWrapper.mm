@@ -19,9 +19,7 @@ using namespace facebook::react;
 
 @property (nonatomic, strong) KlarnaPaymentView* actualPaymentView;
 
-
 @end
-
 
 @implementation PaymentViewWrapper
 
