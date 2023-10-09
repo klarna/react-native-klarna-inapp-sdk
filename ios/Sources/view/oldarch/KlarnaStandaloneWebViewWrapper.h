@@ -11,13 +11,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KlarnaStandaloneWebViewWrapper : UIView
 
+@property (nonatomic, copy) RCTDirectEventBlock onBeforeLoad;
+@property (nonatomic, copy) RCTDirectEventBlock onLoad;
+
 @property (nonatomic, strong) NSString* returnUrl;
 
 #pragma mark - React Native Overrides
 
-- (void) initializeKlarnaStandaloneWebView;
+- (void)initializeKlarnaStandaloneWebView;
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
+
+- (void)load:(nonnull NSString*)url;
 
 @end
 

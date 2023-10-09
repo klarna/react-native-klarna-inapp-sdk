@@ -15,7 +15,7 @@
 
 using namespace facebook::react;
 
-@interface KlarnaStandaloneWebViewWrapper
+@interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate, RCTRNKlarnaStandaloneWebViewViewProtocol>
 
 @property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
 
@@ -25,25 +25,27 @@ using namespace facebook::react;
 
 - (id) init {
     self = [super init];
-    [self initializeKlarnaStandaloneWebView];
+    // TODO: What should we pass here for 'returnUrl'?
+    [self initializeKlarnaStandaloneWebView: nil];
+    self.klarnaStandaloneWebView.delegate = self;
     return self;
 }
 
 #pragma mark - React Native Overrides
 
-- (void) initializeKlarnaStandaloneWebView:(NSString*)returnUrl {
-    if (returnUrl.length > 0) {
+- (void) initializeKlarnaStandaloneWebView:(nullable NSString*)returnUrl {
+    if (returnUrl != nil && returnUrl.length > 0) {
         self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl]];
     } else {
-        // TODO what should we do here?
+        // TODO: What should we do here? I mean, can returnUrl be nil?
+        self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:@"returnUrl://"]];
     }
     self.klarnaStandaloneWebView.translatesAutoresizingMaskIntoConstraints = NO;
-        
     
     [self addSubview:self.klarnaStandaloneWebView];
     
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
-                                             [self.klarnaStandaloneWebView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                 [self.klarnaStandaloneWebView.topAnchor constraintEqualToAnchor:self.topAnchor],
                                              [self.klarnaStandaloneWebView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
                                              [self.klarnaStandaloneWebView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
                                              [self.klarnaStandaloneWebView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
@@ -56,7 +58,7 @@ using namespace facebook::react;
     [self.klarnaStandaloneWebView layoutSubviews];
 }
 
-#pragma mark - Standalone Web View Methods
+#pragma mark - Klarna Standalone Web View Methods
 
 - (instancetype) initWithFrame:(CGRect)frame
 {
@@ -76,7 +78,7 @@ using namespace facebook::react;
 
 Class<RCTComponentViewProtocol> RNKlarnaStandaloneWebViewCls(void)
 {
-  return KlarnaStandaloneWebViewWrapper.class;
+    return KlarnaStandaloneWebViewWrapper.class;
 }
 
 - (void) updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
@@ -92,7 +94,38 @@ Class<RCTComponentViewProtocol> RNKlarnaStandaloneWebViewCls(void)
     [super updateProps:props oldProps:oldProps];
 }
 
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
+    RCTRNKlarnaStandaloneWebViewHandleCommand(self, commandName, args);
+}
+
+#pragma mark - KlarnaStandaloneWebViewDelegate methods
+
+- (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
+    if(_eventEmitter){
+        RCTLogInfo(@"Sending onBeforeLoad event");
+        std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
+        ->onBeforeLoad(RNKlarnaStandaloneWebViewEventEmitter::OnBeforeLoad{});
+    } else {
+        RCTLogInfo(@"_eventEmitter is nil!");
+    }
+}
+
+- (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFinish:(WKNavigation * _Nonnull)navigation {
+    if(_eventEmitter){
+        RCTLogInfo(@"Sending onLoad event");
+        std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
+        ->onLoad(RNKlarnaStandaloneWebViewEventEmitter::OnLoad{});
+    } else {
+        RCTLogInfo(@"_eventEmitter is nil!");
+    }
+}
+
+#pragma mark - RCTRNKlarnaStandaloneWebViewViewProtocol methods
+
+- (void)load:(nonnull NSString *)url {
+    [self.klarnaStandaloneWebView loadURL:[NSURL URLWithString:url]];
+}
+
 @end
 
 #endif
-
