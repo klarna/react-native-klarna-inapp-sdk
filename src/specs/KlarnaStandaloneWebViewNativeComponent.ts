@@ -20,11 +20,20 @@ interface RNKlarnaStandaloneWebViewNativeCommands {
     viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>,
     url: string
   ) => void;
+  goBack: (
+    viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>
+  ) => void;
+  goForward: (
+    viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>
+  ) => void;
+  reload: (
+    viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>
+  ) => void;
 }
 
 export const RNKlarnaStandaloneWebViewCommands: RNKlarnaStandaloneWebViewNativeCommands =
   codegenNativeCommands<RNKlarnaStandaloneWebViewNativeCommands>({
-    supportedCommands: ['load'],
+    supportedCommands: ['load', 'goBack', 'goForward', 'reload'],
   });
 
 export default codegenNativeComponent<RNKlarnaStandaloneWebViewProps>(

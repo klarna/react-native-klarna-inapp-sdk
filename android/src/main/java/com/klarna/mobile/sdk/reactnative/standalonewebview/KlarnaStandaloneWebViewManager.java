@@ -28,6 +28,9 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
 
     // Commands that can be triggered from RN
     public static final String COMMAND_LOAD = "load";
+    public static final String COMMAND_GO_FORWARD = "goForward";
+    public static final String COMMAND_GO_BACK = "goBack";
+    public static final String COMMAND_RELOAD = "reload";
 
     private static final String REACT_CLASS = "RNKlarnaStandaloneWebView";
 
@@ -81,12 +84,36 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
                     load(root, url);
                 }
                 break;
+            case COMMAND_GO_FORWARD:
+                goForward(root);
+                break;
+            case COMMAND_GO_BACK:
+                goBack(root);
+                break;
+            case COMMAND_RELOAD:
+                reload(root);
+                break;
         }
     }
 
     @Override
     public void load(KlarnaStandaloneWebView view, String url) {
         view.loadUrl(url);
+    }
+
+    @Override
+    public void goForward(KlarnaStandaloneWebView view) {
+        view.goForward();
+    }
+
+    @Override
+    public void goBack(KlarnaStandaloneWebView view) {
+        view.goBack();
+    }
+
+    @Override
+    public void reload(KlarnaStandaloneWebView view) {
+        view.reload();
     }
 
     /**

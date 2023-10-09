@@ -10,4 +10,10 @@ public abstract class RNKlarnaStandaloneWebViewSpec<T extends View> extends Simp
     public abstract void setReturnUrl(T view, @Nullable String returnUrl);
 
     public abstract void load(T view, String url);
+
+    public abstract void goForward(T view);
+
+    public abstract void goBack(T view);
+
+    public abstract void reload(T view);
 }

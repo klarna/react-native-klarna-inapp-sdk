@@ -55,6 +55,27 @@ export class KlarnaStandaloneWebView extends Component<
       RNKlarnaStandaloneWebViewCommands.load(view, url);
     }
   };
+
+  goForward = () => {
+    const view = this.standaloneWebViewRef.current;
+    if (view != null) {
+      RNKlarnaStandaloneWebViewCommands.goForward(view);
+    }
+  };
+
+  goBack = () => {
+    const view = this.standaloneWebViewRef.current;
+    if (view != null) {
+      RNKlarnaStandaloneWebViewCommands.goBack(view);
+    }
+  };
+
+  reload = () => {
+    const view = this.standaloneWebViewRef.current;
+    if (view != null) {
+      RNKlarnaStandaloneWebViewCommands.reload(view);
+    }
+  };
 }
 
 export default KlarnaStandaloneWebView;

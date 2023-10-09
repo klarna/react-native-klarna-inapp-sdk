@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   urlInput: {
-    marginEnd: 10,
     borderColor: 'gray',
     borderWidth: 1,
     flex: 1,

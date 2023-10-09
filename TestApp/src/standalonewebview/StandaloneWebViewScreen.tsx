@@ -42,6 +42,45 @@ export default function StandaloneWebViewScreen() {
     );
   };
 
+  const renderGoBackButton = () => {
+    return (
+      <View>
+        <Button
+          onPress={() => {
+            klarnaStandaloneWebViewRef.current?.goBack();
+          }}
+          title="Go Back"
+        />
+      </View>
+    );
+  };
+
+  const renderGoForwardButton = () => {
+    return (
+      <View>
+        <Button
+          onPress={() => {
+            klarnaStandaloneWebViewRef.current?.goForward();
+          }}
+          title="Go Forward"
+        />
+      </View>
+    );
+  };
+
+  const renderReloadButton = () => {
+    return (
+      <View>
+        <Button
+          onPress={() => {
+            klarnaStandaloneWebViewRef.current?.reload();
+          }}
+          title="Reload"
+        />
+      </View>
+    );
+  };
+
   return (
     <View
       style={{
@@ -54,10 +93,14 @@ export default function StandaloneWebViewScreen() {
           width: '100%',
           alignItems: 'center',
           padding: 10,
-          backgroundColor: Colors.lightGray,
         }}>
         {renderUrlTextInput()}
+      </View>
+      <View style={styles.buttonsContainer}>
         {renderLoadUrlButton()}
+        {renderReloadButton()}
+        {renderGoBackButton()}
+        {renderGoForwardButton()}
       </View>
       <KlarnaStandaloneWebView
         ref={klarnaStandaloneWebViewRef}
