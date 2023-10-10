@@ -1,5 +1,5 @@
-import {Keyboard, TextInput, useColorScheme, View} from 'react-native';
-import styles, {Colors} from '../common/ui/Styles';
+import {Keyboard, TextInput, View} from 'react-native';
+import styles from '../common/ui/Styles';
 import React, {useRef, useState} from 'react';
 import {
   KlarnaStandaloneWebView,
@@ -10,7 +10,6 @@ import Button from '../common/ui/view/Button';
 // TODO pass the required props
 export default function StandaloneWebViewScreen() {
   const klarnaStandaloneWebViewRef = useRef<KlarnaStandaloneWebView>(null);
-  const isDarkMode = useColorScheme() === 'dark';
   const [url, setUrl] = useState('');
 
   const onEvent = (...params: Array<string>) => {
@@ -89,10 +88,7 @@ export default function StandaloneWebViewScreen() {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
-      }}>
+    <View>
       <View
         /* eslint-disable-next-line react-native/no-inline-styles */
         style={{
