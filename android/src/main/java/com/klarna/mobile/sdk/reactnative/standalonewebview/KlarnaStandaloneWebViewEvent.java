@@ -16,10 +16,18 @@ import com.facebook.react.uimanager.events.Event;
  */
 public class KlarnaStandaloneWebViewEvent extends Event<KlarnaStandaloneWebViewEvent> {
 
-    // This event is sent just before loading a URL
-    public static final String EVENT_NAME_ON_BEFORE_LOAD = "onBeforeLoad";
-    // This event is sent when loading a URL is done
-    public static final String EVENT_NAME_ON_LOAD = "onLoad";
+    public enum Event {
+        // This event is sent just before loading a URL
+        ON_BEFORE_LOAD("onBeforeLoad"),
+        // This event is sent when loading a URL is done
+        ON_LOAD("onLoad");
+
+        public final String name;
+
+        Event(String name) {
+            this.name = name;
+        }
+    }
 
     @NonNull
     private final String eventName;

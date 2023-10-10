@@ -6,9 +6,11 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -17,6 +19,7 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebView;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebViewClient;
+import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaStandaloneWebViewSpec;
 
 import java.lang.ref.WeakReference;
@@ -39,13 +42,23 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     private final KlarnaStandaloneWebViewClient klarnaStandaloneWebViewClient = new KlarnaStandaloneWebViewClient() {
         @Override
         public void onPageStarted(@Nullable KlarnaStandaloneWebView view, @Nullable String url, @Nullable Bitmap favicon) {
-            postEventForView(KlarnaStandaloneWebViewEvent.EVENT_NAME_ON_BEFORE_LOAD, null, view);
+            WritableMap params = ArgumentsUtil.createMap(
+                    new HashMap<>() {{
+                        put("event", buildNavigationEventMap(view, KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD));
+                    }}
+            );
+            postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD, params, view);
         }
 
         @Override
         public void onPageFinished(@Nullable KlarnaStandaloneWebView view, @Nullable String url) {
-            // FIXME: This method get called twice per page!
-            postEventForView(KlarnaStandaloneWebViewEvent.EVENT_NAME_ON_LOAD, null, view);
+            // FIXME: Sometimes this method get called more than once per page!
+            WritableMap params = ArgumentsUtil.createMap(
+                    new HashMap<>() {{
+                        put("event", buildNavigationEventMap(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD));
+                    }}
+            );
+            postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD, params, view);
         }
     };
 
@@ -126,8 +139,8 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     @Override
     public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
         MapBuilder.Builder<String, Object> builder = MapBuilder.builder();
-        builder.put(KlarnaStandaloneWebViewEvent.EVENT_NAME_ON_BEFORE_LOAD, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.EVENT_NAME_ON_BEFORE_LOAD));
-        builder.put(KlarnaStandaloneWebViewEvent.EVENT_NAME_ON_LOAD, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.EVENT_NAME_ON_LOAD));
+        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD.name));
+        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD.name));
         return builder.build();
     }
 
@@ -147,17 +160,17 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     /**
      * Creates an event from event name and a map of params. Sends it via the right dispatcher.
      *
-     * @param eventName        name of the event should match getExportedCustomDirectEventTypeConstants
+     * @param event            name of the event should match getExportedCustomDirectEventTypeConstants
      * @param additionalParams payload of the event
      * @param view             source native view
      */
-    private void postEventForView(String eventName, WritableMap additionalParams, KlarnaStandaloneWebView view) {
+    private void postEventForView(KlarnaStandaloneWebViewEvent.Event event, WritableMap additionalParams, KlarnaStandaloneWebView view) {
         KlarnaStandaloneWebView klarnaStandaloneWebView = getKlarnaStandaloneWebView(view);
         if (klarnaStandaloneWebView != null) {
             EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) klarnaStandaloneWebView.getContext(), klarnaStandaloneWebView.getId());
             if (eventDispatcher != null) {
-                KlarnaStandaloneWebViewEvent event = new KlarnaStandaloneWebViewEvent(klarnaStandaloneWebView.getId(), eventName, additionalParams);
-                eventDispatcher.dispatchEvent(event);
+                KlarnaStandaloneWebViewEvent e = new KlarnaStandaloneWebViewEvent(klarnaStandaloneWebView.getId(), event.name, additionalParams);
+                eventDispatcher.dispatchEvent(e);
             }
         }
     }
@@ -171,6 +184,34 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
             }
         }
         return null;
+    }
+
+    private ReadableMap buildNavigationEventMap(@Nullable KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event) {
+        if (view == null) {
+            return Arguments.createMap();
+        } else {
+            return ArgumentsUtil.createMap(
+                    new HashMap<>() {{
+                        // TODO Verify that we're passing the correct values
+                        // Possible values for 'event' are 'willLoad', 'loadStarted', and 'loadEnded'
+                        put("event", event == KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD ? "loadStarted" : "loadEnded");
+                        put("newUrl", view.getUrl());
+                        put("webViewState", buildWebViewStateMap(view, event));
+                    }}
+            );
+        }
+    }
+
+    private ReadableMap buildWebViewStateMap(KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event) {
+        return ArgumentsUtil.createMap(
+                new HashMap<>() {{
+                    // TODO Verify that we're passing the correct values
+                    put("url", view.getUrl());
+                    put("title", view.getTitle());
+                    put("progress", view.getProgress());
+                    put("isLoading", event == KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD);
+                }}
+        );
     }
 
 }

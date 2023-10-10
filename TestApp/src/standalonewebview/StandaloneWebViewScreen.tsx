@@ -1,7 +1,10 @@
 import {Keyboard, TextInput, useColorScheme, View} from 'react-native';
 import styles, {Colors} from '../common/ui/Styles';
 import React, {useRef, useState} from 'react';
-import {KlarnaStandaloneWebView} from 'react-native-klarna-inapp-sdk';
+import {
+  KlarnaStandaloneWebView,
+  KlarnaWebViewNavigationEvent,
+} from 'react-native-klarna-inapp-sdk';
 import Button from '../common/ui/view/Button';
 
 // TODO pass the required props
@@ -9,6 +12,10 @@ export default function StandaloneWebViewScreen() {
   const klarnaStandaloneWebViewRef = useRef<KlarnaStandaloneWebView>(null);
   const isDarkMode = useColorScheme() === 'dark';
   const [url, setUrl] = useState('');
+
+  const onEvent = (...params: Array<string>) => {
+    console.log('onEvent', params);
+  };
 
   const renderUrlTextInput = () => {
     return (
@@ -110,11 +117,11 @@ export default function StandaloneWebViewScreen() {
           height: '100%',
         }}
         returnUrl={'returnUrl://'}
-        onBeforeLoad={() => {
-          console.log('onEvent: onBeforeLoad');
+        onBeforeLoad={(event: KlarnaWebViewNavigationEvent) => {
+          onEvent('onBeforeLoad', JSON.stringify(event));
         }}
-        onLoad={() => {
-          console.log('onEvent: onLoad');
+        onLoad={(event: KlarnaWebViewNavigationEvent) => {
+          onEvent('onLoad', JSON.stringify(event));
         }}
       />
     </View>
