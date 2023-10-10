@@ -126,6 +126,18 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
     [self.klarnaStandaloneWebView loadURL:[NSURL URLWithString:url]];
 }
 
+- (void)goForward {
+    [self.klarnaStandaloneWebView goForward];
+}
+
+- (void)goBack {
+    [self.klarnaStandaloneWebView goBack];
+}
+
+- (void)reload {
+    [self.klarnaStandaloneWebView reload];
+}
+
 @end
 
 #endif

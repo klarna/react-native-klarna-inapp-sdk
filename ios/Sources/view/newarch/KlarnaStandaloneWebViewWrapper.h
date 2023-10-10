@@ -16,6 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)load:(nonnull NSString*)url;
 
+- (void)goForward;
+
+- (void)goBack;
+
+- (void)reload;
+
 @end
 
 NS_ASSUME_NONNULL_END

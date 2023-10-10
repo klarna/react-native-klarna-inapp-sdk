@@ -38,4 +38,37 @@ RCT_EXPORT_METHOD(load:(nonnull NSNumber*)reactTag url:(nonnull NSString*)url) {
     }];
 }
 
+RCT_EXPORT_METHOD(goForward:(nonnull NSNumber*)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        KlarnaStandaloneWebViewWrapper* view = (KlarnaStandaloneWebViewWrapper*) viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:KlarnaStandaloneWebViewWrapper.class]) {
+            RCTLogError(@"Can't find KlarnaStandaloneWebViewWrapper with tag #%@", reactTag);
+            return;
+        }
+        [view goForward];
+    }];
+}
+
+RCT_EXPORT_METHOD(goBack:(nonnull NSNumber*)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        KlarnaStandaloneWebViewWrapper* view = (KlarnaStandaloneWebViewWrapper*) viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:KlarnaStandaloneWebViewWrapper.class]) {
+            RCTLogError(@"Can't find KlarnaStandaloneWebViewWrapper with tag #%@", reactTag);
+            return;
+        }
+        [view goBack];
+    }];
+}
+
+RCT_EXPORT_METHOD(reload:(nonnull NSNumber*)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        KlarnaStandaloneWebViewWrapper* view = (KlarnaStandaloneWebViewWrapper*) viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:KlarnaStandaloneWebViewWrapper.class]) {
+            RCTLogError(@"Can't find KlarnaStandaloneWebViewWrapper with tag #%@", reactTag);
+            return;
+        }
+        [view reload];
+    }];
+}
+
 @end

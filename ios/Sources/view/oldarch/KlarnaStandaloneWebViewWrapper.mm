@@ -61,6 +61,18 @@
     [self.klarnaStandaloneWebView loadURL:[NSURL URLWithString:url]];
 }
 
+- (void)goForward {
+    [self.klarnaStandaloneWebView goForward];
+}
+
+- (void)goBack {
+    [self.klarnaStandaloneWebView goBack];
+}
+
+- (void)reload {
+    [self.klarnaStandaloneWebView reload];
+}
+
 #pragma mark - KlarnaStandaloneWebViewDelegate methods
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
