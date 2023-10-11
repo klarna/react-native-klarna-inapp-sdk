@@ -3,7 +3,10 @@ import styles from '../common/ui/Styles';
 import React, {useRef, useState} from 'react';
 import {
   KlarnaStandaloneWebView,
+  KlarnaWebViewKlarnaMessageEvent,
+  KlarnaWebViewNavigationError,
   KlarnaWebViewNavigationEvent,
+  KlarnaWebViewProgressEvent,
 } from 'react-native-klarna-inapp-sdk';
 import Button from '../common/ui/view/Button';
 
@@ -118,6 +121,15 @@ export default function StandaloneWebViewScreen() {
         }}
         onLoad={(event: KlarnaWebViewNavigationEvent) => {
           onEvent('onLoad', JSON.stringify(event));
+        }}
+        onLoadError={(event: KlarnaWebViewNavigationError) => {
+          onEvent('onLoadError', JSON.stringify(event));
+        }}
+        onProgressChange={(event: KlarnaWebViewProgressEvent) => {
+          onEvent('onProgressChange', JSON.stringify(event));
+        }}
+        onKlarnaMessage={(event: KlarnaWebViewKlarnaMessageEvent) => {
+          onEvent('onKlarnaMessage', JSON.stringify(event));
         }}
       />
     </View>

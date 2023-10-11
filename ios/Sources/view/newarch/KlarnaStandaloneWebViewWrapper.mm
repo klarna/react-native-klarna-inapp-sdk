@@ -21,31 +21,66 @@ using namespace facebook::react;
 
 @end
 
+// TODO: Add support for sending onKlarnaMessage event.
+// TODO: Double-check that we're sending the correct values for parameters of the events.
 @implementation KlarnaStandaloneWebViewWrapper
+
+// The property name in KlarnaStandaloneWebView that we want to observe for changes
+NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (id)init {
     self = [super init];
     // TODO: What should we pass here for 'returnUrl'?
-    [self initializeKlarnaStandaloneWebView: nil];
+    [self initializeKlarnaStandaloneWebView: @"returnUrl://"];
     self.klarnaStandaloneWebView.delegate = self;
+    // TODO: Where is the proper place to call removeObserver?
+    [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
     return self;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([keyPath isEqualToString:PROPERTY_NAME_ESTIMATED_PROGRESS]) {
+        // newProgress is a value in range [0..1].
+        NSNumber * newProgress = [change objectForKey:NSKeyValueChangeNewKey];
+        // We need to convert it to an int value in range [0..100]
+        int progress = [NSNumber numberWithDouble:(newProgress.doubleValue * 100)].intValue;
+        [self sendProgressChangeEvent:progress];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+- (void)sendProgressChangeEvent:(int)progress {
+    if (_eventEmitter) {
+        RCTLogInfo(@"Sending onProgressChange event");
+        NSString * url = self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString;
+        NSString * title = self.klarnaStandaloneWebView.title == nil ? @"" : self.klarnaStandaloneWebView.title;
+        std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
+        ->onProgressChange(RNKlarnaStandaloneWebViewEventEmitter::OnProgressChange{
+            .progressEvent = {
+                .webViewState = {
+                    .url = std::string([url UTF8String]),
+                    .title = std::string([title UTF8String]),
+                    .progress = std::string([[@(progress) stringValue] UTF8String]),
+                    .isLoading = self.klarnaStandaloneWebView.isLoading,
+                }
+            }
+        });
+    } else {
+        RCTLogInfo(@"_eventEmitter is nil!");
+    }
 }
 
 #pragma mark - React Native Overrides
 
-- (void)initializeKlarnaStandaloneWebView:(nullable NSString*)returnUrl {
-    if (returnUrl != nil && returnUrl.length > 0) {
-        self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl]];
-    } else {
-        // TODO: What should we do here? I mean, can returnUrl be nil?
-        self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:@"returnUrl://"]];
-    }
+- (void)initializeKlarnaStandaloneWebView:(nonnull NSString*)returnUrl {
+    self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl]];
     self.klarnaStandaloneWebView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self addSubview:self.klarnaStandaloneWebView];
     
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
-                                                 [self.klarnaStandaloneWebView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                            [self.klarnaStandaloneWebView.topAnchor constraintEqualToAnchor:self.topAnchor],
                                              [self.klarnaStandaloneWebView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
                                              [self.klarnaStandaloneWebView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
                                              [self.klarnaStandaloneWebView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
@@ -101,8 +136,11 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 #pragma mark - KlarnaStandaloneWebViewDelegate methods
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
-    if(_eventEmitter){
+    if (_eventEmitter) {
         RCTLogInfo(@"Sending onBeforeLoad event");
+        // 'estimatedProgress' is a double value in range [0..1].
+        // We need to convert it to an int value in range [0..100].
+        int progress = (int) (self.klarnaStandaloneWebView.estimatedProgress * 100);
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
         ->onBeforeLoad(RNKlarnaStandaloneWebViewEventEmitter::OnBeforeLoad{
             .navigationEvent = {
@@ -111,7 +149,7 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
                 .webViewState = {
                     .url = std::string([webView.url.absoluteString UTF8String]),
                     .title = std::string([webView.title UTF8String]),
-                    .progress = std::string([[[NSNumber numberWithDouble:webView.estimatedProgress] stringValue] UTF8String]),
+                    .progress = std::string([[@(progress) stringValue] UTF8String]),
                     .isLoading = webView.isLoading,
                 }
             }
@@ -122,8 +160,11 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFinish:(WKNavigation * _Nonnull)navigation {
-    if(_eventEmitter){
+    if (_eventEmitter) {
         RCTLogInfo(@"Sending onLoad event");
+        // 'estimatedProgress' is a double value in range [0..1].
+        // We need to convert it to an int value in range [0..100].
+        int progress = (int) (self.klarnaStandaloneWebView.estimatedProgress * 100);
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
         ->onLoad(RNKlarnaStandaloneWebViewEventEmitter::OnLoad{
             .navigationEvent = {
@@ -132,9 +173,37 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
                 .webViewState = {
                     .url = std::string([webView.url.absoluteString UTF8String]),
                     .title = std::string([webView.title UTF8String]),
-                    .progress = std::string([[[NSNumber numberWithDouble:webView.estimatedProgress] stringValue] UTF8String]),
+                    .progress = std::string([[@(progress) stringValue] UTF8String]),
                     .isLoading = webView.isLoading,
                 }
+            }
+        });
+    } else {
+        RCTLogInfo(@"_eventEmitter is nil!");
+    }
+}
+
+- (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFailProvisionalNavigation:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
+    if (_eventEmitter) {
+        RCTLogInfo(@"Sending onLoadError event");
+        std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
+        ->onLoadError(RNKlarnaStandaloneWebViewEventEmitter::OnLoadError{
+            .navigationError = {
+                .errorMessage = std::string([[error localizedDescription] UTF8String]),
+            }
+        });
+    } else {
+        RCTLogInfo(@"_eventEmitter is nil!");
+    }
+}
+
+- (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFail:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
+    if (_eventEmitter) {
+        RCTLogInfo(@"Sending onLoadError event");
+        std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
+        ->onLoadError(RNKlarnaStandaloneWebViewEventEmitter::OnLoadError{
+            .navigationError = {
+                .errorMessage = std::string([[error localizedDescription] UTF8String]),
             }
         });
     } else {

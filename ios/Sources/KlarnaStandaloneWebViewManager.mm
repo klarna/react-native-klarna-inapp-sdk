@@ -18,6 +18,9 @@ RCT_EXPORT_MODULE(RNKlarnaStandaloneWebView)
 RCT_EXPORT_VIEW_PROPERTY(returnUrl, NSString)
 RCT_EXPORT_VIEW_PROPERTY(onBeforeLoad, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onLoadError, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onProgressChange, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onKlarnaMessage, RCTDirectEventBlock)
 
 - (UIView *)view {
     KlarnaStandaloneWebViewWrapper* wrapper = [KlarnaStandaloneWebViewWrapper new];

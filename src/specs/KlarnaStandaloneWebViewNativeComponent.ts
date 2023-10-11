@@ -5,13 +5,14 @@ import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativ
 import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTypes';
 import React from 'react';
 
-// TODO add all the props
 export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   readonly returnUrl: string;
   readonly onBeforeLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   readonly onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
+  readonly onLoadError: DirectEventHandler<KlarnaWebViewNavigationError>;
+  readonly onProgressChange: DirectEventHandler<KlarnaWebViewProgressEvent>;
+  readonly onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
 }
-
 type KlarnaWebViewNavigationEvent = Readonly<{
   readonly navigationEvent: Readonly<{
     readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
@@ -19,10 +20,37 @@ type KlarnaWebViewNavigationEvent = Readonly<{
     readonly webViewState: Readonly<{
       readonly url: string;
       readonly title: string;
+      // Number is not supported for events. So for now we pass 'progress' as a string
+      // 'progress' is a number is range [0..100]
+      readonly progress: string;
+      readonly isLoading: boolean;
+    }>;
+  }>;
+}>;
+
+// TODO Add the fields when the definition is known. For now we just add an error message
+type KlarnaWebViewNavigationError = Readonly<{
+  readonly navigationError: Readonly<{
+    readonly errorMessage: string;
+  }>;
+}>;
+
+type KlarnaWebViewProgressEvent = Readonly<{
+  readonly progressEvent: Readonly<{
+    readonly webViewState: Readonly<{
+      readonly url: string;
+      readonly title: string;
       // Number is not supported for events
       readonly progress: string;
       readonly isLoading: boolean;
     }>;
+  }>;
+}>;
+
+// TODO add the fields when the definition is known. For now we just add a message
+type KlarnaWebViewKlarnaMessageEvent = Readonly<{
+  readonly klarnaMessageEvent: Readonly<{
+    readonly message: string;
   }>;
 }>;
 

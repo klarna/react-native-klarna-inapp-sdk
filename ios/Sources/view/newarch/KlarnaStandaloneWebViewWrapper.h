@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
 
-- (void) initializeKlarnaStandaloneWebView:(nullable NSString*)returnUrl;
+- (void) initializeKlarnaStandaloneWebView:(nonnull NSString*)returnUrl;
 
 - (void)load:(nonnull NSString*)url;
 
