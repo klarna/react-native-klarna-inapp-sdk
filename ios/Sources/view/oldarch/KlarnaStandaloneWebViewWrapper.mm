@@ -33,7 +33,7 @@
     if (self.returnUrl != nil && self.returnUrl.length > 0) {
         self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl]];
     } else {
-        // TODO What should we do here?
+        // TODO: What should we do here?
         self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:@"returnUrl://"]];
     }
     
@@ -80,7 +80,19 @@
         RCTLog(@"Missing 'onBeforeLoad' callback prop.");
         return;
     }
-    self.onBeforeLoad(@{});
+    // TODO: Verify that we're passing the correct values
+    self.onBeforeLoad(@{
+        @"event": @{
+            @"event": @"loadStarted",
+            @"newUrl": webView.url.absoluteString,
+            @"webViewState": @{
+                @"url": webView.url.absoluteString,
+                @"title": webView.title,
+                @"progress": @(webView.estimatedProgress),
+                @"isLoading": @(webView.isLoading)
+            }
+        }
+    });
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFinish:(WKNavigation * _Nonnull)navigation {
@@ -88,7 +100,19 @@
         RCTLog(@"Missing 'onLoad' callback prop.");
         return;
     }
-    self.onLoad(@{});
+    // TODO: Verify that we're passing the correct values
+    self.onLoad(@{
+        @"event": @{
+            @"event": @"loadEnded",
+            @"newUrl": webView.url.absoluteString,
+            @"webViewState": @{
+                @"url": webView.url.absoluteString,
+                @"title": webView.title,
+                @"progress": @(webView.estimatedProgress),
+                @"isLoading": @(webView.isLoading)
+            }
+        }
+    });
 }
 
 @end
