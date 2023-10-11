@@ -8,35 +8,23 @@ import React from 'react';
 // TODO add all the props
 export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   readonly returnUrl: string;
-  readonly onBeforeLoad: DirectEventHandler<
-    Readonly<{
-      readonly event: Readonly<{
-        readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
-        readonly newUrl: string;
-        readonly webViewState: Readonly<{
-          readonly url: string;
-          readonly title: string;
-          readonly progress: number;
-          readonly isLoading: boolean;
-        }>;
-      }>;
-    }>
-  >;
-  readonly onLoad: DirectEventHandler<
-    Readonly<{
-      readonly event: Readonly<{
-        readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
-        readonly newUrl: string;
-        readonly webViewState: Readonly<{
-          readonly url: string;
-          readonly title: string;
-          readonly progress: number;
-          readonly isLoading: boolean;
-        }>;
-      }>;
-    }>
-  >;
+  readonly onBeforeLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
+  readonly onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
 }
+
+type KlarnaWebViewNavigationEvent = Readonly<{
+  readonly navigationEvent: Readonly<{
+    readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
+    readonly newUrl: string;
+    readonly webViewState: Readonly<{
+      readonly url: string;
+      readonly title: string;
+      // Number is not supported for events
+      readonly progress: string;
+      readonly isLoading: boolean;
+    }>;
+  }>;
+}>;
 
 type KlarnaStandaloneWebViewNativeComponentType =
   HostComponent<RNKlarnaStandaloneWebViewProps>;

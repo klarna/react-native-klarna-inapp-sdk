@@ -44,7 +44,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         public void onPageStarted(@Nullable KlarnaStandaloneWebView view, @Nullable String url, @Nullable Bitmap favicon) {
             WritableMap params = ArgumentsUtil.createMap(
                     new HashMap<>() {{
-                        put("event", buildNavigationEventMap(view, KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD));
+                        put("navigationEvent", buildNavigationEventMap(view, KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD));
                     }}
             );
             postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD, params, view);
@@ -55,7 +55,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
             // FIXME: Sometimes this method get called more than once per page!
             WritableMap params = ArgumentsUtil.createMap(
                     new HashMap<>() {{
-                        put("event", buildNavigationEventMap(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD));
+                        put("navigationEvent", buildNavigationEventMap(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD));
                     }}
             );
             postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD, params, view);
@@ -208,7 +208,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
                     // TODO Verify that we're passing the correct values
                     put("url", view.getUrl());
                     put("title", view.getTitle());
-                    put("progress", view.getProgress());
+                    put("progress", String.valueOf(view.getProgress()));
                     put("isLoading", event == KlarnaStandaloneWebViewEvent.Event.ON_BEFORE_LOAD);
                 }}
         );

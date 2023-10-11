@@ -104,7 +104,18 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
     if(_eventEmitter){
         RCTLogInfo(@"Sending onBeforeLoad event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onBeforeLoad(RNKlarnaStandaloneWebViewEventEmitter::OnBeforeLoad{});
+        ->onBeforeLoad(RNKlarnaStandaloneWebViewEventEmitter::OnBeforeLoad{
+            .navigationEvent = {
+                .event = facebook::react::RNKlarnaStandaloneWebViewEventEmitter::OnBeforeLoadNavigationEventEvent::LoadStarted,
+                .newUrl = std::string([webView.url.absoluteString UTF8String]),
+                .webViewState = {
+                    .url = std::string([webView.url.absoluteString UTF8String]),
+                    .title = std::string([webView.title UTF8String]),
+                    .progress = std::string([[[NSNumber numberWithDouble:webView.estimatedProgress] stringValue] UTF8String]),
+                    .isLoading = webView.isLoading,
+                }
+            }
+        });
     } else {
         RCTLogInfo(@"_eventEmitter is nil!");
     }
@@ -114,7 +125,18 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
     if(_eventEmitter){
         RCTLogInfo(@"Sending onLoad event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onLoad(RNKlarnaStandaloneWebViewEventEmitter::OnLoad{});
+        ->onLoad(RNKlarnaStandaloneWebViewEventEmitter::OnLoad{
+            .navigationEvent = {
+                .event = facebook::react::RNKlarnaStandaloneWebViewEventEmitter::OnLoadNavigationEventEvent::LoadEnded,
+                .newUrl = std::string([webView.url.absoluteString UTF8String]),
+                .webViewState = {
+                    .url = std::string([webView.url.absoluteString UTF8String]),
+                    .title = std::string([webView.title UTF8String]),
+                    .progress = std::string([[[NSNumber numberWithDouble:webView.estimatedProgress] stringValue] UTF8String]),
+                    .isLoading = webView.isLoading,
+                }
+            }
+        });
     } else {
         RCTLogInfo(@"_eventEmitter is nil!");
     }

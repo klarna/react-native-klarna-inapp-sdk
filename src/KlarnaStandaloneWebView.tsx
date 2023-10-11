@@ -12,8 +12,10 @@ import RNKlarnaStandaloneWebView, {
 export interface KlarnaStandaloneWebViewProps {
   style?: ViewStyle;
   readonly returnUrl: string;
-  readonly onBeforeLoad?: (event: KlarnaWebViewNavigationEvent) => void;
-  readonly onLoad?: (event: KlarnaWebViewNavigationEvent) => void;
+  readonly onBeforeLoad?: (
+    navigationEvent: KlarnaWebViewNavigationEvent
+  ) => void;
+  readonly onLoad?: (navigationEvent: KlarnaWebViewNavigationEvent) => void;
 }
 
 export class KlarnaStandaloneWebView extends Component<
@@ -38,13 +40,13 @@ export class KlarnaStandaloneWebView extends Component<
         onBeforeLoad={(
           event: NativeSyntheticEvent<
             Readonly<{
-              readonly event: Readonly<{
+              readonly navigationEvent: Readonly<{
                 readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
                 readonly newUrl: string;
                 readonly webViewState: Readonly<{
                   readonly url: string;
                   readonly title: string;
-                  readonly progress: number;
+                  readonly progress: string;
                   readonly isLoading: boolean;
                 }>;
               }>;
@@ -52,19 +54,19 @@ export class KlarnaStandaloneWebView extends Component<
           >
         ) => {
           if (this.props.onBeforeLoad != null) {
-            this.props.onBeforeLoad(event.nativeEvent.event);
+            this.props.onBeforeLoad(event.nativeEvent.navigationEvent);
           }
         }}
         onLoad={(
           event: NativeSyntheticEvent<
             Readonly<{
-              readonly event: Readonly<{
+              readonly navigationEvent: Readonly<{
                 readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
                 readonly newUrl: string;
                 readonly webViewState: Readonly<{
                   readonly url: string;
                   readonly title: string;
-                  readonly progress: number;
+                  readonly progress: string;
                   readonly isLoading: boolean;
                 }>;
               }>;
@@ -72,7 +74,7 @@ export class KlarnaStandaloneWebView extends Component<
           >
         ) => {
           if (this.props.onLoad != null) {
-            this.props.onLoad(event.nativeEvent.event);
+            this.props.onLoad(event.nativeEvent.navigationEvent);
           }
         }}
       />
@@ -114,7 +116,7 @@ export interface KlarnaWebViewNavigationEvent {
   readonly webViewState: Readonly<{
     readonly url: string;
     readonly title: string;
-    readonly progress: number;
+    readonly progress: string;
     readonly isLoading: boolean;
   }>;
 }
