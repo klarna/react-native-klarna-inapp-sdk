@@ -23,7 +23,10 @@ const AppStack = () => {
         options={{title: 'Klarna MSDK TestApp'}}
       />
       <Stack.Screen name="Payments" component={PaymentsScreen} />
-      <Stack.Screen name="StandaloneWebView" component={StandaloneWebViewScreen} />
+      <Stack.Screen
+        name="StandaloneWebView"
+        component={StandaloneWebViewScreen}
+      />
     </Stack.Navigator>
   );
 };
