@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-// TODO Add support for sending onKlarnaMessage events.
 public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpec<KlarnaStandaloneWebView> {
 
     // Commands that can be triggered from React Native side
@@ -47,12 +46,14 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     private final KlarnaEventHandler klarnaEventHandler = new KlarnaEventHandler() {
         @Override
         public void onEvent(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaProductEvent klarnaProductEvent) {
-            // Not used as of now
+            if (klarnaComponent instanceof KlarnaStandaloneWebView) {
+                klarnaStandaloneWebViewEventSender.sendKlarnaMessageEvent((KlarnaStandaloneWebView) klarnaComponent, klarnaProductEvent);
+            }
         }
 
         @Override
         public void onError(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
-            // No used as of now
+            // Not used as of now
         }
     };
     private final KlarnaStandaloneWebViewClient klarnaStandaloneWebViewClient = new KlarnaStandaloneWebViewClient() {

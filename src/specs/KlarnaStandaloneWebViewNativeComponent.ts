@@ -47,10 +47,13 @@ type KlarnaWebViewProgressEvent = Readonly<{
   }>;
 }>;
 
-// TODO add the fields when the definition is known. For now we just add a message
 type KlarnaWebViewKlarnaMessageEvent = Readonly<{
   readonly klarnaMessageEvent: Readonly<{
-    readonly message: string;
+    readonly action: string;
+    // Dictionary is not support for events
+    // readonly params: { [key: string]: any };
+    // TODO What is a KlarnaWebViewComponent?
+    // readonly component: KlarnaWebViewComponent;
   }>;
 }>;
 

@@ -5,13 +5,12 @@
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>
 
-@interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate>
+@interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate, KlarnaEventHandler>
 
 @property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
 
 @end
 
-// TODO: Add support for sending onKlarnaMessage event.
 // TODO: Double-check that we're sending the correct values for parameters of the events.
 @implementation KlarnaStandaloneWebViewWrapper
 
@@ -22,6 +21,8 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
     self = [super init];
     [self initializeKlarnaStandaloneWebView];
     self.klarnaStandaloneWebView.delegate = self;
+    self.klarnaStandaloneWebView.eventHandler = self;
+    // TODO: Where is the proper place to call removeObserver?
     [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
     return self;
 }
@@ -173,6 +174,24 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
             @"errorMessage": error.description,
         }
     });
+}
+
+#pragma mark - KlarnaEventHandler methods
+
+- (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent dispatchedEvent:(KlarnaProductEvent * _Nonnull)event {
+    if (!self.onKlarnaMessage) {
+        RCTLog(@"Missing 'onKlarnaMessage' callback prop.");
+        return;
+    }
+    self.onKlarnaMessage(@{
+        @"klarnaMessageEvent": @{
+            @"action": event.action
+        }
+    });
+}
+
+- (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent encounteredError:(KlarnaError * _Nonnull)error {
+    // Not used as of now
 }
 
 @end

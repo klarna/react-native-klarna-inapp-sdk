@@ -121,7 +121,9 @@ export class KlarnaStandaloneWebView extends Component<
           event: NativeSyntheticEvent<
             Readonly<{
               readonly klarnaMessageEvent: Readonly<{
-                readonly message: string;
+                action: string;
+                // Dictionary is not support for events
+                // readonly params: { [key: string]: any };
               }>;
             }>
           >
@@ -188,7 +190,11 @@ export interface KlarnaWebViewProgressEvent {
 }
 
 export interface KlarnaWebViewKlarnaMessageEvent {
-  readonly message: string;
+  readonly action: string;
+  // Dictionary is not support for events
+  // readonly params: { [key: string]: any };
+  // TODO What is a KlarnaWebViewComponent?
+  // readonly component: KlarnaWebViewComponent;
 }
 
 export default KlarnaStandaloneWebView;

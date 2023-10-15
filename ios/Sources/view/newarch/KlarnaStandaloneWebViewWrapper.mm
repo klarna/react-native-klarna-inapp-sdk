@@ -15,7 +15,7 @@
 
 using namespace facebook::react;
 
-@interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate, RCTRNKlarnaStandaloneWebViewViewProtocol>
+@interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate, KlarnaEventHandler, RCTRNKlarnaStandaloneWebViewViewProtocol>
 
 @property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
 
@@ -33,6 +33,7 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
     // TODO: What should we pass here for 'returnUrl'?
     [self initializeKlarnaStandaloneWebView: @"returnUrl://"];
     self.klarnaStandaloneWebView.delegate = self;
+    self.klarnaStandaloneWebView.eventHandler = self;
     // TODO: Where is the proper place to call removeObserver?
     [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
     return self;
@@ -209,6 +210,26 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
     } else {
         RCTLogInfo(@"_eventEmitter is nil!");
     }
+}
+
+#pragma mark - RCTRNKlarnaStandaloneWebViewViewProtocol methods
+
+- (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent dispatchedEvent:(KlarnaProductEvent * _Nonnull)event {
+    if (_eventEmitter) {
+        RCTLogInfo(@"Sending onKlarnaMessage event");
+        std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
+        ->onKlarnaMessage(RNKlarnaStandaloneWebViewEventEmitter::OnKlarnaMessage{
+            .klarnaMessageEvent = {
+                .action = std::string([[event action] UTF8String]),
+            }
+        });
+    } else {
+        RCTLogInfo(@"_eventEmitter is nil!");
+    }
+}
+
+- (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent encounteredError:(KlarnaError * _Nonnull)error {
+    // Not used as of now
 }
 
 #pragma mark - RCTRNKlarnaStandaloneWebViewViewProtocol methods
