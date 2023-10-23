@@ -12,6 +12,9 @@ export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   readonly onLoadError: DirectEventHandler<KlarnaWebViewNavigationError>;
   readonly onProgressChange: DirectEventHandler<KlarnaWebViewProgressEvent>;
   readonly onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
+  /* Android only */
+  readonly onRenderProcessGone: DirectEventHandler<KlarnaWebViewRenderProcessGoneEvent>;
+  /* End of Android only */
 }
 type KlarnaWebViewNavigationEvent = Readonly<{
   readonly navigationEvent: Readonly<{
@@ -54,6 +57,12 @@ type KlarnaWebViewKlarnaMessageEvent = Readonly<{
     // readonly params: { [key: string]: any };
     // TODO What is a KlarnaWebViewComponent?
     // readonly component: KlarnaWebViewComponent;
+  }>;
+}>;
+
+type KlarnaWebViewRenderProcessGoneEvent = Readonly<{
+  readonly renderProcessGoneEvent: Readonly<{
+    readonly didCrash: boolean;
   }>;
 }>;
 

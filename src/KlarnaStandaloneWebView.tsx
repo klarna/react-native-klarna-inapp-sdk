@@ -9,7 +9,7 @@ import RNKlarnaStandaloneWebView, {
   type RNKlarnaStandaloneWebViewProps,
 } from './specs/KlarnaStandaloneWebViewNativeComponent';
 
-export interface KlarnaStandaloneWebViewProps {
+export interface KlarnaWebViewProps {
   style?: ViewStyle;
   readonly returnUrl: string;
   readonly onBeforeLoad?: (
@@ -25,17 +25,22 @@ export interface KlarnaStandaloneWebViewProps {
   readonly onKlarnaMessage?: (
     klarnaMessageEvent: KlarnaWebViewKlarnaMessageEvent
   ) => void;
+  /* Android only */
+  readonly onRenderProcessGone?: (
+    renderProcessGoneEvent: KlarnaWebViewRenderProcessGoneEvent
+  ) => void;
+  /* End of Android only */
 }
 
 export class KlarnaStandaloneWebView extends Component<
-  KlarnaStandaloneWebViewProps,
+  KlarnaWebViewProps,
   any
 > {
   standaloneWebViewRef: RefObject<
     Component<RNKlarnaStandaloneWebViewProps> & Readonly<NativeMethods>
   >;
 
-  constructor(props: KlarnaStandaloneWebViewProps) {
+  constructor(props: KlarnaWebViewProps) {
     super(props);
     this.standaloneWebViewRef = React.createRef();
   }
@@ -121,7 +126,7 @@ export class KlarnaStandaloneWebView extends Component<
           event: NativeSyntheticEvent<
             Readonly<{
               readonly klarnaMessageEvent: Readonly<{
-                action: string;
+                readonly action: string;
                 // Dictionary is not support for events
                 // readonly params: { [key: string]: any };
               }>;
@@ -130,6 +135,21 @@ export class KlarnaStandaloneWebView extends Component<
         ) => {
           if (this.props.onKlarnaMessage != null) {
             this.props.onKlarnaMessage(event.nativeEvent.klarnaMessageEvent);
+          }
+        }}
+        onRenderProcessGone={(
+          event: NativeSyntheticEvent<
+            Readonly<{
+              readonly renderProcessGoneEvent: Readonly<{
+                readonly didCrash: boolean;
+              }>;
+            }>
+          >
+        ) => {
+          if (this.props.onRenderProcessGone != null) {
+            this.props.onRenderProcessGone(
+              event.nativeEvent.renderProcessGoneEvent
+            );
           }
         }}
       />
@@ -195,6 +215,10 @@ export interface KlarnaWebViewKlarnaMessageEvent {
   // readonly params: { [key: string]: any };
   // TODO What is a KlarnaWebViewComponent?
   // readonly component: KlarnaWebViewComponent;
+}
+
+export interface KlarnaWebViewRenderProcessGoneEvent {
+  readonly didCrash: boolean;
 }
 
 export default KlarnaStandaloneWebView;

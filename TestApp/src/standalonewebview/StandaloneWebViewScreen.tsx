@@ -7,6 +7,7 @@ import {
   KlarnaWebViewNavigationError,
   KlarnaWebViewNavigationEvent,
   KlarnaWebViewProgressEvent,
+  KlarnaWebViewRenderProcessGoneEvent,
 } from 'react-native-klarna-inapp-sdk';
 import Button from '../common/ui/view/Button';
 
@@ -131,6 +132,9 @@ export default function StandaloneWebViewScreen() {
         }}
         onKlarnaMessage={(event: KlarnaWebViewKlarnaMessageEvent) => {
           onEvent('onKlarnaMessage', JSON.stringify(event));
+        }}
+        onRenderProcessGone={(event: KlarnaWebViewRenderProcessGoneEvent) => {
+          onEvent('onRenderProcessGone', JSON.stringify(event));
         }}
       />
     </View>

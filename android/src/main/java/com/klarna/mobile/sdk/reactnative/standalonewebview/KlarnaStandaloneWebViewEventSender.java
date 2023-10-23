@@ -28,6 +28,7 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_NAVIGATION_ERROR = "navigationError";
     private static final String PARAM_NAME_PROGRESS_EVENT = "progressEvent";
     private static final String PARAM_NAME_KLARNA_MESSAGE_EVENT = "klarnaMessageEvent";
+    private static final String PARAM_NAME_RENDER_PROCESS_GONE_EVENT = "renderProcessGoneEvent";
     private static final String PARAM_NAME_ERROR_MESSAGE = "errorMessage";
     private static final String PARAM_NAME_EVENT = "event";
     private static final String PARAM_NAME_NEW_URL = "newUrl";
@@ -37,6 +38,7 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_IS_LOADING = "isLoading";
     private static final String PARAM_NAME_WEB_VIEW_STATE = "webViewState";
     private static final String PARAM_NAME_ACTION = "action";
+    private static final String PARAM_NAME_DID_CRASH = "didCrash";
 
     private final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher;
 
@@ -62,18 +64,25 @@ public class KlarnaStandaloneWebViewEventSender {
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_ERROR, params, view);
     }
 
-    public void sendNavigationEvent(KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event) {
+    public void sendNavigationEvent(@Nullable KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event) {
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
             put(PARAM_NAME_NAVIGATION_EVENT, buildNavigationEventMap(view, event));
         }});
         postEventForView(event, params, view);
     }
 
-    public void sendKlarnaMessageEvent(@NonNull KlarnaStandaloneWebView view, @NonNull KlarnaProductEvent klarnaProductEvent) {
+    public void sendKlarnaMessageEvent(@Nullable KlarnaStandaloneWebView view, @NonNull KlarnaProductEvent klarnaProductEvent) {
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
             put(PARAM_NAME_KLARNA_MESSAGE_EVENT, buildKlarnaMessageEventMap(klarnaProductEvent));
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE, params, view);
+    }
+
+    public void sendRenderProcessGoneEvent(@Nullable KlarnaStandaloneWebView view, boolean didCrash) {
+        WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
+            put(PARAM_NAME_RENDER_PROCESS_GONE_EVENT, buildRenderProcessGoneEventMap(didCrash));
+        }});
+        postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE, params, view);
     }
 
     /**
@@ -83,7 +92,7 @@ public class KlarnaStandaloneWebViewEventSender {
      * @param additionalParams payload of the event
      * @param view             source native view
      */
-    private void postEventForView(KlarnaStandaloneWebViewEvent.Event event, WritableMap additionalParams, KlarnaStandaloneWebView view) {
+    private void postEventForView(KlarnaStandaloneWebViewEvent.Event event, WritableMap additionalParams, @Nullable KlarnaStandaloneWebView view) {
         KlarnaStandaloneWebView klarnaStandaloneWebView = getKlarnaStandaloneWebView(view);
         if (klarnaStandaloneWebView != null) {
             EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) klarnaStandaloneWebView.getContext(), klarnaStandaloneWebView.getId());
@@ -95,7 +104,10 @@ public class KlarnaStandaloneWebViewEventSender {
     }
 
     @Nullable
-    private KlarnaStandaloneWebView getKlarnaStandaloneWebView(KlarnaStandaloneWebView klarnaStandaloneWebView) {
+    private KlarnaStandaloneWebView getKlarnaStandaloneWebView(@Nullable KlarnaStandaloneWebView klarnaStandaloneWebView) {
+        if (klarnaStandaloneWebView == null) {
+            return null;
+        }
         for (WeakReference<KlarnaStandaloneWebView> reference : viewToDispatcher.keySet()) {
             KlarnaStandaloneWebView webView = reference.get();
             if (webView != null && webView == klarnaStandaloneWebView) {
@@ -130,6 +142,12 @@ public class KlarnaStandaloneWebViewEventSender {
     private ReadableMap buildKlarnaMessageEventMap(KlarnaProductEvent klarnaProductEvent) {
         return ArgumentsUtil.createMap(new HashMap<>() {{
             put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
+        }});
+    }
+
+    private ReadableMap buildRenderProcessGoneEventMap(boolean didCrash) {
+        return ArgumentsUtil.createMap(new HashMap<>() {{
+            put(PARAM_NAME_DID_CRASH, didCrash);
         }});
     }
 

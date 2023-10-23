@@ -3,6 +3,7 @@ package com.klarna.mobile.sdk.reactnative.standalonewebview;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 
@@ -83,6 +84,15 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         @Override
         public void onProgressChanged(@Nullable KlarnaStandaloneWebView view, int newProgress) {
             klarnaStandaloneWebViewEventSender.sendProgressChangeEvent(view, newProgress);
+        }
+
+        @Override
+        public void onRenderProcessGone(@Nullable KlarnaStandaloneWebView view, @Nullable RenderProcessGoneDetail detail) {
+            boolean didCrash = false;
+            if (detail != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                didCrash = detail.didCrash();
+            }
+            klarnaStandaloneWebViewEventSender.sendRenderProcessGoneEvent(view, didCrash);
         }
     };
 

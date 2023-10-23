@@ -26,8 +26,10 @@ public class KlarnaStandaloneWebViewEvent extends Event<KlarnaStandaloneWebViewE
         ON_LOAD_ERROR("onLoadError"),
         // This event is sent when the progress of loading a page changes
         ON_PROGRESS_CHANGE("onProgressChange"),
-        // This event is sent when the Mobile SDK wants to send a message to the Web View
-        ON_KLARNA_MESSAGE("onKlarnaMessage");
+        // This event is sent when the Mobile SDK wants to send an event to the Web View
+        ON_KLARNA_MESSAGE("onKlarnaMessage"),
+        // This event is sent when the WebView's render process has exited
+        ON_RENDER_PROCESS_GONE("onRenderProcessGone");
 
         public final String name;
 
