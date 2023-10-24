@@ -179,6 +179,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_ERROR.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_ERROR.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_PROGRESS_CHANGE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_PROGRESS_CHANGE.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name));
+        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE.name));
         return builder.build();
     }
 
