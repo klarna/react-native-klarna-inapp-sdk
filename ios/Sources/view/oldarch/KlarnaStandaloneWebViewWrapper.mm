@@ -95,7 +95,12 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 #pragma mark - Klarna Standalone Web View Methods
 
 - (void)load:(nonnull NSString *)url {
-    [self.klarnaStandaloneWebView loadURL:[NSURL URLWithString:url]];
+    NSURL *urlToLoad = [NSURL URLWithString:url];
+    if ([urlToLoad scheme] && [urlToLoad host] && urlToLoad) {
+      [self.klarnaStandaloneWebView loadURL:urlToLoad];
+    } else {
+        RCTLogInfo(@"url is not a valid URL");
+    }
 }
 
 - (void)goForward {

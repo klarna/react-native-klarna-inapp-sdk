@@ -21,7 +21,6 @@ using namespace facebook::react;
 
 @end
 
-// TODO: Add support for sending onKlarnaMessage event.
 // TODO: Double-check that we're sending the correct values for parameters of the events.
 @implementation KlarnaStandaloneWebViewWrapper
 
@@ -235,7 +234,12 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 #pragma mark - RCTRNKlarnaStandaloneWebViewViewProtocol methods
 
 - (void)load:(nonnull NSString *)url {
-    [self.klarnaStandaloneWebView loadURL:[NSURL URLWithString:url]];
+    NSURL *urlToLoad = [NSURL URLWithString:url];
+    if ([urlToLoad scheme] && [urlToLoad host] && urlToLoad) {
+      [self.klarnaStandaloneWebView loadURL:urlToLoad];
+    } else {
+        RCTLogInfo(@"url is not a valid URL");
+    }
 }
 
 - (void)goForward {
