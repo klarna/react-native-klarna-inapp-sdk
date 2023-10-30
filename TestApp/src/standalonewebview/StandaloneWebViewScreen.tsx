@@ -25,6 +25,7 @@ export default function StandaloneWebViewScreen() {
         keyboardType={`url`}
         autoCorrect={false}
         autoCapitalize={'none'}
+        numberOfLines={1}
         style={styles.urlInput}
         defaultValue={url}
         placeholder="Enter the URL to load..."
