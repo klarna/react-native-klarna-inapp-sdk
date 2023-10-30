@@ -65,7 +65,6 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
 
         @Override
         public void onPageFinished(@Nullable KlarnaStandaloneWebView view, @Nullable String url) {
-            // FIXME: Sometimes onPageFinished gets called more than once per page!
             klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD);
         }
 
