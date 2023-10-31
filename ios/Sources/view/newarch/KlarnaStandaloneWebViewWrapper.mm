@@ -21,7 +21,6 @@ using namespace facebook::react;
 
 @end
 
-// TODO: Double-check that we're sending the correct values for parameters of the events.
 @implementation KlarnaStandaloneWebViewWrapper
 
 // The property name in KlarnaStandaloneWebView that we want to observe for changes
@@ -33,9 +32,12 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
     [self initializeKlarnaStandaloneWebView: @"returnUrl://"];
     self.klarnaStandaloneWebView.delegate = self;
     self.klarnaStandaloneWebView.eventHandler = self;
-    // TODO: Where is the proper place to call removeObserver?
     [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
     return self;
+}
+
+-(void)dealloc {
+    [self.klarnaStandaloneWebView removeObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS context:nil];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
