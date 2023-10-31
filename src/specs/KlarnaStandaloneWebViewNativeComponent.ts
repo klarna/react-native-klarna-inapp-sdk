@@ -6,63 +6,63 @@ import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTyp
 import React from 'react';
 
 export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
-  readonly returnUrl: string;
-  readonly onBeforeLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
-  readonly onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
-  readonly onLoadError: DirectEventHandler<KlarnaWebViewNavigationError>;
-  readonly onProgressChange: DirectEventHandler<KlarnaWebViewProgressEvent>;
-  readonly onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
+  returnUrl: string;
+  onBeforeLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
+  onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
+  onLoadError: DirectEventHandler<KlarnaWebViewNavigationError>;
+  onProgressChange: DirectEventHandler<KlarnaWebViewProgressEvent>;
+  onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
   /* Android only */
-  readonly onRenderProcessGone: DirectEventHandler<KlarnaWebViewRenderProcessGoneEvent>;
+  onRenderProcessGone: DirectEventHandler<KlarnaWebViewRenderProcessGoneEvent>;
   /* End of Android only */
 }
 type KlarnaWebViewNavigationEvent = Readonly<{
-  readonly navigationEvent: Readonly<{
-    readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
-    readonly newUrl: string;
-    readonly webViewState: Readonly<{
-      readonly url: string;
-      readonly title: string;
-      // Number is not supported for events. So for now we pass 'progress' as a string
+  navigationEvent: Readonly<{
+    event: 'willLoad' | 'loadStarted' | 'loadEnded';
+    newUrl: string;
+    webViewState: Readonly<{
+      url: string;
+      title: string;
+      // Number is not supported for events. So for now we pass 'progress' as a string.
       // 'progress' is a number is range [0..100]
-      readonly progress: string;
-      readonly isLoading: boolean;
+      progress: string;
+      isLoading: boolean;
     }>;
   }>;
 }>;
 
 // TODO Add the fields when the definition is known. For now we just add an error message
 type KlarnaWebViewNavigationError = Readonly<{
-  readonly navigationError: Readonly<{
-    readonly errorMessage: string;
+  navigationError: Readonly<{
+    errorMessage: string;
   }>;
 }>;
 
 type KlarnaWebViewProgressEvent = Readonly<{
-  readonly progressEvent: Readonly<{
-    readonly webViewState: Readonly<{
-      readonly url: string;
-      readonly title: string;
+  progressEvent: Readonly<{
+    webViewState: Readonly<{
+      url: string;
+      title: string;
       // Number is not supported for events
-      readonly progress: string;
-      readonly isLoading: boolean;
+      progress: string;
+      isLoading: boolean;
     }>;
   }>;
 }>;
 
 type KlarnaWebViewKlarnaMessageEvent = Readonly<{
-  readonly klarnaMessageEvent: Readonly<{
-    readonly action: string;
+  klarnaMessageEvent: Readonly<{
+    action: string;
     // Dictionary is not support for events
-    // readonly params: { [key: string]: any };
+    // params: { [key: string]: any };
     // TODO What is a KlarnaWebViewComponent?
-    // readonly component: KlarnaWebViewComponent;
+    // component: KlarnaWebViewComponent;
   }>;
 }>;
 
 type KlarnaWebViewRenderProcessGoneEvent = Readonly<{
-  readonly renderProcessGoneEvent: Readonly<{
-    readonly didCrash: boolean;
+  renderProcessGoneEvent: Readonly<{
+    didCrash: boolean;
   }>;
 }>;
 
