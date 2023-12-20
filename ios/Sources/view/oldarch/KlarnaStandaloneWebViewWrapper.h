@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) RCTDirectEventBlock onLoadStart;
 @property (nonatomic, copy) RCTDirectEventBlock onLoad;
-@property (nonatomic, copy) RCTDirectEventBlock onLoadError;
+@property (nonatomic, copy) RCTDirectEventBlock onError;
 @property (nonatomic, copy) RCTDirectEventBlock onLoadProgress;
 @property (nonatomic, copy) RCTDirectEventBlock onKlarnaMessage;
 

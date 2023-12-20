@@ -46,7 +46,7 @@ public class KlarnaStandaloneWebViewEventSender {
         this.viewToDispatcher = viewToDispatcher;
     }
 
-    public void sendProgressChangeEvent(@Nullable KlarnaStandaloneWebView view, int progress) {
+    public void sendLoadProgressEvent(@Nullable KlarnaStandaloneWebView view, int progress) {
         ReadableMap webViewStateMap = (view == null) ? Arguments.createMap() : buildWebViewStateMap(view.getUrl(), view.getTitle(), progress);
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
             put(PARAM_NAME_PROGRESS_EVENT, webViewStateMap);
@@ -54,14 +54,14 @@ public class KlarnaStandaloneWebViewEventSender {
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS, params, view);
     }
 
-    public void sendLoadErrorEvent(@Nullable KlarnaStandaloneWebView view, String description) {
+    public void sendErrorEvent(@Nullable KlarnaStandaloneWebView view, String description) {
         ReadableMap navigationErrorMap = ArgumentsUtil.createMap(new HashMap<>() {{
             put(PARAM_NAME_ERROR_MESSAGE, description);
         }});
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
             put(PARAM_NAME_NAVIGATION_ERROR, navigationErrorMap);
         }});
-        postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_ERROR, params, view);
+        postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_ERROR, params, view);
     }
 
     public void sendNavigationEvent(@Nullable KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event) {

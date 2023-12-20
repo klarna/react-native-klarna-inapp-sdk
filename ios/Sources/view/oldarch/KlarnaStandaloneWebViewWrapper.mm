@@ -160,11 +160,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFailProvisionalNavigation:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
-    if (!self.onLoadError) {
-        RCTLog(@"Missing 'onLoadError' callback prop.");
+    if (!self.onError) {
+        RCTLog(@"Missing 'onError' callback prop.");
         return;
     }
-    self.onLoadError(@{
+    self.onError(@{
         @"navigationError": @{
             @"errorMessage": error.description,
         }
@@ -172,11 +172,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFail:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
-    if (!self.onLoadError) {
-        RCTLog(@"Missing 'onLoadError' callback prop.");
+    if (!self.onError) {
+        RCTLog(@"Missing 'onError' callback prop.");
         return;
     }
-    self.onLoadError(@{
+    self.onError(@{
         @"navigationError": @{
             @"errorMessage": error.description,
         }

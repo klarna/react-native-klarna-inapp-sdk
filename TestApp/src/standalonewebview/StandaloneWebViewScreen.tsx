@@ -125,8 +125,8 @@ export default function StandaloneWebViewScreen() {
         onLoad={(event: KlarnaWebViewNavigationEvent) => {
           onEvent('onLoad', JSON.stringify(event));
         }}
-        onLoadError={(event: KlarnaWebViewNavigationError) => {
-          onEvent('onLoadError', JSON.stringify(event));
+        onError={(event: KlarnaWebViewNavigationError) => {
+          onEvent('onError', JSON.stringify(event));
         }}
         onLoadProgress={(event: KlarnaWebViewProgressEvent) => {
           onEvent('onLoadProgress', JSON.stringify(event));

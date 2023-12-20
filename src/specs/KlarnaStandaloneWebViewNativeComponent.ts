@@ -9,7 +9,7 @@ export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   returnUrl: string;
   onLoadStart: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
-  onLoadError: DirectEventHandler<KlarnaWebViewNavigationError>;
+  onError: DirectEventHandler<KlarnaWebViewNavigationError>;
   onLoadProgress: DirectEventHandler<KlarnaWebViewProgressEvent>;
   onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
   /* Android only */

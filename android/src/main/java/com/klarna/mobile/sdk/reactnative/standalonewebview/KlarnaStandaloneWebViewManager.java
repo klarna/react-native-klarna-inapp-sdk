@@ -71,18 +71,18 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, @Nullable WebResourceRequest request, @Nullable WebResourceError error) {
             if (error != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                klarnaStandaloneWebViewEventSender.sendLoadErrorEvent(view, error.getDescription().toString());
+                klarnaStandaloneWebViewEventSender.sendErrorEvent(view, error.getDescription().toString());
             }
         }
 
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, int errorCode, @Nullable String description, @Nullable String failingUrl) {
-            klarnaStandaloneWebViewEventSender.sendLoadErrorEvent(view, description);
+            klarnaStandaloneWebViewEventSender.sendErrorEvent(view, description);
         }
 
         @Override
         public void onProgressChanged(@Nullable KlarnaStandaloneWebView view, int newProgress) {
-            klarnaStandaloneWebViewEventSender.sendProgressChangeEvent(view, newProgress);
+            klarnaStandaloneWebViewEventSender.sendLoadProgressEvent(view, newProgress);
         }
 
         @Override
@@ -175,7 +175,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         MapBuilder.Builder<String, Object> builder = MapBuilder.builder();
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD.name));
-        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_ERROR.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_ERROR.name));
+        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_ERROR.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_ERROR.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE.name));

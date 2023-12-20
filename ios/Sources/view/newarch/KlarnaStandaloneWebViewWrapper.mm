@@ -187,9 +187,9 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFailProvisionalNavigation:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
     if (_eventEmitter) {
-        RCTLogInfo(@"Sending onLoadError event");
+        RCTLogInfo(@"Sending onError event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onLoadError(RNKlarnaStandaloneWebViewEventEmitter::OnLoadError{
+        ->onError(RNKlarnaStandaloneWebViewEventEmitter::OnError{
             .navigationError = {
                 .errorMessage = std::string([[error localizedDescription] UTF8String]),
             }
@@ -201,9 +201,9 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFail:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
     if (_eventEmitter) {
-        RCTLogInfo(@"Sending onLoadError event");
+        RCTLogInfo(@"Sending onError event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onLoadError(RNKlarnaStandaloneWebViewEventEmitter::OnLoadError{
+        ->onError(RNKlarnaStandaloneWebViewEventEmitter::OnError{
             .navigationError = {
                 .errorMessage = std::string([[error localizedDescription] UTF8String]),
             }

@@ -16,9 +16,7 @@ export interface KlarnaWebViewProps {
     navigationEvent: KlarnaWebViewNavigationEvent
   ) => void;
   readonly onLoad?: (navigationEvent: KlarnaWebViewNavigationEvent) => void;
-  readonly onLoadError?: (
-    navigationError: KlarnaWebViewNavigationError
-  ) => void;
+  readonly onError?: (navigationError: KlarnaWebViewNavigationError) => void;
   readonly onLoadProgress?: (progressEvent: KlarnaWebViewProgressEvent) => void;
   readonly onKlarnaMessage?: (
     klarnaMessageEvent: KlarnaWebViewKlarnaMessageEvent
@@ -89,7 +87,7 @@ export class KlarnaStandaloneWebView extends Component<
             this.props.onLoad(event.nativeEvent.navigationEvent);
           }
         }}
-        onLoadError={(
+        onError={(
           event: NativeSyntheticEvent<
             Readonly<{
               readonly navigationError: Readonly<{
@@ -98,8 +96,8 @@ export class KlarnaStandaloneWebView extends Component<
             }>
           >
         ) => {
-          if (this.props.onLoadError != null) {
-            this.props.onLoadError(event.nativeEvent.navigationError);
+          if (this.props.onError != null) {
+            this.props.onError(event.nativeEvent.navigationError);
           }
         }}
         onLoadProgress={(
