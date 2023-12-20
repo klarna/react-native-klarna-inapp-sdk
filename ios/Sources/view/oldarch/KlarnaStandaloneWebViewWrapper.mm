@@ -42,11 +42,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 - (void)sendProgressChangeEvent:(int)progress {
-    if (!self.onProgressChange) {
+    if (!self.onLoadProgress) {
         RCTLog(@"Missing 'onProgressChange' callback prop.");
         return;
     }
-    self.onProgressChange(@{
+    self.onLoadProgress(@{
             @"progressEvent": @{
                 @"webViewState": @{
                     @"url": self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString,
@@ -120,12 +120,12 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 #pragma mark - KlarnaStandaloneWebViewDelegate methods
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
-    if (!self.onBeforeLoad) {
+    if (!self.onLoadStart) {
         RCTLog(@"Missing 'onBeforeLoad' callback prop.");
         return;
     }
     int progress = (int) (webView.estimatedProgress * 100);
-    self.onBeforeLoad(@{
+    self.onLoadStart(@{
         @"navigationEvent": @{
             @"event": @"loadStarted",
             @"newUrl": webView.url.absoluteString,

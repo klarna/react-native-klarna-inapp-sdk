@@ -54,11 +54,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (void)sendProgressChangeEvent:(int)progress {
     if (_eventEmitter) {
-        RCTLogInfo(@"Sending onProgressChange event");
+        RCTLogInfo(@"Sending onLoadProgress event");
         NSString * url = self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString;
         NSString * title = self.klarnaStandaloneWebView.title == nil ? @"" : self.klarnaStandaloneWebView.title;
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onProgressChange(RNKlarnaStandaloneWebViewEventEmitter::OnProgressChange{
+        ->onLoadProgress(RNKlarnaStandaloneWebViewEventEmitter::OnLoadProgress{
             .progressEvent = {
                 .webViewState = {
                     .url = std::string([url UTF8String]),
@@ -139,14 +139,14 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
     if (_eventEmitter) {
-        RCTLogInfo(@"Sending onBeforeLoad event");
+        RCTLogInfo(@"Sending onLoadStart event");
         // 'estimatedProgress' is a double value in range [0..1].
         // We need to convert it to an int value in range [0..100].
         int progress = (int) (self.klarnaStandaloneWebView.estimatedProgress * 100);
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onBeforeLoad(RNKlarnaStandaloneWebViewEventEmitter::OnBeforeLoad{
+        ->onLoadStart(RNKlarnaStandaloneWebViewEventEmitter::OnLoadStart{
             .navigationEvent = {
-                .event = facebook::react::RNKlarnaStandaloneWebViewEventEmitter::OnBeforeLoadNavigationEventEvent::LoadStarted,
+                .event = facebook::react::RNKlarnaStandaloneWebViewEventEmitter::OnLoadStartNavigationEventEvent::LoadStarted,
                 .newUrl = std::string([webView.url.absoluteString UTF8String]),
                 .webViewState = {
                     .url = std::string([webView.url.absoluteString UTF8String]),

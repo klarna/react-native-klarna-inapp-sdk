@@ -119,8 +119,8 @@ export default function StandaloneWebViewScreen() {
           flex: 1,
         }}
         returnUrl={'returnUrl://'}
-        onBeforeLoad={(event: KlarnaWebViewNavigationEvent) => {
-          onEvent('onBeforeLoad', JSON.stringify(event));
+        onLoadStart={(event: KlarnaWebViewNavigationEvent) => {
+          onEvent('onLoadStart', JSON.stringify(event));
         }}
         onLoad={(event: KlarnaWebViewNavigationEvent) => {
           onEvent('onLoad', JSON.stringify(event));
@@ -128,8 +128,8 @@ export default function StandaloneWebViewScreen() {
         onLoadError={(event: KlarnaWebViewNavigationError) => {
           onEvent('onLoadError', JSON.stringify(event));
         }}
-        onProgressChange={(event: KlarnaWebViewProgressEvent) => {
-          onEvent('onProgressChange', JSON.stringify(event));
+        onLoadProgress={(event: KlarnaWebViewProgressEvent) => {
+          onEvent('onLoadProgress', JSON.stringify(event));
         }}
         onKlarnaMessage={(event: KlarnaWebViewKlarnaMessageEvent) => {
           onEvent('onKlarnaMessage', JSON.stringify(event));

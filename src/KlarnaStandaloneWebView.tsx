@@ -12,16 +12,14 @@ import RNKlarnaStandaloneWebView, {
 export interface KlarnaWebViewProps {
   style?: ViewStyle;
   readonly returnUrl: string;
-  readonly onBeforeLoad?: (
+  readonly onLoadStart?: (
     navigationEvent: KlarnaWebViewNavigationEvent
   ) => void;
   readonly onLoad?: (navigationEvent: KlarnaWebViewNavigationEvent) => void;
   readonly onLoadError?: (
     navigationError: KlarnaWebViewNavigationError
   ) => void;
-  readonly onProgressChange?: (
-    progressEvent: KlarnaWebViewProgressEvent
-  ) => void;
+  readonly onLoadProgress?: (progressEvent: KlarnaWebViewProgressEvent) => void;
   readonly onKlarnaMessage?: (
     klarnaMessageEvent: KlarnaWebViewKlarnaMessageEvent
   ) => void;
@@ -51,7 +49,7 @@ export class KlarnaStandaloneWebView extends Component<
         ref={this.standaloneWebViewRef}
         style={this.props.style}
         returnUrl={this.props.returnUrl || ''}
-        onBeforeLoad={(
+        onLoadStart={(
           event: NativeSyntheticEvent<
             Readonly<{
               readonly navigationEvent: Readonly<{
@@ -67,8 +65,8 @@ export class KlarnaStandaloneWebView extends Component<
             }>
           >
         ) => {
-          if (this.props.onBeforeLoad != null) {
-            this.props.onBeforeLoad(event.nativeEvent.navigationEvent);
+          if (this.props.onLoadStart != null) {
+            this.props.onLoadStart(event.nativeEvent.navigationEvent);
           }
         }}
         onLoad={(
@@ -104,7 +102,7 @@ export class KlarnaStandaloneWebView extends Component<
             this.props.onLoadError(event.nativeEvent.navigationError);
           }
         }}
-        onProgressChange={(
+        onLoadProgress={(
           event: NativeSyntheticEvent<
             Readonly<{
               readonly progressEvent: Readonly<{
@@ -118,8 +116,8 @@ export class KlarnaStandaloneWebView extends Component<
             }>
           >
         ) => {
-          if (this.props.onProgressChange != null) {
-            this.props.onProgressChange(event.nativeEvent.progressEvent);
+          if (this.props.onLoadProgress != null) {
+            this.props.onLoadProgress(event.nativeEvent.progressEvent);
           }
         }}
         onKlarnaMessage={(
@@ -211,7 +209,7 @@ export interface KlarnaWebViewProgressEvent {
 
 export interface KlarnaWebViewKlarnaMessageEvent {
   readonly action: string;
-  // Dictionary is not support for events
+  // Dictionary is not supported for events
   // readonly params: { [key: string]: any };
   // TODO What is a KlarnaWebViewComponent?
   // readonly component: KlarnaWebViewComponent;

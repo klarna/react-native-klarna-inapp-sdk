@@ -7,10 +7,10 @@ import React from 'react';
 
 export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   returnUrl: string;
-  onBeforeLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
+  onLoadStart: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   onLoadError: DirectEventHandler<KlarnaWebViewNavigationError>;
-  onProgressChange: DirectEventHandler<KlarnaWebViewProgressEvent>;
+  onLoadProgress: DirectEventHandler<KlarnaWebViewProgressEvent>;
   onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
   /* Android only */
   onRenderProcessGone: DirectEventHandler<KlarnaWebViewRenderProcessGoneEvent>;
@@ -53,7 +53,7 @@ type KlarnaWebViewProgressEvent = Readonly<{
 type KlarnaWebViewKlarnaMessageEvent = Readonly<{
   klarnaMessageEvent: Readonly<{
     action: string;
-    // Dictionary is not support for events
+    // Dictionary is not supported for events
     // params: { [key: string]: any };
     // TODO What is a KlarnaWebViewComponent?
     // component: KlarnaWebViewComponent;

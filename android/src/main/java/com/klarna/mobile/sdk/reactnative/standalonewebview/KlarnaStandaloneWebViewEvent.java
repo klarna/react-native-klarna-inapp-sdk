@@ -19,13 +19,13 @@ public class KlarnaStandaloneWebViewEvent extends Event<KlarnaStandaloneWebViewE
     // List of possible events that can be sent to the React Native side.
     public enum Event {
         // This event is sent just before loading a URL
-        ON_BEFORE_LOAD("onBeforeLoad"),
+        ON_LOAD_START("onLoadStart"),
         // This event is sent when loading a URL is done
         ON_LOAD("onLoad"),
         // This event is sent when loading a URL encounters an error
         ON_LOAD_ERROR("onLoadError"),
         // This event is sent when the progress of loading a page changes
-        ON_PROGRESS_CHANGE("onProgressChange"),
+        ON_LOAD_PROGRESS("onLoadProgress"),
         // This event is sent when the Mobile SDK wants to send an event to the Web View
         ON_KLARNA_MESSAGE("onKlarnaMessage"),
         // This event is sent when the WebView's render process has exited
