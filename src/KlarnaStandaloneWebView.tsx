@@ -8,6 +8,7 @@ import RNKlarnaStandaloneWebView, {
   RNKlarnaStandaloneWebViewCommands,
   type RNKlarnaStandaloneWebViewProps,
 } from './specs/KlarnaStandaloneWebViewNativeComponent';
+import type { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface KlarnaWebViewProps {
   style?: ViewStyle;
@@ -16,7 +17,7 @@ export interface KlarnaWebViewProps {
     navigationEvent: KlarnaWebViewNavigationEvent
   ) => void;
   readonly onLoad?: (navigationEvent: KlarnaWebViewNavigationEvent) => void;
-  readonly onError?: (navigationError: KlarnaWebViewNavigationError) => void;
+  readonly onError?: (navigationError: KlarnaWebViewError) => void;
   readonly onLoadProgress?: (progressEvent: KlarnaWebViewProgressEvent) => void;
   readonly onKlarnaMessage?: (
     klarnaMessageEvent: KlarnaWebViewKlarnaMessageEvent
@@ -51,14 +52,11 @@ export class KlarnaStandaloneWebView extends Component<
           event: NativeSyntheticEvent<
             Readonly<{
               readonly navigationEvent: Readonly<{
-                readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
-                readonly newUrl: string;
-                readonly webViewState: Readonly<{
-                  readonly url: string;
-                  readonly title: string;
-                  readonly progress: string;
-                  readonly isLoading: boolean;
-                }>;
+                readonly url: string;
+                readonly loading: boolean;
+                readonly title: string;
+                readonly canGoBack: boolean;
+                readonly canGoForward: boolean;
               }>;
             }>
           >
@@ -71,14 +69,11 @@ export class KlarnaStandaloneWebView extends Component<
           event: NativeSyntheticEvent<
             Readonly<{
               readonly navigationEvent: Readonly<{
-                readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
-                readonly newUrl: string;
-                readonly webViewState: Readonly<{
-                  readonly url: string;
-                  readonly title: string;
-                  readonly progress: string;
-                  readonly isLoading: boolean;
-                }>;
+                readonly url: string;
+                readonly loading: boolean;
+                readonly title: string;
+                readonly canGoBack: boolean;
+                readonly canGoForward: boolean;
               }>;
             }>
           >
@@ -90,26 +85,32 @@ export class KlarnaStandaloneWebView extends Component<
         onError={(
           event: NativeSyntheticEvent<
             Readonly<{
-              readonly navigationError: Readonly<{
-                readonly errorMessage: string;
+              readonly error: Readonly<{
+                readonly url: string;
+                readonly loading: boolean;
+                readonly title: string;
+                readonly canGoBack: boolean;
+                readonly canGoForward: boolean;
+                readonly code: number;
+                readonly description: string;
               }>;
             }>
           >
         ) => {
           if (this.props.onError != null) {
-            this.props.onError(event.nativeEvent.navigationError);
+            this.props.onError(event.nativeEvent.error);
           }
         }}
         onLoadProgress={(
           event: NativeSyntheticEvent<
             Readonly<{
               readonly progressEvent: Readonly<{
-                readonly webViewState: Readonly<{
-                  readonly url: string;
-                  readonly title: string;
-                  readonly progress: string;
-                  readonly isLoading: boolean;
-                }>;
+                readonly url: string;
+                readonly loading: boolean;
+                readonly title: string;
+                readonly canGoBack: boolean;
+                readonly canGoForward: boolean;
+                readonly progress: Double;
               }>;
             }>
           >
@@ -181,28 +182,24 @@ export class KlarnaStandaloneWebView extends Component<
   };
 }
 
-export interface KlarnaWebViewNavigationEvent {
-  readonly event: 'willLoad' | 'loadStarted' | 'loadEnded';
-  readonly newUrl: string;
-  readonly webViewState: Readonly<{
-    readonly url: string;
-    readonly title: string;
-    readonly progress: string;
-    readonly isLoading: boolean;
-  }>;
+export interface KlarnaWebViewNativeEvent {
+  readonly url: string;
+  readonly loading: boolean;
+  readonly title: string;
+  readonly canGoBack: boolean;
+  readonly canGoForward: boolean;
 }
 
-export interface KlarnaWebViewNavigationError {
-  readonly errorMessage: string;
+export interface KlarnaWebViewNavigationEvent
+  extends KlarnaWebViewNativeEvent {}
+
+export interface KlarnaWebViewError extends KlarnaWebViewNativeEvent {
+  readonly code: number;
+  readonly description: string;
 }
 
-export interface KlarnaWebViewProgressEvent {
-  readonly webViewState: Readonly<{
-    readonly url: string;
-    readonly title: string;
-    readonly progress: string;
-    readonly isLoading: boolean;
-  }>;
+export interface KlarnaWebViewProgressEvent extends KlarnaWebViewNativeEvent {
+  readonly progress: number;
 }
 
 export interface KlarnaWebViewKlarnaMessageEvent {

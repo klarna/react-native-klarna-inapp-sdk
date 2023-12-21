@@ -60,24 +60,24 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     private final KlarnaStandaloneWebViewClient klarnaStandaloneWebViewClient = new KlarnaStandaloneWebViewClient() {
         @Override
         public void onPageStarted(@Nullable KlarnaStandaloneWebView view, @Nullable String url, @Nullable Bitmap favicon) {
-            klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START);
+            klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START, url);
         }
 
         @Override
         public void onPageFinished(@Nullable KlarnaStandaloneWebView view, @Nullable String url) {
-            klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD);
+            klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD, url);
         }
 
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, @Nullable WebResourceRequest request, @Nullable WebResourceError error) {
             if (error != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                klarnaStandaloneWebViewEventSender.sendErrorEvent(view, error.getDescription().toString());
+                klarnaStandaloneWebViewEventSender.sendErrorEvent(view, error.getErrorCode(), error.getDescription().toString());
             }
         }
 
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, int errorCode, @Nullable String description, @Nullable String failingUrl) {
-            klarnaStandaloneWebViewEventSender.sendErrorEvent(view, description);
+            klarnaStandaloneWebViewEventSender.sendErrorEvent(view, errorCode, description);
         }
 
         @Override

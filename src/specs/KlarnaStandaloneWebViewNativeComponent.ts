@@ -4,49 +4,50 @@ import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNati
 import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTypes';
 import React from 'react';
+import type { Double, Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   returnUrl: string;
   onLoadStart: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
-  onError: DirectEventHandler<KlarnaWebViewNavigationError>;
+  onError: DirectEventHandler<KlarnaWebViewError>;
   onLoadProgress: DirectEventHandler<KlarnaWebViewProgressEvent>;
   onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
   /* Android only */
   onRenderProcessGone: DirectEventHandler<KlarnaWebViewRenderProcessGoneEvent>;
   /* End of Android only */
 }
-type KlarnaWebViewNavigationEvent = Readonly<{
+
+export type KlarnaWebViewNavigationEvent = Readonly<{
   navigationEvent: Readonly<{
-    event: 'willLoad' | 'loadStarted' | 'loadEnded';
-    newUrl: string;
-    webViewState: Readonly<{
-      url: string;
-      title: string;
-      // Number is not supported for events. So for now we pass 'progress' as a string.
-      // 'progress' is a number is range [0..100]
-      progress: string;
-      isLoading: boolean;
-    }>;
+    url: string;
+    loading: boolean;
+    title: string;
+    canGoBack: boolean;
+    canGoForward: boolean;
   }>;
 }>;
 
-// TODO Add the fields when the definition is known. For now we just add an error message
-type KlarnaWebViewNavigationError = Readonly<{
-  navigationError: Readonly<{
-    errorMessage: string;
+type KlarnaWebViewError = Readonly<{
+  error: Readonly<{
+    url: string;
+    loading: boolean;
+    title: string;
+    canGoBack: boolean;
+    canGoForward: boolean;
+    code: Int32;
+    description: string;
   }>;
 }>;
 
 type KlarnaWebViewProgressEvent = Readonly<{
   progressEvent: Readonly<{
-    webViewState: Readonly<{
-      url: string;
-      title: string;
-      // Number is not supported for events
-      progress: string;
-      isLoading: boolean;
-    }>;
+    url: string;
+    loading: boolean;
+    title: string;
+    canGoBack: boolean;
+    canGoForward: boolean;
+    progress: Double;
   }>;
 }>;
 
