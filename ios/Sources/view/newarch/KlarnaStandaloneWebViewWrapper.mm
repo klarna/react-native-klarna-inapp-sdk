@@ -46,13 +46,13 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         NSNumber * newProgress = [change objectForKey:NSKeyValueChangeNewKey];
         // We need to convert it to an int value in range [0..100]
         int progress = [NSNumber numberWithDouble:(newProgress.doubleValue * 100)].intValue;
-        [self sendProgressChangeEvent:progress];
+        [self sendLoadProgressEvent:progress];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
-- (void)sendProgressChangeEvent:(int)progress {
+- (void)sendLoadProgressEvent:(int)progress {
     if (_eventEmitter) {
         RCTLogInfo(@"Sending onLoadProgress event");
         NSString * url = self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString;

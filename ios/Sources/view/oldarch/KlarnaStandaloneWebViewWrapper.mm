@@ -35,13 +35,13 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         NSNumber * newProgress = [change objectForKey:NSKeyValueChangeNewKey];
         // We need to convert it to an int value in range [0..100]
         int progress = (int) (newProgress.doubleValue * 100);
-        [self sendProgressChangeEvent:self.klarnaStandaloneWebView progress:progress];
+        [self sendLoadProgressEvent:self.klarnaStandaloneWebView progress:progress];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
-- (void)sendProgressChangeEvent:(KlarnaStandaloneWebView * _Nonnull)webView progress:(int)progress {
+- (void)sendLoadProgressEvent:(KlarnaStandaloneWebView * _Nonnull)webView progress:(int)progress {
     if (!self.onLoadProgress) {
         RCTLog(@"Missing 'onProgressChange' callback prop.");
         return;
@@ -117,7 +117,7 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
     if (!self.onLoadStart) {
-        RCTLog(@"Missing 'onBeforeLoad' callback prop.");
+        RCTLog(@"Missing 'onLoadStart' callback prop.");
         return;
     }
     NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
