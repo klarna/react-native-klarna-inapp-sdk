@@ -46,13 +46,13 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         NSNumber * newProgress = [change objectForKey:NSKeyValueChangeNewKey];
         // We need to convert it to an int value in range [0..100]
         int progress = [NSNumber numberWithDouble:(newProgress.doubleValue * 100)].intValue;
-        [self sendProgressChangeEvent:progress];
+        [self sendLoadProgressEvent:progress];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
-- (void)sendProgressChangeEvent:(int)progress {
+- (void)sendLoadProgressEvent:(int)progress {
     if (_eventEmitter) {
         RCTLogInfo(@"Sending onLoadProgress event");
         NSString * url = self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString;
@@ -60,12 +60,12 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
         ->onLoadProgress(RNKlarnaStandaloneWebViewEventEmitter::OnLoadProgress{
             .progressEvent = {
-                .webViewState = {
-                    .url = std::string([url UTF8String]),
-                    .title = std::string([title UTF8String]),
-                    .progress = std::string([[@(progress) stringValue] UTF8String]),
-                    .isLoading = self.klarnaStandaloneWebView.isLoading,
-                }
+                .url = std::string([url UTF8String]),
+                .title = std::string([title UTF8String]),
+                .loading = self.klarnaStandaloneWebView.isLoading,
+                .canGoBack = self.klarnaStandaloneWebView.canGoBack,
+                .canGoForward = self.klarnaStandaloneWebView.canGoForward,
+                .progress = (double)progress
             }
         });
     } else {
@@ -142,18 +142,14 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
         RCTLogInfo(@"Sending onLoadStart event");
         // 'estimatedProgress' is a double value in range [0..1].
         // We need to convert it to an int value in range [0..100].
-        int progress = (int) (self.klarnaStandaloneWebView.estimatedProgress * 100);
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
         ->onLoadStart(RNKlarnaStandaloneWebViewEventEmitter::OnLoadStart{
             .navigationEvent = {
-                .event = facebook::react::RNKlarnaStandaloneWebViewEventEmitter::OnLoadStartNavigationEventEvent::LoadStarted,
-                .newUrl = std::string([webView.url.absoluteString UTF8String]),
-                .webViewState = {
-                    .url = std::string([webView.url.absoluteString UTF8String]),
-                    .title = std::string([webView.title UTF8String]),
-                    .progress = std::string([[@(progress) stringValue] UTF8String]),
-                    .isLoading = webView.isLoading,
-                }
+                .url = std::string([webView.url.absoluteString UTF8String]),
+                .title = std::string([webView.title UTF8String]),
+                .loading = self.klarnaStandaloneWebView.isLoading,
+                .canGoBack = self.klarnaStandaloneWebView.canGoBack,
+                .canGoForward = self.klarnaStandaloneWebView.canGoForward,
             }
         });
     } else {
@@ -163,21 +159,17 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFinish:(WKNavigation * _Nonnull)navigation {
     if (_eventEmitter) {
-        RCTLogInfo(@"Sending onLoad event");
+        RCTLogInfo(@"Sending onLoadEnd event");
         // 'estimatedProgress' is a double value in range [0..1].
         // We need to convert it to an int value in range [0..100].
-        int progress = (int) (self.klarnaStandaloneWebView.estimatedProgress * 100);
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onLoad(RNKlarnaStandaloneWebViewEventEmitter::OnLoad{
+        ->onLoadEnd(RNKlarnaStandaloneWebViewEventEmitter::OnLoadEnd{
             .navigationEvent = {
-                .event = facebook::react::RNKlarnaStandaloneWebViewEventEmitter::OnLoadNavigationEventEvent::LoadEnded,
-                .newUrl = std::string([webView.url.absoluteString UTF8String]),
-                .webViewState = {
-                    .url = std::string([webView.url.absoluteString UTF8String]),
-                    .title = std::string([webView.title UTF8String]),
-                    .progress = std::string([[@(progress) stringValue] UTF8String]),
-                    .isLoading = webView.isLoading,
-                }
+                .url = std::string([webView.url.absoluteString UTF8String]),
+                .title = std::string([webView.title UTF8String]),
+                .loading = self.klarnaStandaloneWebView.isLoading,
+                .canGoBack = self.klarnaStandaloneWebView.canGoBack,
+                .canGoForward = self.klarnaStandaloneWebView.canGoForward,
             }
         });
     } else {
@@ -190,8 +182,14 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
         RCTLogInfo(@"Sending onError event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
         ->onError(RNKlarnaStandaloneWebViewEventEmitter::OnError{
-            .navigationError = {
-                .errorMessage = std::string([[error localizedDescription] UTF8String]),
+            .error = {
+                .url = std::string([webView.url.absoluteString UTF8String]),
+                .title = std::string([webView.title UTF8String]),
+                .loading = self.klarnaStandaloneWebView.isLoading,
+                .canGoBack = self.klarnaStandaloneWebView.canGoBack,
+                .canGoForward = self.klarnaStandaloneWebView.canGoForward,
+                .code = (int)error.code,
+                .description = std::string([[error localizedDescription] UTF8String])
             }
         });
     } else {
@@ -204,8 +202,14 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
         RCTLogInfo(@"Sending onError event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
         ->onError(RNKlarnaStandaloneWebViewEventEmitter::OnError{
-            .navigationError = {
-                .errorMessage = std::string([[error localizedDescription] UTF8String]),
+            .error = {
+                .url = std::string([webView.url.absoluteString UTF8String]),
+                .title = std::string([webView.title UTF8String]),
+                .loading = self.klarnaStandaloneWebView.isLoading,
+                .canGoBack = self.klarnaStandaloneWebView.canGoBack,
+                .canGoForward = self.klarnaStandaloneWebView.canGoForward,
+                .code = (int)error.code,
+                .description = std::string([[error localizedDescription] UTF8String])
             }
         });
     } else {

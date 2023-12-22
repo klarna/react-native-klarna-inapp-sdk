@@ -3,7 +3,6 @@ package com.klarna.mobile.sdk.reactnative.standalonewebview;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
@@ -17,8 +16,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Double-check that we're sending the correct values for parameters of the events.
-
 /**
  * This class is responsible for sending some KlarnaStandaloneWebView-related events to the React Native side.
  */
@@ -29,14 +26,14 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_PROGRESS_EVENT = "progressEvent";
     private static final String PARAM_NAME_KLARNA_MESSAGE_EVENT = "klarnaMessageEvent";
     private static final String PARAM_NAME_RENDER_PROCESS_GONE_EVENT = "renderProcessGoneEvent";
-    private static final String PARAM_NAME_ERROR_MESSAGE = "errorMessage";
-    private static final String PARAM_NAME_EVENT = "event";
-    private static final String PARAM_NAME_NEW_URL = "newUrl";
+    private static final String PARAM_NAME_CODE = "code";
+    private static final String PARAM_NAME_DESCRIPTION = "description";
     private static final String PARAM_NAME_TITLE = "title";
     private static final String PARAM_NAME_URL = "url";
+    private static final String PARAM_NAME_CAN_GO_BACK = "canGoBack";
+    private static final String PARAM_NAME_CAN_GO_FORWARD = "canGoForward";
     private static final String PARAM_NAME_PROGRESS = "progress";
-    private static final String PARAM_NAME_IS_LOADING = "isLoading";
-    private static final String PARAM_NAME_WEB_VIEW_STATE = "webViewState";
+    private static final String PARAM_NAME_LOADING = "loading";
     private static final String PARAM_NAME_ACTION = "action";
     private static final String PARAM_NAME_DID_CRASH = "didCrash";
 
@@ -47,40 +44,48 @@ public class KlarnaStandaloneWebViewEventSender {
     }
 
     public void sendLoadProgressEvent(@Nullable KlarnaStandaloneWebView view, int progress) {
-        ReadableMap webViewStateMap = (view == null) ? Arguments.createMap() : buildWebViewStateMap(view.getUrl(), view.getTitle(), progress);
+        WritableMap webViewMap = buildWebViewMap(view, null);
+        webViewMap.putDouble(PARAM_NAME_PROGRESS, progress);
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_PROGRESS_EVENT, webViewStateMap);
+            put(PARAM_NAME_PROGRESS_EVENT, webViewMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS, params, view);
     }
 
-    public void sendErrorEvent(@Nullable KlarnaStandaloneWebView view, String description) {
-        ReadableMap navigationErrorMap = ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_ERROR_MESSAGE, description);
-        }});
+    public void sendErrorEvent(@Nullable KlarnaStandaloneWebView view, int code, String description) {
+        WritableMap webViewMap = buildWebViewMap(view, null);
+        webViewMap.putDouble(PARAM_NAME_CODE, code);
+        webViewMap.putString(PARAM_NAME_DESCRIPTION, description);
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_NAVIGATION_ERROR, navigationErrorMap);
+            put(PARAM_NAME_NAVIGATION_ERROR, webViewMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_ERROR, params, view);
     }
 
-    public void sendNavigationEvent(@Nullable KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event) {
+    public void sendNavigationEvent(@Nullable KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event, String url) {
+        WritableMap webViewMap = buildWebViewMap(view, url);
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_NAVIGATION_EVENT, buildNavigationEventMap(view, event));
+            put(PARAM_NAME_NAVIGATION_EVENT, webViewMap);
         }});
         postEventForView(event, params, view);
     }
 
     public void sendKlarnaMessageEvent(@Nullable KlarnaStandaloneWebView view, @NonNull KlarnaProductEvent klarnaProductEvent) {
+        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<>() {{
+            put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
+        }});
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_KLARNA_MESSAGE_EVENT, buildKlarnaMessageEventMap(klarnaProductEvent));
+            put(PARAM_NAME_KLARNA_MESSAGE_EVENT, eventMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE, params, view);
     }
 
     public void sendRenderProcessGoneEvent(@Nullable KlarnaStandaloneWebView view, boolean didCrash) {
+        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<>() {{
+            put(PARAM_NAME_DID_CRASH, didCrash);
+        }});
         WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_RENDER_PROCESS_GONE_EVENT, buildRenderProcessGoneEventMap(didCrash));
+            put(PARAM_NAME_RENDER_PROCESS_GONE_EVENT, eventMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE, params, view);
     }
@@ -117,37 +122,17 @@ public class KlarnaStandaloneWebViewEventSender {
         return null;
     }
 
-    private ReadableMap buildWebViewStateMap(String url, String title, int progress) {
+    private WritableMap buildWebViewMap(KlarnaStandaloneWebView webView, String url) {
         return ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_URL, url);
-            put(PARAM_NAME_TITLE, title);
-            put(PARAM_NAME_PROGRESS, String.valueOf(progress));
-            put(PARAM_NAME_IS_LOADING, progress < 100);
-        }});
-    }
-
-    private ReadableMap buildNavigationEventMap(@Nullable KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event) {
-        if (view == null) {
-            return Arguments.createMap();
-        } else {
-            return ArgumentsUtil.createMap(new HashMap<>() {{
-                // Possible values for 'event' are 'willLoad', 'loadStarted', and 'loadEnded'
-                put(PARAM_NAME_EVENT, event == KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START ? "loadStarted" : "loadEnded");
-                put(PARAM_NAME_NEW_URL, view.getUrl());
-                put(PARAM_NAME_WEB_VIEW_STATE, buildWebViewStateMap(view.getUrl(), view.getTitle(), view.getProgress()));
-            }});
-        }
-    }
-
-    private ReadableMap buildKlarnaMessageEventMap(KlarnaProductEvent klarnaProductEvent) {
-        return ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
-        }});
-    }
-
-    private ReadableMap buildRenderProcessGoneEventMap(boolean didCrash) {
-        return ArgumentsUtil.createMap(new HashMap<>() {{
-            put(PARAM_NAME_DID_CRASH, didCrash);
+            if (webView != null) {
+                put(PARAM_NAME_URL, url != null ? url : webView.getUrl());
+                put(PARAM_NAME_TITLE, webView.getTitle());
+                put(PARAM_NAME_LOADING, webView.getProgress() < 100);
+                put(PARAM_NAME_CAN_GO_BACK, webView.canGoBack());
+                put(PARAM_NAME_CAN_GO_FORWARD, webView.canGoForward());
+            } else {
+                put(PARAM_NAME_URL, url);
+            }
         }});
     }
 

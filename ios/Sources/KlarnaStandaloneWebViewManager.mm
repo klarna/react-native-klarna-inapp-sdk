@@ -17,7 +17,7 @@ RCT_EXPORT_MODULE(RNKlarnaStandaloneWebView)
 
 RCT_EXPORT_VIEW_PROPERTY(returnUrl, NSString)
 RCT_EXPORT_VIEW_PROPERTY(onLoadStart, RCTDirectEventBlock)
-RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onLoadEnd, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onError, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadProgress, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onKlarnaMessage, RCTDirectEventBlock)

@@ -4,7 +4,7 @@ import React, {useRef, useState} from 'react';
 import {
   KlarnaStandaloneWebView,
   KlarnaWebViewKlarnaMessageEvent,
-  KlarnaWebViewNavigationError,
+  KlarnaWebViewError,
   KlarnaWebViewNavigationEvent,
   KlarnaWebViewProgressEvent,
   KlarnaWebViewRenderProcessGoneEvent,
@@ -122,10 +122,10 @@ export default function StandaloneWebViewScreen() {
         onLoadStart={(event: KlarnaWebViewNavigationEvent) => {
           onEvent('onLoadStart', JSON.stringify(event));
         }}
-        onLoad={(event: KlarnaWebViewNavigationEvent) => {
-          onEvent('onLoad', JSON.stringify(event));
+        onLoadEnd={(event: KlarnaWebViewNavigationEvent) => {
+          onEvent('onLoadEnd', JSON.stringify(event));
         }}
-        onError={(event: KlarnaWebViewNavigationError) => {
+        onError={(event: KlarnaWebViewError) => {
           onEvent('onError', JSON.stringify(event));
         }}
         onLoadProgress={(event: KlarnaWebViewProgressEvent) => {

@@ -35,27 +35,23 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         NSNumber * newProgress = [change objectForKey:NSKeyValueChangeNewKey];
         // We need to convert it to an int value in range [0..100]
         int progress = (int) (newProgress.doubleValue * 100);
-        [self sendProgressChangeEvent:progress];
+        [self sendLoadProgressEvent:self.klarnaStandaloneWebView progress:progress];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
-- (void)sendProgressChangeEvent:(int)progress {
+- (void)sendLoadProgressEvent:(KlarnaStandaloneWebView * _Nonnull)webView progress:(int)progress {
     if (!self.onLoadProgress) {
         RCTLog(@"Missing 'onProgressChange' callback prop.");
         return;
     }
-    self.onLoadProgress(@{
-            @"progressEvent": @{
-                @"webViewState": @{
-                    @"url": self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString,
-                    @"title": self.klarnaStandaloneWebView.title == nil ? @"" : self.klarnaStandaloneWebView.title,
-                    @"progress": [[NSNumber numberWithInt:progress] stringValue],
-                @"isLoading": @(self.klarnaStandaloneWebView.isLoading)
-            }
-        }
-    });
+    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
+    [event addEntriesFromDictionary:@{
+          @"progress": [NSNumber numberWithDouble: progress] // could use self.klarnaStandaloneWebView.estimatedProgress
+        }];
+    
+    self.onLoadProgress(@{@"progressEvent": event});
 
 }
 
@@ -121,42 +117,20 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
     if (!self.onLoadStart) {
-        RCTLog(@"Missing 'onBeforeLoad' callback prop.");
+        RCTLog(@"Missing 'onLoadStart' callback prop.");
         return;
     }
-    int progress = (int) (webView.estimatedProgress * 100);
-    self.onLoadStart(@{
-        @"navigationEvent": @{
-            @"event": @"loadStarted",
-            @"newUrl": webView.url.absoluteString,
-            @"webViewState": @{
-                @"url": webView.url.absoluteString,
-                @"title": webView.title,
-                @"progress": [[NSNumber numberWithInt:progress] stringValue],
-                @"isLoading": @(webView.isLoading)
-            }
-        }
-    });
+    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
+    self.onLoadStart(@{@"navigationEvent": event});
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFinish:(WKNavigation * _Nonnull)navigation {
-    if (!self.onLoad) {
-        RCTLog(@"Missing 'onLoad' callback prop.");
+    if (!self.onLoadEnd) {
+        RCTLog(@"Missing 'onLoadEnd' callback prop.");
         return;
     }
-    int progress = (int) (webView.estimatedProgress * 100);
-    self.onLoad(@{
-        @"navigationEvent": @{
-            @"event": @"loadEnded",
-            @"newUrl": webView.url.absoluteString,
-            @"webViewState": @{
-                @"url": webView.url.absoluteString,
-                @"title": webView.title,
-                @"progress": [[NSNumber numberWithInt:progress] stringValue],
-                @"isLoading": @(webView.isLoading)
-            }
-        }
-    });
+    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
+    self.onLoadEnd(@{@"navigationEvent": event});
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFailProvisionalNavigation:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
@@ -164,11 +138,12 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         RCTLog(@"Missing 'onError' callback prop.");
         return;
     }
-    self.onError(@{
-        @"navigationError": @{
-            @"errorMessage": error.description,
-        }
-    });
+    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
+    [event addEntriesFromDictionary:@{
+            @"code": @(error.code),
+            @"description": error.description,
+        }];
+    self.onError(@{@"error": event});
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFail:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
@@ -176,11 +151,12 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         RCTLog(@"Missing 'onError' callback prop.");
         return;
     }
-    self.onError(@{
-        @"navigationError": @{
-            @"errorMessage": error.description,
-        }
-    });
+    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
+    [event addEntriesFromDictionary:@{
+            @"code": @(error.code),
+            @"description": error.description,
+        }];
+    self.onError(@{@"error": error});
 }
 
 #pragma mark - KlarnaEventHandler methods
@@ -199,6 +175,19 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent encounteredError:(KlarnaError * _Nonnull)error {
     // Not used as of now
+}
+
+#pragma mark - Events
+
+- (NSMutableDictionary<NSString *, id> *)webViewDict:(KlarnaStandaloneWebView * _Nonnull)webView {
+    NSDictionary *event = @{
+        @"url": webView.url.absoluteString ?: @"",
+        @"title": webView.title ?: @"",
+        @"loading" : @(webView.isLoading),
+        @"canGoBack": @(webView.canGoBack),
+        @"canGoForward" : @(webView.canGoForward)
+      };
+    return [[NSMutableDictionary alloc] initWithDictionary: event];
 }
 
 @end
