@@ -33,7 +33,7 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_CAN_GO_BACK = "canGoBack";
     private static final String PARAM_NAME_CAN_GO_FORWARD = "canGoForward";
     private static final String PARAM_NAME_PROGRESS = "progress";
-    private static final String PARAM_NAME_IS_LOADING = "isLoading";
+    private static final String PARAM_NAME_LOADING = "loading";
     private static final String PARAM_NAME_ACTION = "action";
     private static final String PARAM_NAME_DID_CRASH = "didCrash";
 
@@ -127,7 +127,7 @@ public class KlarnaStandaloneWebViewEventSender {
             if (webView != null) {
                 put(PARAM_NAME_URL, url != null ? url : webView.getUrl());
                 put(PARAM_NAME_TITLE, webView.getTitle());
-                put(PARAM_NAME_IS_LOADING, webView.getProgress() < 100);
+                put(PARAM_NAME_LOADING, webView.getProgress() < 100);
                 put(PARAM_NAME_CAN_GO_BACK, webView.canGoBack());
                 put(PARAM_NAME_CAN_GO_FORWARD, webView.canGoForward());
             } else {
