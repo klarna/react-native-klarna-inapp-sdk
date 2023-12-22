@@ -159,11 +159,11 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFinish:(WKNavigation * _Nonnull)navigation {
     if (_eventEmitter) {
-        RCTLogInfo(@"Sending onLoad event");
+        RCTLogInfo(@"Sending onLoadEnd event");
         // 'estimatedProgress' is a double value in range [0..1].
         // We need to convert it to an int value in range [0..100].
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
-        ->onLoad(RNKlarnaStandaloneWebViewEventEmitter::OnLoad{
+        ->onLoadEnd(RNKlarnaStandaloneWebViewEventEmitter::OnLoadEnd{
             .navigationEvent = {
                 .url = std::string([webView.url.absoluteString UTF8String]),
                 .title = std::string([webView.title UTF8String]),

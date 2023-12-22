@@ -65,7 +65,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
 
         @Override
         public void onPageFinished(@Nullable KlarnaStandaloneWebView view, @Nullable String url) {
-            klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD, url);
+            klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD_END, url);
         }
 
         @Override
@@ -174,7 +174,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
         MapBuilder.Builder<String, Object> builder = MapBuilder.builder();
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START.name));
-        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD.name));
+        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_END.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_END.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_ERROR.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_ERROR.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name));

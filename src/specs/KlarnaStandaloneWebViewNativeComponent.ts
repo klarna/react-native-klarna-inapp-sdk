@@ -9,7 +9,7 @@ import type { Double, Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   returnUrl: string;
   onLoadStart: DirectEventHandler<KlarnaWebViewNavigationEvent>;
-  onLoad: DirectEventHandler<KlarnaWebViewNavigationEvent>;
+  onLoadEnd: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   onError: DirectEventHandler<KlarnaWebViewError>;
   onLoadProgress: DirectEventHandler<KlarnaWebViewProgressEvent>;
   onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;

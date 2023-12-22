@@ -125,12 +125,12 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFinish:(WKNavigation * _Nonnull)navigation {
-    if (!self.onLoad) {
-        RCTLog(@"Missing 'onLoad' callback prop.");
+    if (!self.onLoadEnd) {
+        RCTLog(@"Missing 'onLoadEnd' callback prop.");
         return;
     }
     NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
-    self.onLoad(@{@"navigationEvent": event});
+    self.onLoadEnd(@{@"navigationEvent": event});
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFailProvisionalNavigation:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
