@@ -3,7 +3,6 @@
 #import <React/RCTUIManager.h>
 #import <React/RCTLog.h>
 
-
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "view/newarch/PaymentViewWrapper.h"
 #else
@@ -37,7 +36,6 @@ RCT_EXPORT_VIEW_PROPERTY(onResized, RCTDirectEventBlock)
 #pragma mark - Exported Methods
 
 RCT_EXPORT_METHOD(initialize:(nonnull NSNumber*)reactTag clientToken:(NSString*)clientToken returnUrl:(NSString*)returnUrl) {
-    
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
         PaymentViewWrapper* view = (PaymentViewWrapper*) viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:PaymentViewWrapper.class]) {
@@ -46,12 +44,9 @@ RCT_EXPORT_METHOD(initialize:(nonnull NSNumber*)reactTag clientToken:(NSString*)
         }
         [view initializePaymentViewWithClientToken:clientToken withReturnUrl:returnUrl];
     }];
-    
-    
 }
 
 RCT_EXPORT_METHOD(load:(nonnull NSNumber*)reactTag sessionData:(nullable NSString*)sessionData) {
-    
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
         PaymentViewWrapper* view = (PaymentViewWrapper*) viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:PaymentViewWrapper.class]) {
@@ -63,7 +58,6 @@ RCT_EXPORT_METHOD(load:(nonnull NSNumber*)reactTag sessionData:(nullable NSStrin
 }
 
 RCT_EXPORT_METHOD(loadPaymentReview:(nonnull NSNumber*)reactTag) {
-    
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
         PaymentViewWrapper* view = (PaymentViewWrapper*) viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:PaymentViewWrapper.class]) {
@@ -75,7 +69,6 @@ RCT_EXPORT_METHOD(loadPaymentReview:(nonnull NSNumber*)reactTag) {
 }
 
 RCT_EXPORT_METHOD(authorize:(nonnull NSNumber*)reactTag autoFinalize:(BOOL)autoFinalize sessionData:(nullable NSString*)sessionData) {
-    
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
         PaymentViewWrapper* view = (PaymentViewWrapper*) viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:PaymentViewWrapper.class]) {
@@ -87,7 +80,6 @@ RCT_EXPORT_METHOD(authorize:(nonnull NSNumber*)reactTag autoFinalize:(BOOL)autoF
 }
 
 RCT_EXPORT_METHOD(reauthorize:(nonnull NSNumber*)reactTag sessionData:(nullable NSString*)sessionData) {
-    
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
         PaymentViewWrapper* view = (PaymentViewWrapper*) viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:PaymentViewWrapper.class]) {
@@ -99,7 +91,6 @@ RCT_EXPORT_METHOD(reauthorize:(nonnull NSNumber*)reactTag sessionData:(nullable 
 }
 
 RCT_EXPORT_METHOD(finalize:(nonnull NSNumber*)reactTag sessionData:(nullable NSString*)sessionData) {
-    
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
         PaymentViewWrapper* view = (PaymentViewWrapper*) viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:PaymentViewWrapper.class]) {
@@ -108,8 +99,6 @@ RCT_EXPORT_METHOD(finalize:(nonnull NSNumber*)reactTag sessionData:(nullable NSS
         }
         [view finalizePaymentViewWithSessionData:sessionData];
     }];
-    
-    
 }
 
 @end

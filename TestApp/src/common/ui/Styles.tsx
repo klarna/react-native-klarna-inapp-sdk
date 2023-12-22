@@ -14,6 +14,7 @@ export const Colors = {
   white: '#FFF',
   lighter: '#F3F3F3',
   light: '#DAE1E7',
+  lightGray: '#d2d2d2',
   dark: '#444',
   darker: '#222',
   black: '#000',
@@ -34,6 +35,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     margin: 20,
+  },
+  urlInput: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    flex: 1,
+    padding: 10,
   },
   container: {
     justifyContent: 'center',
