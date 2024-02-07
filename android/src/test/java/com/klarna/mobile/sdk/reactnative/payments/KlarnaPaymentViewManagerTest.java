@@ -1,5 +1,12 @@
 package com.klarna.mobile.sdk.reactnative.payments;
 
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_AUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_FINALIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_INITIALIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
+
 import android.app.Application;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -20,20 +27,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
-
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_AUTHORIZE;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_FINALIZE;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_INITIALIZE;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
 
 import java.util.Collections;
 
@@ -45,39 +43,24 @@ public class KlarnaPaymentViewManagerTest {
     @Rule
     public PowerMockRule rule = new PowerMockRule();
 
-    private Application application;
-    private ReactApplicationContext reactContext;
-
     private KlarnaPaymentViewManager manager;
     private PaymentViewWrapper wrapper;
 
     @Before
     public void setup() {
-        application = ApplicationProvider.getApplicationContext();
-        reactContext = new ReactApplicationContext(application);
+        Application application = ApplicationProvider.getApplicationContext();
+        ReactApplicationContext reactContext = new ReactApplicationContext(application);
 
-        manager = new KlarnaPaymentViewManager(reactContext, application);
+        manager = new KlarnaPaymentViewManager(reactContext);
 
         wrapper = Mockito.mock(PaymentViewWrapper.class);
         wrapper.paymentView = Mockito.mock(KlarnaPaymentView.class);
 
         PowerMockito.mockStatic(Arguments.class);
         PowerMockito.when(Arguments.createArray())
-                .thenAnswer(
-                        new Answer<Object>() {
-                            @Override
-                            public Object answer(InvocationOnMock invocation) throws Throwable {
-                                return new JavaOnlyArray();
-                            }
-                        });
+                .thenAnswer(invocation -> new JavaOnlyArray());
         PowerMockito.when(Arguments.createMap())
-                .thenAnswer(
-                        new Answer<Object>() {
-                            @Override
-                            public Object answer(InvocationOnMock invocation) throws Throwable {
-                                return new JavaOnlyMap();
-                            }
-                        });
+                .thenAnswer(invocation -> new JavaOnlyMap());
     }
 
     @After

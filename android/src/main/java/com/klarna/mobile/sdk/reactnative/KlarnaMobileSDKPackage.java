@@ -26,7 +26,7 @@ public class KlarnaMobileSDKPackage implements ReactPackage {
     @Override
     public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
         return List.of(
-                new KlarnaPaymentViewManager(reactContext, (Application) reactContext.getApplicationContext()),
+                new KlarnaPaymentViewManager(reactContext),
                 new KlarnaStandaloneWebViewManager(reactContext, (Application) reactContext.getApplicationContext())
         );
     }

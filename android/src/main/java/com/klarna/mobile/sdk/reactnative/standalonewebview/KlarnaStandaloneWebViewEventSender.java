@@ -46,7 +46,7 @@ public class KlarnaStandaloneWebViewEventSender {
     public void sendLoadProgressEvent(@Nullable KlarnaStandaloneWebView view, int progress) {
         WritableMap webViewMap = buildWebViewMap(view, null);
         webViewMap.putDouble(PARAM_NAME_PROGRESS, progress);
-        WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
+        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_PROGRESS_EVENT, webViewMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS, params, view);
@@ -56,7 +56,7 @@ public class KlarnaStandaloneWebViewEventSender {
         WritableMap webViewMap = buildWebViewMap(view, null);
         webViewMap.putDouble(PARAM_NAME_CODE, code);
         webViewMap.putString(PARAM_NAME_DESCRIPTION, description);
-        WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
+        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_NAVIGATION_ERROR, webViewMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_ERROR, params, view);
@@ -64,27 +64,27 @@ public class KlarnaStandaloneWebViewEventSender {
 
     public void sendNavigationEvent(@Nullable KlarnaStandaloneWebView view, KlarnaStandaloneWebViewEvent.Event event, String url) {
         WritableMap webViewMap = buildWebViewMap(view, url);
-        WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
+        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_NAVIGATION_EVENT, webViewMap);
         }});
         postEventForView(event, params, view);
     }
 
     public void sendKlarnaMessageEvent(@Nullable KlarnaStandaloneWebView view, @NonNull KlarnaProductEvent klarnaProductEvent) {
-        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<>() {{
+        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
         }});
-        WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
+        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_KLARNA_MESSAGE_EVENT, eventMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE, params, view);
     }
 
     public void sendRenderProcessGoneEvent(@Nullable KlarnaStandaloneWebView view, boolean didCrash) {
-        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<>() {{
+        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_DID_CRASH, didCrash);
         }});
-        WritableMap params = ArgumentsUtil.createMap(new HashMap<>() {{
+        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_RENDER_PROCESS_GONE_EVENT, eventMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE, params, view);
@@ -123,7 +123,7 @@ public class KlarnaStandaloneWebViewEventSender {
     }
 
     private WritableMap buildWebViewMap(KlarnaStandaloneWebView webView, String url) {
-        return ArgumentsUtil.createMap(new HashMap<>() {{
+        return ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             if (webView != null) {
                 put(PARAM_NAME_URL, url != null ? url : webView.getUrl());
                 put(PARAM_NAME_TITLE, webView.getTitle());
