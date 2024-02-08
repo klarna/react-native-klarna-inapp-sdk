@@ -1,7 +1,5 @@
 package com.klarna.mobile.sdk.reactnative.payments;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -19,7 +17,6 @@ import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
 import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
-import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaPaymentViewSpec;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +46,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     // Store a list of views to event dispatchers so we send up events via the right views.
     private final Map<WeakReference<PaymentViewWrapper>, EventDispatcher> viewToDispatcher;
 
-    public KlarnaPaymentViewManager(ReactApplicationContext reactApplicationContext, Application app) {
+    public KlarnaPaymentViewManager(ReactApplicationContext reactApplicationContext) {
         super();
         this.viewToDispatcher = new HashMap<>();
         this.reactAppContext = reactApplicationContext;
@@ -264,7 +261,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     public void onAuthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken, @org.jetbrains.annotations.Nullable Boolean finalizeRequired) {
         requestLayout(paymentView);
         WritableMap params = ArgumentsUtil.createMap(
-                new HashMap<>() {{
+                new HashMap<String, Object>() {{
                     put("approved", approved);
                     put("authToken", authToken);
                     put("finalizeRequired", finalizeRequired);
@@ -277,7 +274,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     public void onReauthorized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
         requestLayout(paymentView);
         WritableMap params = ArgumentsUtil.createMap(
-                new HashMap<>() {{
+                new HashMap<String, Object>() {{
                     put("approved", approved);
                     put("authToken", authToken);
                 }}
@@ -289,7 +286,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     public void onFinalized(@NotNull KlarnaPaymentView paymentView, boolean approved, @org.jetbrains.annotations.Nullable String authToken) {
         requestLayout(paymentView);
         WritableMap params = ArgumentsUtil.createMap(
-                new HashMap<>() {{
+                new HashMap<String, Object>() {{
                     put("approved", approved);
                     put("authToken", authToken);
                 }}
@@ -302,7 +299,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
         requestLayout(klarnaPaymentView);
         ReadableMap sdkError = buildErrorMap(klarnaPaymentsSDKError);
         WritableMap params = ArgumentsUtil.createMap(
-                new HashMap<>() {{
+                new HashMap<String, Object>() {{
                     put("error", sdkError);
                 }}
         );
@@ -312,7 +309,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     @Override
     public void onResized(PaymentViewWrapper paymentViewWrapper, int value) {
         WritableMap params = ArgumentsUtil.createMap(
-                new HashMap<>() {{
+                new HashMap<String, Object>() {{
                     put("height", String.valueOf(value));
                 }}
         );
@@ -321,7 +318,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
     ReadableMap buildErrorMap(KlarnaPaymentsSDKError klarnaPaymentsSDKError) {
         return ArgumentsUtil.createMap(
-                new HashMap<>() {{
+                new HashMap<String, Object>() {{
                     put("action", klarnaPaymentsSDKError.getAction());
                     put("isFatal", klarnaPaymentsSDKError.isFatal());
                     put("message", klarnaPaymentsSDKError.getMessage());
