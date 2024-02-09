@@ -4,6 +4,11 @@ All notable changes to React Native Klarna In-App SDK will be documented in this
 ### [2.2.1] - 2024-02-08
 - Fixed a Java 8 compatibility issue.
 
+### [2.2.0] - 2023-12-22
+- Added KlarnaStandaloneWebView component
+- Added support for React Native's new architecture
+- Updated the required JDK version to 11
+
 ### [2.1.13] - 2023-09-19
 - Update Android native SDK version to 2.6.8
 - Update iOS native SDK version to 2.6.10
