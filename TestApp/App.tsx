@@ -20,7 +20,7 @@ const AppStack = () => {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{title: 'Klarna MSDK TestApp'}}
+        options={{title: 'Klarna Mobile SDK Test App'}}
       />
       <Stack.Screen name="Payments" component={PaymentsScreen} />
       <Stack.Screen
