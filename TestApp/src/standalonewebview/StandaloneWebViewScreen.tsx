@@ -15,7 +15,7 @@ export default function StandaloneWebViewScreen() {
   const klarnaStandaloneWebViewRef = useRef<KlarnaStandaloneWebView>(null);
   const [url, setUrl] = useState('');
 
-  const onEvent = (...params: Array<string>) => {
+  const logEvent = (...params: Array<string>) => {
     console.log('onEvent', params);
   };
 
@@ -120,22 +120,22 @@ export default function StandaloneWebViewScreen() {
         }}
         returnUrl={'returnUrl://'}
         onLoadStart={(event: KlarnaWebViewNavigationEvent) => {
-          onEvent('onLoadStart', JSON.stringify(event));
+          logEvent('onLoadStart', JSON.stringify(event));
         }}
         onLoadEnd={(event: KlarnaWebViewNavigationEvent) => {
-          onEvent('onLoadEnd', JSON.stringify(event));
+          logEvent('onLoadEnd', JSON.stringify(event));
         }}
         onError={(event: KlarnaWebViewError) => {
-          onEvent('onError', JSON.stringify(event));
+          logEvent('onError', JSON.stringify(event));
         }}
         onLoadProgress={(event: KlarnaWebViewProgressEvent) => {
-          onEvent('onLoadProgress', JSON.stringify(event));
+          logEvent('onLoadProgress', JSON.stringify(event));
         }}
         onKlarnaMessage={(event: KlarnaWebViewKlarnaMessageEvent) => {
-          onEvent('onKlarnaMessage', JSON.stringify(event));
+          logEvent('onKlarnaMessage', JSON.stringify(event));
         }}
         onRenderProcessGone={(event: KlarnaWebViewRenderProcessGoneEvent) => {
-          onEvent('onRenderProcessGone', JSON.stringify(event));
+          logEvent('onRenderProcessGone', JSON.stringify(event));
         }}
       />
     </View>
