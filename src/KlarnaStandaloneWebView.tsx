@@ -182,7 +182,7 @@ export class KlarnaStandaloneWebView extends Component<
   };
 }
 
-export interface KlarnaWebViewNativeEvent {
+interface KlarnaWebViewNativeEvent {
   readonly url: string;
   readonly loading: boolean;
   readonly title: string;

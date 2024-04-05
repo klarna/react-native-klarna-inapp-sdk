@@ -18,7 +18,7 @@ export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   /* End of Android only */
 }
 
-export type KlarnaWebViewNavigationEvent = Readonly<{
+type KlarnaWebViewNavigationEvent = Readonly<{
   navigationEvent: Readonly<{
     url: string;
     loading: boolean;
