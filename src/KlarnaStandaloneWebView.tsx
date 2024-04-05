@@ -124,14 +124,21 @@ export class KlarnaStandaloneWebView extends Component<
             Readonly<{
               readonly klarnaMessageEvent: Readonly<{
                 readonly action: string;
-                // Dictionary is not support for events
-                // readonly params: { [key: string]: any };
+                readonly params: string;
               }>;
             }>
           >
         ) => {
           if (this.props.onKlarnaMessage != null) {
-            this.props.onKlarnaMessage(event.nativeEvent.klarnaMessageEvent);
+            const klarnaMessageEvent = event.nativeEvent.klarnaMessageEvent;
+            let params = {};
+            try {
+              params = JSON.parse(klarnaMessageEvent.params);
+            } catch (e) {}
+            this.props.onKlarnaMessage({
+              action: klarnaMessageEvent.action,
+              params: params,
+            });
           }
         }}
         onRenderProcessGone={(
@@ -204,8 +211,7 @@ export interface KlarnaWebViewProgressEvent extends KlarnaWebViewNativeEvent {
 
 export interface KlarnaWebViewKlarnaMessageEvent {
   readonly action: string;
-  // Dictionary is not supported for events
-  // readonly params: { [key: string]: any };
+  readonly params: { [key: string]: any };
   // TODO What is a KlarnaWebViewComponent?
   // readonly component: KlarnaWebViewComponent;
 }

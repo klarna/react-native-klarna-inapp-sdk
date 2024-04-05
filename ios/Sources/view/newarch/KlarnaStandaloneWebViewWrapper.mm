@@ -17,14 +17,14 @@ using namespace facebook::react;
 
 @interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate, KlarnaEventHandler, RCTRNKlarnaStandaloneWebViewViewProtocol>
 
-@property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
+@property (nonatomic, strong) KlarnaStandaloneWebView *klarnaStandaloneWebView;
 
 @end
 
 @implementation KlarnaStandaloneWebViewWrapper
 
 // The property name in KlarnaStandaloneWebView that we want to observe for changes
-NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
+NSString *const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (id)init {
     self = [super init];
@@ -43,7 +43,7 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:PROPERTY_NAME_ESTIMATED_PROGRESS]) {
         // newProgress is a value in range [0..1].
-        NSNumber * newProgress = [change objectForKey:NSKeyValueChangeNewKey];
+        NSNumber *newProgress = [change objectForKey:NSKeyValueChangeNewKey];
         // We need to convert it to an int value in range [0..100]
         int progress = [NSNumber numberWithDouble:(newProgress.doubleValue * 100)].intValue;
         [self sendLoadProgressEvent:progress];
@@ -55,8 +55,8 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 - (void)sendLoadProgressEvent:(int)progress {
     if (_eventEmitter) {
         RCTLogInfo(@"Sending onLoadProgress event");
-        NSString * url = self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString;
-        NSString * title = self.klarnaStandaloneWebView.title == nil ? @"" : self.klarnaStandaloneWebView.title;
+        NSString *url = self.klarnaStandaloneWebView.url == nil ? @"" : self.klarnaStandaloneWebView.url.absoluteString;
+        NSString *title = self.klarnaStandaloneWebView.title == nil ? @"" : self.klarnaStandaloneWebView.title;
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
         ->onLoadProgress(RNKlarnaStandaloneWebViewEventEmitter::OnLoadProgress{
             .progressEvent = {
@@ -124,7 +124,7 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
     const auto &newViewProps = *std::static_pointer_cast<RNKlarnaStandaloneWebViewProps const>(props);
     
     if (oldViewProps.returnUrl != newViewProps.returnUrl) {
-        NSString * newReturnUrl = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
+        NSString *newReturnUrl = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
         self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:newReturnUrl];
     }
     
@@ -226,6 +226,7 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
         ->onKlarnaMessage(RNKlarnaStandaloneWebViewEventEmitter::OnKlarnaMessage{
             .klarnaMessageEvent = {
                 .action = std::string([[event action] UTF8String]),
+                .params = std::string([[self serializeDictionaryToJsonString: [event getParams]] UTF8String])
             }
         });
     } else {
@@ -258,6 +259,18 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 
 - (void)reload {
     [self.klarnaStandaloneWebView reload];
+}
+
+- (NSString *)serializeDictionaryToJsonString:(NSDictionary<NSString *, id<NSCoding>> *)dictionary {
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&error];
+    
+    if (!jsonData) {
+        return @"{}";
+    } else {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        return jsonString;
+    }
 }
 
 @end

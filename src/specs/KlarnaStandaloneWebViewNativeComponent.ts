@@ -54,8 +54,7 @@ type KlarnaWebViewProgressEvent = Readonly<{
 type KlarnaWebViewKlarnaMessageEvent = Readonly<{
   klarnaMessageEvent: Readonly<{
     action: string;
-    // Dictionary is not supported for events
-    // params: { [key: string]: any };
+    params: string;
     // TODO What is a KlarnaWebViewComponent?
     // component: KlarnaWebViewComponent;
   }>;
