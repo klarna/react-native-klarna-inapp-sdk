@@ -10,6 +10,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.EventDispatcher;
+import com.klarna.mobile.sdk.reactnative.common.ui.WrapperView;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -22,19 +23,30 @@ public abstract class ComponentEventSender<T extends View> {
         this.viewToDispatcher = viewToDispatcher;
     }
 
-    protected void postEventForView(@Nullable T view, @NonNull String eventName, @Nullable WritableMap params) {
+    protected void postEvent(@Nullable EventDispatcher eventDispatcher, @NonNull ComponentEvent event) {
+        if (eventDispatcher != null) {
+            eventDispatcher.dispatchEvent(event);
+        }
+    }
+
+    protected ComponentEvent createEvent(@Nullable View view, @NonNull String eventName, @Nullable WritableMap params) {
+        T viewReference = getView(view);
+        if (view == null) {
+            return null;
+        }
+        return new ComponentEvent(view.getId(), eventName, params);
+    }
+
+    protected void postEventForView(@Nullable View view, @NonNull String eventName, @Nullable WritableMap params) {
         T viewReference = getView(view);
         if (viewReference != null) {
             EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) viewReference.getContext(), viewReference.getId());
-            if (eventDispatcher != null) {
-                ComponentEvent event = new ComponentEvent(viewReference.getId(), eventName, params);
-                eventDispatcher.dispatchEvent(event);
-            }
+            postEvent(eventDispatcher, createEvent(viewReference, eventName, params));
         }
     }
 
     @Nullable
-    private T getView(@Nullable T view) {
+    private T getView(@Nullable View view) {
         if (view == null) {
             return null;
         }
@@ -42,6 +54,12 @@ public abstract class ComponentEventSender<T extends View> {
             T viewReference = reference.get();
             if (viewReference != null && viewReference == view) {
                 return viewReference;
+            }
+            if (viewReference instanceof WrapperView) {
+                View wrappedView = ((WrapperView) viewReference).getView();
+                if (wrappedView == view) {
+                    return viewReference;
+                }
             }
         }
         return null;

@@ -33,7 +33,7 @@ public class PaymentViewWrapper extends LinearLayout implements WebViewResizeObs
         paymentView = new KlarnaPaymentView(getReactAppContext().getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
         paymentView.registerPaymentViewCallback(paymentViewCallback);
         addView(paymentView, webViewParams);
-        resizeObserver = new WebViewResizeObserver(this);
+        resizeObserver = new WebViewResizeObserver(this, WebViewResizeObserver.TargetElement.PAYMENT_CONTAINER);
         WebView webView = getPaymentViewWebView();
         if (webView != null) {
             resizeObserver.addInterface(webView);

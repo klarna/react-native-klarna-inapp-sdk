@@ -10,13 +10,13 @@ import com.klarna.mobile.sdk.api.checkout.KlarnaCheckoutView;
 
 public abstract class RNKlarnaCheckoutViewSpec<T extends View> extends SimpleViewManager<T> {
 
-    public abstract void setReturnUrl(KlarnaCheckoutView view, @Nullable String value);
+    public abstract void setReturnUrl(T view, @Nullable String value);
 
-    public abstract void setCheckoutOptions(KlarnaCheckoutView view, @Nullable ReadableMap value);
+    public abstract void setCheckoutOptions(T view, @Nullable ReadableMap value);
 
-    public abstract void setSnippet(KlarnaCheckoutView view, String snippet);
+    public abstract void setSnippet(T view, String snippet);
 
-    public abstract void suspend(KlarnaCheckoutView view);
+    public abstract void suspend(T view);
 
-    public abstract void resume(KlarnaCheckoutView view);
+    public abstract void resume(T view);
 }

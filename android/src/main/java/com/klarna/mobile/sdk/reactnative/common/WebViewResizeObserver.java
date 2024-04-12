@@ -15,11 +15,19 @@ public class WebViewResizeObserver {
         void onResized(int value);
     }
 
+    public enum TargetElement {
+        BODY,
+        PAYMENT_CONTAINER,
+        CHECKOUT_CONTAINER
+    }
+
     private static final String JS_INTERFACE_NAME = "NativeResizeObserver";
     private final WeakReference<WebViewResizeObserverCallback> callback;
+    private final TargetElement targetElement;
 
-    public WebViewResizeObserver(WebViewResizeObserverCallback callback) {
+    public WebViewResizeObserver(WebViewResizeObserverCallback callback, TargetElement targetElement) {
         this.callback = new WeakReference<>(callback);
+        this.targetElement = targetElement;
     }
 
     public void addInterface(WebView webView) {
@@ -78,8 +86,22 @@ public class WebViewResizeObserver {
     }
 
     private String initScript() {
-        return "const container = document.querySelector('#payment-container');\n" +
-                "const resizeObserver = new ResizeObserver((entries) => {\n" +
+        StringBuilder scriptBuilder = new StringBuilder();
+        scriptBuilder.append("console.log('Resize observer injection started');\n");
+        switch (targetElement) {
+            case BODY:
+                scriptBuilder.append("const container = document.body;\n");
+                break;
+            case PAYMENT_CONTAINER:
+                scriptBuilder.append("const container = document.querySelector('#payment-container');\n");
+                break;
+            case CHECKOUT_CONTAINER:
+                scriptBuilder.append("const container = document.querySelector('#klarna-checkout-container');\n");
+                break;
+        }
+        scriptBuilder.append("console.log('Resize observer container selected: ', container);\n");
+        scriptBuilder.append("const resizeObserver = new ResizeObserver((entries) => {\n" +
+                "    console.log('Container size changed.', entries);\n" +
                 "    for (let entry of entries) {\n" +
                 "        console.log('New dimensions found: ', entry);\n" +
                 "        if (entry.contentRect) {\n" +
@@ -87,14 +109,18 @@ public class WebViewResizeObserver {
                 "            const listener = window.NativeResizeObserver;\n" +
                 "            if (listener != null) {\n" +
                 "                listener.onResized(height);\n" +
+                "                console.log('Container size sent to native: ', height);\n" +
                 "            }\n" +
                 "        }\n" +
                 "    }\n" +
-                "    console.log('Container size changed');\n" +
-                "});\n" +
-                "if (container != null) {\n" +
+                "});\n");
+        scriptBuilder.append("console.log('Resize observer initialized.');\n");
+        scriptBuilder.append("if (container != null) {\n" +
                 "    resizeObserver.observe(container);\n" +
-                "}\n" +
-                "console.log('Resize observer initialized');";
+                "    console.log('Resize observer set to component.');\n" +
+                "}\n");
+        scriptBuilder.append("console.log('Resize observer injection finished.');");
+
+        return scriptBuilder.toString();
     }
 }

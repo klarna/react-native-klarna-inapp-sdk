@@ -1,5 +1,9 @@
 package com.klarna.mobile.sdk.reactnative.checkout;
 
+import android.os.Handler;
+import android.view.View;
+import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -11,13 +15,15 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.checkout.KlarnaCheckoutView;
+import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
+import com.klarna.mobile.sdk.reactnative.common.ui.WrapperView;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaCheckoutViewSpec;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<KlarnaCheckoutView> {
+public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<WrapperView<KlarnaCheckoutView>> {
 
     public static final String KLARNA_CHECKOUT_VIEW_REACT_CLASS = "RNKlarnaCheckoutView";
 
@@ -33,7 +39,11 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<KlarnaCh
     /**
      * Store a list of views to event dispatchers so we send up events via the right views.
      */
-    private final Map<WeakReference<KlarnaCheckoutView>, EventDispatcher> viewToDispatcher;
+    private final Map<WeakReference<WrapperView<KlarnaCheckoutView>>, EventDispatcher> viewToDispatcher;
+    /**
+     * Store a list of views to resize observers.
+     */
+    private final Map<Integer, WebViewResizeObserver> viewIdToResizeObserver;
 
     private final KlarnaCheckoutViewEventSender eventSender;
     private final KlarnaCheckoutViewEventHandler eventHandler;
@@ -41,6 +51,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<KlarnaCh
     public KlarnaCheckoutViewManager(ReactApplicationContext reactApplicationContext) {
         super();
         this.viewToDispatcher = new HashMap<>();
+        this.viewIdToResizeObserver = new HashMap<>();
         this.reactAppContext = reactApplicationContext;
         this.eventSender = new KlarnaCheckoutViewEventSender(viewToDispatcher);
         this.eventHandler = new KlarnaCheckoutViewEventHandler(eventSender);
@@ -54,8 +65,9 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<KlarnaCh
 
     @NonNull
     @Override
-    protected KlarnaCheckoutView createViewInstance(@NonNull ThemedReactContext themedReactContext) {
-        KlarnaCheckoutView view = new KlarnaCheckoutView(reactAppContext, null, 0, eventHandler);
+    protected WrapperView<KlarnaCheckoutView> createViewInstance(@NonNull ThemedReactContext themedReactContext) {
+        KlarnaCheckoutView klarnaCheckoutView = new KlarnaCheckoutView(reactAppContext, null, 0, eventHandler);
+        WrapperView<KlarnaCheckoutView> view = new WrapperView<>(reactAppContext, null, klarnaCheckoutView);
 
         // Each view has its own event dispatcher.
         EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), view.getId());
@@ -84,7 +96,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<KlarnaCh
      * @param args      array of command arguments
      */
     @Override
-    public void receiveCommand(@NonNull KlarnaCheckoutView root, String commandId, @Nullable ReadableArray args) {
+    public void receiveCommand(@NonNull WrapperView<KlarnaCheckoutView> root, String commandId, @Nullable ReadableArray args) {
         switch (commandId) {
             case COMMAND_SET_RETURN_URL:
                 setReturnUrl(root, args != null ? args.getString(0) : null);
@@ -105,35 +117,89 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<KlarnaCh
     }
 
     @Override
-    public void setReturnUrl(KlarnaCheckoutView view, @Nullable String value) {
-        view.setReturnURL(value);
+    public void setReturnUrl(WrapperView<KlarnaCheckoutView> view, @Nullable String value) {
+        view.getView().setReturnURL(value);
     }
 
     @Override
-    public void setCheckoutOptions(KlarnaCheckoutView view, @Nullable ReadableMap value) {
-        if (value == null || view.getCheckoutOptions() != null) {
+    public void setCheckoutOptions(WrapperView<KlarnaCheckoutView> view, @Nullable ReadableMap value) {
+        if (value == null || view.getView().getCheckoutOptions() != null) {
             return;
         }
         if (value.hasKey("merchantHandlesEPM")) {
-            view.getCheckoutOptions().setMerchantHandlesEPM(value.getBoolean("merchantHandlesEPM"));
+            view.getView().getCheckoutOptions().setMerchantHandlesEPM(value.getBoolean("merchantHandlesEPM"));
         }
         if (value.hasKey("merchantHandlesValidationErrors")) {
-            view.getCheckoutOptions().setMerchantHandlesValidationErrors(value.getBoolean("merchantHandlesValidationErrors"));
+            view.getView().getCheckoutOptions().setMerchantHandlesValidationErrors(value.getBoolean("merchantHandlesValidationErrors"));
         }
     }
 
     @Override
-    public void setSnippet(KlarnaCheckoutView view, String snippet) {
-        view.setSnippet(snippet);
+    public void setSnippet(WrapperView<KlarnaCheckoutView> view, String snippet) {
+        view.getView().setSnippet(snippet);
+        initializeWebViewResizeObserver(view.getView());
+        // Delay the injection of the resize observer to ensure the web view is ready
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> injectResizeObserverToView(view.getView()), 500);
     }
 
     @Override
-    public void suspend(KlarnaCheckoutView view) {
-        view.suspend();
+    public void suspend(WrapperView<KlarnaCheckoutView> view) {
+        view.getView().suspend();
     }
 
     @Override
-    public void resume(KlarnaCheckoutView view) {
-        view.resume();
+    public void resume(WrapperView<KlarnaCheckoutView> view) {
+        view.getView().resume();
+    }
+
+    private void initializeWebViewResizeObserver(KlarnaCheckoutView view) {
+        int viewId = view.getId();
+        WebViewResizeObserver observerFromMap = viewIdToResizeObserver.get(viewId);
+        if (observerFromMap != null) {
+            // observer already set
+            return;
+        }
+        EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), viewId);
+        WebViewResizeObserver.WebViewResizeObserverCallback callback = new WebViewResizeObserver.WebViewResizeObserverCallback() {
+            @Override
+            public void onResized(int value) {
+                eventSender.sendOnResizedEvent(eventDispatcher, viewId, value);
+            }
+        };
+        WebViewResizeObserver webViewResizeObserver = new WebViewResizeObserver(
+                callback,
+                WebViewResizeObserver.TargetElement.BODY
+        );
+        viewIdToResizeObserver.put(viewId, webViewResizeObserver);
+    }
+
+    private void injectResizeObserverToView(KlarnaCheckoutView view) {
+        int viewId = view.getId();
+        WebViewResizeObserver observerFromMap = viewIdToResizeObserver.get(viewId);
+        if (observerFromMap == null) {
+            // observer not set
+            return;
+        }
+        WebView webView = getCheckoutViewWebView(view);
+        if (webView == null) {
+            return;
+        }
+        observerFromMap.addInterface(webView);
+        observerFromMap.injectListener(webView);
+    }
+
+    /**
+     * Attempts to retrieve the web view from within the KlarnaPaymentView. This is really fragile.
+     */
+    private WebView getCheckoutViewWebView(KlarnaCheckoutView view) {
+        for (int i = 0; i < view.getChildCount(); i++) {
+            View child = view.getChildAt(i);
+
+            if (child instanceof WebView) {
+                return (WebView) child;
+            }
+        }
+        return null;
     }
 }

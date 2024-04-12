@@ -27,7 +27,7 @@ public class KlarnaEventHandlerEventsUtil {
     private static final String PARAM_NAME_SESSION_ID = "sessionId";
     private static final String PARAM_NAME_PRODUCT_EVENT = "productEvent";
 
-    public static <T extends View> void sendKlarnaProductEvent(@NonNull ComponentEventSender<T> componentEventSender, @Nullable T view, @NonNull KlarnaProductEvent klarnaProductEvent) {
+    public static <T extends View> void sendKlarnaProductEvent(@NonNull ComponentEventSender<T> componentEventSender, @Nullable View view, @NonNull KlarnaProductEvent klarnaProductEvent) {
         String stringifiedParams = ParserUtil.toJson(klarnaProductEvent.getParams());
         String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
@@ -40,7 +40,7 @@ public class KlarnaEventHandlerEventsUtil {
         componentEventSender.postEventForView(view, EVENT_NAME_ON_EVENT, params);
     }
 
-    public static <T extends View> void sendKlarnaMobileSDKError(@NonNull ComponentEventSender<T> componentEventSender, @Nullable T view, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
+    public static <T extends View> void sendKlarnaMobileSDKError(@NonNull ComponentEventSender<T> componentEventSender, @Nullable View view, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
         String stringifiedParams = ParserUtil.toJson(klarnaMobileSDKError.getParams());
         String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
