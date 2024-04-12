@@ -8,6 +8,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.klarna.mobile.sdk.reactnative.checkout.KlarnaCheckoutViewManager;
 import com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager;
 import com.klarna.mobile.sdk.reactnative.standalonewebview.KlarnaStandaloneWebViewManager;
 
@@ -27,7 +28,8 @@ public class KlarnaMobileSDKPackage implements ReactPackage {
     public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
         return List.of(
                 new KlarnaPaymentViewManager(reactContext),
-                new KlarnaStandaloneWebViewManager(reactContext, (Application) reactContext.getApplicationContext())
+                new KlarnaStandaloneWebViewManager(reactContext, (Application) reactContext.getApplicationContext()),
+                new KlarnaCheckoutViewManager(reactContext)
         );
     }
 }
