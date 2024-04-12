@@ -90,6 +90,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 20,
   },
+  componentView: {
+    width: '100%',
+    flexGrow: 1,
+  },
 });
 
 export default styles;
