@@ -9,7 +9,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
-import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
+import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ParserUtil;
 
 import java.util.HashMap;

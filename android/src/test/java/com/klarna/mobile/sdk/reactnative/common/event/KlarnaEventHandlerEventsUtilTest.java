@@ -5,7 +5,7 @@ import android.view.View;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaProduct;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
-import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
+import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
 import org.junit.Before;
 import org.junit.Test;

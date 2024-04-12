@@ -16,7 +16,7 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
-import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
+import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaPaymentViewSpec;
 
 import org.jetbrains.annotations.NotNull;
