@@ -16,7 +16,6 @@ export interface RNKlarnaCheckoutViewProps extends ViewProps {
       readonly productEvent: Readonly<{
         readonly action: string;
         readonly params: string;
-        readonly sessionId: string;
       }>;
     }>
   >;
@@ -26,8 +25,6 @@ export interface RNKlarnaCheckoutViewProps extends ViewProps {
         readonly isFatal: boolean;
         readonly message: string;
         readonly name: string;
-        readonly params: string;
-        readonly sessionId: string;
       }>;
     }>
   >;

@@ -44,11 +44,12 @@ public class KlarnaEventHandlerEventsUtil {
         String stringifiedParams = ParserUtil.toJson(klarnaMobileSDKError.getParams());
         String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-            put(PARAM_NAME_IS_FATAL, klarnaMobileSDKError.isFatal());
-            put(PARAM_NAME_MESSAGE, klarnaMobileSDKError.getMessage());
             put(PARAM_NAME_NAME, klarnaMobileSDKError.getName());
-            put(PARAM_NAME_PARAMS, paramsJson);
-            put(PARAM_NAME_SESSION_ID, klarnaMobileSDKError.getSessionId());
+            put(PARAM_NAME_MESSAGE, klarnaMobileSDKError.getMessage());
+            put(PARAM_NAME_IS_FATAL, klarnaMobileSDKError.isFatal());
+            // TODO: Uncomment these when they are available on iOS
+            // put(PARAM_NAME_PARAMS, paramsJson);
+            // put(PARAM_NAME_SESSION_ID, klarnaMobileSDKError.getSessionId());
         }});
         WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_PRODUCT_EVENT, eventMap);

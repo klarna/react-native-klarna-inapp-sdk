@@ -57,7 +57,6 @@ export class KlarnaCheckoutView extends Component<
               readonly productEvent: Readonly<{
                 readonly action: string;
                 readonly params: string;
-                readonly sessionId: string;
               }>;
             }>
           >
@@ -65,7 +64,6 @@ export class KlarnaCheckoutView extends Component<
           const productEvent: KlarnaProductEvent = {
             action: event.nativeEvent.productEvent.action,
             params: JSON.parse(event.nativeEvent.productEvent.params),
-            sessionId: event.nativeEvent.productEvent.sessionId,
           };
           this.props.onEvent?.(productEvent);
         }}
@@ -76,8 +74,6 @@ export class KlarnaCheckoutView extends Component<
                 readonly isFatal: boolean;
                 readonly message: string;
                 readonly name: string;
-                readonly params: string;
-                readonly sessionId: string;
               }>;
             }>
           >
@@ -86,8 +82,6 @@ export class KlarnaCheckoutView extends Component<
             isFatal: event.nativeEvent.error.isFatal,
             message: event.nativeEvent.error.message,
             name: event.nativeEvent.error.name,
-            params: JSON.parse(event.nativeEvent.error.params),
-            sessionId: event.nativeEvent.error.sessionId,
           };
           this.props.onError?.(mobileSdkError);
         }}
