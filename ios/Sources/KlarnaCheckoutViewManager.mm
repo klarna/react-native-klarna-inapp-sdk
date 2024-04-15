@@ -16,7 +16,7 @@ RCT_EXPORT_MODULE(RNKlarnaCheckoutView)
 #pragma mark - View
 
 RCT_EXPORT_VIEW_PROPERTY(returnUrl, NSString)
-RCT_EXPORT_VIEW_PROPERTY(checkoutOptions, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(checkoutOptions, NSDictionary)
 RCT_EXPORT_VIEW_PROPERTY(onEvent, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onError, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onResized, RCTDirectEventBlock)

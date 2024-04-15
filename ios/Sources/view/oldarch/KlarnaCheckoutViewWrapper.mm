@@ -24,6 +24,18 @@
     [self evaluateProps];
 }
 
+- (void)setCheckoutOptions:(NSDictionary *)checkoutOptions {
+print:checkoutOptions;
+    // TODO : KlarnaCheckoutOptions needs to be ObjC ready
+//    if ([checkoutOptions objectForKey:@"merchantHandlesEPM"] != nil) {
+//        merchantHandlesEPM = [[checkoutOptions valueForKey:@"merchantHandlesEPM"] boolValue];
+//    }
+//    Boolean merchantHandlesValidationErrors;
+//    if ([checkoutOptions objectForKey:@"merchantHandlesValidationErrors"]) {
+//        merchantHandlesValidationErrors = [[checkoutOptions valueForKey:@"merchantHandlesValidationErrors"] boolValue];
+//    }
+}
+
 - (void) evaluateProps {
     [self initializeActualCheckoutView];
 }

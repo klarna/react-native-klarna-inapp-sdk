@@ -24,7 +24,6 @@ public class KlarnaEventHandlerEventsUtil {
     private static final String PARAM_NAME_IS_FATAL = "isFatal";
     private static final String PARAM_NAME_MESSAGE = "message";
     private static final String PARAM_NAME_NAME = "name";
-    private static final String PARAM_NAME_SESSION_ID = "sessionId";
     private static final String PARAM_NAME_PRODUCT_EVENT = "productEvent";
 
     public static <T extends View> void sendKlarnaProductEvent(@NonNull ComponentEventSender<T> componentEventSender, @Nullable View view, @NonNull KlarnaProductEvent klarnaProductEvent) {
@@ -41,15 +40,10 @@ public class KlarnaEventHandlerEventsUtil {
     }
 
     public static <T extends View> void sendKlarnaMobileSDKError(@NonNull ComponentEventSender<T> componentEventSender, @Nullable View view, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
-        String stringifiedParams = ParserUtil.toJson(klarnaMobileSDKError.getParams());
-        String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_NAME, klarnaMobileSDKError.getName());
             put(PARAM_NAME_MESSAGE, klarnaMobileSDKError.getMessage());
             put(PARAM_NAME_IS_FATAL, klarnaMobileSDKError.isFatal());
-            // TODO: Uncomment these when they are available on iOS
-            // put(PARAM_NAME_PARAMS, paramsJson);
-            // put(PARAM_NAME_SESSION_ID, klarnaMobileSDKError.getSessionId());
         }});
         WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_PRODUCT_EVENT, eventMap);

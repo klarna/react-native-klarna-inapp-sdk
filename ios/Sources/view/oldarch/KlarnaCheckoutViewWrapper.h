@@ -16,10 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onResized;
 
 @property (nonatomic, strong) NSString* returnUrl;
-@property (nonatomic, strong) NSString* checkoutOptions;
+@property (nonatomic, strong) NSDictionary* checkoutOptions;
 
 #pragma mark - React Native Overrides
 - (void) setReturnUrl:(NSString * _Nonnull)returnUrl;
+- (void) setCheckoutOptions:(NSDictionary * _Nonnull)checkoutOptions;
 - (void) evaluateProps;
 - (void) initializeActualCheckoutView;
 
