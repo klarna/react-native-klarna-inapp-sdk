@@ -9,7 +9,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KlarnaCheckoutViewWrapper : RCTViewComponentView
 
 #pragma mark - React Native Overrides
-- (void) initializeActualCheckoutView;
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
 
