@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.EventDispatcher;
+import com.google.gson.Gson;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebView;
 import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
@@ -35,8 +36,10 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_PROGRESS = "progress";
     private static final String PARAM_NAME_LOADING = "loading";
     private static final String PARAM_NAME_ACTION = "action";
+    private static final String PARAM_NAME_PARAMS = "params";
     private static final String PARAM_NAME_DID_CRASH = "didCrash";
 
+    private final Gson gson = new Gson();
     private final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher;
 
     KlarnaStandaloneWebViewEventSender(@NonNull final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher) {
@@ -52,7 +55,7 @@ public class KlarnaStandaloneWebViewEventSender {
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS, params, view);
     }
 
-    public void sendErrorEvent(@Nullable KlarnaStandaloneWebView view, int code, String description) {
+    public void sendNavigationErrorEvent(@Nullable KlarnaStandaloneWebView view, int code, String description) {
         WritableMap webViewMap = buildWebViewMap(view, null);
         webViewMap.putDouble(PARAM_NAME_CODE, code);
         webViewMap.putString(PARAM_NAME_DESCRIPTION, description);
@@ -71,8 +74,15 @@ public class KlarnaStandaloneWebViewEventSender {
     }
 
     public void sendKlarnaMessageEvent(@Nullable KlarnaStandaloneWebView view, @NonNull KlarnaProductEvent klarnaProductEvent) {
+        String paramsJson = "{}";
+        try {
+            paramsJson = gson.toJson(klarnaProductEvent.getParams());
+        } catch (Exception ignored) {
+        }
+        String finalParamsJson = paramsJson;
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
+            put(PARAM_NAME_PARAMS, finalParamsJson);
         }});
         WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_KLARNA_MESSAGE_EVENT, eventMap);

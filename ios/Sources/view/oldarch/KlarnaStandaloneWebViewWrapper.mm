@@ -166,9 +166,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         RCTLog(@"Missing 'onKlarnaMessage' callback prop.");
         return;
     }
+    
     self.onKlarnaMessage(@{
         @"klarnaMessageEvent": @{
-            @"action": event.action
+            @"action": event.action,
+            @"params": [self serializeDictionaryToJsonString: [event getParams]]
         }
     });
 }
@@ -178,6 +180,18 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 #pragma mark - Events
+
+- (NSString *)serializeDictionaryToJsonString:(NSDictionary<NSString *, id<NSCoding>> *)dictionary {
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&error];
+    
+    if (!jsonData) {
+        return @"{}";
+    } else {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        return jsonString;
+    }
+}
 
 - (NSMutableDictionary<NSString *, id> *)webViewDict:(KlarnaStandaloneWebView * _Nonnull)webView {
     NSDictionary *event = @{
