@@ -61,9 +61,15 @@ export class KlarnaCheckoutView extends Component<
             }>
           >
         ) => {
+          let params = {};
+          try {
+            params = JSON.parse(event.nativeEvent.productEvent.params);
+          } catch (e) {
+            console.error('Failed to parse productEvent.params', e);
+          }
           const productEvent: KlarnaProductEvent = {
             action: event.nativeEvent.productEvent.action,
-            params: JSON.parse(event.nativeEvent.productEvent.params),
+            params: params,
           };
           this.props.onEvent?.(productEvent);
         }}
