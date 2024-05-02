@@ -99,7 +99,9 @@ public class WebViewResizeObserver {
                 scriptBuilder.append("const container = document.querySelector('#klarna-checkout-container');\n");
                 break;
         }
-        scriptBuilder.append("console.log('Resize observer container selected: ', container);\n");
+        scriptBuilder.append("console.log('Resize observer container selected: ', container);\n" +
+                "const containerHeight = container.offsetHeight;\n" +
+                "console.log('Container height: ', containerHeight);\n");
         scriptBuilder.append("const resizeObserver = new ResizeObserver((entries) => {\n" +
                 "    console.log('Container size changed.', entries);\n" +
                 "    for (let entry of entries) {\n" +
@@ -110,7 +112,11 @@ public class WebViewResizeObserver {
                 "            if (listener != null) {\n" +
                 "                listener.onResized(height);\n" +
                 "                console.log('Container size sent to native: ', height);\n" +
+                "            } else {\n" +
+                "                console.error('Native resize observer not found.');\n" +
                 "            }\n" +
+                "        } else {\n" +
+                "            console.error('Content rect not found.');\n" +
                 "        }\n" +
                 "    }\n" +
                 "});\n");
