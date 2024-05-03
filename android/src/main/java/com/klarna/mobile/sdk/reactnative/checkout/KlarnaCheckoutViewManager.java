@@ -1,7 +1,6 @@
 package com.klarna.mobile.sdk.reactnative.checkout;
 
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,13 +69,10 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
         viewToDispatcher.put(new WeakReference<>(view), eventDispatcher);
 
         view.initiateWebViewResizeObserver(WebViewResizeObserver.TargetElement.BODY, (resizeObserverWrapperView, newHeight) -> {
-            Log.d("RNCheckout", "onResized: " + newHeight);
             if (resizeObserverWrapperView == null) {
-                Log.e("RNCheckout", "onResized: view not found");
                 return;
             }
             if (eventDispatcher == null) {
-                Log.e("RNCheckout", "onResized: event dispatcher not found");
                 return;
             }
             eventSender.sendOnResizedEvent(eventDispatcher, resizeObserverWrapperView.getId(), newHeight);
