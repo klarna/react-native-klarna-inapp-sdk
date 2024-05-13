@@ -108,7 +108,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:${getExtOrFallback('reactnativeVersion', '+')}"
 
-    implementation 'com.klarna.mobile:sdk:2.6.16'
+    implementation 'com.klarna.mobile:sdk:2.6.17'
 
     testImplementation "junit:junit:4.13"
     testImplementation 'androidx.test:core:1.2.0'
