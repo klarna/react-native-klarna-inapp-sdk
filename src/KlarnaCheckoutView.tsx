@@ -7,7 +7,7 @@ import type {
 import type { KlarnaProductEvent } from './types/common/KlarnaProductEvent';
 import type { KlarnaMobileSDKError } from './types/common/KlarnaMobileSDKError';
 import RNKlarnaCheckoutView, {
-  RNKlarnaCheckoutViewCommands,
+  Commands as RNKlarnaCheckoutViewCommands,
   type RNKlarnaCheckoutViewProps,
 } from './specs/KlarnaCheckoutViewNativeComponent';
 

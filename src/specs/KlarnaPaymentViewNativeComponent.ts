@@ -82,7 +82,7 @@ interface RNKlarnaPaymentViewNativeCommands {
   ) => void;
 }
 
-export const RNKlarnaPaymentViewCommands: RNKlarnaPaymentViewNativeCommands =
+export const Commands: RNKlarnaPaymentViewNativeCommands =
   codegenNativeCommands<RNKlarnaPaymentViewNativeCommands>({
     supportedCommands: [
       'initialize',
