@@ -1,11 +1,19 @@
-import {Keyboard, Text, TextInput, View} from 'react-native';
+import {
+  Keyboard,
+  ScrollView,
+  Text,
+  TextInput,
+  useColorScheme,
+  View,
+} from 'react-native';
 import {KlarnaCheckoutView} from '../../../src/KlarnaCheckoutView';
 import React, {useRef, useState} from 'react';
-import styles from '../common/ui/Styles';
+import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
 import testProps from '../common/util/TestProps';
 
 export default function KlarnaCheckoutScreen(): React.JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
   const checkoutViewRef = useRef<KlarnaCheckoutView>(null);
   const [snippet, setSnippet] = useState<string>();
   const [eventState, setEventState] = useState<string>();
@@ -74,42 +82,36 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}>
-      {renderSnippetInput()}
-      <View style={styles.buttonsContainer}>
-        {renderSetSnippetButton()}
-        {renderSuspendButton()}
-        {renderResumeButton()}
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      style={backgroundStyle(styles.scrollView, isDarkMode)}>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}>
+        {renderSnippetInput()}
+        <View style={styles.buttonsContainer}>
+          {renderSetSnippetButton()}
+          {renderSuspendButton()}
+          {renderResumeButton()}
+        </View>
+        <KlarnaCheckoutView
+          ref={checkoutViewRef}
+          style={styles.componentView}
+          returnUrl={'returnUrl://'}
+          checkoutOptions={{
+            merchantHandlesEPM: false,
+            merchantHandlesValidationErrors: false,
+          }}
+          onEvent={klarnaProductEvent => {
+            onEvent(JSON.stringify(klarnaProductEvent));
+          }}
+          onError={error => {
+            onEvent(JSON.stringify(error));
+          }}
+        />
+        <Text {...testProps('state_events')}>{eventState}</Text>
       </View>
-      <KlarnaCheckoutView
-        ref={checkoutViewRef}
-        style={styles.componentView}
-        returnUrl={'returnUrl://'}
-        checkoutOptions={{
-          merchantHandlesEPM: false,
-          merchantHandlesValidationErrors: false,
-        }}
-        onEvent={klarnaProductEvent => {
-          onEvent(
-            klarnaProductEvent.action,
-            JSON.stringify(klarnaProductEvent.params),
-            klarnaProductEvent.sessionId,
-          );
-        }}
-        onError={error => {
-          onEvent(
-            error.name,
-            error.message,
-            error.isFatal,
-            JSON.stringify(error.params),
-            error.sessionId,
-          );
-        }}
-      />
-      <Text {...testProps('state_events')}>{eventState}</Text>
-    </View>
+    </ScrollView>
   );
 }
