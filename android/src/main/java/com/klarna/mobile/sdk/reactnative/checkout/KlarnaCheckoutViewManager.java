@@ -67,6 +67,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<WrapperV
     @Override
     protected WrapperView<KlarnaCheckoutView> createViewInstance(@NonNull ThemedReactContext themedReactContext) {
         KlarnaCheckoutView klarnaCheckoutView = new KlarnaCheckoutView(reactAppContext, null, 0, eventHandler);
+        klarnaCheckoutView.setId(View.generateViewId());
         WrapperView<KlarnaCheckoutView> view = new WrapperView<>(reactAppContext, null, klarnaCheckoutView);
 
         // Each view has its own event dispatcher.
@@ -169,7 +170,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<WrapperV
         };
         WebViewResizeObserver webViewResizeObserver = new WebViewResizeObserver(
                 callback,
-                WebViewResizeObserver.TargetElement.BODY
+                WebViewResizeObserver.TargetElement.CHECKOUT_CONTAINER
         );
         viewIdToResizeObserver.put(viewId, webViewResizeObserver);
     }
