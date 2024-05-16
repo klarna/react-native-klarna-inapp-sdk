@@ -24,7 +24,6 @@ public class WrapperView<T extends View> extends FrameLayout {
         this.view = view;
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         addView(view, layoutParams);
-        view.setMinimumHeight(100);
     }
 
     public T getView() {
