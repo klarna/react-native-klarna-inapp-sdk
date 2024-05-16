@@ -73,9 +73,9 @@ PODS:
   - hermes-engine (0.72.4):
     - hermes-engine/Pre-built (= 0.72.4)
   - hermes-engine/Pre-built (0.72.4)
-  - KlarnaMobileSDK (2.6.16):
-    - KlarnaMobileSDK/basic (= 2.6.16)
-  - KlarnaMobileSDK/basic (2.6.16)
+  - KlarnaMobileSDK (2.6.19):
+    - KlarnaMobileSDK/basic (= 2.6.19)
+  - KlarnaMobileSDK/basic (2.6.19)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.07.22.00):
@@ -378,8 +378,8 @@ PODS:
   - React-jsinspector (0.72.4)
   - React-logger (0.72.4):
     - glog
-  - react-native-klarna-inapp-sdk (2.2.1):
-    - KlarnaMobileSDK (= 2.6.16)
+  - react-native-klarna-inapp-sdk (2.2.4):
+    - KlarnaMobileSDK (= 2.6.19)
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-safe-area-context (4.7.2):
@@ -692,7 +692,7 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: 81191603c4eaa01f5e4ae5737a9efcf64756c7b2
-  KlarnaMobileSDK: 624fd3cce529fe35b61fc1cbad967edcd1fc28a2
+  KlarnaMobileSDK: f461d71b046b93f157d840a7da6f8e52edbd9711
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
@@ -710,7 +710,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: c7f826e40fa9cab5d37cab6130b1af237332b594
   React-jsinspector: aaed4cf551c4a1c98092436518c2d267b13a673f
   React-logger: da1ebe05ae06eb6db4b162202faeafac4b435e77
-  react-native-klarna-inapp-sdk: 95021cde2dc882767b3ddef730dbe6508a391627
+  react-native-klarna-inapp-sdk: 31d50553efe4a5d986d8c9f50fac475b7818b2f7
   react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
   React-NativeModulesApple: edb5ace14f73f4969df6e7b1f3e41bef0012740f
   React-perflogger: 496a1a3dc6737f964107cb3ddae7f9e265ddda58
@@ -736,4 +736,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5f146ddb62f4ae63c85ec80898f0a94176f8ed53
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

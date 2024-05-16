@@ -71,13 +71,13 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, @Nullable WebResourceRequest request, @Nullable WebResourceError error) {
             if (error != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                klarnaStandaloneWebViewEventSender.sendErrorEvent(view, error.getErrorCode(), error.getDescription().toString());
+                klarnaStandaloneWebViewEventSender.sendNavigationErrorEvent(view, error.getErrorCode(), error.getDescription().toString());
             }
         }
 
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, int errorCode, @Nullable String description, @Nullable String failingUrl) {
-            klarnaStandaloneWebViewEventSender.sendErrorEvent(view, errorCode, description);
+            klarnaStandaloneWebViewEventSender.sendNavigationErrorEvent(view, errorCode, description);
         }
 
         @Override
