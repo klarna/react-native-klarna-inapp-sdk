@@ -24,6 +24,31 @@ using namespace facebook::react;
 
 @implementation KlarnaCheckoutViewWrapper
 
+#pragma mark - RN Klarna Checout View
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        static const auto defaultProps = std::make_shared<const RNKlarnaCheckoutViewProps>();
+        _props = defaultProps;
+    }
+    
+    return self;
+}
+
++ (ComponentDescriptorProvider)componentDescriptorProvider
+{
+    return concreteComponentDescriptorProvider<RNKlarnaCheckoutViewComponentDescriptor>();
+}
+
+Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
+{
+    return KlarnaCheckoutViewWrapper.class;
+}
+
+#pragma mark - RN Klarna Checout View Props
+
 - (void)updateProps:(const facebook::react::Props::Shared &)props oldProps:(const facebook::react::Props::Shared &)oldProps {
     const auto &oldViewProps = *std::static_pointer_cast<RNKlarnaCheckoutViewProps const>(_props);
     const auto &newViewProps = *std::static_pointer_cast<RNKlarnaCheckoutViewProps const>(props);
@@ -39,6 +64,9 @@ using namespace facebook::react;
     
     [super updateProps:props oldProps:oldProps];
 }
+
+
+#pragma mark - RN Klarna Checout View Methods
 
 - (void)initializeActualCheckoutView:(NSString*)returnUrl {
     self.actualCheckoutView = [[KlarnaCheckoutView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl] eventHandler:self];
