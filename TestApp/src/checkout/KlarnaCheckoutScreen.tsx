@@ -6,7 +6,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {KlarnaCheckoutView} from '../../../src/KlarnaCheckoutView';
+import {KlarnaCheckoutView} from 'react-native-klarna-inapp-sdk';
 import React, {useRef, useState} from 'react';
 import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
@@ -99,10 +99,6 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
           ref={checkoutViewRef}
           style={styles.componentView}
           returnUrl={'returnUrl://'}
-          checkoutOptions={{
-            merchantHandlesEPM: false,
-            merchantHandlesValidationErrors: false,
-          }}
           onEvent={klarnaProductEvent => {
             onEvent(JSON.stringify(klarnaProductEvent));
           }}

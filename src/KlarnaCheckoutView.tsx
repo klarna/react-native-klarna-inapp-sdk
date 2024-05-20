@@ -4,7 +4,6 @@ import type {
   NativeSyntheticEvent,
   ViewStyle,
 } from 'react-native';
-import type { KlarnaCheckoutOptions } from './types/checkout/KlarnaCheckoutOptions';
 import type { KlarnaProductEvent } from './types/common/KlarnaProductEvent';
 import type { KlarnaMobileSDKError } from './types/common/KlarnaMobileSDKError';
 import RNKlarnaCheckoutView, {
@@ -17,7 +16,6 @@ export interface KlarnaCheckoutViewProps {
   readonly returnUrl: string;
   readonly onEvent?: (klarnaProductEvent: KlarnaProductEvent) => void;
   readonly onError?: (error: KlarnaMobileSDKError) => void;
-  readonly checkoutOptions?: KlarnaCheckoutOptions;
 }
 
 interface KlarnaCheckoutViewState {
@@ -50,7 +48,6 @@ export class KlarnaCheckoutView extends Component<
           height: this.state.nativeViewHeight,
         }}
         returnUrl={this.props.returnUrl || ''}
-        checkoutOptions={this.props.checkoutOptions || {}}
         onEvent={(
           event: NativeSyntheticEvent<
             Readonly<{

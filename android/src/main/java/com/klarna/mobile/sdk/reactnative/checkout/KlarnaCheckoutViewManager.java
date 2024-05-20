@@ -28,7 +28,6 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
 
     // Commands that can be triggered from RN
     public static final String COMMAND_SET_RETURN_URL = "setReturnUrl";
-    public static final String COMMAND_SET_CHECKOUT_OPTIONS = "setCheckoutOptions";
     public static final String COMMAND_SET_SNIPPET = "setSnippet";
     public static final String COMMAND_SUSPEND = "suspend";
     public static final String COMMAND_RESUME = "resume";
@@ -107,9 +106,6 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
             case COMMAND_SET_RETURN_URL:
                 setReturnUrl(root, args != null ? args.getString(0) : null);
                 break;
-            case COMMAND_SET_CHECKOUT_OPTIONS:
-                setCheckoutOptions(root, args != null ? args.getMap(0) : null);
-                break;
             case COMMAND_SET_SNIPPET:
                 setSnippet(root, args != null ? args.getString(0) : null);
                 break;
@@ -125,19 +121,6 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     @Override
     public void setReturnUrl(ResizeObserverWrapperView<KlarnaCheckoutView> view, @Nullable String value) {
         view.getView().setReturnURL(value);
-    }
-
-    @Override
-    public void setCheckoutOptions(ResizeObserverWrapperView<KlarnaCheckoutView> view, @Nullable ReadableMap value) {
-        if (value == null || view.getView().getCheckoutOptions() != null) {
-            return;
-        }
-        if (value.hasKey("merchantHandlesEPM")) {
-            view.getView().getCheckoutOptions().setMerchantHandlesEPM(value.getBoolean("merchantHandlesEPM"));
-        }
-        if (value.hasKey("merchantHandlesValidationErrors")) {
-            view.getView().getCheckoutOptions().setMerchantHandlesValidationErrors(value.getBoolean("merchantHandlesValidationErrors"));
-        }
     }
 
     @Override

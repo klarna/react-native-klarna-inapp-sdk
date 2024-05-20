@@ -12,8 +12,6 @@ public abstract class RNKlarnaCheckoutViewSpec<T extends View> extends SimpleVie
 
     public abstract void setReturnUrl(T view, @Nullable String value);
 
-    public abstract void setCheckoutOptions(T view, @Nullable ReadableMap value);
-
     public abstract void setSnippet(T view, String snippet);
 
     public abstract void suspend(T view);

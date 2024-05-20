@@ -7,10 +7,6 @@ import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNati
 
 export interface RNKlarnaCheckoutViewProps extends ViewProps {
   readonly returnUrl: string;
-  readonly checkoutOptions: Readonly<{
-    readonly merchantHandlesEPM?: boolean;
-    readonly merchantHandlesValidationErrors?: boolean;
-  }>;
   readonly onEvent: DirectEventHandler<
     Readonly<{
       readonly productEvent: Readonly<{
