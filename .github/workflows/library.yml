@@ -17,7 +17,7 @@ jobs:
       - name: Lint files
         run: |
           yarn lint
-          yarn TestApp lint
+          (cd TestApp;yarn lint)
 
       - name: Typecheck files
         run: yarn typecheck

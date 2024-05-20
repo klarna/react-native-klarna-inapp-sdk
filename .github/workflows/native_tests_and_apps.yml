@@ -63,7 +63,7 @@ jobs:
         run: yarn test:android
 
       - name: Bundle TestApp JS for Android
-        run: mkdir TestApp/android/app/src/main/assets && yarn TestApp bundle:android
+        run: mkdir TestApp/android/app/src/main/assets && (cd TestApp;yarn bundle:android)
 
       - name: Build TestApp for Android
         run: |
@@ -129,12 +129,12 @@ jobs:
 
       - name: Install TestApp cocoapods
         run: |
-          yarn TestApp pods
+          (cd TestApp;yarn pods)
         env:
           NO_FLIPPER: 1
 
       - name: Bundle TestApp JS for iOS
-        run: yarn TestApp bundle:ios
+        run: (cd TestApp;yarn bundle:ios)
 
       - name: Build TestApp for iOS
         run: |
