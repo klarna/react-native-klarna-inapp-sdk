@@ -70,6 +70,7 @@
 		79BD25FF2BCD4F6C00D2D92A /* KlarnaCheckoutViewWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaCheckoutViewWrapper.mm; sourceTree = "<group>"; };
 		79BD26022BCD56D400D2D92A /* RNMobileSDKUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNMobileSDKUtils.h; sourceTree = "<group>"; };
 		79BD26032BCD572600D2D92A /* RNMobileSDKUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RNMobileSDKUtils.mm; sourceTree = "<group>"; };
+		79E2A0B02BFBA653002923A5 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		7A4208B9D3B0F45669A2E06F /* Pods-RNKlarnaMobileSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK.release.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK/Pods-RNKlarnaMobileSDK.release.xcconfig"; sourceTree = "<group>"; };
 		B074D4744315BBCD94D119E9 /* Pods-RNKlarnaMobileSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK.debug.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK/Pods-RNKlarnaMobileSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* KlarnaPaymentViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KlarnaPaymentViewManager.h; sourceTree = "<group>"; };
@@ -135,13 +136,14 @@
 			isa = PBXGroup;
 			children = (
 				79BD26012BCD56C000D2D92A /* common */,
+				9CDEDC2923475BAC006C9C97 /* view */,
 				79BD25F82BC97A0100D2D92A /* KlarnaCheckoutViewManager.h */,
 				79BD25F92BC97A3000D2D92A /* KlarnaCheckoutViewManager.mm */,
 				B3E7B5881CC2AC0600A0062D /* KlarnaPaymentViewManager.h */,
 				B3E7B5891CC2AC0600A0062D /* KlarnaPaymentViewManager.mm */,
 				42BC05FD2AC57D950044A9FE /* KlarnaStandaloneWebViewManager.h */,
 				42BC05FE2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.mm */,
-				9CDEDC2923475BAC006C9C97 /* view */,
+				79E2A0B02BFBA653002923A5 /* PrefixHeader.pch */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
