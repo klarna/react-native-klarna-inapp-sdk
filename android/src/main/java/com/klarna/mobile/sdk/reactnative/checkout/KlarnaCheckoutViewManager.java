@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
+import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.KlarnaLoggingLevel;
 import com.klarna.mobile.sdk.api.checkout.KlarnaCheckoutView;
@@ -21,13 +22,13 @@ import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaCheckoutViewSpec;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeObserverWrapperView<KlarnaCheckoutView>> {
 
     public static final String KLARNA_CHECKOUT_VIEW_REACT_CLASS = "RNKlarnaCheckoutView";
 
     // Commands that can be triggered from RN
-    public static final String COMMAND_SET_RETURN_URL = "setReturnUrl";
     public static final String COMMAND_SET_SNIPPET = "setSnippet";
     public static final String COMMAND_SUSPEND = "suspend";
     public static final String COMMAND_RESUME = "resume";
@@ -103,9 +104,6 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     @Override
     public void receiveCommand(@NonNull ResizeObserverWrapperView<KlarnaCheckoutView> root, String commandId, @Nullable ReadableArray args) {
         switch (commandId) {
-            case COMMAND_SET_RETURN_URL:
-                setReturnUrl(root, args != null ? args.getString(0) : null);
-                break;
             case COMMAND_SET_SNIPPET:
                 setSnippet(root, args != null ? args.getString(0) : null);
                 break;
@@ -118,9 +116,15 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
         }
     }
 
+    @ReactProp(name = "returnUrl")
     @Override
     public void setReturnUrl(ResizeObserverWrapperView<KlarnaCheckoutView> view, @Nullable String value) {
-        view.getView().setReturnURL(value);
+        KlarnaCheckoutView checkoutView = view.getView();
+        if (checkoutView != null) {
+            if (!Objects.equals(value, checkoutView.getReturnURL())) {
+                checkoutView.setReturnURL(value);
+            }
+        }
     }
 
     @Override
