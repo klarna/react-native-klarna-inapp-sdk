@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -60,7 +59,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     @NonNull
     @Override
     protected ResizeObserverWrapperView<KlarnaCheckoutView> createViewInstance(@NonNull ThemedReactContext themedReactContext) {
-        KlarnaCheckoutView klarnaCheckoutView = new KlarnaCheckoutView(reactAppContext, null, 0, eventHandler);
+        KlarnaCheckoutView klarnaCheckoutView = new KlarnaCheckoutView(reactAppContext.getCurrentActivity(), null, 0, eventHandler);
         klarnaCheckoutView.setLoggingLevel(KlarnaLoggingLevel.Verbose);
         ResizeObserverWrapperView<KlarnaCheckoutView> view = new ResizeObserverWrapperView<>(reactAppContext, null, klarnaCheckoutView);
 
