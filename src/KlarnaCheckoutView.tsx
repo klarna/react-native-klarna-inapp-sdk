@@ -126,3 +126,5 @@ export class KlarnaCheckoutView extends Component<
     }
   };
 }
+
+export default KlarnaCheckoutView;
