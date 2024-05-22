@@ -47,6 +47,10 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
     return KlarnaCheckoutViewWrapper.class;
 }
 
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
+    RCTRNKlarnaCheckoutViewHandleCommand(self, commandName, args);
+}
+
 #pragma mark - RN Klarna Checout View Props
 
 - (void)updateProps:(const facebook::react::Props::Shared &)props oldProps:(const facebook::react::Props::Shared &)oldProps {
@@ -58,7 +62,7 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
         if (self.actualCheckoutView != nil) {
             self.actualCheckoutView.returnURL = [NSURL URLWithString:newReturnUrl];
         } else {
-            
+            [self initializeActualCheckoutView:newReturnUrl];
         }
     }
     
