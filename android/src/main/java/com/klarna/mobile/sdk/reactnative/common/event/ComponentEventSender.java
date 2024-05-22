@@ -31,10 +31,10 @@ public abstract class ComponentEventSender<T extends View> {
 
     protected ComponentEvent createEvent(@Nullable View view, @NonNull String eventName, @Nullable WritableMap params) {
         T viewReference = getView(view);
-        if (view == null) {
+        if (viewReference == null) {
             return null;
         }
-        return new ComponentEvent(view.getId(), eventName, params);
+        return new ComponentEvent(viewReference.getId(), eventName, params);
     }
 
     protected void postEventForView(@Nullable View view, @NonNull String eventName, @Nullable WritableMap params) {

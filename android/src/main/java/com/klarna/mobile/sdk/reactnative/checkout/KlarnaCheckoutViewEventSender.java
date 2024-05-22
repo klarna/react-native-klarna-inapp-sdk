@@ -45,13 +45,12 @@ public class KlarnaCheckoutViewEventSender extends ComponentEventSender<ResizeOb
         KlarnaEventHandlerEventsUtil.sendKlarnaMobileSDKError(this, view, klarnaMobileSDKError);
     }
 
-    public void sendOnResizedEvent(@Nullable EventDispatcher eventDispatcher, int viewId, int height) {
+    public void sendOnResizedEvent(@Nullable KlarnaCheckoutView view, int height) {
         WritableMap params = ArgumentsUtil.createMap(
                 new HashMap<String, Object>() {{
                     put("height", String.valueOf(height));
                 }}
         );
-        ComponentEvent event = new ComponentEvent(viewId, EVENT_NAME_ON_RESIZED, params);
-        postEvent(eventDispatcher, event);
+        postEventForView(view, EVENT_NAME_ON_RESIZED, params);
     }
 }

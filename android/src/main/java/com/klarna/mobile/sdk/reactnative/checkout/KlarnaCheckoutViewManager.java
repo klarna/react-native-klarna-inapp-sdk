@@ -74,7 +74,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
             if (eventDispatcher == null) {
                 return;
             }
-            eventSender.sendOnResizedEvent(eventDispatcher, resizeObserverWrapperView.getId(), newHeight);
+            eventSender.sendOnResizedEvent(resizeObserverWrapperView.getView(), newHeight);
         });
         view.addInterfaceToWebView();
 
