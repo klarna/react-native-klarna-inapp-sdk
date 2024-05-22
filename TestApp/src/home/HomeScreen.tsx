@@ -44,6 +44,20 @@ export default function HomeScreen() {
           Klarna Standalone WebView
         </Text>
       </View>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}>
+        <Text
+          style={styles.navMenuItem}
+          {...testProps('navKlarnaCheckoutView')}
+          onPress={() => {
+            console.log('Navigating to Checkout');
+            navigation.navigate('KlarnaCheckout');
+          }}>
+          Klarna Checkout
+        </Text>
+      </View>
     </ScrollView>
   );
 }

@@ -15,11 +15,18 @@ public class WebViewResizeObserver {
         void onResized(int value);
     }
 
+    public enum TargetElement {
+        PAYMENT_CONTAINER,
+        CHECKOUT_CONTAINER
+    }
+
     private static final String JS_INTERFACE_NAME = "NativeResizeObserver";
     private final WeakReference<WebViewResizeObserverCallback> callback;
+    private final TargetElement targetElement;
 
-    public WebViewResizeObserver(WebViewResizeObserverCallback callback) {
+    public WebViewResizeObserver(WebViewResizeObserverCallback callback, TargetElement targetElement) {
         this.callback = new WeakReference<>(callback);
+        this.targetElement = targetElement;
     }
 
     public void addInterface(WebView webView) {
@@ -78,23 +85,56 @@ public class WebViewResizeObserver {
     }
 
     private String initScript() {
-        return "const container = document.querySelector('#payment-container');\n" +
-                "const resizeObserver = new ResizeObserver((entries) => {\n" +
-                "    for (let entry of entries) {\n" +
-                "        console.log('New dimensions found: ', entry);\n" +
-                "        if (entry.contentRect) {\n" +
-                "            const height = entry.contentRect.height;\n" +
-                "            const listener = window.NativeResizeObserver;\n" +
-                "            if (listener != null) {\n" +
-                "                listener.onResized(height);\n" +
-                "            }\n" +
-                "        }\n" +
-                "    }\n" +
-                "    console.log('Container size changed');\n" +
-                "});\n" +
-                "if (container != null) {\n" +
-                "    resizeObserver.observe(container);\n" +
-                "}\n" +
-                "console.log('Resize observer initialized');";
+        StringBuilder scriptBuilder = new StringBuilder();
+        switch (targetElement) {
+            case PAYMENT_CONTAINER:
+                scriptBuilder.append("console.log('Resize observer injection started');\n");
+                scriptBuilder.append("const container = document.querySelector('#payment-container');\n");
+                scriptBuilder.append("console.log('Resize observer container selected: ', container);\n");
+                scriptBuilder.append("const resizeObserver = new ResizeObserver((entries) => {\n" +
+                        "    console.log('Container size changed.', entries);\n" +
+                        "    for (let entry of entries) {\n" +
+                        "        console.log('New dimensions found: ', entry);\n" +
+                        "        if (entry.contentRect) {\n" +
+                        "            const height = entry.contentRect.height;\n" +
+                        "            const listener = window.NativeResizeObserver;\n" +
+                        "            if (listener != null) {\n" +
+                        "                listener.onResized(height);\n" +
+                        "                console.log('Container size sent to native: ', height);\n" +
+                        "            }\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "});\n");
+                scriptBuilder.append("console.log('Resize observer initialized.');\n");
+                scriptBuilder.append("if (container != null) {\n" +
+                        "    resizeObserver.observe(container);\n" +
+                        "    console.log('Resize observer set to component.');\n" +
+                        "}\n");
+                scriptBuilder.append("console.log('Resize observer injection finished.');");
+                break;
+            case CHECKOUT_CONTAINER:
+                scriptBuilder.append("const kcoIframe = document.getElementById('klarna-checkout-iframe')\n");
+                scriptBuilder.append("window.addEventListener('message', (message) => {\n" +
+                        "                if (message.source !== kcoIframe && message.data) {\n" +
+                        "                    try {\n" +
+                        "                        const data = JSON.parse(message.data)\n" +
+                        "                        if (data.event === 'frame:checkout:resize') {\n" +
+                        "                            const listener = window.NativeResizeObserver;\n" +
+                        "                            if (listener != null) {\n" +
+                        "                                const height = data.args[0];" +
+                        "                                listener.onResized(height);\n" +
+                        "                                console.log('Container size sent to native: ', height);\n" +
+                        "                            } else {\n" +
+                        "                                console.log('listener is null!')\n" +
+                        "                            }\n" +
+                        "                        }\n" +
+                        "                    } catch (error) {\n" +
+                        "                        console.log('Could not parse message.data', message);\n" +
+                        "                    }\n" +
+                        "                 }\n" +
+                        "             });\n");
+                break;
+        }
+        return scriptBuilder.toString();
     }
 }

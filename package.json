@@ -86,10 +86,10 @@
     "turbo": "^1.10.7",
     "typescript": "^5.0.2"
   },
-  "dependencies": {},
   "engines": {
     "node": ">=16"
   },
+  "packageManager": "yarn@1.22.22",
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",

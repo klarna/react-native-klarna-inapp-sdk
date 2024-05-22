@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative.common;
+package com.klarna.mobile.sdk.reactnative.common.util;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;

@@ -11,7 +11,7 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 import com.google.gson.Gson;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebView;
-import com.klarna.mobile.sdk.reactnative.common.ArgumentsUtil;
+import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

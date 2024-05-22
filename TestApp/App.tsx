@@ -11,6 +11,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/home/HomeScreen';
 import PaymentsScreen from './src/payments/PaymentsScreen';
 import StandaloneWebViewScreen from './src/standalonewebview/StandaloneWebViewScreen';
+import KlarnaCheckoutScreen from './src/checkout/KlarnaCheckoutScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -27,6 +28,7 @@ const AppStack = () => {
         name="StandaloneWebView"
         component={StandaloneWebViewScreen}
       />
+      <Stack.Screen name="KlarnaCheckout" component={KlarnaCheckoutScreen} />
     </Stack.Navigator>
   );
 };
@@ -43,6 +45,7 @@ type AppStackParamList = {
   Home: undefined;
   Payments: undefined;
   StandaloneWebView: undefined;
+  KlarnaCheckout: undefined;
 };
 
 export type {AppStackParamList};
