@@ -8,8 +8,9 @@
 
 This library wraps Klarna Mobile SDK and exposes its functionality as React Native components. It
 currently has the following components:
-- `KlarnaPaymentView` to integrate Klarna Payments,
-- `KlarnaStandaloneWebView` to integrate Klarna Standalone WebView.
+- `KlarnaPaymentView` to integrate Klarna Payments
+- `KlarnaStandaloneWebView` to integrate Klarna Standalone WebView
+- `KlarnaCheckoutView` to integrate Klarna Checkout
 
 This repository also includes a test application that you can use to see how it works.
 
