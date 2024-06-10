@@ -26,7 +26,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 -(void)dealloc {
-    [self.klarnaStandaloneWebView removeObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS context:nil];
+    @try {
+        [self.klarnaStandaloneWebView removeObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS context:nil];
+    } @catch(NSException *exception) {
+        RCTLog(@"Could not remove observer: %@", exception);
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -71,10 +75,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         // TODO: initWithReturnURL expects a non-null URL. What should we do here if returnUrl is null?
         self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:@"returnUrl://"]];
     }
-    
     self.klarnaStandaloneWebView.translatesAutoresizingMaskIntoConstraints = NO;
 
     [self addSubview:self.klarnaStandaloneWebView];
+
+    [self setWebViewBackgroundToTransparent];
     
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
                                              [self.klarnaStandaloneWebView.topAnchor constraintEqualToAnchor:self.topAnchor],
@@ -188,6 +193,17 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         @"canGoForward" : @(webView.canGoForward)
       };
     return [[NSMutableDictionary alloc] initWithDictionary: event];
+}
+
+- (void)setWebViewBackgroundToTransparent {
+    for (UIView *subview in self.klarnaStandaloneWebView.subviews) {
+        if ([subview isKindOfClass:[WKWebView class]]) {
+            WKWebView *webView = (WKWebView *)subview;
+            webView.backgroundColor = [UIColor clearColor];
+            webView.opaque = NO;
+            webView.scrollView.backgroundColor = [UIColor clearColor];
+        }
+    }
 }
 
 @end
