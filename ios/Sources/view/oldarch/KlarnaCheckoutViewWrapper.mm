@@ -1,6 +1,6 @@
 #if !RCT_NEW_ARCH_ENABLED
 
-#import "KlarnaCheckoutViewWrapper.h"
+#import "../KlarnaCheckoutViewWrapper.h"
 #import "../../common/RNMobileSDKUtils.h"
 
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>

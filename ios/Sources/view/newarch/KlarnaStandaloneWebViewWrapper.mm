@@ -1,6 +1,6 @@
 #if RCT_NEW_ARCH_ENABLED
 
-#import "KlarnaStandaloneWebViewWrapper.h"
+#import "../KlarnaStandaloneWebViewWrapper.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>

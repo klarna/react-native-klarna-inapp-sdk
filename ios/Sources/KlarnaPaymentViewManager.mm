@@ -3,11 +3,7 @@
 #import <React/RCTUIManager.h>
 #import <React/RCTLog.h>
 
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "view/newarch/PaymentViewWrapper.h"
-#else
-#import "view/oldarch/PaymentViewWrapper.h"
-#endif
+#import "view/PaymentViewWrapper.h"
 
 @implementation KlarnaPaymentViewManager
 

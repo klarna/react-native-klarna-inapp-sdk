@@ -3,11 +3,7 @@
 #import <React/RCTUIManager.h>
 #import <React/RCTLog.h>
 
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "view/newarch/KlarnaStandaloneWebViewWrapper.h"
-#else
-#import "view/oldarch/KlarnaStandaloneWebViewWrapper.h"
-#endif
+#import "view/KlarnaStandaloneWebViewWrapper.h"
 
 @implementation KlarnaStandaloneWebViewManager
 

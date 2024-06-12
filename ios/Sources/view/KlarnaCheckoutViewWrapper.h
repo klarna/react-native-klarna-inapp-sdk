@@ -1,14 +1,20 @@
-#if !RCT_NEW_ARCH_ENABLED
-
 #import <React/RCTUIManager.h>
-
-#import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+
+#if RCT_NEW_ARCH_ENABLED
+#import <React/RCTViewComponentView.h>
+#else
+#import <AVFoundation/AVFoundation.h>
 #import <React/RCTView.h>
-#import <React/RCTUIManager.h>
+#endif
+
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+#if RCT_NEW_ARCH_ENABLED
+@interface KlarnaCheckoutViewWrapper : RCTViewComponentView
+#else
 @interface KlarnaCheckoutViewWrapper : UIView
 
 @property (nonatomic, copy) RCTDirectEventBlock onEvent;
@@ -17,10 +23,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString* returnUrl;
 
-#pragma mark - React Native Overrides
 - (void) setReturnUrl:(NSString * _Nonnull)returnUrl;
 - (void) evaluateProps;
 - (void) initializeActualCheckoutView;
+#endif
+
+#pragma mark - React Native Overrides
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
 
@@ -32,6 +40,5 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END
 
-#endif
+NS_ASSUME_NONNULL_END

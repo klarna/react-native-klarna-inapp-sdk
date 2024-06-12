@@ -1,14 +1,20 @@
-#if !RCT_NEW_ARCH_ENABLED
-
 #import <React/RCTUIManager.h>
-
-#import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+
+#if RCT_NEW_ARCH_ENABLED
+#import <React/RCTViewComponentView.h>
+#else
+#import <AVFoundation/AVFoundation.h>
 #import <React/RCTView.h>
-#import <React/RCTUIManager.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
+#if RCT_NEW_ARCH_ENABLED
+@interface KlarnaStandaloneWebViewWrapper : RCTViewComponentView
+
+- (void) initializeKlarnaStandaloneWebView:(nonnull NSString*)returnUrl;
+#else
 @interface KlarnaStandaloneWebViewWrapper : UIView
 
 @property (nonatomic, copy) RCTDirectEventBlock onLoadStart;
@@ -19,9 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString* returnUrl;
 
-#pragma mark - React Native Overrides
-
 - (void)initializeKlarnaStandaloneWebView;
+#endif
+
+#pragma mark - React Native Overrides
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
 
@@ -36,7 +43,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif
-
-
