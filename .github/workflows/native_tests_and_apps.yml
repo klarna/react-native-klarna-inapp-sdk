@@ -55,6 +55,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup
+        uses: ./.github/actions/setup
+
       - name: Cache Lib cocoapods
         id: cocoapods-cache-lib
         uses: actions/cache@v3
