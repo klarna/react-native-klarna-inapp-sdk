@@ -7,22 +7,22 @@ import com.klarna.mobile.sdk.api.KlarnaProduct;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ArgumentsUtil.class})
+@RunWith(MockitoJUnitRunner.class)
 public class KlarnaEventHandlerEventsUtilTest {
 
+    private MockedStatic<ArgumentsUtil> mockedStaticArgumentsUtil;
     private ComponentEventSender componentEventSender;
     private View view;
 
@@ -31,8 +31,13 @@ public class KlarnaEventHandlerEventsUtilTest {
         componentEventSender = Mockito.mock(ComponentEventSender.class);
         view = Mockito.mock(View.class);
 
-        PowerMockito.mockStatic(ArgumentsUtil.class);
+        mockedStaticArgumentsUtil = Mockito.mockStatic(ArgumentsUtil.class);
         Mockito.when(ArgumentsUtil.createMap(Mockito.anyMap())).thenAnswer(invocation -> null);
+    }
+
+    @After
+    public void teardown() {
+        mockedStaticArgumentsUtil.close();
     }
 
     @Test

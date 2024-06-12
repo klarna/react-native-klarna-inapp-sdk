@@ -11,32 +11,32 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Arguments.class, SystemClock.class})
 public class ComponentEventTest {
+
+    private MockedStatic<Arguments> mockedStaticArguments;
+    private MockedStatic<SystemClock> mockedStaticSystemClock;
 
     @Before
     public void setup() {
-        PowerMockito.mockStatic(Arguments.class);
-        PowerMockito.when(Arguments.createArray())
+        mockedStaticArguments = Mockito.mockStatic(Arguments.class);
+        Mockito.when(Arguments.createArray())
                 .thenAnswer(invocation -> {
                     return new JavaOnlyArray();
                 });
-        PowerMockito.when(Arguments.createMap())
+        Mockito.when(Arguments.createMap())
                 .thenAnswer(invocation -> {
                     return new JavaOnlyMap();
                 });
-        PowerMockito.mockStatic(SystemClock.class);
+        mockedStaticSystemClock = Mockito.mockStatic(SystemClock.class);
     }
 
     @After
     public void teardown() {
-
+        mockedStaticArguments.close();
+        mockedStaticSystemClock.close();
     }
 
     @Test

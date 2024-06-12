@@ -23,26 +23,19 @@ import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.Collections;
 
-@PrepareForTest({Arguments.class})
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*", "com.android.*"})
 public class KlarnaPaymentViewManagerTest {
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
+    private MockedStatic<Arguments> mockedStaticArguments;
     private KlarnaPaymentViewManager manager;
     private PaymentViewWrapper wrapper;
 
@@ -56,16 +49,17 @@ public class KlarnaPaymentViewManagerTest {
         wrapper = Mockito.mock(PaymentViewWrapper.class);
         wrapper.paymentView = Mockito.mock(KlarnaPaymentView.class);
 
-        PowerMockito.mockStatic(Arguments.class);
-        PowerMockito.when(Arguments.createArray())
+        mockedStaticArguments = Mockito.mockStatic(Arguments.class);
+        Mockito.when(Arguments.createArray())
                 .thenAnswer(invocation -> new JavaOnlyArray());
-        PowerMockito.when(Arguments.createMap())
+        Mockito.when(Arguments.createMap())
                 .thenAnswer(invocation -> new JavaOnlyMap());
     }
 
     @After
     public void teardown() {
         Mockito.reset(wrapper, wrapper.paymentView);
+        mockedStaticArguments.close();
     }
 
     @Test
