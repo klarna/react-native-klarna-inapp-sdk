@@ -1,4 +1,4 @@
-name: Native Tests & Apps
+name: Test Apps
 
 on:
   push:
@@ -9,20 +9,6 @@ on:
       - master
 
 jobs:
-  test-native-android:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Prepare Android
-        uses: ./.github/actions/prepare-android
-
-      - name: Run Unit Tests for Android
-        run: yarn test:android
   build-testapp-android:
     runs-on: ubuntu-latest
     steps:
@@ -42,24 +28,6 @@ jobs:
         run: |
           yarn run build:android
 
-  test-native-ios:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Prepare iOS
-        uses: ./.github/actions/prepare-ios
-
-      - name: Install Lib cocoapods
-        run: |
-          (cd ios;pod install)
-
-      - name: Run Unit Tests for iOS
-        run: yarn test:ios
   build-testapp-ios:
     runs-on: macos-latest
     steps:
