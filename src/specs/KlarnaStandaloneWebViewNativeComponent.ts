@@ -85,7 +85,7 @@ interface RNKlarnaStandaloneWebViewNativeCommands {
   ) => void;
 }
 
-export const RNKlarnaStandaloneWebViewCommands: RNKlarnaStandaloneWebViewNativeCommands =
+export const Commands: RNKlarnaStandaloneWebViewNativeCommands =
   codegenNativeCommands<RNKlarnaStandaloneWebViewNativeCommands>({
     supportedCommands: ['load', 'goBack', 'goForward', 'reload'],
   });

@@ -48,7 +48,7 @@ interface RNKlarnaCheckoutViewNativeCommands {
   ) => void;
 }
 
-export const RNKlarnaCheckoutViewCommands: RNKlarnaCheckoutViewNativeCommands =
+export const Commands: RNKlarnaCheckoutViewNativeCommands =
   codegenNativeCommands<RNKlarnaCheckoutViewNativeCommands>({
     supportedCommands: ['setSnippet', 'suspend', 'resume'],
   });

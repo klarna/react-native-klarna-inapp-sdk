@@ -4,8 +4,11 @@ description: Setup Node.js and install dependencies
 runs:
   using: composite
   steps:
+    - name: Enable corepack
+      shell: bash
+      run: corepack enable
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18.17.1'
         cache: 'yarn'
@@ -24,6 +27,6 @@ runs:
     - name: Install dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: |
-        yarn install --cwd TestApp --frozen-lockfile
         yarn install --frozen-lockfile
+        (cd TestApp;yarn install --frozen-lockfile)
       shell: bash

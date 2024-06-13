@@ -1,0 +1,4 @@
+/* PrefixHeader_h */
+#ifdef __OBJC__
+#import <WebKit/WebKit.h>
+#endif

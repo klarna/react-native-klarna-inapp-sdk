@@ -1,5 +1,14 @@
 package com.klarna.mobile.sdk.reactnative.payments;
 
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_ERROR;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW;
+import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE;
+import static org.mockito.Mockito.mock;
+
 import android.os.SystemClock;
 
 import com.facebook.react.bridge.Arguments;
@@ -18,40 +27,23 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RobolectricTestRunner;
 
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_AUTHORIZE;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_ERROR;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_FINALIZE;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_INITIALIZE;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_LOAD_PAYMENT_REVIEW;
-import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentEvent.EVENT_NAME_ON_REAUTHORIZE;
-import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-
-@PrepareForTest({ReactChoreographer.class, Arguments.class, SystemClock.class})
-@RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*", "com.android.*"})
+@RunWith(MockitoJUnitRunner.class)
 public class KlarnaPaymentEventTest {
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
+    private MockedStatic<ReactChoreographer> mockedStaticReactChoreographer;
+    private MockedStatic<Arguments> mockedStaticArguments;
+    private MockedStatic<SystemClock> mockedStaticSystemClock;
 
     private CatalystInstance catalystInstance;
     private ReactApplicationContext reactContext;
-
-    private UIManagerModule uiManagerModuleMock;
     private EventDispatcher eventDispatcherMock;
 
     @Before
@@ -59,22 +51,19 @@ public class KlarnaPaymentEventTest {
         reactContext = mock(ReactApplicationContext.class);
         catalystInstance = mock(CatalystInstance.class);
 
-        uiManagerModuleMock = mock(UIManagerModule.class);
         eventDispatcherMock = new EventDispatcherImpl(reactContext);
-        when(uiManagerModuleMock.getEventDispatcher())
-                .thenReturn(eventDispatcherMock);
 
         final ReactChoreographer choreographerMock = mock(ReactChoreographer.class);
-        PowerMockito.mockStatic(ReactChoreographer.class);
-        when(ReactChoreographer.getInstance()).thenAnswer(new Answer<Object>() {
+        mockedStaticReactChoreographer = Mockito.mockStatic(ReactChoreographer.class);
+        Mockito.when(ReactChoreographer.getInstance()).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return choreographerMock;
             }
         });
 
-        PowerMockito.mockStatic(Arguments.class);
-        PowerMockito.when(Arguments.createArray())
+        mockedStaticArguments = Mockito.mockStatic(Arguments.class);
+        Mockito.when(Arguments.createArray())
                 .thenAnswer(
                         new Answer<Object>() {
                             @Override
@@ -82,7 +71,7 @@ public class KlarnaPaymentEventTest {
                                 return new JavaOnlyArray();
                             }
                         });
-        PowerMockito.when(Arguments.createMap())
+        Mockito.when(Arguments.createMap())
                 .thenAnswer(
                         new Answer<Object>() {
                             @Override
@@ -90,12 +79,15 @@ public class KlarnaPaymentEventTest {
                                 return new JavaOnlyMap();
                             }
                         });
-        PowerMockito.mockStatic(SystemClock.class);
+        mockedStaticSystemClock = Mockito.mockStatic(SystemClock.class);
     }
 
     @After
     public void teardown() {
-        Mockito.reset(reactContext, catalystInstance, uiManagerModuleMock);
+        Mockito.reset(reactContext, catalystInstance);
+        mockedStaticReactChoreographer.close();
+        mockedStaticArguments.close();
+        mockedStaticSystemClock.close();
     }
 
     @Test

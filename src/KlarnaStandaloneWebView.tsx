@@ -5,7 +5,7 @@ import type {
   ViewStyle,
 } from 'react-native';
 import RNKlarnaStandaloneWebView, {
-  RNKlarnaStandaloneWebViewCommands,
+  Commands as RNKlarnaStandaloneWebViewCommands,
   type RNKlarnaStandaloneWebViewProps,
 } from './specs/KlarnaStandaloneWebViewNativeComponent';
 import type { Double } from 'react-native/Libraries/Types/CodegenTypes';

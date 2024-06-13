@@ -5,7 +5,7 @@ import type {
   ViewStyle,
 } from 'react-native';
 import RNKlarnaPaymentView, {
-  RNKlarnaPaymentViewCommands,
+  Commands as RNKlarnaPaymentViewCommands,
   type RNKlarnaPaymentViewProps,
 } from './specs/KlarnaPaymentViewNativeComponent';
 

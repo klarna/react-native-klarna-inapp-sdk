@@ -7,14 +7,14 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.EventDispatcher;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -22,10 +22,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({UIManagerHelper.class, SystemClock.class})
+@RunWith(MockitoJUnitRunner.class)
 public class ComponentEventSenderTest {
 
+    private MockedStatic<UIManagerHelper> mockedStaticUiManagerHelper;
+    private MockedStatic<SystemClock> mockedStaticSystemClock;
     private TestEventSender testEventSender;
     private View view;
     private EventDispatcher eventDispatcher;
@@ -40,9 +41,15 @@ public class ComponentEventSenderTest {
         }};
         testEventSender = new TestEventSender(viewToDispatcher);
 
-        PowerMockito.mockStatic(UIManagerHelper.class);
+        mockedStaticUiManagerHelper = Mockito.mockStatic(UIManagerHelper.class);
         Mockito.when(UIManagerHelper.getEventDispatcherForReactTag(Mockito.any(), Mockito.anyInt())).thenAnswer(invocation -> eventDispatcher);
-        PowerMockito.mockStatic(SystemClock.class);
+        mockedStaticSystemClock = Mockito.mockStatic(SystemClock.class);
+    }
+
+    @After
+    public void teardown() {
+        mockedStaticUiManagerHelper.close();
+        mockedStaticSystemClock.close();
     }
 
     @Test
