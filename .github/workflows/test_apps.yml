@@ -61,7 +61,7 @@ jobs:
 
       - name: Install TestApp cocoapods
         run: |
-          (cd TestApp/ios;pod install)
+          (cd TestApp/ios;bundle exec pod install)
 
       - name: Bundle TestApp JS for iOS
         run: (cd TestApp;yarn bundle:ios)
@@ -84,7 +84,7 @@ jobs:
 
       - name: Install TestApp cocoapods
         run: |
-          (cd TestApp/ios;RCT_NEW_ARCH_ENABLED=1 pod install)
+          (cd TestApp/ios;RCT_NEW_ARCH_ENABLED=1 bundle exec pod install)
 
       - name: Bundle TestApp JS for iOS
         run: (cd TestApp;yarn bundle:ios)

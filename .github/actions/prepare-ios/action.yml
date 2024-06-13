@@ -3,6 +3,8 @@ description: Prepare iOS environment
 
 runs:
   using: composite
+  env:
+    BUNDLE_GEMFILE: ${{ github.workspace }}/TestApp/Gemfile
   steps:
     - name: Cache Pods
       uses: actions/cache@v4
@@ -13,3 +15,8 @@ runs:
         key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-pods-
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+        bundler-cache: true
