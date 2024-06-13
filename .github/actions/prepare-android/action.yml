@@ -1,0 +1,19 @@
+name: Prepare Android
+description: Prepare Android environment
+
+runs:
+  using: composite
+  steps:
+    - name: Set up our JDK environment
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+          cache-dependency-path: |
+            **/*.gradle*
+            **/gradle-wrapper.properties
+
+    - name: Finalize Android SDK
+      run: |
+        /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
