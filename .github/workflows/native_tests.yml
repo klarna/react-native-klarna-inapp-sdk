@@ -8,6 +8,9 @@ on:
     branches:
       - master
 
+env:
+  BUNDLE_GEMFILE: ${{ github.workspace }}/TestApp/Gemfile
+
 jobs:
   test-native-android:
     runs-on: ubuntu-latest

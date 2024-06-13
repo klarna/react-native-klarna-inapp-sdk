@@ -3,8 +3,6 @@ description: Prepare iOS environment
 
 runs:
   using: composite
-  env:
-    BUNDLE_GEMFILE: ${{ github.workspace }}/TestApp/Gemfile
   steps:
     - name: Cache Pods
       uses: actions/cache@v4
