@@ -15,5 +15,6 @@ runs:
           **/gradle-wrapper.properties
 
     - name: Finalize Android SDK
+      shell: bash
       run: |
         /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
