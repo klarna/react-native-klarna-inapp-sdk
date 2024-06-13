@@ -12,11 +12,7 @@
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import "../Sources/KlarnaPaymentViewManager.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "../Sources/view/newarch/PaymentViewWrapper.h"
-#else
-#import "../Sources/view/oldarch/PaymentViewWrapper.h"
-#endif
+#import "../Sources/view/PaymentViewWrapper.h"
 
 @interface PaymentViewWrapperTests : XCTestCase
 
