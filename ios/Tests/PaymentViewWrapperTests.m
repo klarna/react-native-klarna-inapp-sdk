@@ -14,6 +14,14 @@
 
 #import "../Sources/view/PaymentViewWrapper.h"
 
+@interface PaymentViewWrapper ()
+
+// declaring private methods to be able to verify them with OCMock
+- (void) evaluateProps;
+- (void) initializeActualPaymentView;
+
+@end
+
 @interface PaymentViewWrapperTests : XCTestCase
 
 @property (nonatomic, strong) PaymentViewWrapper* paymentViewWrapper;
