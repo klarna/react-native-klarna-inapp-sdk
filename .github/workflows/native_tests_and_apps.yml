@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build-android:
+  test-native-android:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,6 +23,17 @@ jobs:
 
       - name: Run Unit Tests for Android
         run: yarn test:android
+  build-testapp-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Prepare Android
+        uses: ./.github/actions/prepare-android
 
       - name: Bundle TestApp JS for Android
         run: mkdir TestApp/android/app/src/main/assets && (cd TestApp;yarn bundle:android)
@@ -31,7 +42,7 @@ jobs:
         run: |
           yarn run build:android
 
-  build-ios:
+  test-native-ios:
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -49,6 +60,17 @@ jobs:
 
       - name: Run Unit Tests for iOS
         run: yarn test:ios
+  build-testapp-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Prepare iOS
+        uses: ./.github/actions/prepare-ios
 
       - name: Install TestApp cocoapods
         run: |
