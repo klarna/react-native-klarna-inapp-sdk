@@ -5,14 +5,14 @@ runs:
   using: composite
   steps:
     - name: Set up our JDK environment
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'gradle'
-          cache-dependency-path: |
-            **/*.gradle*
-            **/gradle-wrapper.properties
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'gradle'
+        cache-dependency-path: |
+          **/*.gradle*
+          **/gradle-wrapper.properties
 
     - name: Finalize Android SDK
       run: |

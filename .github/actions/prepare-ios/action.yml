@@ -4,13 +4,12 @@ description: Prepare iOS environment
 runs:
   using: composite
   steps:
-    - name: Cache Lib cocoapods
-        id: cocoapods-cache-lib
-        uses: actions/cache@v3
-        with:
-          path: |
-            ios/Pods
-            TestApp/ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cocoapods-
+    - name: Cache Pods
+      uses: actions/cache@v4
+      with:
+        path: |
+          ios/Pods
+          TestApp/ios/Pods
+        key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pods-
