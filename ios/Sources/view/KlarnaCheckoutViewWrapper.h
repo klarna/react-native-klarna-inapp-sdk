@@ -24,8 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString* returnUrl;
 
 - (void) setReturnUrl:(NSString * _Nonnull)returnUrl;
-- (void) evaluateProps;
-- (void) initializeActualCheckoutView;
 #endif
 
 #pragma mark - React Native Overrides

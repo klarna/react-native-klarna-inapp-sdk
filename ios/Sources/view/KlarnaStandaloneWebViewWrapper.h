@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #if RCT_NEW_ARCH_ENABLED
 @interface KlarnaStandaloneWebViewWrapper : RCTViewComponentView
-
-- (void) initializeKlarnaStandaloneWebView:(nonnull NSString*)returnUrl;
 #else
 @interface KlarnaStandaloneWebViewWrapper : UIView
 
@@ -24,8 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onKlarnaMessage;
 
 @property (nonatomic, strong) NSString* returnUrl;
-
-- (void)initializeKlarnaStandaloneWebView;
 #endif
 
 #pragma mark - React Native Overrides

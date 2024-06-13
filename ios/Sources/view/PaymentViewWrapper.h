@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #if RCT_NEW_ARCH_ENABLED
 @interface PaymentViewWrapper : RCTViewComponentView
-
-- (void) initializeActualPaymentView:(NSString*)category withReturnUrl:(NSString*)returnUrl;
 #else
 @interface PaymentViewWrapper : UIView
 
@@ -30,8 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString* returnUrl;
 
 - (void) setCategory:(NSString *)category;
-- (void) evaluateProps;
-- (void) initializeActualPaymentView;
 #endif
 
 #pragma mark - React Native Overrides
