@@ -1,6 +1,6 @@
 #if !RCT_NEW_ARCH_ENABLED
 
-#import "PaymentViewWrapper.h"
+#import "../PaymentViewWrapper.h"
 
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>

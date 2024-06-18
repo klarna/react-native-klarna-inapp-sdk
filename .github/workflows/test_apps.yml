@@ -1,4 +1,4 @@
-name: Native Tests & Apps
+name: Test Apps
 
 on:
   push:
@@ -8,21 +8,10 @@ on:
     branches:
       - master
 
+env:
+  BUNDLE_GEMFILE: ${{ github.workspace }}/TestApp/Gemfile
+
 jobs:
-  test-native-android:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Prepare Android
-        uses: ./.github/actions/prepare-android
-
-      - name: Run Unit Tests for Android
-        run: yarn test:android
   build-testapp-android:
     runs-on: ubuntu-latest
     steps:
@@ -42,8 +31,8 @@ jobs:
         run: |
           yarn run build:android
 
-  test-native-ios:
-    runs-on: macos-latest
+  build-testapp-newarch-android:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,15 +40,16 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Prepare iOS
-        uses: ./.github/actions/prepare-ios
+      - name: Prepare Android
+        uses: ./.github/actions/prepare-android
 
-      - name: Install Lib cocoapods
+      - name: Bundle TestApp JS for Android
+        run: mkdir TestApp/android/app/src/main/assets && (cd TestApp;yarn bundle:android)
+
+      - name: Build TestApp for Android
         run: |
-          (cd ios;pod install)
+          ORG_GRADLE_PROJECT_newArchEnabled=true yarn run build:android
 
-      - name: Run Unit Tests for iOS
-        run: yarn test:ios
   build-testapp-ios:
     runs-on: macos-latest
     steps:
@@ -74,7 +64,30 @@ jobs:
 
       - name: Install TestApp cocoapods
         run: |
-          (cd TestApp/ios;pod install)
+          (cd TestApp/ios;bundle exec pod install)
+
+      - name: Bundle TestApp JS for iOS
+        run: (cd TestApp;yarn bundle:ios)
+
+      - name: Build TestApp for iOS
+        run: |
+          yarn run build:ios
+
+  build-testapp-newarch-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Prepare iOS
+        uses: ./.github/actions/prepare-ios
+
+      - name: Install TestApp cocoapods
+        run: |
+          (cd TestApp/ios;rm Podfile.lock;RCT_NEW_ARCH_ENABLED=1 bundle exec pod install)
 
       - name: Bundle TestApp JS for iOS
         run: (cd TestApp;yarn bundle:ios)
