@@ -19,6 +19,8 @@ using namespace facebook::react;
 
 @property (nonatomic, strong) KlarnaStandaloneWebView *klarnaStandaloneWebView;
 
+typedef void (^WebViewOperation)(WKWebView *);
+
 @end
 
 @implementation KlarnaStandaloneWebViewWrapper
@@ -143,6 +145,11 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
         NSString *newReturnUrl = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
         self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:newReturnUrl];
     }
+    
+    WebViewOperation setBounces = ^(WKWebView *webView) {
+        webView.scrollView.bounces = newViewProps.bounces;
+    };
+    [self applyOperationToWebViews:setBounces];
     
     [super updateProps:props oldProps:oldProps];
 }
@@ -291,6 +298,15 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         return jsonString;
+    }
+}
+
+- (void)applyOperationToWebViews:(WebViewOperation)operation {
+    for (UIView *subView in self.klarnaStandaloneWebView.subviews) {
+        if ([subView isKindOfClass:[WKWebView class]]) {
+            WKWebView *webView = (WKWebView *) subView;
+            operation(webView);
+        }
     }
 }
 

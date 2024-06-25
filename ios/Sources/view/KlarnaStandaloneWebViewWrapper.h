@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onKlarnaMessage;
 
 @property (nonatomic, strong) NSString* returnUrl;
+@property (nonatomic, assign) BOOL bounces;
 #endif
 
 #pragma mark - React Native Overrides

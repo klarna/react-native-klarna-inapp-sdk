@@ -13,6 +13,8 @@ import type { Double } from 'react-native/Libraries/Types/CodegenTypes';
 export interface KlarnaWebViewProps {
   style?: ViewStyle;
   readonly returnUrl: string;
+  readonly overScrollMode?: 'always' | 'content' | 'never';
+  readonly bounces?: boolean;
   readonly onLoadStart?: (
     navigationEvent: KlarnaWebViewNavigationEvent
   ) => void;
@@ -48,6 +50,8 @@ export class KlarnaStandaloneWebView extends Component<
         ref={this.standaloneWebViewRef}
         style={this.props.style}
         returnUrl={this.props.returnUrl || ''}
+        overScrollMode={this.props.overScrollMode ?? 'always'}
+        bounces={this.props.bounces ?? true}
         onLoadStart={(
           event: NativeSyntheticEvent<
             Readonly<{

@@ -12,6 +12,7 @@ RCT_EXPORT_MODULE(RNKlarnaStandaloneWebView)
 #pragma mark - View
 
 RCT_EXPORT_VIEW_PROPERTY(returnUrl, NSString)
+RCT_EXPORT_VIEW_PROPERTY(bounces, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(onLoadStart, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadEnd, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onError, RCTDirectEventBlock)

@@ -13,9 +13,15 @@ export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   onError: DirectEventHandler<KlarnaWebViewError>;
   onLoadProgress: DirectEventHandler<KlarnaWebViewProgressEvent>;
   onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
+
   /* Android only */
   onRenderProcessGone: DirectEventHandler<KlarnaWebViewRenderProcessGoneEvent>;
+  overScrollMode: string;
   /* End of Android only */
+
+  /* iOS only */
+  bounces: boolean;
+  /* End of iOS only */
 }
 
 type KlarnaWebViewNavigationEvent = Readonly<{
