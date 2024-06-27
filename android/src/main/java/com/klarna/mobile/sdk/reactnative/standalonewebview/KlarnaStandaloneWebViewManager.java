@@ -1,11 +1,12 @@
 package com.klarna.mobile.sdk.reactnative.standalonewebview;
 
-import android.app.Application;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.view.View;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,17 +34,22 @@ import java.util.Objects;
 
 public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpec<KlarnaStandaloneWebView> {
 
+    private static final String REACT_CLASS = "RNKlarnaStandaloneWebView";
+
     // Commands that can be triggered from React Native side
     public static final String COMMAND_LOAD = "load";
     public static final String COMMAND_GO_FORWARD = "goForward";
     public static final String COMMAND_GO_BACK = "goBack";
     public static final String COMMAND_RELOAD = "reload";
 
-    private static final String REACT_CLASS = "RNKlarnaStandaloneWebView";
+    private static final String OVER_SCROLL_MODE_ALWAYS = "always";
+    private static final String OVER_SCROLL_MODE_CONTENT = "content";
+    private static final String OVER_SCROLL_MODE_NEVER = "never";
 
     // Store a list of views to event dispatchers so we send up events via the right views.
     private final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher;
     private final KlarnaStandaloneWebViewEventSender klarnaStandaloneWebViewEventSender;
+    private final ReactApplicationContext reactAppContext;
     private final KlarnaEventHandler klarnaEventHandler = new KlarnaEventHandler() {
         @Override
         public void onEvent(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaProductEvent klarnaProductEvent) {
@@ -95,8 +101,9 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         }
     };
 
-    public KlarnaStandaloneWebViewManager(ReactApplicationContext reactContext, Application applicationContext) {
+    public KlarnaStandaloneWebViewManager(ReactApplicationContext reactContext) {
         super();
+        this.reactAppContext = reactContext;
         viewToDispatcher = new HashMap<>();
         klarnaStandaloneWebViewEventSender = new KlarnaStandaloneWebViewEventSender(viewToDispatcher);
     }
@@ -107,6 +114,37 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         if (!Objects.equals(returnUrl, view.getReturnURL())) {
             view.setReturnURL(returnUrl);
         }
+    }
+
+    @ReactProp(name = "overScrollMode")
+    @Override
+    public void setOverScrollMode(KlarnaStandaloneWebView view, String overScrollMode) {
+        for (int i = 0; i < view.getChildCount(); i++) {
+            View v = view.getChildAt(i);
+            if (v instanceof WebView) {
+                applyOverScrollMode(v, overScrollMode);
+            }
+        }
+    }
+
+    private void applyOverScrollMode(View view, String overScrollMode) {
+        switch (overScrollMode) {
+            case OVER_SCROLL_MODE_NEVER:
+                view.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                break;
+            case OVER_SCROLL_MODE_CONTENT:
+                view.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
+                break;
+            case OVER_SCROLL_MODE_ALWAYS:
+            default:
+                view.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+                break;
+        }
+    }
+
+    @Override
+    public void setBounces(KlarnaStandaloneWebView view, boolean value) {
+        // No need to implement this as it is not supported in Android
     }
 
     @NonNull
@@ -186,7 +224,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     @Override
     protected KlarnaStandaloneWebView createViewInstance(@NonNull ThemedReactContext themedReactContext) {
         KlarnaStandaloneWebView klarnaStandaloneWebView = new KlarnaStandaloneWebView(
-                /* context */ themedReactContext,
+                /* context */ reactAppContext,
                 /* attrs */ null,
                 /* defStyleAttr */ 0,
                 /* webViewClient */ klarnaStandaloneWebViewClient,

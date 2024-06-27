@@ -9,6 +9,10 @@ import com.facebook.react.uimanager.SimpleViewManager;
 public abstract class RNKlarnaStandaloneWebViewSpec<T extends View> extends SimpleViewManager<T> {
     public abstract void setReturnUrl(T view, @Nullable String returnUrl);
 
+    public abstract void setOverScrollMode(T view, String overScrollMode);
+
+    public abstract void setBounces(T view, boolean bounces);
+
     public abstract void load(T view, String url);
 
     public abstract void goForward(T view);

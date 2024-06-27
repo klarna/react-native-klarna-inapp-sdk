@@ -7,6 +7,8 @@
 
 @interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate, KlarnaEventHandler>
 
+typedef void (^WebViewOperation)(WKWebView *);
+
 @property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
 
 @end
@@ -66,6 +68,13 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
     if (returnUrl.length > 0) {
         self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:self.returnUrl];
     }
+}
+
+- (void)setBounces:(BOOL)bounces {
+    WebViewOperation setBounces = ^(WKWebView *webView) {
+        webView.scrollView.bounces = bounces;
+    };
+    [self applyOperationToWebViews:setBounces];
 }
 
 - (void)initializeKlarnaStandaloneWebView {
@@ -223,6 +232,15 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         @"canGoForward" : @(webView.canGoForward)
       };
     return [[NSMutableDictionary alloc] initWithDictionary: event];
+}
+
+- (void)applyOperationToWebViews:(WebViewOperation)operation {
+    for (UIView *subView in self.klarnaStandaloneWebView.subviews) {
+        if ([subView isKindOfClass:[WKWebView class]]) {
+            WKWebView *webView = (WKWebView *) subView;
+            operation(webView);
+        }
+    }
 }
 
 @end
