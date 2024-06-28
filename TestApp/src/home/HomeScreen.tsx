@@ -50,10 +50,10 @@ export default function HomeScreen() {
         }}>
         <Text
           style={styles.navMenuItem}
-          {...testProps('navKlarnaCheckoutView')}
+          {...testProps('navKlarnaSnippet')}
           onPress={() => {
-            console.log('Navigating to Checkout');
-            navigation.navigate('KlarnaCheckout');
+            console.log('Navigating to KlarnaSnippet');
+            navigation.navigate('KlarnaSnippet');
           }}>
           Klarna Checkout
         </Text>
