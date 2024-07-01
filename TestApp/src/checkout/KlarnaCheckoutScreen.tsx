@@ -1,14 +1,7 @@
-import {
-  Keyboard,
-  ScrollView,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {Keyboard, Text, TextInput, useColorScheme, View} from 'react-native';
 import {KlarnaCheckoutView} from 'react-native-klarna-inapp-sdk';
 import React, {useRef, useState} from 'react';
-import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
+import styles, {backgroundStyle} from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
 import testProps from '../common/util/TestProps';
 
@@ -82,32 +75,27 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
   };
 
   return (
-    <ScrollView
-      contentInsetAdjustmentBehavior="automatic"
-      style={backgroundStyle(styles.scrollView, isDarkMode)}>
-      <View
-        style={{
-          backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        }}>
+    <View style={backgroundStyle(styles.column, isDarkMode)}>
+      <View style={styles.columnHeader}>
         {renderSnippetInput()}
         <View style={styles.buttonsContainer}>
           {renderSetSnippetButton()}
           {renderSuspendButton()}
           {renderResumeButton()}
         </View>
-        <KlarnaCheckoutView
-          ref={checkoutViewRef}
-          style={styles.componentView}
-          returnUrl={'returnUrl://'}
-          onEvent={klarnaProductEvent => {
-            onEvent(JSON.stringify(klarnaProductEvent));
-          }}
-          onError={error => {
-            onEvent(JSON.stringify(error));
-          }}
-        />
         <Text {...testProps('state_events')}>{eventState}</Text>
       </View>
-    </ScrollView>
+      <KlarnaCheckoutView
+        ref={checkoutViewRef}
+        style={styles.columnItemFill}
+        returnUrl={'returnUrl://'}
+        onEvent={klarnaProductEvent => {
+          onEvent(JSON.stringify(klarnaProductEvent));
+        }}
+        onError={error => {
+          onEvent(JSON.stringify(error));
+        }}
+      />
+    </View>
   );
 }

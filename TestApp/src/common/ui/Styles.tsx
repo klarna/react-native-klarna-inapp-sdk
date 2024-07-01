@@ -26,6 +26,20 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
   },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+  },
+  columnHeader: {
+    flexShrink: 0,
+  },
+  columnFooter: {
+    flexShrink: 0,
+  },
+  columnItemFill: {
+    flexGrow: 1,
+  },
   tokenInput: {
     flexDirection: 'column',
     justifyContent: 'space-around',
