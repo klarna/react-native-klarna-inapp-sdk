@@ -74,6 +74,7 @@ export class KlarnaPaymentView extends Component<
         style={{
           width: '100%',
           height: this.state.nativeViewHeight,
+          flexShrink: 1,
         }}
         category={this.props.category || ''}
         returnUrl={this.props.returnUrl || ''}
