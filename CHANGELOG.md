@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.4] - 2024-07-01
+- Added flex-shrink to child checkout and payment views.
+
 ## [2.3.3] - 2024-06-27
 - Added the following optional props to the `KlarnaStandaloneWebView` component:
   - `overScrollMode: 'always' | 'content' | 'never'`: allows setting the over scroll mode of the web view (Android-only).
