@@ -46,6 +46,7 @@ export class KlarnaCheckoutView extends Component<
         style={{
           width: '100%',
           height: this.state.nativeViewHeight,
+          flexShrink: 1,
         }}
         returnUrl={this.props.returnUrl || ''}
         onEvent={(
