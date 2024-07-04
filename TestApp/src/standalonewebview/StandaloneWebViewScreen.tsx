@@ -1,4 +1,4 @@
-import {Keyboard, TextInput, View} from 'react-native';
+import {Keyboard, Text, TextInput, View} from 'react-native';
 import styles from '../common/ui/Styles';
 import React, {useRef, useState} from 'react';
 import {
@@ -10,13 +10,16 @@ import {
   KlarnaWebViewRenderProcessGoneEvent,
 } from 'react-native-klarna-inapp-sdk';
 import Button from '../common/ui/view/Button';
+import testProps from '../common/util/TestProps.tsx';
 
 export default function StandaloneWebViewScreen() {
   const klarnaStandaloneWebViewRef = useRef<KlarnaStandaloneWebView>(null);
   const [url, setUrl] = useState('');
+  const [eventState, setEventState] = useState<string>();
 
   const logEvent = (...params: Array<string>) => {
     console.log('onEvent', params);
+    setEventState(params.join(', '));
   };
 
   const renderUrlTextInput = () => {
@@ -113,6 +116,7 @@ export default function StandaloneWebViewScreen() {
         {renderGoBackButton()}
         {renderGoForwardButton()}
       </View>
+      <Text {...testProps('state_events')}>{eventState}</Text>
       <KlarnaStandaloneWebView
         ref={klarnaStandaloneWebViewRef}
         /* eslint-disable-next-line react-native/no-inline-styles */

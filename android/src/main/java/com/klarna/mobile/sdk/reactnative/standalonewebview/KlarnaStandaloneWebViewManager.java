@@ -105,7 +105,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         super();
         this.reactAppContext = reactContext;
         viewToDispatcher = new HashMap<>();
-        klarnaStandaloneWebViewEventSender = new KlarnaStandaloneWebViewEventSender(viewToDispatcher);
+        klarnaStandaloneWebViewEventSender = new KlarnaStandaloneWebViewEventSender(reactContext, viewToDispatcher);
     }
 
     @ReactProp(name = "returnUrl")
@@ -224,7 +224,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     @Override
     protected KlarnaStandaloneWebView createViewInstance(@NonNull ThemedReactContext themedReactContext) {
         KlarnaStandaloneWebView klarnaStandaloneWebView = new KlarnaStandaloneWebView(
-                /* context */ reactAppContext,
+                /* context */ reactAppContext.getCurrentActivity(), // needs to be activity for SDK dialogs to work
                 /* attrs */ null,
                 /* defStyleAttr */ 0,
                 /* webViewClient */ klarnaStandaloneWebViewClient,
@@ -235,7 +235,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
                 /* resourceEndpoint */ null,
                 /* returnURL */ null);
         // Each view has its own event dispatcher.
-        EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) klarnaStandaloneWebView.getContext(), klarnaStandaloneWebView.getId());
+        EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactAppContext, klarnaStandaloneWebView.getId());
         viewToDispatcher.put(new WeakReference<>(klarnaStandaloneWebView), dispatcher);
         return klarnaStandaloneWebView;
     }
