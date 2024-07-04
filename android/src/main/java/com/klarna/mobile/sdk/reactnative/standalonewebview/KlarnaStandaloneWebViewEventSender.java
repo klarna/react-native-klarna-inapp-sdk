@@ -40,9 +40,11 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_DID_CRASH = "didCrash";
 
     private final Gson gson = new Gson();
+    private final WeakReference<ReactContext> reactContextWeakReference;
     private final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher;
 
-    KlarnaStandaloneWebViewEventSender(@NonNull final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher) {
+    KlarnaStandaloneWebViewEventSender(@NonNull ReactContext reactContext, @NonNull final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher) {
+        this.reactContextWeakReference = new WeakReference<>(reactContext);
         this.viewToDispatcher = viewToDispatcher;
     }
 
@@ -110,7 +112,7 @@ public class KlarnaStandaloneWebViewEventSender {
     private void postEventForView(KlarnaStandaloneWebViewEvent.Event event, WritableMap additionalParams, @Nullable KlarnaStandaloneWebView view) {
         KlarnaStandaloneWebView klarnaStandaloneWebView = getKlarnaStandaloneWebView(view);
         if (klarnaStandaloneWebView != null) {
-            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) klarnaStandaloneWebView.getContext(), klarnaStandaloneWebView.getId());
+            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContextWeakReference.get(), klarnaStandaloneWebView.getId());
             if (eventDispatcher != null) {
                 KlarnaStandaloneWebViewEvent e = new KlarnaStandaloneWebViewEvent(klarnaStandaloneWebView.getId(), event.name, additionalParams);
                 eventDispatcher.dispatchEvent(e);

@@ -215,7 +215,7 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     private void postEventForView(String eventName, WritableMap additionalParams, PaymentViewWrapper wrapper) {
         if (wrapper != null) {
             KlarnaPaymentEvent event = new KlarnaPaymentEvent(wrapper.getId(), eventName, additionalParams);
-            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) wrapper.getContext(), wrapper.getId());
+            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactAppContext, wrapper.getId());
             if (eventDispatcher != null) {
                 eventDispatcher.dispatchEvent(event);
             }
