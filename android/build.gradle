@@ -9,11 +9,13 @@ buildscript {
 
     repositories {
         google()
+        gradlePluginPortal()
         mavenCentral()
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:${getExtOrDefault('gradlePluginVersion')}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
     }
 }
 
