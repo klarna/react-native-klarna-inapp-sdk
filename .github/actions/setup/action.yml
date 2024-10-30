@@ -13,12 +13,12 @@ runs:
         node-version: '18.17.1'
         cache: 'yarn'
 
-    - name: Cache dependencies
+    - name: Cache Yarn dependencies
       id: yarn-cache
       uses: actions/cache@v3
       with:
         path: |
-          **/node_modules
+          ~/.yarn/cache
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
         restore-keys: |
           ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
