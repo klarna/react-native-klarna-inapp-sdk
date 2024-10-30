@@ -18,7 +18,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: |
-          ~/.yarn/cache
+          ~/.cache/yarn
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
         restore-keys: |
           ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
