@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.9] - 2024-11-20
+- Updated the native Android SDK version to 2.6.23
+
 ## [2.3.8] - 2024-10-30
 - Updated the native Android SDK version to 2.6.22
 - Updated the native iOS SDK version to 2.6.23
