@@ -48,5 +48,5 @@ Pod::Spec.new do |s|
    end
   end
 
-  s.dependency 'KlarnaMobileSDK', '2.6.23'
+  s.dependency 'KlarnaMobileSDK', '2.6.24'
 end
