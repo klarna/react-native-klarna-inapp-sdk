@@ -41,7 +41,7 @@ jobs:
 
       - name: Install Lib cocoapods
         run: |
-          (cd ios;pod install)
+          (cd ios;pod repo update;pod install --verbose)
 
       - name: Run Unit Tests for iOS
         run: yarn test:ios
