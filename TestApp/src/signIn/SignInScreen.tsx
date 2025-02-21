@@ -3,6 +3,7 @@ import {ScrollView, TextInput, Text, useColorScheme, View} from 'react-native';
 import styles, {backgroundStyle} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button.tsx';
+import {RNKlarnaSignIn} from 'react-native-klarna-inapp-sdk';
 
 export default function SignInScreen() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -58,9 +59,18 @@ export default function SignInScreen() {
         <Button
           title="Sign In"
           onPress={() => {
-            console.log(
-              'Klarna sign in with KlarnaMobileSDK should start now on the native side',
-            );
+            if (isButtonEnabled) {
+              RNKlarnaSignIn.signIn(
+                clientId,
+                scope,
+                market,
+                locale,
+                tokenizationId,
+              );
+              console.log(
+                'Klarna sign in with KlarnaMobileSDK should start now on the native side',
+              );
+            }
           }}
         />
       </View>

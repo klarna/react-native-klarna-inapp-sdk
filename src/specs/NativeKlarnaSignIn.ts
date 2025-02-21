@@ -11,4 +11,4 @@ export interface Spec extends TurboModule {
   ): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('KlarnaSignIn');
+export default TurboModuleRegistry.getEnforcing<Spec>('RNKlarnaSignIn');
