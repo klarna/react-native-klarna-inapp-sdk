@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.10] - 2025-02-19
 - Updated the native Android SDK version to 2.6.25
-- Updated the native iOS SDK version to 2.6.24
+- Updated the native iOS SDK version to 2.6.25
 
 ## [2.3.9] - 2024-11-20
 - Updated the native Android SDK version to 2.6.23
