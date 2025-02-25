@@ -7,22 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#ifdef RCT_NEW_ARCH_ENABLED
-#import <RNKlarnaMobileSDK/RNKlarnaMobileSDK.h>
-#endif
+#import <React/RCTBridgeModule.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 #ifdef RCT_NEW_ARCH_ENABLED
+#import <RNKlarnaMobileSDK/RNKlarnaMobileSDK.h>
 @interface KlarnaSignInManager: NSObject<NativeKlarnaSignInSpec>
 
 #else
 
 @interface KlarnaSignInManager: NSObject<RCTBridgeModule>
-
-@property (nonatomic, copy) RCTDirectEventBlock onEvent;
-@property (nonatomic, copy) RCTDirectEventBlock onError;
 
 #endif
 

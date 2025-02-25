@@ -5,15 +5,15 @@
 //  Created by Jorge Palacio on 2025-02-20.
 //  Copyright © 2025 Facebook. All rights reserved.
 //
+#ifdef RCT_NEW_ARCH_ENABLED
 
 #import "KlarnaSignInManager.h"
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <RNKlarnaMobileSDK/RNKlarnaMobileSDK.h>
-#endif
 #import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"
 #import <AuthenticationServices/AuthenticationServices.h>
 #import <UIKit/UIKit.h>
 #import <React/RCTLog.h>
+#import <React/RCTBridgeModule.h>
 
 @interface KlarnaSignInManager() <KlarnaEventHandler, ASWebAuthenticationPresentationContextProviding>
 @property (strong, nonatomic) KlarnaSignInSDK *signInSDK;
@@ -21,13 +21,11 @@
 
 @implementation KlarnaSignInManager
 
-RCT_EXPORT_MODULE(RNKlarnaSignIn)
+RCT_EXPORT_MODULE(RNKlarnaSignIn);
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params {
     return std::make_shared<facebook::react::NativeKlarnaSignInSpecJSI>(params);
 }
-#endif
 
 - (void)signIn:(NSString *)clientId
          scope:(NSString *)scope
@@ -42,6 +40,8 @@ tokenizationId:(NSString *)tokenizationId {
                   eventHandler: self];
     [_signInSDK signInClientId:clientId scope:scope market:market locale:locale tokenizationId:tokenizationId presentationContext:self];
 }
+
+
 
 // MARK: - KlarnaEventHandler Methods
 
@@ -76,3 +76,5 @@ tokenizationId:(NSString *)tokenizationId {
 }
 
 @end
+
+#endif
