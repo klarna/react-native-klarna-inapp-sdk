@@ -6,65 +6,57 @@
 //  Copyright © 2025 Facebook. All rights reserved.
 //
 
-#import "KlarnaSignInManager.h"
-#import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"
-#import <AuthenticationServices/AuthenticationServices.h>
-#import <UIKit/UIKit.h>
-#import <React/RCTLog.h>
-#import <React/RCTBridgeModule.h>
+#if !RCT_NEW_ARCH_ENABLED
 
-@interface KlarnaSignInManager() <KlarnaEventHandler, ASWebAuthenticationPresentationContextProviding>
+#import "KlarnaSignInManager.h"
+#import "KlarnaSignInEventsHandler.h"
+#import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"
+#import <React/RCTLog.h>
+
+@interface KlarnaSignInManager()
 @property (strong, nonatomic) KlarnaSignInSDK *signInSDK;
+@property (strong, nonatomic) KlarnaSignInEventsHandler *handler;
 @end
 
 @implementation KlarnaSignInManager
 
 RCT_EXPORT_MODULE(RNKlarnaSignIn);
 
+RCT_EXPORT_METHOD(init: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl) {
+    RCTLogInfo(@"KlarnaSignInSDK Native Module: Initialised");
+    
+    KlarnaEnvironment * env = [KlarnaSignInEventsHandler environmentFrom: environment];
+    KlarnaRegion * reg = [KlarnaSignInEventsHandler regionFrom: region];
+    NSURL *url = [NSURL URLWithString: returnUrl];
+
+    if (url != nil) {
+        _handler = [KlarnaSignInEventsHandler new];
+        _signInSDK = [[KlarnaSignInSDK alloc]
+                      initWithEnvironment: env
+                      region: reg
+                      returnUrl: url
+                      eventHandler: self.handler];
+    }
+}
+
 RCT_EXPORT_METHOD(signIn:(NSString *)clientId
          scope:(NSString *)scope
         market:(NSString *)market
         locale:(NSString *)locale
-tokenizationId:(NSString *)tokenizationId) {
-    RCTLogInfo(@"Sign should trigger with the following values:\n clientId: %@\nscope: %@\nmarket: %@\nlocale: %@\ntokenizationId: %@\n", clientId, scope, market, locale, tokenizationId);
-    _signInSDK = [[KlarnaSignInSDK alloc]
-                  initWithEnvironment: KlarnaEnvironment.staging
-                  region: KlarnaRegion.eu
-                  returnUrl: [NSURL URLWithString:@"in-app-test://siwk"]
-                  eventHandler: self];
-    [_signInSDK signInClientId:clientId scope:scope market:market locale:locale tokenizationId:tokenizationId presentationContext:self];
-}
-
-// MARK: - KlarnaEventHandler Methods
-
-- (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent dispatchedEvent:(KlarnaProductEvent * _Nonnull)event {
-    RCTLogInfo(@"KlarnaSignIn Native Module Event: %@", event.debugDescription);
-}
-
-- (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent encounteredError:(KlarnaError * _Nonnull)error {
-    RCTLogError(@"KlarnaSignIn Native Module Error: %@", error.debugDescription);
-}
-
-// MARK: - ASWebAuthenticationPresentationContextProviding
-
-- (ASPresentationAnchor)presentationAnchorForWebAuthenticationSession:(ASWebAuthenticationSession *)session {
-    UIWindowScene *windowScene = (UIWindowScene *)[[[UIApplication sharedApplication].connectedScenes objectsPassingTest:^BOOL(UIScene * _Nonnull obj, BOOL * _Nonnull stop) {
-        if(obj.activationState == UISceneActivationStateForegroundActive) {
-            *stop = YES; // Stop after finding the first match
-            return YES;
-        }
-        return NO;
-    }] allObjects].firstObject;
-
-    if (windowScene != nil) {
-        UIWindow *currentTopWindow = windowScene.windows.firstObject;
-        if (currentTopWindow != nil) {
-            RCTLogInfo(@"KlarnaSignIn Native Module Anchor found top window: %@", currentTopWindow.debugDescription);
-            return currentTopWindow;
-        }
-    }
-    
-    return ASPresentationAnchor();
+tokenizationId:(NSString *)tokenizationId
+      resolver:(RCTPromiseResolveBlock)resolve
+      rejecter:(RCTPromiseRejectBlock)reject) {
+    RCTLogInfo(@"KlarnaSignInSDK Native Module: SignIn started....");
+    self.handler.resolver = resolve;
+    self.handler.rejecter = reject;
+    [self.signInSDK signInClientId: clientId
+                             scope: scope
+                            market: market
+                            locale: locale
+                    tokenizationId: tokenizationId
+               presentationContext: self.handler];
 }
 
 @end
+
+#endif
