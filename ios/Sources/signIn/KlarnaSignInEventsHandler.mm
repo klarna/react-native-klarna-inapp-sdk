@@ -44,6 +44,15 @@
     return reg;
 }
 
+-(void)rejectWithInvalidiOSVersionSupported {
+    NSString *msg = @"KlarnaSignIn is supported from iOS version 13.0";
+    NSError *error = [NSError errorWithDomain:@"com.klarnamobilesdk"
+                                         code:9999
+                                     userInfo:@{ @"error": @{ @"message": msg }
+                                              }];
+    self.rejecter(@"9999", msg, error);
+}
+
 // MARK: - KlarnaEventHandler Methods
 
 - (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent dispatchedEvent:(KlarnaProductEvent * _Nonnull)event {

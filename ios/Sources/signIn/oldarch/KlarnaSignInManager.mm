@@ -14,7 +14,7 @@
 #import <React/RCTLog.h>
 
 @interface KlarnaSignInManager()
-@property (strong, nonatomic) KlarnaSignInSDK *signInSDK;
+@property (strong, nonatomic) KlarnaSignInSDK *signInSDK API_AVAILABLE(ios(13.0));
 @property (strong, nonatomic) KlarnaSignInEventsHandler *handler;
 @end
 
@@ -23,7 +23,7 @@
 RCT_EXPORT_MODULE(RNKlarnaSignIn);
 
 RCT_EXPORT_METHOD(init: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl) {
-    RCTLogInfo(@"KlarnaSignInSDK Native Module: Initialised");
+    RCTLogInfo(@"KlarnaSignInSDK Native Module: Initialized");
     
     KlarnaEnvironment * env = [KlarnaSignInEventsHandler environmentFrom: environment];
     KlarnaRegion * reg = [KlarnaSignInEventsHandler regionFrom: region];
@@ -31,11 +31,13 @@ RCT_EXPORT_METHOD(init: (NSString *)environment region: (NSString *)region  retu
 
     if (url != nil) {
         _handler = [KlarnaSignInEventsHandler new];
-        _signInSDK = [[KlarnaSignInSDK alloc]
-                      initWithEnvironment: env
-                      region: reg
-                      returnUrl: url
-                      eventHandler: self.handler];
+        if (@available(iOS 13.0, *)) {
+            _signInSDK = [[KlarnaSignInSDK alloc]
+                          initWithEnvironment: env
+                          region: reg
+                          returnUrl: url
+                          eventHandler: self.handler];
+        }
     }
 }
 
@@ -49,12 +51,16 @@ tokenizationId:(NSString *)tokenizationId
     RCTLogInfo(@"KlarnaSignInSDK Native Module: SignIn started....");
     self.handler.resolver = resolve;
     self.handler.rejecter = reject;
-    [self.signInSDK signInClientId: clientId
-                             scope: scope
-                            market: market
-                            locale: locale
-                    tokenizationId: tokenizationId
-               presentationContext: self.handler];
+    if (@available(iOS 13.0, *)) {
+        [self.signInSDK signInClientId: clientId
+                                 scope: scope
+                                market: market
+                                locale: locale
+                        tokenizationId: tokenizationId
+                   presentationContext: self.handler];
+    } else {
+        [self.handler rejectWithInvalidiOSVersionSupported];
+    }
 }
 
 @end
