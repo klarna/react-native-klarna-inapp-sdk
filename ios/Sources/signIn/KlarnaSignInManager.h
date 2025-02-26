@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import <RNKlarnaMobileSDK/RNKlarnaMobileSDK.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import <RNKlarnaMobileSDK/RNKlarnaMobileSDK.h>
 @interface KlarnaSignInManager: NSObject<NativeKlarnaSignInSpec>
 
 #else

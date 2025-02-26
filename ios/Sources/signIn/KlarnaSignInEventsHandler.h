@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nonatomic) RCTPromiseResolveBlock resolver;
 @property (copy, nonatomic) RCTPromiseRejectBlock rejecter;
 
+-(void)rejectWithInvalidiOSVersionSupported;
+
 @end
 
 NS_ASSUME_NONNULL_END

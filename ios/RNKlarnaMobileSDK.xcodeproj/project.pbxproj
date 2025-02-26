@@ -20,7 +20,9 @@
 		79BD26042BCD572600D2D92A /* RNMobileSDKUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 79BD26032BCD572600D2D92A /* RNMobileSDKUtils.mm */; };
 		B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* KlarnaPaymentViewManager.mm */; };
 		C950FFE559BF35928E94BF8D /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7837F2C76927FD0EC420C40 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */; };
-		D5B84F7F2D67877C006C0EB1 /* KlarnaSignInSDK.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5B84F7E2D67877C006C0EB1 /* KlarnaSignInSDK.mm */; };
+		D5BF197F2D6F438B00C9C9E7 /* KlarnaSignInManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5BF19772D6F438B00C9C9E7 /* KlarnaSignInManager.mm */; };
+		D5BF19802D6F438B00C9C9E7 /* KlarnaSignInEventsHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5BF197C2D6F438B00C9C9E7 /* KlarnaSignInEventsHandler.mm */; };
+		D5BF19812D6F438B00C9C9E7 /* KlarnaSignInManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5BF19792D6F438B00C9C9E7 /* KlarnaSignInManager.mm */; };
 		DF4C69429315E34435B953E8 /* libPods-RNKlarnaMobileSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF5062264E440DC969A15ACA /* libPods-RNKlarnaMobileSDK.a */; };
 /* End PBXBuildFile section */
 
@@ -73,8 +75,11 @@
 		B074D4744315BBCD94D119E9 /* Pods-RNKlarnaMobileSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK.debug.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK/Pods-RNKlarnaMobileSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* KlarnaPaymentViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KlarnaPaymentViewManager.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* KlarnaPaymentViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaPaymentViewManager.mm; sourceTree = "<group>"; };
-		D5B84F7D2D67877C006C0EB1 /* KlarnaSignInSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaSignInSDK.h; sourceTree = "<group>"; };
-		D5B84F7E2D67877C006C0EB1 /* KlarnaSignInSDK.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaSignInSDK.mm; sourceTree = "<group>"; };
+		D5BF19772D6F438B00C9C9E7 /* KlarnaSignInManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaSignInManager.mm; sourceTree = "<group>"; };
+		D5BF19792D6F438B00C9C9E7 /* KlarnaSignInManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaSignInManager.mm; sourceTree = "<group>"; };
+		D5BF197B2D6F438B00C9C9E7 /* KlarnaSignInEventsHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaSignInEventsHandler.h; sourceTree = "<group>"; };
+		D5BF197C2D6F438B00C9C9E7 /* KlarnaSignInEventsHandler.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaSignInEventsHandler.mm; sourceTree = "<group>"; };
+		D5BF197D2D6F438B00C9C9E7 /* KlarnaSignInManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaSignInManager.h; sourceTree = "<group>"; };
 		F7837F2C76927FD0EC420C40 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF5062264E440DC969A15ACA /* libPods-RNKlarnaMobileSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNKlarnaMobileSDK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -135,7 +140,6 @@
 		7917D74C255C445E00E16799 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				D5B84F7C2D678727006C0EB1 /* signIn */,
 				79BD26012BCD56C000D2D92A /* common */,
 				9CDEDC2923475BAC006C9C97 /* view */,
 				79BD25F82BC97A0100D2D92A /* KlarnaCheckoutViewManager.h */,
@@ -145,6 +149,7 @@
 				42BC05FD2AC57D950044A9FE /* KlarnaStandaloneWebViewManager.h */,
 				42BC05FE2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.mm */,
 				79E2A0B02BFBA653002923A5 /* PrefixHeader.pch */,
+				D5BF197E2D6F438B00C9C9E7 /* signIn */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -223,11 +228,30 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D5B84F7C2D678727006C0EB1 /* signIn */ = {
+		D5BF19782D6F438B00C9C9E7 /* newarch */ = {
 			isa = PBXGroup;
 			children = (
-				D5B84F7D2D67877C006C0EB1 /* KlarnaSignInSDK.h */,
-				D5B84F7E2D67877C006C0EB1 /* KlarnaSignInSDK.mm */,
+				D5BF19772D6F438B00C9C9E7 /* KlarnaSignInManager.mm */,
+			);
+			path = newarch;
+			sourceTree = "<group>";
+		};
+		D5BF197A2D6F438B00C9C9E7 /* oldarch */ = {
+			isa = PBXGroup;
+			children = (
+				D5BF19792D6F438B00C9C9E7 /* KlarnaSignInManager.mm */,
+			);
+			path = oldarch;
+			sourceTree = "<group>";
+		};
+		D5BF197E2D6F438B00C9C9E7 /* signIn */ = {
+			isa = PBXGroup;
+			children = (
+				D5BF19782D6F438B00C9C9E7 /* newarch */,
+				D5BF197A2D6F438B00C9C9E7 /* oldarch */,
+				D5BF197B2D6F438B00C9C9E7 /* KlarnaSignInEventsHandler.h */,
+				D5BF197C2D6F438B00C9C9E7 /* KlarnaSignInEventsHandler.mm */,
+				D5BF197D2D6F438B00C9C9E7 /* KlarnaSignInManager.h */,
 			);
 			path = signIn;
 			sourceTree = "<group>";
@@ -413,9 +437,11 @@
 			files = (
 				42BC06032AC586C50044A9FE /* KlarnaStandaloneWebViewWrapper.mm in Sources */,
 				79BD25FC2BC97B0900D2D92A /* KlarnaCheckoutViewWrapper.mm in Sources */,
+				D5BF197F2D6F438B00C9C9E7 /* KlarnaSignInManager.mm in Sources */,
+				D5BF19802D6F438B00C9C9E7 /* KlarnaSignInEventsHandler.mm in Sources */,
+				D5BF19812D6F438B00C9C9E7 /* KlarnaSignInManager.mm in Sources */,
 				79BD26002BCD4F6C00D2D92A /* KlarnaCheckoutViewWrapper.mm in Sources */,
 				79BD26042BCD572600D2D92A /* RNMobileSDKUtils.mm in Sources */,
-				D5B84F7F2D67877C006C0EB1 /* KlarnaSignInSDK.mm in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentViewManager.mm in Sources */,
 				792F67C02AB8AD7D00675E18 /* PaymentViewWrapper.mm in Sources */,
 				42BC06052AC588180044A9FE /* KlarnaStandaloneWebViewWrapper.mm in Sources */,

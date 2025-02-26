@@ -3,7 +3,7 @@ import {ScrollView, TextInput, Text, useColorScheme, View} from 'react-native';
 import styles, {backgroundStyle} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button.tsx';
-import {RNKlarnaSignIn} from 'react-native-klarna-inapp-sdk';
+import {KlarnaSignIn} from 'react-native-klarna-inapp-sdk';
 
 export default function SignInScreen() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -14,6 +14,12 @@ export default function SignInScreen() {
   const [locale, setLocale] = useState('');
   const [tokenizationId, setTokenizationId] = useState('');
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+
+  const klarnaSignIn = new KlarnaSignIn({
+    environment: 'staging',
+    region: 'eu',
+    returnUrl: 'https://www.klarna.com',
+  });
 
   useEffect(() => {
     setIsButtonEnabled(
@@ -34,6 +40,7 @@ export default function SignInScreen() {
       <View style={{marginBottom: 20, width: '80%'}}>
         <Text style={styles.title}>{label}</Text>
         <TextInput
+          autoCapitalize="none"
           style={styles.tokenInput}
           value={value}
           placeholder={`Enter ${label}`}
@@ -60,16 +67,17 @@ export default function SignInScreen() {
           title="Sign In"
           onPress={() => {
             if (isButtonEnabled) {
-              RNKlarnaSignIn.signIn(
-                clientId,
-                scope,
-                market,
-                locale,
-                tokenizationId,
-              );
               console.log(
                 'Klarna sign in with KlarnaMobileSDK should start now on the native side',
               );
+              klarnaSignIn
+                .signIn(clientId, scope, market, locale, tokenizationId)
+                .then(r => {
+                  console.log('Sign in success with result: ', r);
+                })
+                .catch(e => {
+                  console.error('Sign in failed with error: ', e);
+                });
             }
           }}
         />
