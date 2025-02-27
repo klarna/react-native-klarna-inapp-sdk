@@ -1,4 +1,4 @@
-package com.klarna.mobile.sdk.reactnative.signin;
+package com.klarna.mobile.sdk.reactnative.spec;
 
 import androidx.annotation.Nullable;
 
@@ -13,10 +13,10 @@ import com.klarna.mobile.sdk.api.KlarnaMobileSDKCommon;
 import com.klarna.mobile.sdk.api.KlarnaRegion;
 import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
 import com.klarna.mobile.sdk.reactnative.NativeKlarnaSignInSpec;
+import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInEventsHandler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class KlarnaSignInManager extends NativeKlarnaSignInSpec {
 
