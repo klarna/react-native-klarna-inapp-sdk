@@ -8,6 +8,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.model.ReactModuleInfo;
 import com.facebook.react.module.model.ReactModuleInfoProvider;
 import com.klarna.mobile.sdk.api.KlarnaEnvironment;
+import com.klarna.mobile.sdk.api.KlarnaLoggingLevel;
+import com.klarna.mobile.sdk.api.KlarnaMobileSDKCommon;
 import com.klarna.mobile.sdk.api.KlarnaRegion;
 import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
 import com.klarna.mobile.sdk.reactnative.NativeKlarnaSignInSpec;
@@ -21,11 +23,11 @@ public class KlarnaSignInManager extends NativeKlarnaSignInSpec {
     private KlarnaSignInSDK signInSDK;
     private KlarnaSignInEventsHandler handler;
 
-    private final ReactApplicationContext context;
+    private final ReactApplicationContext reactAppContext;
 
     public KlarnaSignInManager(ReactApplicationContext reactContext) {
         super(reactContext);
-        context = reactContext;
+        this.reactAppContext = reactContext;
     }
 
     @Nullable
@@ -59,7 +61,10 @@ public class KlarnaSignInManager extends NativeKlarnaSignInSpec {
         handler = new KlarnaSignInEventsHandler();
         KlarnaEnvironment env = KlarnaSignInEventsHandler.environmentFrom(environment);
         KlarnaRegion reg = KlarnaSignInEventsHandler.regionFrom(region);
-        signInSDK = new KlarnaSignInSDK(context.getCurrentActivity(), returnUrl, handler, env, reg);
+        KlarnaMobileSDKCommon.setLoggingLevel(KlarnaLoggingLevel.Verbose);
+        reactAppContext.runOnUiQueueThread(() -> {
+            signInSDK = new KlarnaSignInSDK(reactAppContext.getCurrentActivity(), returnUrl, handler, env, reg);
+        });
     }
 
     @Override

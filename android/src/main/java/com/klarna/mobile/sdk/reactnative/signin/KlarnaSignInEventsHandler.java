@@ -27,35 +27,21 @@ public class KlarnaSignInEventsHandler implements KlarnaEventHandler {
     public Promise signInPromise;
 
     public static KlarnaEnvironment environmentFrom(@NonNull String value) {
-        if (value.equals("playground")) {
-            return KlarnaEnvironment.PLAYGROUND;
-        }
+        return switch (value) {
+            case "playground" -> KlarnaEnvironment.PLAYGROUND;
+            case "staging" -> KlarnaEnvironment.STAGING;
+            default -> KlarnaEnvironment.PRODUCTION;
+        };
 
-        if (value.equals("staging")) {
-            return KlarnaEnvironment.STAGING;
-        }
-
-        if (value.equals("production")) {
-            return KlarnaEnvironment.PRODUCTION;
-        }
-
-        return KlarnaEnvironment.PRODUCTION;
     }
 
     public static KlarnaRegion regionFrom(@NonNull String value) {
-        if (value.equals("eu")) {
-            return KlarnaRegion.EU;
-        }
+        return switch (value) {
+            case "na" -> KlarnaRegion.NA;
+            case "oc" -> KlarnaRegion.OC;
+            default -> KlarnaRegion.EU;
+        };
 
-        if (value.equals("na")) {
-            return KlarnaRegion.NA;
-        }
-
-        if (value.equals("oc")) {
-            return KlarnaRegion.OC;
-        }
-
-        return KlarnaRegion.EU;
     }
 
     @Override
