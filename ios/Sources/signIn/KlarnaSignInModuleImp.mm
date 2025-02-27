@@ -17,15 +17,15 @@
 @property (copy, nonatomic) RCTPromiseResolveBlock resolver;
 @property (copy, nonatomic) RCTPromiseRejectBlock rejecter;
 
--(KlarnaEnvironment *)environmentFrom: (NSString *)value;
--(KlarnaRegion *)regionFrom: (NSString *)value;
--(void)rejectWithInvalidiOSVersionSupported;
+- (KlarnaEnvironment *)environmentFrom: (NSString *)value;
+- (KlarnaRegion *)regionFrom: (NSString *)value;
+- (void)rejectWithInvalidiOSVersionSupported;
 
 @end
 
 @implementation KlarnaSignInModuleImp
 
--(KlarnaEnvironment *)environmentFrom: (NSString *)value {
+- (KlarnaEnvironment *)environmentFrom: (NSString *)value {
     KlarnaEnvironment *env = nil;
     if ([value isEqualToString:@"playground"]) {
         env = KlarnaEnvironment.playground;
@@ -40,7 +40,7 @@
     return env;
 }
 
--(KlarnaRegion *)regionFrom: (NSString *)value {
+- (KlarnaRegion *)regionFrom: (NSString *)value {
     KlarnaRegion *reg = nil;
     if ([value isEqualToString:@"eu"]) {
         reg = KlarnaRegion.eu;
@@ -57,7 +57,7 @@
     return reg;
 }
 
--(void)initWith: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl {
+- (void)initWith: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl {
     RCTLogInfo(@"KlarnaSignInSDK Native Module: Initialized");
     
     KlarnaEnvironment * env = [self environmentFrom: environment];
@@ -71,11 +71,20 @@
                           region: reg
                           returnUrl: url
                           eventHandler: self];
+        } else {
+            [self rejectWithInvalidiOSVersionSupported];
         }
+    } else {
+        NSString *msg = @"Invalid URL can't be use to initialize KlarnaSignInModule.";
+        NSError *error = [NSError errorWithDomain:@"com.klarnamobilesdk"
+                                             code:8888
+                                         userInfo:@{ @"error": @{ @"message": msg }
+                                                  }];
+        self.rejecter(@"8888", msg, error);
     }
 }
 
--(void)signInWith:(NSString *)clientId
+- (void)signInWith:(NSString *)clientId
         scope:(NSString *)scope
        market:(NSString *)market
        locale:(NSString *)locale
@@ -98,7 +107,7 @@ tokenizationId:(NSString *)tokenizationId
 }
 
 
--(void)rejectWithInvalidiOSVersionSupported {
+- (void)rejectWithInvalidiOSVersionSupported {
     NSString *msg = @"KlarnaSignIn is supported from iOS version 13.0";
     NSError *error = [NSError errorWithDomain:@"com.klarnamobilesdk"
                                          code:9999

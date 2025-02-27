@@ -12,14 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KlarnaSignInModuleImp: NSObject
 
--(void)initWith: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl;
--(void)signInWith:(NSString *)clientId
-            scope:(NSString *)scope
-           market:(NSString *)market
-           locale:(NSString *)locale
+- (void)initWith: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl;
+- (void)signInWith:(NSString *)clientId
+             scope:(NSString *)scope
+            market:(NSString *)market
+            locale:(NSString *)locale
     tokenizationId:(NSString *)tokenizationId
-         resolver:(RCTPromiseResolveBlock)resolve
-         rejecter:(RCTPromiseRejectBlock)reject;
+          resolver:(RCTPromiseResolveBlock)resolve
+          rejecter:(RCTPromiseRejectBlock)reject;
 
 @end
 
