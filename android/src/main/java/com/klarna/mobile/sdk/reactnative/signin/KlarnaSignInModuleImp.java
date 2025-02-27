@@ -5,20 +5,24 @@ import static com.klarna.mobile.sdk.reactnative.common.util.ParserUtil.gson;
 import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaEnvironment;
 import com.klarna.mobile.sdk.api.KlarnaEventHandler;
+import com.klarna.mobile.sdk.api.KlarnaLoggingLevel;
+import com.klarna.mobile.sdk.api.KlarnaMobileSDKCommon;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.api.KlarnaRegion;
 import com.klarna.mobile.sdk.api.component.KlarnaComponent;
+import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
-import com.klarna.mobile.sdk.reactnative.standalonewebview.KlarnaStandaloneWebViewEvent;
 
 import java.util.HashMap;
 
-public class KlarnaSignInEventsHandler implements KlarnaEventHandler {
+public class KlarnaSignInModuleImp implements KlarnaEventHandler {
 
     private static final String PARAM_NAME_ACTION = "action";
     private static final String PARAM_NAME_KLARNA_MESSAGE_EVENT = "klarnaMessageEvent";
@@ -26,7 +30,19 @@ public class KlarnaSignInEventsHandler implements KlarnaEventHandler {
 
     public Promise signInPromise;
 
-    public static KlarnaEnvironment environmentFrom(@NonNull String value) {
+    public static final String NAME = "RNKlarnaSignIn";
+
+    private final ReactApplicationContext reactAppContext;
+    private KlarnaSignInSDK signInSDK;
+
+    public KlarnaSignInModuleImp(ReactApplicationContext reactAppContext) {
+        this.reactAppContext = reactAppContext;
+        KlarnaMobileSDKCommon.setLoggingLevel(KlarnaLoggingLevel.Verbose);
+    }
+
+    /* Module private methods */
+
+    private KlarnaEnvironment environmentFrom(@NonNull String value) {
         return switch (value) {
             case "playground" -> KlarnaEnvironment.PLAYGROUND;
             case "staging" -> KlarnaEnvironment.STAGING;
@@ -35,7 +51,7 @@ public class KlarnaSignInEventsHandler implements KlarnaEventHandler {
 
     }
 
-    public static KlarnaRegion regionFrom(@NonNull String value) {
+    private KlarnaRegion regionFrom(@NonNull String value) {
         return switch (value) {
             case "na" -> KlarnaRegion.NA;
             case "oc" -> KlarnaRegion.OC;
@@ -43,6 +59,23 @@ public class KlarnaSignInEventsHandler implements KlarnaEventHandler {
         };
 
     }
+
+    /* Module public methods */
+
+    public void init(String environment, String region, String returnUrl) {
+        KlarnaEnvironment env = environmentFrom(environment);
+        KlarnaRegion reg = regionFrom(region);
+        reactAppContext.runOnUiQueueThread(() -> {
+            signInSDK = new KlarnaSignInSDK(reactAppContext.getCurrentActivity(), returnUrl, this, env, reg);
+        });
+    }
+
+    public void signIn(String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
+        this.signInPromise = promise;
+        signInSDK.signIn(clientId, scope, market, locale, tokenizationId);
+    }
+
+    /* KlarnaEventHandler methods */
 
     @Override
     public void onError(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
