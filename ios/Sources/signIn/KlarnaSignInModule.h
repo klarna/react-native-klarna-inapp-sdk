@@ -13,11 +13,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #ifdef RCT_NEW_ARCH_ENABLED
-@interface KlarnaSignInManager: NSObject<NativeKlarnaSignInSpec>
+@interface KlarnaSignInModule: NSObject<NativeKlarnaSignInSpec>
 
 #else
 
-@interface KlarnaSignInManager: NSObject<RCTBridgeModule>
+@interface KlarnaSignInModule: NSObject<RCTBridgeModule>
 
 #endif
 

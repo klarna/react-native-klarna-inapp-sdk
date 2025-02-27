@@ -5,14 +5,27 @@
 //  Created by Jorge Palacio on 2025-02-26.
 //
 
-#import "KlarnaSignInEventsHandler.h"
+#import "KlarnaSignInModuleImp.h"
 #import "../common/RNMobileSDKUtils.h"
 #import <AuthenticationServices/AuthenticationServices.h>
+#import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"
 #import <React/RCTLog.h>
 
-@implementation KlarnaSignInEventsHandler
+@interface KlarnaSignInModuleImp()<KlarnaEventHandler, ASWebAuthenticationPresentationContextProviding>
 
-+(KlarnaEnvironment *)environmentFrom: (NSString *)value {
+@property (strong, nonatomic) KlarnaSignInSDK *signInSDK API_AVAILABLE(ios(13.0));
+@property (copy, nonatomic) RCTPromiseResolveBlock resolver;
+@property (copy, nonatomic) RCTPromiseRejectBlock rejecter;
+
+-(KlarnaEnvironment *)environmentFrom: (NSString *)value;
+-(KlarnaRegion *)regionFrom: (NSString *)value;
+-(void)rejectWithInvalidiOSVersionSupported;
+
+@end
+
+@implementation KlarnaSignInModuleImp
+
+-(KlarnaEnvironment *)environmentFrom: (NSString *)value {
     KlarnaEnvironment *env = nil;
     if ([value isEqualToString:@"playground"]) {
         env = KlarnaEnvironment.playground;
@@ -27,7 +40,7 @@
     return env;
 }
 
-+(KlarnaRegion *)regionFrom: (NSString *)value {
+-(KlarnaRegion *)regionFrom: (NSString *)value {
     KlarnaRegion *reg = nil;
     if ([value isEqualToString:@"eu"]) {
         reg = KlarnaRegion.eu;
@@ -43,6 +56,47 @@
     
     return reg;
 }
+
+-(void)initWith: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl {
+    RCTLogInfo(@"KlarnaSignInSDK Native Module: Initialized");
+    
+    KlarnaEnvironment * env = [self environmentFrom: environment];
+    KlarnaRegion * reg = [self regionFrom: region];
+    NSURL *url = [NSURL URLWithString: returnUrl];
+    
+    if (url != nil) {
+        if (@available(iOS 13.0, *)) {
+            _signInSDK = [[KlarnaSignInSDK alloc]
+                          initWithEnvironment: env
+                          region: reg
+                          returnUrl: url
+                          eventHandler: self];
+        }
+    }
+}
+
+-(void)signInWith:(NSString *)clientId
+        scope:(NSString *)scope
+       market:(NSString *)market
+       locale:(NSString *)locale
+tokenizationId:(NSString *)tokenizationId
+     resolver:(RCTPromiseResolveBlock)resolve
+     rejecter:(RCTPromiseRejectBlock)reject {
+    RCTLogInfo(@"KlarnaSignInSDK Native Module: SignIn started....");
+    _resolver = resolve;
+    _rejecter = reject;
+    if (@available(iOS 13.0, *)) {
+        [self.signInSDK signInClientId: clientId
+                                 scope: scope
+                                market: market
+                                locale: locale
+                        tokenizationId: tokenizationId
+                   presentationContext: self];
+    } else {
+        [self rejectWithInvalidiOSVersionSupported];
+    }
+}
+
 
 -(void)rejectWithInvalidiOSVersionSupported {
     NSString *msg = @"KlarnaSignIn is supported from iOS version 13.0";
@@ -108,7 +162,7 @@
             }
         }
         
-        return [[UIWindow new] initWithWindowScene: windowScene];
+        return [[UIWindow alloc] initWithWindowScene: windowScene];
     }
     
     // This Shouldn't execute app crashes!!!
