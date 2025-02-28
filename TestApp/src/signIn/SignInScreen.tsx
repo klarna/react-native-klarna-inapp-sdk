@@ -18,7 +18,7 @@ export default function SignInScreen() {
   const klarnaSignIn = new KlarnaSignIn({
     environment: 'staging',
     region: 'eu',
-    returnUrl: 'https://www.klarna.com',
+    returnUrl: 'in-app://test/siwk',
   });
 
   useEffect(() => {
