@@ -13,23 +13,12 @@ export default function SignInScreen() {
   const [market, setMarket] = useState('');
   const [locale, setLocale] = useState('');
   const [tokenizationId, setTokenizationId] = useState('');
-  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
   const klarnaSignIn = new KlarnaSignIn({
     environment: 'staging',
     region: 'eu',
-    returnUrl: 'in-app://test/siwk',
+    returnUrl: 'in-app-test://siwk',
   });
-
-  useEffect(() => {
-    setIsButtonEnabled(
-      clientId !== '' &&
-        scope !== '' &&
-        market !== '' &&
-        locale !== '' &&
-        tokenizationId !== '',
-    );
-  }, [clientId, scope, market, locale, tokenizationId]);
 
   const renderTextField = (
     label: string,
@@ -66,19 +55,17 @@ export default function SignInScreen() {
         <Button
           title="Sign In"
           onPress={() => {
-            if (isButtonEnabled) {
-              console.log(
-                'Klarna sign in with KlarnaMobileSDK should start now on the native side',
-              );
-              klarnaSignIn
-                .signIn(clientId, scope, market, locale, tokenizationId)
-                .then(r => {
-                  console.log('Sign in success with result: ', r);
-                })
-                .catch(e => {
-                  console.error('Sign in failed with error: ', e);
-                });
-            }
+            console.log(
+              'Klarna sign in with KlarnaMobileSDK should start now on the native side',
+            );
+            klarnaSignIn
+              .signIn(clientId, scope, market, locale, tokenizationId)
+              .then(r => {
+                console.log('Sign in success with result: ', r);
+              })
+              .catch(e => {
+                console.error('Sign in failed with error: ', e);
+              });
           }}
         />
       </View>

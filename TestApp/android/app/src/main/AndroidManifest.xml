@@ -37,6 +37,16 @@
                 android:path="/siwk"
                 android:scheme="in-app" />
         </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="siwk"
+                    android:scheme="in-app-test" />
+            </intent-filter>
         </activity>
     </application>
 </manifest>
