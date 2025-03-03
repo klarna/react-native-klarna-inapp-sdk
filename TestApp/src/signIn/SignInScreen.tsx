@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, TextInput, Text, useColorScheme, View} from 'react-native';
 import styles, {backgroundStyle} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
@@ -13,12 +13,22 @@ export default function SignInScreen() {
   const [market, setMarket] = useState('');
   const [locale, setLocale] = useState('');
   const [tokenizationId, setTokenizationId] = useState('');
+  const [eventState, setEventState] = useState<string>();
 
   const klarnaSignIn = new KlarnaSignIn({
     environment: 'staging',
     region: 'eu',
     returnUrl: 'in-app-test://siwk',
   });
+
+  const onEvent = (...params: Array<string | boolean | null>) => {
+    console.log('onEvent', params);
+    setEventState(prevState =>
+      prevState
+        ? `${prevState} ${params.join('\n ----- \n')}`
+        : params.join('\n ----- \n'),
+    );
+  };
 
   const renderTextField = (
     label: string,
@@ -62,13 +72,17 @@ export default function SignInScreen() {
               .signIn(clientId, scope, market, locale, tokenizationId)
               .then(r => {
                 console.log('Sign in success with result: ', r);
+                onEvent('Sign in success with result: ', JSON.stringify(r));
               })
               .catch(e => {
                 console.error('Sign in failed with error: ', e);
+                onEvent('Sign in failed with error: ', JSON.stringify(e));
               });
           }}
         />
       </View>
+      <Text style={styles.title}>"Events Log"</Text>
+      <Text style={styles.title}>{eventState}</Text>
     </ScrollView>
   );
 }
