@@ -26,7 +26,7 @@
 @implementation KlarnaSignInModuleImp
 
 - (KlarnaEnvironment *)environmentFrom: (NSString *)value {
-    KlarnaEnvironment *env = nil;
+    KlarnaEnvironment *env = KlarnaEnvironment.production;
     if ([value isEqualToString:@"playground"]) {
         env = KlarnaEnvironment.playground;
     }
@@ -41,7 +41,7 @@
 }
 
 - (KlarnaRegion *)regionFrom: (NSString *)value {
-    KlarnaRegion *reg = nil;
+    KlarnaRegion *reg = KlarnaRegion.eu;
     if ([value isEqualToString:@"eu"]) {
         reg = KlarnaRegion.eu;
     }
@@ -58,8 +58,6 @@
 }
 
 - (void)initWith: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl {
-    RCTLogInfo(@"KlarnaSignInSDK Native Module: Initialized");
-    
     KlarnaEnvironment * env = [self environmentFrom: environment];
     KlarnaRegion * reg = [self regionFrom: region];
     NSURL *url = [NSURL URLWithString: returnUrl];
@@ -91,7 +89,6 @@
 tokenizationId:(NSString *)tokenizationId
      resolver:(RCTPromiseResolveBlock)resolve
      rejecter:(RCTPromiseRejectBlock)reject {
-    RCTLogInfo(@"KlarnaSignInSDK Native Module: SignIn started....");
     _resolver = resolve;
     _rejecter = reject;
     if (@available(iOS 13.0, *)) {
@@ -113,29 +110,30 @@ tokenizationId:(NSString *)tokenizationId
                                          code:9999
                                      userInfo:@{ @"error": @{ @"message": msg }
                                               }];
+    if (!self.rejecter) {
+        RCTLog(@"Missing 'rejecter' callback prop.");
+        return;
+    }
     self.rejecter(@"9999", msg, error);
 }
 
 // MARK: - KlarnaEventHandler Methods
 
 - (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent dispatchedEvent:(KlarnaProductEvent * _Nonnull)event {
-    RCTLogInfo(@"KlarnaSignIn Native Module Event: %@", event.debugDescription);
-    if (!self.rejecter) {
-        RCTLog(@"Missing 'rejecter' callback prop.");
+    if (!self.resolver) {
+        RCTLog(@"Missing 'resolver' callback prop.");
         return;
     }
-    NSString *serializedParams = [SerializationUtil serializeDictionaryToJsonString:[event getParams]];
     NSDictionary *resolvedEvent = @{
         @"productEvent": @{
             @"action": event.action,
-            @"params": serializedParams,
+            @"params": [event getParams],
         }
     };
     self.resolver(resolvedEvent);
 }
 
 - (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent encounteredError:(KlarnaError * _Nonnull)error {
-    RCTLogError(@"KlarnaSignIn Native Module Error: %@", error.debugDescription);
     if (!self.rejecter) {
         RCTLog(@"Missing 'rejecter' callback prop.");
         return;
