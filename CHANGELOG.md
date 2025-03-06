@@ -5,13 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.12] - 2025-03-06
+- Updated the native iOS SDK version to 2.6.27
+- Fixed a critical error, afecting the last 2 releasing, causing a crash in certain cases with cached old SDK configurations.
+
 ## [2.3.11] - 2025-03-05
 - Updated the native Android SDK version to 2.6.26
 - Updated the native iOS SDK version to 2.6.26
+- :warning: **This version has a critical issue on iOS only**: Please use a newer version of the SDK. Future releases will be cautiously checked to prevent these warnings.
 
 ## [2.3.10] - 2025-02-19
 - Updated the native Android SDK version to 2.6.25
 - Updated the native iOS SDK version to 2.6.25
+- :warning: **This version has a critical issue on iOS only**: Please use a newer version of the SDK. Future releases will be cautiously checked to prevent these warnings.
 
 ## [2.3.9] - 2024-11-20
 - Updated the native Android SDK version to 2.6.23
