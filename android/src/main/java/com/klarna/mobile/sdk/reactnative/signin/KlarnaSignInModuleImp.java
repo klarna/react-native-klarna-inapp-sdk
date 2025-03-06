@@ -46,7 +46,6 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
 
     public KlarnaSignInModuleImp(ReactApplicationContext reactAppContext) {
         this.reactAppContext = reactAppContext;
-        KlarnaMobileSDKCommon.setLoggingLevel(KlarnaLoggingLevel.Verbose);
     }
 
     /* Module private methods */
@@ -88,7 +87,6 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
     @Override
     public void onError(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
         if (signInPromise != null) {
-            String json = ParserUtil.toJson(klarnaMobileSDKError.getParams());
             WritableMap map = ArgumentsUtil.createMap(klarnaMobileSDKError.getParams());
             signInPromise.reject(klarnaMobileSDKError.getName(), "An error occurred during sign in", map);
         }

@@ -35,9 +35,9 @@ public class KlarnaMobileSDKPackageTest {
 
     @Test
     public void testCreateNativeModules() {
-        KlarnaMobileSDKPackage paymentViewPackage = new KlarnaMobileSDKPackage();
-        List<NativeModule> nativeModules = paymentViewPackage.createNativeModules(reactContext);
-        Assert.assertNotNull(nativeModules);
+        KlarnaMobileSDKPackage mobilePackage = new KlarnaMobileSDKPackage();
+        List<NativeModule> nativeModules = mobilePackage.createNativeModules(reactContext);
+        Assert.assertEquals(1, nativeModules.size());
         Assert.assertTrue(nativeModules.get(0) instanceof RNKlarnaSignInModuleSpec);
     }
 

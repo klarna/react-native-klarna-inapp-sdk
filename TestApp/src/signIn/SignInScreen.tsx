@@ -13,7 +13,7 @@ export default function SignInScreen() {
   const [market, setMarket] = useState('');
   const [locale, setLocale] = useState('');
   const [tokenizationId, setTokenizationId] = useState('');
-  const [eventState, setEventState] = useState<string>();
+  const [event, setEvent] = useState<string>();
 
   const klarnaSignIn = new KlarnaSignIn({
     environment: 'staging',
@@ -23,7 +23,7 @@ export default function SignInScreen() {
 
   const onEvent = (...params: Array<string | boolean | null>) => {
     console.log('onEvent', params);
-    setEventState(prevState =>
+    setEvent(prevState =>
       prevState
         ? `${prevState} ${params.join('\n ----- \n')}`
         : params.join('\n ----- \n'),
@@ -82,7 +82,7 @@ export default function SignInScreen() {
         />
       </View>
       <Text style={styles.title}>"Events Log"</Text>
-      <Text style={styles.title}>{eventState}</Text>
+      <Text style={styles.title}>{event}</Text>
     </ScrollView>
   );
 }
