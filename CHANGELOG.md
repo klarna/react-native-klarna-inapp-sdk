@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.12] - 2025-03-06
 - Updated the native iOS SDK version to 2.6.27
-- Fixed a critical error, afecting the last 2 releasing, causing a crash in certain cases with cached old SDK configurations.
+- Fixed a critical error, affecting the last 2 releases, causing a crash in certain cases with cached old SDK configurations.
 
 ## [2.3.11] - 2025-03-05
 - Updated the native Android SDK version to 2.6.26
