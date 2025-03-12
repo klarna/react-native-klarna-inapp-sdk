@@ -8,18 +8,18 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.model.ReactModuleInfo;
 import com.facebook.react.module.model.ReactModuleInfoProvider;
 import com.klarna.mobile.sdk.reactnative.NativeKlarnaSignInSpec;
-import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInModuleImp;
+import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInModuleImpl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RNKlarnaSignInModuleSpec extends NativeKlarnaSignInSpec {
 
-    private final KlarnaSignInModuleImp module;
+    private final KlarnaSignInModuleImpl module;
 
     public RNKlarnaSignInModuleSpec(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.module = new KlarnaSignInModuleImp(reactContext);
+        this.module = new KlarnaSignInModuleImpl(reactContext);
     }
 
     @Nullable

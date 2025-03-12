@@ -6,20 +6,20 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInModuleImp;
+import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInModuleImpl;
 
 public class RNKlarnaSignInModuleSpec extends ReactContextBaseJavaModule {
-    private KlarnaSignInModuleImp module;
+    private KlarnaSignInModuleImpl module;
 
     public RNKlarnaSignInModuleSpec(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.module = new KlarnaSignInModuleImp(reactContext);
+        this.module = new KlarnaSignInModuleImpl(reactContext);
     }
 
     @NonNull
     @Override
     public String getName() {
-        return KlarnaSignInModuleImp.NAME;
+        return KlarnaSignInModuleImpl.NAME;
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
