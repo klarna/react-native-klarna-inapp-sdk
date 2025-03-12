@@ -5,7 +5,7 @@
 //  Created by Jorge Palacio on 2025-02-26.
 //
 
-#import "KlarnaSignInModuleImp.h"
+#import "KlarnaSignInModuleImpl.h"
 #import "../common/RNMobileSDKUtils.h"
 #import <AuthenticationServices/AuthenticationServices.h>
 #import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"

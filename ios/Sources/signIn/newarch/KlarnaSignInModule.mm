@@ -8,7 +8,7 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 
 #import "KlarnaSignInModule.h"
-#import "KlarnaSignInModuleImp.h"
+#import "KlarnaSignInModuleImpl.h"
 
 @interface KlarnaSignInModule()
 
