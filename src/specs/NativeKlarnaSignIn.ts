@@ -13,7 +13,7 @@ export interface Spec extends TurboModule {
     market: string,
     locale: string,
     tokenizationId: string
-  ): Promise<(result: KlarnaSignInPayload, error: KlarnaSignInPayload) => void>;
+  ): Promise<any>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RNKlarnaSignIn');

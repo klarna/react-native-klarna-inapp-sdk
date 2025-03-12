@@ -1,15 +1,27 @@
 import RNKlarnaSignIn from './specs/NativeKlarnaSignIn';
 
 export interface KlarnaSignInProps {
-  readonly environment: string;
-  readonly region: string;
+  readonly environment: KlarnaEnvironment;
+  readonly region: KlarnaRegion;
   readonly returnUrl: string;
+}
+
+export enum KlarnaEnvironment {
+  Playground = 'playground',
+  Production = 'production',
+  Staging = 'staging',
+}
+
+export enum KlarnaRegion {
+  EU = 'eu',
+  NA = 'na',
+  OC = 'oc',
 }
 
 // declare a class that receive the KlarnaSignInProps in the initializer and expose a method to sign in
 export class KlarnaSignIn {
-  readonly environment: string;
-  readonly region: string;
+  readonly environment: KlarnaEnvironment;
+  readonly region: KlarnaRegion;
   readonly returnUrl: string;
 
   constructor(props: KlarnaSignInProps) {
@@ -25,7 +37,7 @@ export class KlarnaSignIn {
     market: string,
     locale: string,
     tokenizationId: string
-  ): Promise<(result: any, error: any) => void> {
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       RNKlarnaSignIn.signIn(clientId, scope, market, locale, tokenizationId)
         .then((result) => {
