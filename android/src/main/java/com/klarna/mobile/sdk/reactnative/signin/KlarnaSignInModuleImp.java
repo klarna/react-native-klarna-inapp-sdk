@@ -88,6 +88,15 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
         return null;
     }
 
+    private String getParamsFrom(KlarnaProductEvent event) {
+        String paramsJson = "{}";
+        try {
+            paramsJson = gson.toJson(event.getParams());
+        } catch (Exception ignored) {
+        }
+        return paramsJson;
+    }
+
     /* Module public methods */
     public void init(String instanceId, String environment, String region, String returnUrl) {
         KlarnaEnvironment env = environmentFrom(environment);
@@ -134,15 +143,9 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
             switch (klarnaProductEvent.getAction()) {
                 case KlarnaSignInEvent.USER_CANCELLED:
                     if (data.promise != null) {
-                        String paramsJson = "{}";
-                        try {
-                            paramsJson = gson.toJson(klarnaProductEvent.getParams());
-                        } catch (Exception ignored) {
-                        }
-                        String finalParamsJson = paramsJson;
                         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
                             put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
-                            put(PARAM_NAME_PARAMS, finalParamsJson);
+                            put(PARAM_NAME_PARAMS, getParamsFrom(klarnaProductEvent));
                         }});
                         WritableMap errorMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
                             put(PARAM_NAME_KLARNA_MESSAGE_EVENT, eventMap);
@@ -154,7 +157,11 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
                     break;
                 case KlarnaSignInEvent.SIGN_IN_TOKEN:
                     if (data.promise != null) {
-                        data.promise.resolve(klarnaProductEvent);
+                        ReadableMap event = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
+                            put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
+                            put(PARAM_NAME_PARAMS, getParamsFrom(klarnaProductEvent));
+                        }});
+                        data.promise.resolve(event);
                         signInSDKList.remove(data);
                     }
                     break;

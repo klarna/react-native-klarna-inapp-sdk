@@ -49,12 +49,12 @@ public class RNKlarnaSignInModuleSpec extends NativeKlarnaSignInSpec {
     }
 
     @Override
-    public void init(String environment, String region, String returnUrl) {
-        module.init(environment, region, returnUrl);
+    public void init(String instanceId, String environment, String region, String returnUrl) {
+        module.init(instanceId, environment, region, returnUrl);
     }
 
     @Override
-    public void signIn(String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
-        module.signIn(clientId, scope, market, locale, tokenizationId, promise);
+    public void signIn(String instanceId, String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
+        module.signIn(instanceId, clientId, scope, market, locale, tokenizationId, promise);
     }
 }
