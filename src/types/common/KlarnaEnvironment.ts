@@ -1,5 +1,5 @@
 export enum KlarnaEnvironment {
-    Playground = 'playground',
-    Production = 'production',
-    Staging = 'staging',
-  }
+  Playground = 'playground',
+  Production = 'production',
+  Staging = 'staging',
+}

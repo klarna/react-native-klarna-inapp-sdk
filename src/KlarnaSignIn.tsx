@@ -14,12 +14,19 @@ export class KlarnaSignIn {
   readonly environment: KlarnaEnvironment;
   readonly region: KlarnaRegion;
   readonly returnUrl: string;
+  readonly instanceId: string;
 
   constructor(props: KlarnaSignInProps) {
     this.environment = props.environment;
     this.region = props.region;
     this.returnUrl = props.returnUrl;
-    RNKlarnaSignIn.init(this.environment, this.region, this.returnUrl);
+    this.instanceId = Math.random().toString(36).substring(2, 15);
+    RNKlarnaSignIn.init(
+      this.instanceId,
+      this.environment,
+      this.region,
+      this.returnUrl
+    );
   }
 
   signIn(
@@ -30,7 +37,14 @@ export class KlarnaSignIn {
     tokenizationId: string
   ): Promise<KlarnaProductEvent> {
     return new Promise((resolve, reject) => {
-      RNKlarnaSignIn.signIn(clientId, scope, market, locale, tokenizationId)
+      RNKlarnaSignIn.signIn(
+        this.instanceId,
+        clientId,
+        scope,
+        market,
+        locale,
+        tokenizationId
+      )
         .then((result) => {
           console.log('Sign in success with result: ', result);
           resolve(result);

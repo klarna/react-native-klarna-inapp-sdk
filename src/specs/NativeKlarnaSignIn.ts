@@ -3,8 +3,14 @@ import { TurboModuleRegistry } from 'react-native';
 import type { KlarnaProductEvent } from 'src/types/common/KlarnaProductEvent';
 
 export interface Spec extends TurboModule {
-  init(environment: string, region: string, returnUrl: string): void;
+  init(
+    instanceId: string,
+    environment: string,
+    region: string,
+    returnUrl: string
+  ): void;
   signIn(
+    instanceId: string,
     clientId: string,
     scope: string,
     market: string,
