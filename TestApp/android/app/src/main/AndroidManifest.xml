@@ -26,17 +26,6 @@
             android:name="com.klarna.mobile.sdk.activity.KlarnaRedirectReceiverActivity"
             android:exported="true"
             tools:node="replace">
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-
-            <data
-                android:host="test"
-                android:path="/siwk"
-                android:scheme="in-app" />
-        </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -97,7 +97,7 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
         switch (klarnaProductEvent.getAction()) {
             case KlarnaSignInEvent.USER_CANCELLED:
                 if (signInPromise != null) {
-                    WritableMap errorMap = new WritableNativeMap();
+                    WritableMap errorMap = ArgumentsUtil.createMap(klarnaProductEvent.getParams());
                     errorMap.putString("sessionId", klarnaProductEvent.getSessionId());
                     signInPromise.reject(KlarnaSignInEvent.USER_CANCELLED, "User cancelled the sign in process", errorMap);
                 }
@@ -105,8 +105,7 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
             case KlarnaSignInEvent.SIGN_IN_TOKEN:
                 if (signInPromise != null) {
                     Map<String, Object> params = klarnaProductEvent.getParams();
-                    String json = ParserUtil.toJson(params.get(KlarnaSignInEvent.SIGN_IN_TOKEN));
-                    signInPromise.resolve(json);
+                    signInPromise.resolve(params);
                 }
                 break;
             default:
