@@ -25,9 +25,12 @@ import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
 import com.klarna.mobile.sdk.api.signin.model.KlarnaSignInToken;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ParserUtil;
+import com.klarna.mobile.sdk.reactnative.standalonewebview.KlarnaStandaloneWebViewEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import okhttp3.internal.Util;
 
@@ -37,15 +40,14 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
     private static final String PARAM_NAME_KLARNA_MESSAGE_EVENT = "klarnaMessageEvent";
     private static final String PARAM_NAME_PARAMS = "params";
 
-    public Promise signInPromise;
-
     public static final String NAME = "RNKlarnaSignIn";
 
     private final ReactApplicationContext reactAppContext;
-    private KlarnaSignInSDK signInSDK;
+    private final ArrayList<KlarnaSignInData> signInSDKList;
 
     public KlarnaSignInModuleImp(ReactApplicationContext reactAppContext) {
         this.reactAppContext = reactAppContext;
+        this.signInSDKList = new ArrayList<KlarnaSignInData>();
     }
 
     /* Module private methods */
@@ -68,48 +70,97 @@ public class KlarnaSignInModuleImp implements KlarnaEventHandler {
 
     }
 
+    private KlarnaSignInData getInstanceData(KlarnaComponent component) {
+        for (KlarnaSignInData data : signInSDKList) {
+            if (data.sdkInstance == component) {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    private KlarnaSignInData getInstanceData(String instanceId) {
+        for (KlarnaSignInData data : signInSDKList) {
+            if (data.instanceId.equals(instanceId)) {
+                return data;
+            }
+        }
+        return null;
+    }
+
     /* Module public methods */
-    public void init(String environment, String region, String returnUrl) {
+    public void init(String instanceId, String environment, String region, String returnUrl) {
         KlarnaEnvironment env = environmentFrom(environment);
         KlarnaRegion reg = regionFrom(region);
         reactAppContext.runOnUiQueueThread(() -> {
-            signInSDK = new KlarnaSignInSDK(reactAppContext.getCurrentActivity(), returnUrl, this, env, reg);
+            KlarnaSignInSDK signInInstance = new KlarnaSignInSDK(reactAppContext.getCurrentActivity(), returnUrl, this, env, reg);
+            KlarnaSignInData signInData = new KlarnaSignInData(instanceId, signInInstance);
+            signInSDKList.add(signInData);
         });
     }
 
-    public void signIn(String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
-        this.signInPromise = promise;
-        signInSDK.signIn(clientId, scope, market, locale, tokenizationId);
+    public void signIn(String instanceId, String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
+        KlarnaSignInData signInData = getInstanceData(instanceId);
+        if (signInData != null) {
+            signInData.promise = promise;
+            signInData.sdkInstance.signIn(clientId, scope, market, locale, tokenizationId);
+        } else {
+            promise.reject("SIGN_IN_SDK_NOT_INITIALIZED", "Sign in SDK not initialized");
+        }
     }
 
     /* KlarnaEventHandler methods */
 
     @Override
     public void onError(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
-        if (signInPromise != null) {
-            WritableMap map = ArgumentsUtil.createMap(klarnaMobileSDKError.getParams());
-            signInPromise.reject(klarnaMobileSDKError.getName(), "An error occurred during sign in", map);
+        // Ignore not fatal errors
+        if (!klarnaMobileSDKError.isFatal()) {
+            return;
+        }
+        KlarnaSignInData data = getInstanceData(klarnaComponent);
+        if (data != null) {
+            if (data.promise != null) {
+                WritableMap map = ArgumentsUtil.createMap(klarnaMobileSDKError.getParams());
+                data.promise.reject(klarnaMobileSDKError.getName(), klarnaMobileSDKError.getMessage(), map);
+                signInSDKList.remove(data);
+            }
         }
     }
 
     @Override
     public void onEvent(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaProductEvent klarnaProductEvent) {
-        switch (klarnaProductEvent.getAction()) {
-            case KlarnaSignInEvent.USER_CANCELLED:
-                if (signInPromise != null) {
-                    WritableMap errorMap = ArgumentsUtil.createMap(klarnaProductEvent.getParams());
-                    errorMap.putString("sessionId", klarnaProductEvent.getSessionId());
-                    signInPromise.reject(KlarnaSignInEvent.USER_CANCELLED, "User cancelled the sign in process", errorMap);
-                }
-                break;
-            case KlarnaSignInEvent.SIGN_IN_TOKEN:
-                if (signInPromise != null) {
-                    Map<String, Object> params = klarnaProductEvent.getParams();
-                    signInPromise.resolve(params);
-                }
-                break;
-            default:
-                break;
+        KlarnaSignInData data = getInstanceData(klarnaComponent);
+        if (data != null) {
+            switch (klarnaProductEvent.getAction()) {
+                case KlarnaSignInEvent.USER_CANCELLED:
+                    if (data.promise != null) {
+                        String paramsJson = "{}";
+                        try {
+                            paramsJson = gson.toJson(klarnaProductEvent.getParams());
+                        } catch (Exception ignored) {
+                        }
+                        String finalParamsJson = paramsJson;
+                        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
+                            put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
+                            put(PARAM_NAME_PARAMS, finalParamsJson);
+                        }});
+                        WritableMap errorMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
+                            put(PARAM_NAME_KLARNA_MESSAGE_EVENT, eventMap);
+                        }});
+                        errorMap.putString("sessionId", klarnaProductEvent.getSessionId());
+                        data.promise.reject(klarnaProductEvent.getAction(), errorMap);
+                        signInSDKList.remove(data);
+                    }
+                    break;
+                case KlarnaSignInEvent.SIGN_IN_TOKEN:
+                    if (data.promise != null) {
+                        data.promise.resolve(klarnaProductEvent);
+                        signInSDKList.remove(data);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
