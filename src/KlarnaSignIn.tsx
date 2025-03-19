@@ -16,17 +16,31 @@ export class KlarnaSignIn {
   readonly returnUrl: string;
   readonly instanceId: string;
 
-  constructor(props: KlarnaSignInProps) {
+  private constructor(props: KlarnaSignInProps, instanceId: string) {
     this.environment = props.environment;
     this.region = props.region;
     this.returnUrl = props.returnUrl;
-    this.instanceId = Math.random().toString(36).substring(2, 15);
-    RNKlarnaSignIn.init(
-      this.instanceId,
-      this.environment,
-      this.region,
-      this.returnUrl
-    );
+    this.instanceId = instanceId;
+  }
+
+  static async createInstance(props: KlarnaSignInProps): Promise<KlarnaSignIn> {
+    return new Promise((resolve, reject) => {
+      let instanceId = Math.random().toString(36).substring(2, 15);
+      RNKlarnaSignIn.init(
+        instanceId,
+        props.environment,
+        props.region,
+        props.returnUrl
+      )
+        .then((result) => {
+          console.log('Init success with result: ', result);
+          resolve(new KlarnaSignIn(props, instanceId));
+        })
+        .catch((error) => {
+          console.error('Init failed with error: ', error);
+          reject(error);
+        });
+    });
   }
 
   signIn(

@@ -22,9 +22,9 @@ public class RNKlarnaSignInModuleSpec extends ReactContextBaseJavaModule {
         return KlarnaSignInModuleImpl.NAME;
     }
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public void init(String instanceId, String environment, String region, String returnUrl) {
-        module.init(instanceId, environment, region, returnUrl);
+    @ReactMethod(isBlockingSynchronousMethod = false)
+    public void init(String instanceId, String environment, String region, String returnUrl, Promise promise) {
+        module.init(instanceId, environment, region, returnUrl, promise);
     }
 
     @ReactMethod(isBlockingSynchronousMethod = false)

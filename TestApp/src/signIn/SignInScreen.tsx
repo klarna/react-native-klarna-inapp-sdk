@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, TextInput, Text, useColorScheme, View} from 'react-native';
 import styles, {backgroundStyle} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
@@ -16,12 +16,25 @@ export default function SignInScreen() {
   const [locale, setLocale] = useState('');
   const [tokenizationId, setTokenizationId] = useState('');
   const [event, setEvent] = useState<string>();
+  const [klarnaSignIn, setKlarnaSignIn] = useState<KlarnaSignIn | null>(null);
 
-  const klarnaSignIn = new KlarnaSignIn({
-    environment: KlarnaEnvironment.Staging,
-    region: KlarnaRegion.EU,
-    returnUrl: 'in-app-test://siwk',
-  });
+  useEffect(() => {
+    KlarnaSignIn.createInstance({
+      environment: KlarnaEnvironment.Staging,
+      region: KlarnaRegion.EU,
+      returnUrl: 'in-app-test://siwk',
+    })
+      .then(instance => {
+        console.log('KlarnaSignIn instance created: ', instance);
+        setKlarnaSignIn(instance);
+      })
+      .catch(e => {
+        console.error('KlarnaSignIn instance creation failed: ', e);
+        setEvent(prevState =>
+          prevState ? `${prevState} ${JSON.stringify(e)}` : JSON.stringify(e),
+        );
+      });
+  }, []);
 
   const onEvent = (...params: Array<string | boolean | null>) => {
     console.log('onEvent', params);
@@ -71,7 +84,7 @@ export default function SignInScreen() {
               'Klarna sign in with KlarnaMobileSDK should start now on the native side',
             );
             klarnaSignIn
-              .signIn(clientId, scope, market, locale, tokenizationId)
+              ?.signIn(clientId, scope, market, locale, tokenizationId)
               .then(r => {
                 console.log('Sign in success with result: ', r);
                 onEvent('Sign in success with result: ', JSON.stringify(r));

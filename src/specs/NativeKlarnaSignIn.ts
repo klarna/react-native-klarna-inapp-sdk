@@ -8,7 +8,8 @@ export interface Spec extends TurboModule {
     environment: string,
     region: string,
     returnUrl: string
-  ): void;
+  ): Promise<void>;
+
   signIn(
     instanceId: string,
     clientId: string,
