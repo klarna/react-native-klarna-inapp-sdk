@@ -31,6 +31,8 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
 
     public static final String NAME = "RNKlarnaSignIn";
 
+    public static final String SIGN_IN_SDK_NOT_INITIALIZED = "SIGN_IN_SDK_NOT_INITIALIZED";
+
     private final ReactApplicationContext reactAppContext;
     private final HashMap<String, KlarnaSignInData> signInSDKMap;
 
@@ -96,7 +98,7 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
             signInData.promise = promise;
             signInData.sdkInstance.signIn(clientId, scope, market, locale, tokenizationId);
         } else {
-            promise.reject("SIGN_IN_SDK_NOT_INITIALIZED", "Sign in SDK not initialized");
+            promise.reject(SIGN_IN_SDK_NOT_INITIALIZED, "Sign in SDK not initialized");
         }
     }
 
