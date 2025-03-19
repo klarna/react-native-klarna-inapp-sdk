@@ -14,12 +14,11 @@
 
 @interface KlarnaSignInModuleImp()<KlarnaEventHandler, ASWebAuthenticationPresentationContextProviding>
 
-@property (nonatomic, strong) NSMutableArray *signInSDKs;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, KlarnaSignInData *> *signInSDKs;
 
 - (KlarnaEnvironment *)environmentFrom: (NSString *)value;
 - (KlarnaRegion *)regionFrom: (NSString *)value;
 - (void)rejectWithInvalidiOSVersionSupported:(RCTPromiseRejectBlock) rejectBlock;
-- (KlarnaSignInData *)getInstanceFromId: (NSString *)instanceId;
 - (KlarnaSignInData *)getInstanceFromComponent: (id <KlarnaComponent> _Nonnull)component;
 
 @end
@@ -28,7 +27,7 @@
 
 - (id)init {
     self = [super init];
-    _signInSDKs = [NSMutableArray new];
+    _signInSDKs = [NSMutableDictionary new];
     return self;
 }
 
@@ -64,19 +63,18 @@
     return reg;
 }
 
-- (KlarnaSignInData *)getInstanceFromId: (NSString *)instanceId {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat: @"instanceID == %@", instanceId];
-    KlarnaSignInData *signInData = [_signInSDKs filteredArrayUsingPredicate: predicate].firstObject;
-    return signInData;
-}
-
 - (KlarnaSignInData *)getInstanceFromComponent:(id<KlarnaComponent>)component {
     NSPredicate *predicate = [NSPredicate predicateWithFormat: @"sdkInstance == %@", component];
-    KlarnaSignInData *signInData = [_signInSDKs filteredArrayUsingPredicate: predicate].firstObject;
+    KlarnaSignInData *signInData = [_signInSDKs.objectEnumerator.allObjects filteredArrayUsingPredicate: predicate].firstObject;
     return signInData;
 }
 
-- (void)initWith:(NSString *)instanceId environment: (NSString *)environment region: (NSString *)region  returnUrl: (NSString *) returnUrl {
+- (void)initWith:(NSString *)instanceId
+     environment: (NSString *)environment
+          region: (NSString *)region
+       returnUrl: (NSString *) returnUrl
+        resolver:(RCTPromiseResolveBlock)resolve
+        rejecter:(RCTPromiseRejectBlock)reject {
     KlarnaEnvironment * env = [self environmentFrom: environment];
     KlarnaRegion * reg = [self regionFrom: region];
     NSURL *url = [NSURL URLWithString: returnUrl];
@@ -87,10 +85,14 @@
                                                                                  returnUrl: url
                                                                               eventHandler: self];
             KlarnaSignInData *data = [[KlarnaSignInData alloc] initWith: instanceId sdkInstance: signInInstance];
-            [self.signInSDKs addObject: data];
+            [_signInSDKs setObject: data forKey: instanceId];
+            resolve(nil);
+        } else {
+            [self rejectWithInvalidiOSVersionSupported: reject];
         }
     } else {
         RCTLog(@"Invalid returnUrl provided");
+        reject(@"RNKlarnaSignIn", @"Invalid returnUrl provided", nil);
     }
 }
 
@@ -103,7 +105,7 @@ tokenizationId:(NSString *)tokenizationId
      resolver:(RCTPromiseResolveBlock)resolve
      rejecter:(RCTPromiseRejectBlock)reject {
     if (@available(iOS 13.0, *)) {
-        KlarnaSignInData *signInData = [self getInstanceFromId: instanceId];
+        KlarnaSignInData *signInData = [_signInSDKs objectForKey: instanceId];
         if (signInData == nil) {
             RCTLog(@"No instance found for the given instanceId");
             reject(@"RNKlarnaSignIn", @"No instance found to initiate signIn, Init function must be called prior to this one.", nil);
@@ -125,11 +127,7 @@ tokenizationId:(NSString *)tokenizationId
 
 - (void)rejectWithInvalidiOSVersionSupported:(RCTPromiseRejectBlock) rejectBlock {
     NSString *msg = @"KlarnaSignIn is supported from iOS version 13.0";
-    NSError *error = [NSError errorWithDomain:@"com.klarnamobilesdk"
-                                         code:9999
-                                     userInfo:@{ @"error": @{ @"message": msg }
-                                              }];
-    rejectBlock(@"RNKlarnaSignIn", msg, error);
+    rejectBlock(@"RNKlarnaSignIn", msg, nil);
 }
 
 // MARK: - KlarnaEventHandler Methods
@@ -149,7 +147,7 @@ tokenizationId:(NSString *)tokenizationId
                 }
             };
             signInData.resolver(resolvedEvent);
-            [_signInSDKs removeObject: signInData];
+            [_signInSDKs removeObjectForKey: signInData.instanceID];
         }
     }
 }
@@ -174,7 +172,7 @@ tokenizationId:(NSString *)tokenizationId
                 }
             }];
             signInData.rejecter(@"", error.message, errorEvent);
-            [_signInSDKs removeObject: signInData];
+            [_signInSDKs removeObjectForKey: signInData.instanceID];
         }
     }
 }
