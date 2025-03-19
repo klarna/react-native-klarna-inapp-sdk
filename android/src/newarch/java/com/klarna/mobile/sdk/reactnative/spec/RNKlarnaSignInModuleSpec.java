@@ -49,8 +49,8 @@ public class RNKlarnaSignInModuleSpec extends NativeKlarnaSignInSpec {
     }
 
     @Override
-    public void init(String instanceId, String environment, String region, String returnUrl) {
-        module.init(instanceId, environment, region, returnUrl);
+    public void init(String instanceId, String environment, String region, String returnUrl, Promise promise) {
+        module.init(instanceId, environment, region, returnUrl, promise);
     }
 
     @Override
