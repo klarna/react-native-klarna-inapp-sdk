@@ -20,6 +20,8 @@ import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
 
@@ -30,11 +32,11 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
     public static final String NAME = "RNKlarnaSignIn";
 
     private final ReactApplicationContext reactAppContext;
-    private final ArrayList<KlarnaSignInData> signInSDKList;
+    private final HashMap<String, KlarnaSignInData> signInSDKMap;
 
     public KlarnaSignInModuleImpl(ReactApplicationContext reactAppContext) {
         this.reactAppContext = reactAppContext;
-        this.signInSDKList = new ArrayList<KlarnaSignInData>();
+        this.signInSDKMap = new HashMap<String, KlarnaSignInData>();
     }
 
     /* Module private methods */
@@ -58,17 +60,9 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
     }
 
     private KlarnaSignInData getInstanceData(KlarnaComponent component) {
-        for (KlarnaSignInData data : signInSDKList) {
+        for (Map.Entry<String, KlarnaSignInData> entry : signInSDKMap.entrySet()) {
+            KlarnaSignInData data = entry.getValue();
             if (data.sdkInstance == component) {
-                return data;
-            }
-        }
-        return null;
-    }
-
-    private KlarnaSignInData getInstanceData(String instanceId) {
-        for (KlarnaSignInData data : signInSDKList) {
-            if (data.instanceId.equals(instanceId)) {
                 return data;
             }
         }
@@ -91,13 +85,13 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
         reactAppContext.runOnUiQueueThread(() -> {
             KlarnaSignInSDK signInInstance = new KlarnaSignInSDK(reactAppContext.getCurrentActivity(), returnUrl, this, env, reg);
             KlarnaSignInData signInData = new KlarnaSignInData(instanceId, signInInstance);
-            signInSDKList.add(signInData);
+            signInSDKMap.put(instanceId, signInData);
             promise.resolve(null);
         });
     }
 
     public void signIn(String instanceId, String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
-        KlarnaSignInData signInData = getInstanceData(instanceId);
+        KlarnaSignInData signInData = signInSDKMap.get(instanceId);
         if (signInData != null) {
             signInData.promise = promise;
             signInData.sdkInstance.signIn(clientId, scope, market, locale, tokenizationId);
@@ -119,7 +113,7 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
             if (data.promise != null) {
                 WritableMap map = ArgumentsUtil.createMap(klarnaMobileSDKError.getParams());
                 data.promise.reject(klarnaMobileSDKError.getName(), klarnaMobileSDKError.getMessage(), map);
-                signInSDKList.remove(data);
+                signInSDKMap.remove(data.instanceId);
             }
         }
     }
@@ -140,7 +134,7 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
                         }});
                         errorMap.putString("sessionId", klarnaProductEvent.getSessionId());
                         data.promise.reject(klarnaProductEvent.getAction(), errorMap);
-                        signInSDKList.remove(data);
+                        signInSDKMap.remove(data.instanceId);
                     }
                     break;
                 case KlarnaSignInEvent.SIGN_IN_TOKEN:
@@ -150,7 +144,7 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
                             put(PARAM_NAME_PARAMS, getParamsFrom(klarnaProductEvent));
                         }});
                         data.promise.resolve(event);
-                        signInSDKList.remove(data);
+                        signInSDKMap.remove(data.instanceId);
                     }
                     break;
                 default:

@@ -27,11 +27,14 @@ export default function SignInScreen() {
       .then(instance => {
         console.log('KlarnaSignIn instance created: ', instance);
         setKlarnaSignIn(instance);
+        setEvent(
+          _ => 'KlarnaSignIn instance created: ' + JSON.stringify(instance),
+        );
       })
       .catch(e => {
         console.error('KlarnaSignIn instance creation failed: ', e);
-        setEvent(prevState =>
-          prevState ? `${prevState} ${JSON.stringify(e)}` : JSON.stringify(e),
+        setEvent(
+          _ => 'KlarnaSignIn instance creation failed: ' + JSON.stringify(e),
         );
       });
   }, []);
