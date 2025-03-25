@@ -18,27 +18,6 @@ export default function SignInScreen() {
   const [event, setEvent] = useState<string>();
   const [klarnaSignIn, setKlarnaSignIn] = useState<KlarnaSignIn | null>(null);
 
-  useEffect(() => {
-    KlarnaSignIn.createInstance({
-      environment: KlarnaEnvironment.Staging,
-      region: KlarnaRegion.EU,
-      returnUrl: 'in-app-test://siwk',
-    })
-      .then(instance => {
-        console.log('KlarnaSignIn instance created: ', instance);
-        setKlarnaSignIn(instance);
-        setEvent(
-          _ => 'KlarnaSignIn instance created: ' + JSON.stringify(instance),
-        );
-      })
-      .catch(e => {
-        console.error('KlarnaSignIn instance creation failed: ', e);
-        setEvent(
-          _ => 'KlarnaSignIn instance creation failed: ' + JSON.stringify(e),
-        );
-      });
-  }, []);
-
   const onEvent = (...params: Array<string | boolean | null>) => {
     console.log('onEvent', params);
     setEvent(prevState =>
@@ -78,6 +57,38 @@ export default function SignInScreen() {
         {renderTextField('Market', market, setMarket)}
         {renderTextField('Locale', locale, setLocale)}
         {renderTextField('Tokenization ID', tokenizationId, setTokenizationId)}
+      </View>
+      <View style={styles.buttonsContainer}>
+        <Button
+          title="Initialise KlarnaSignIn"
+          onPress={() => {
+            console.log(
+              'Klarna sign in with KlarnaMobileSDK should start now on the native side',
+            );
+            KlarnaSignIn.createInstance({
+              environment: KlarnaEnvironment.Staging,
+              region: KlarnaRegion.EU,
+              returnUrl: 'in-app-test://siwk',
+            })
+              .then(instance => {
+                console.log('KlarnaSignIn instance created: ', instance);
+                setKlarnaSignIn(instance);
+                setEvent(
+                  _ =>
+                    'KlarnaSignIn instance created: ' +
+                    JSON.stringify(instance),
+                );
+              })
+              .catch(e => {
+                console.error('KlarnaSignIn instance creation failed: ', e);
+                setEvent(
+                  _ =>
+                    'KlarnaSignIn instance creation failed: ' +
+                    JSON.stringify(e),
+                );
+              });
+          }}
+        />
       </View>
       <View style={styles.buttonsContainer}>
         <Button
