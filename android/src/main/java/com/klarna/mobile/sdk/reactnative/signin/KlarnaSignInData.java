@@ -5,7 +5,7 @@ import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
 
 public class KlarnaSignInData {
     String instanceId;
-    Promise promise;
+    public Promise promise;
     KlarnaSignInSDK sdkInstance;
 
     public KlarnaSignInData(String instanceId, KlarnaSignInSDK sdkInstance) {

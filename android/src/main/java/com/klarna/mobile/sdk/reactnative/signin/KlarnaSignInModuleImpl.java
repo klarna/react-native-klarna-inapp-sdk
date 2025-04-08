@@ -16,6 +16,7 @@ import com.klarna.mobile.sdk.api.KlarnaRegion;
 import com.klarna.mobile.sdk.api.component.KlarnaComponent;
 import com.klarna.mobile.sdk.api.signin.KlarnaSignInEvent;
 import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
+import com.klarna.mobile.sdk.reactnative.common.event.KlarnaEventHandlerEventsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
 import java.util.ArrayList;
@@ -24,10 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
-
-    private static final String PARAM_NAME_ACTION = "action";
-    private static final String PARAM_NAME_KLARNA_MESSAGE_EVENT = "klarnaMessageEvent";
-    private static final String PARAM_NAME_PARAMS = "params";
 
     public static final String NAME = "RNKlarnaSignIn";
 
@@ -71,15 +68,6 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
         return null;
     }
 
-    private String getParamsFrom(KlarnaProductEvent event) {
-        String paramsJson = "{}";
-        try {
-            paramsJson = gson.toJson(event.getParams());
-        } catch (Exception ignored) {
-        }
-        return paramsJson;
-    }
-
     /* Module public methods */
     public void init(String instanceId, String environment, String region, String returnUrl, Promise promise) {
         KlarnaEnvironment env = environmentFrom(environment);
@@ -113,8 +101,7 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
         KlarnaSignInData data = getInstanceData(klarnaComponent);
         if (data != null) {
             if (data.promise != null) {
-                WritableMap map = ArgumentsUtil.createMap(klarnaMobileSDKError.getParams());
-                data.promise.reject(klarnaMobileSDKError.getName(), klarnaMobileSDKError.getMessage(), map);
+                KlarnaEventHandlerEventsUtil.sendKlarnaMobileSDKError(data, klarnaMobileSDKError);
                 signInSDKMap.remove(data.instanceId);
             }
         }
@@ -128,24 +115,18 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
                 case KlarnaSignInEvent.USER_CANCELLED:
                     if (data.promise != null) {
                         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-                            put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
-                            put(PARAM_NAME_PARAMS, getParamsFrom(klarnaProductEvent));
+                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_NAME, klarnaProductEvent.getAction());
+                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_MESSAGE, "User cancelled the sign-in process.");
+                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_IS_FATAL, false);
+                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_SESSION_ID, klarnaProductEvent.getSessionId());
                         }});
-                        WritableMap errorMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-                            put(PARAM_NAME_KLARNA_MESSAGE_EVENT, eventMap);
-                        }});
-                        errorMap.putString("sessionId", klarnaProductEvent.getSessionId());
-                        data.promise.reject(klarnaProductEvent.getAction(), errorMap);
+                        data.promise.resolve(eventMap);
                         signInSDKMap.remove(data.instanceId);
                     }
                     break;
                 case KlarnaSignInEvent.SIGN_IN_TOKEN:
                     if (data.promise != null) {
-                        ReadableMap event = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-                            put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
-                            put(PARAM_NAME_PARAMS, getParamsFrom(klarnaProductEvent));
-                        }});
-                        data.promise.resolve(event);
+                        KlarnaEventHandlerEventsUtil.sendKlarnaProductEvent(data, klarnaProductEvent);
                         signInSDKMap.remove(data.instanceId);
                     }
                     break;
