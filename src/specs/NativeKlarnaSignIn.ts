@@ -1,6 +1,7 @@
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 import type { KlarnaProductEvent } from 'src/types/common/KlarnaProductEvent';
+import type { KlarnaMobileSDKError } from 'src/types/common/KlarnaMobileSDKError';
 
 export interface Spec extends TurboModule {
   init(
@@ -17,7 +18,7 @@ export interface Spec extends TurboModule {
     market: string,
     locale: string,
     tokenizationId: string
-  ): Promise<KlarnaProductEvent>;
+  ): Promise<KlarnaProductEvent | KlarnaMobileSDKError>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RNKlarnaSignIn');

@@ -1,5 +1,6 @@
 import RNKlarnaSignIn from './specs/NativeKlarnaSignIn';
 import type { KlarnaEnvironment } from './types/common/KlarnaEnvironment';
+import type { KlarnaMobileSDKError } from './types/common/KlarnaMobileSDKError';
 import type { KlarnaProductEvent } from './types/common/KlarnaProductEvent';
 import type { KlarnaRegion } from './types/common/KlarnaRegion';
 
@@ -33,11 +34,9 @@ export class KlarnaSignIn {
         props.returnUrl
       )
         .then((result) => {
-          console.log('Init success with result: ', result);
           resolve(new KlarnaSignIn(props, instanceId));
         })
         .catch((error) => {
-          console.error('Init failed with error: ', error);
           reject(error);
         });
     });
@@ -49,7 +48,7 @@ export class KlarnaSignIn {
     market: string,
     locale: string,
     tokenizationId: string
-  ): Promise<KlarnaProductEvent> {
+  ): Promise<KlarnaProductEvent | KlarnaMobileSDKError> {
     return new Promise((resolve, reject) => {
       RNKlarnaSignIn.signIn(
         this.instanceId,
@@ -60,12 +59,18 @@ export class KlarnaSignIn {
         tokenizationId
       )
         .then((result) => {
-          console.log('Sign in success with result: ', result);
           resolve(result);
         })
         .catch((error) => {
           console.error('Sign in failed with error: ', error);
-          reject(error);
+          const errorInfo = error.userInfo;
+          const sdkError: KlarnaMobileSDKError = {
+            isFatal: errorInfo.isFatal,
+            message: errorInfo.message,
+            name: errorInfo.action,
+            sessionId: errorInfo.sessionId,
+          };
+          reject(sdkError);
         });
     });
   }
