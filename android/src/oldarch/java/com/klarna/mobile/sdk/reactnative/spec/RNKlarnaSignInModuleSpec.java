@@ -28,6 +28,11 @@ public class RNKlarnaSignInModuleSpec extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod(isBlockingSynchronousMethod = false)
+    public void dispose(String instanceId, Promise promise) {
+        module.dispose(instanceId, promise);
+    }
+
+    @ReactMethod(isBlockingSynchronousMethod = false)
     public void signIn(String instanceId, String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
         module.signIn(instanceId, clientId, scope, market, locale, tokenizationId, promise);
     }
