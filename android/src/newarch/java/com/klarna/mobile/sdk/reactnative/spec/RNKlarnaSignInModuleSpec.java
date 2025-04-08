@@ -54,6 +54,11 @@ public class RNKlarnaSignInModuleSpec extends NativeKlarnaSignInSpec {
     }
 
     @Override
+    public void dispose(String instanceId, Promise promise) {
+        module.dispose(instanceId, promise);
+    }
+
+    @Override
     public void signIn(String instanceId, String clientId, String scope, String market, String locale, String tokenizationId, Promise promise) {
         module.signIn(instanceId, clientId, scope, market, locale, tokenizationId, promise);
     }

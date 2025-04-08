@@ -11,6 +11,8 @@ export interface Spec extends TurboModule {
     returnUrl: string
   ): Promise<void>;
 
+  dispose(instanceId: string): Promise<void>;
+
   signIn(
     instanceId: string,
     clientId: string,

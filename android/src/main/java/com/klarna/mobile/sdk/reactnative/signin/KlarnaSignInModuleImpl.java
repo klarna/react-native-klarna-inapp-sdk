@@ -90,6 +90,14 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
         }
     }
 
+    public void dispose(String instanceId, Promise promise) {
+        KlarnaSignInData signInData = signInSDKMap.get(instanceId);
+        if (signInData != null) {
+            signInSDKMap.remove(instanceId);
+            promise.resolve(null);
+        }
+    }
+
     /* KlarnaEventHandler methods */
 
     @Override
@@ -102,7 +110,6 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
         if (data != null) {
             if (data.promise != null) {
                 KlarnaEventHandlerEventsUtil.sendKlarnaMobileSDKError(data, klarnaMobileSDKError);
-                signInSDKMap.remove(data.instanceId);
             }
         }
     }
@@ -121,13 +128,11 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
                             put(KlarnaEventHandlerEventsUtil.PARAM_NAME_SESSION_ID, klarnaProductEvent.getSessionId());
                         }});
                         data.promise.resolve(eventMap);
-                        signInSDKMap.remove(data.instanceId);
                     }
                     break;
                 case KlarnaSignInEvent.SIGN_IN_TOKEN:
                     if (data.promise != null) {
                         KlarnaEventHandlerEventsUtil.sendKlarnaProductEvent(data, klarnaProductEvent);
-                        signInSDKMap.remove(data.instanceId);
                     }
                     break;
                 default:

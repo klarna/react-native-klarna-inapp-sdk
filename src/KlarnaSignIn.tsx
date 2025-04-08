@@ -42,6 +42,10 @@ export class KlarnaSignIn {
     });
   }
 
+  dispose(): Promise<void> {
+    return RNKlarnaSignIn.dispose(this.instanceId);
+  }
+
   signIn(
     clientId: string,
     scope: string,
