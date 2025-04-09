@@ -30,12 +30,20 @@ RCT_EXPORT_MODULE(RNKlarnaSignIn);
     return std::make_shared<facebook::react::NativeKlarnaSignInSpecJSI>(params);
 }
 
-- (void)init: (NSString *)instanceId
- environment: (NSString *)environment
-      region: (NSString *)region
-   returnUrl: (NSString *) returnUrl
-     resolve: (RCTPromiseResolveBlock)resolve
-      reject: (RCTPromiseRejectBlock)reject {
+- (void)dispose:(NSString *)instanceId
+        resolve:(RCTPromiseResolveBlock)resolve
+         reject:(RCTPromiseRejectBlock)reject {
+    [self.signInModule dispose:instanceId
+                      resolver:resolve
+                      rejecter:reject];
+}
+
+- (void)init:(NSString *)instanceId
+ environment:(NSString *)environment
+      region:(NSString *)region
+   returnUrl:(NSString *)returnUrl
+     resolve:(RCTPromiseResolveBlock)resolve
+      reject:(RCTPromiseRejectBlock)reject {
     [self.signInModule initWith: instanceId
                     environment: environment
                          region: region

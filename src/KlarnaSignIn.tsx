@@ -66,7 +66,6 @@ export class KlarnaSignIn {
           resolve(result);
         })
         .catch((error) => {
-          console.error('Sign in failed with error: ', error);
           const errorInfo = error.userInfo;
           const sdkError: KlarnaMobileSDKError = {
             isFatal: errorInfo.isFatal,

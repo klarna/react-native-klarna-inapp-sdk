@@ -47,6 +47,26 @@ export default function SignInScreen() {
     );
   };
 
+  useEffect(() => {
+    return () => {
+      console.log('Disposing KlarnaSignIn instance: ', klarnaSignIn?.instanceId);
+      klarnaSignIn?.dispose();
+      setKlarnaSignIn(null);
+    };
+  }, []);
+
+  function handleSignIn() {
+    klarnaSignIn?.signIn(clientId, scope, market, locale, tokenizationId)
+      .then(r => {
+        console.log('Sign in success with result: ', r);
+        onEvent('Sign in success with result: ', JSON.stringify(r));
+      })
+      .catch(e => {
+        console.error('Sign in failed with error: ', e);
+        onEvent('Sign in failed with error: ', JSON.stringify(e));
+      });
+  }
+
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
@@ -62,9 +82,10 @@ export default function SignInScreen() {
         <Button
           title="Initialise KlarnaSignIn"
           onPress={() => {
-            console.log(
-              'Klarna sign in with KlarnaMobileSDK should start now on the native side',
-            );
+            if (klarnaSignIn != null) {
+              console.log('Disposing of previous KlarnaSignIn instance: ', klarnaSignIn?.instanceId);
+              klarnaSignIn?.dispose();
+            }
             KlarnaSignIn.createInstance({
               environment: KlarnaEnvironment.Staging,
               region: KlarnaRegion.EU,
@@ -97,16 +118,7 @@ export default function SignInScreen() {
             console.log(
               'Klarna sign in with KlarnaMobileSDK should start now on the native side',
             );
-            klarnaSignIn
-              ?.signIn(clientId, scope, market, locale, tokenizationId)
-              .then(r => {
-                console.log('Sign in success with result: ', r);
-                onEvent('Sign in success with result: ', JSON.stringify(r));
-              })
-              .catch(e => {
-                console.error('Sign in failed with error: ', e);
-                onEvent('Sign in failed with error: ', JSON.stringify(e));
-              });
+            handleSignIn();
           }}
         />
       </View>

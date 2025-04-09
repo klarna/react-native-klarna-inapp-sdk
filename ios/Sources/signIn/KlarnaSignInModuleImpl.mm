@@ -158,7 +158,7 @@ tokenizationId:(NSString *)tokenizationId
         return;
     }
 
-    if ([event.action isEqual: @"klarnaSignInUserCanceled"]) {
+    if ([event.action isEqual: @"klarnaSignInUserCancelled"]) {
         NSString *errorMsg = @"User canceled the sign-in process.";
         NSError * error = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
                 @"name": event.action,
