@@ -33,7 +33,7 @@ export class KlarnaSignIn {
         props.region,
         props.returnUrl
       )
-        .then((result) => {
+        .then((_) => {
           resolve(new KlarnaSignIn(props, instanceId));
         })
         .catch((error) => {

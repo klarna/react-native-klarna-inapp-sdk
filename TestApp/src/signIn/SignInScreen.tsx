@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, TextInput, Text, useColorScheme, View} from 'react-native';
 import styles, {backgroundStyle} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
@@ -33,7 +33,7 @@ export default function SignInScreen() {
     setValue: (text: string) => void,
   ) => {
     return (
-      <View style={{marginBottom: 20, width: '80%'}}>
+      <View style={styles.signInTextFieldStyle}>
         <Text style={styles.title}>{label}</Text>
         <TextInput
           autoCapitalize="none"
@@ -47,16 +47,9 @@ export default function SignInScreen() {
     );
   };
 
-  useEffect(() => {
-    return () => {
-      console.log('Disposing KlarnaSignIn instance: ', klarnaSignIn?.instanceId);
-      klarnaSignIn?.dispose();
-      setKlarnaSignIn(null);
-    };
-  }, []);
-
   function handleSignIn() {
-    klarnaSignIn?.signIn(clientId, scope, market, locale, tokenizationId)
+    klarnaSignIn
+      ?.signIn(clientId, scope, market, locale, tokenizationId)
       .then(r => {
         console.log('Sign in success with result: ', r);
         onEvent('Sign in success with result: ', JSON.stringify(r));
@@ -83,7 +76,10 @@ export default function SignInScreen() {
           title="Initialise KlarnaSignIn"
           onPress={() => {
             if (klarnaSignIn != null) {
-              console.log('Disposing of previous KlarnaSignIn instance: ', klarnaSignIn?.instanceId);
+              console.log(
+                'Disposing of previous KlarnaSignIn instance: ',
+                klarnaSignIn?.instanceId,
+              );
               klarnaSignIn?.dispose();
             }
             KlarnaSignIn.createInstance({
