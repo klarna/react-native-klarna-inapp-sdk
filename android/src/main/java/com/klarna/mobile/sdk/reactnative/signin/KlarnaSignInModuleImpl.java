@@ -102,10 +102,6 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
 
     @Override
     public void onError(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
-        // Ignore not fatal errors
-        if (!klarnaMobileSDKError.isFatal()) {
-            return;
-        }
         KlarnaSignInData data = getInstanceData(klarnaComponent);
         if (data != null) {
             if (data.promise != null) {
@@ -123,7 +119,7 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
                     if (data.promise != null) {
                         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
                             put(KlarnaEventHandlerEventsUtil.PARAM_NAME_NAME, klarnaProductEvent.getAction());
-                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_MESSAGE, "User cancelled the sign-in process.");
+                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_MESSAGE, "User canceled the sign-in process.");
                             put(KlarnaEventHandlerEventsUtil.PARAM_NAME_IS_FATAL, false);
                             put(KlarnaEventHandlerEventsUtil.PARAM_NAME_SESSION_ID, klarnaProductEvent.getSessionId());
                         }});

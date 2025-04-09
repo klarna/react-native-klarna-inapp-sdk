@@ -27,6 +27,14 @@ RCT_EXPORT_MODULE(RNKlarnaSignIn); // This should match the turbo module specifi
     return self;
 }
 
+RCT_EXPORT_METHOD(dispose:(NSString *)instanceId
+        resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    [self.signInModule dispose: instanceId
+                      resolver: resolve
+                      rejecter: reject];
+}
+
 RCT_EXPORT_METHOD(init:(NSString *)instanceId
         environment:(NSString *)environment
              region:(NSString *)region

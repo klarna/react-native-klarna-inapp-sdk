@@ -64,15 +64,31 @@
 }
 
 - (KlarnaSignInData *)getInstanceFromComponent:(id<KlarnaComponent>)component {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat: @"sdkInstance == %@", component];
-    KlarnaSignInData *signInData = [_signInSDKs.objectEnumerator.allObjects filteredArrayUsingPredicate: predicate].firstObject;
-    return signInData;
+    for (NSString *key in _signInSDKs) {
+        KlarnaSignInData *data = _signInSDKs[key];
+        if (data.sdkInstance == component) {
+            return data;
+        }
+    }
+    return nil;
+}
+
+// MARK: - Module public Methods
+
+- (void)dispose:(NSString *)instanceId
+       resolver:(RCTPromiseResolveBlock)resolve
+       rejecter:(RCTPromiseRejectBlock)reject {
+    KlarnaSignInData *signInData = _signInSDKs[instanceId];
+    if (signInData != nil) {
+        [_signInSDKs removeObjectForKey:instanceId];
+        resolve(nil);
+    }
 }
 
 - (void)initWith:(NSString *)instanceId
      environment: (NSString *)environment
           region: (NSString *)region
-       returnUrl: (NSString *) returnUrl
+       returnUrl: (NSString *)returnUrl
         resolver:(RCTPromiseResolveBlock)resolve
         rejecter:(RCTPromiseRejectBlock)reject {
     KlarnaEnvironment * env = [self environmentFrom: environment];
@@ -124,7 +140,6 @@ tokenizationId:(NSString *)tokenizationId
     }
 }
 
-
 - (void)rejectWithInvalidiOSVersionSupported:(RCTPromiseRejectBlock) rejectBlock {
     NSString *msg = @"KlarnaSignIn is supported from iOS version 13.0";
     rejectBlock(@"RNKlarnaSignIn", msg, nil);
@@ -136,43 +151,52 @@ tokenizationId:(NSString *)tokenizationId
     KlarnaSignInData *signInData = [self getInstanceFromComponent: klarnaComponent];
     if (signInData == nil) {
         RCTLog(@"No instance found for the given component");
-    } else {
-        if (signInData.resolver == nil) {
-            RCTLog(@"Missing 'resolver' callback prop.");
-        } else {
-            NSDictionary *resolvedEvent = @{
-                @"productEvent": @{
-                    @"action": event.action,
-                    @"params": [event getParams],
-                }
-            };
-            signInData.resolver(resolvedEvent);
-            [_signInSDKs removeObjectForKey: signInData.instanceID];
-        }
+        return;
     }
+    if (signInData.resolver == nil) {
+        RCTLog(@"Missing 'resolver' callback prop.");
+        return;
+    }
+
+    if ([event.action isEqual: @"klarnaSignInUserCanceled"]) {
+        NSString *errorMsg = @"User canceled the sign-in process.";
+        NSError * error = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
+                @"name": event.action,
+                @"message": errorMsg,
+                @"isFatal": @"false",
+                @"sessionId": event.sessionId
+        }];
+
+        signInData.rejecter(@"", errorMsg, error);
+        return;
+    }
+    
+    NSString *params = [SerializationUtil serializeDictionaryToJsonString: [event getParams]];
+    NSDictionary *resolvedEvent = @{
+        @"productEvent": @{
+            @"action": event.action,
+            @"sessionId": event.sessionId,
+            @"params": params
+        }
+    };
+    signInData.resolver(resolvedEvent);
 }
 
 - (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent encounteredError:(KlarnaError * _Nonnull)error {
-    // Ignore non fatal errors
-    if (!error.isFatal) {
-        return;
-    }
     KlarnaSignInData *signInData = [self getInstanceFromComponent: klarnaComponent];
     if (signInData == nil) {
         RCTLog(@"No instance found for the given component");
     } else {
-        if (signInData.resolver == nil) {
+        if (signInData.rejecter == nil) {
             RCTLog(@"Missing 'rejecter' callback prop.");
         } else {
             NSError * errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
-                @"error": @{
-                    @"name": error.name,
-                    @"message": error.message,
-                    @"isFatal": [NSNumber numberWithBool: error.isFatal],
-                }
+                @"name": error.name,
+                @"message": error.message,
+                @"isFatal": error.isFatal ? @"true" : @"false",
+                @"sessionId": error.sessionId
             }];
             signInData.rejecter(@"", error.message, errorEvent);
-            [_signInSDKs removeObjectForKey: signInData.instanceID];
         }
     }
 }

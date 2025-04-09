@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KlarnaSignInModuleImp: NSObject
 
+- (void)dispose:(NSString *)instanceId
+       resolver:(RCTPromiseResolveBlock)resolve
+       rejecter:(RCTPromiseRejectBlock)reject;
+
 -(void)initWith:(NSString *)instanceId
     environment: (NSString *)environment
          region: (NSString *)region

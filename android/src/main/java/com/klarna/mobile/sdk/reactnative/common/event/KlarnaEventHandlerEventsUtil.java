@@ -77,11 +77,8 @@ public class KlarnaEventHandlerEventsUtil {
             put(PARAM_NAME_IS_FATAL, klarnaMobileSDKError.isFatal());
             put(PARAM_NAME_SESSION_ID, klarnaMobileSDKError.getSessionId());
         }});
-        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-            put(PARAM_NAME_PRODUCT_EVENT, eventMap);
-        }});
         if (signInData.promise != null) {
-            signInData.promise.reject(EVENT_NAME_ON_ERROR, params);
+            signInData.promise.reject(EVENT_NAME_ON_ERROR, eventMap);
         }
     }
 }
