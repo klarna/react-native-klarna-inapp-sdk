@@ -53,6 +53,19 @@ export class KlarnaSignIn {
     locale: string,
     tokenizationId: string
   ): Promise<KlarnaProductEvent | KlarnaMobileSDKError> {
+    const scopes = scope.split(' ');
+    const tokenizationScopes = ['payment:customer_not_present', 'payment:customer_present'];
+    const isTokenizationScopeIncluded = tokenizationScopes.some(scope => scopes.includes(scope));
+    if (isTokenizationScopeIncluded && tokenizationId.trim() === '') {
+        return new Promise((_, reject) => {
+          const sdkError: KlarnaMobileSDKError = {
+            isFatal: false,
+            message: `Found ${tokenizationScopes} in scope but tokenizationId is empty.`,
+            name: 'klarnaSignInMissingTokenizationId'
+          };
+          reject(sdkError);
+        });
+    }
     return new Promise((resolve, reject) => {
       RNKlarnaSignIn.signIn(
         this.instanceId,

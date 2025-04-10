@@ -184,7 +184,6 @@ tokenizationId:(NSString *)tokenizationId
 
 - (void)klarnaComponent:(id <KlarnaComponent> _Nonnull)klarnaComponent encounteredError:(KlarnaError * _Nonnull)error {
     if (!error.isFatal) {
-        RCTLog(@"Non fatal error ignored: %@", error);
         NSArray *allowedNonFatalErrors = @[@"KlarnaSignInAlreadyInProgress", @"KlarnaSignInAuthorizationFailed"];
         if (![allowedNonFatalErrors containsObject: error.name]) {
             return;

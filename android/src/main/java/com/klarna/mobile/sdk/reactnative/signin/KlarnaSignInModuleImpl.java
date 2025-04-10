@@ -11,11 +11,13 @@ import com.klarna.mobile.sdk.api.KlarnaEventHandler;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.api.KlarnaRegion;
 import com.klarna.mobile.sdk.api.component.KlarnaComponent;
+import com.klarna.mobile.sdk.api.signin.KlarnaSignInError;
 import com.klarna.mobile.sdk.api.signin.KlarnaSignInEvent;
 import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
 import com.klarna.mobile.sdk.reactnative.common.event.KlarnaEventHandlerEventsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,7 +99,10 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
 
     @Override
     public void onError(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
-        if (klarnaMobileSDKError.isFatal()) {
+        ArrayList<String> allowedNonFatalErrors = new ArrayList<>();
+        allowedNonFatalErrors.add(KlarnaSignInError.SignInFailed);
+        allowedNonFatalErrors.add(KlarnaSignInError.AlreadyInProgress);
+        if (klarnaMobileSDKError.isFatal() || !allowedNonFatalErrors.contains(klarnaMobileSDKError.getName())) {
             KlarnaSignInData data = getInstanceData(klarnaComponent);
             if (data != null) {
                 if (data.promise != null) {
