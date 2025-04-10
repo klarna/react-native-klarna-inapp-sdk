@@ -1,13 +1,10 @@
 package com.klarna.mobile.sdk.reactnative.signin;
 
-import static com.klarna.mobile.sdk.reactnative.common.util.ParserUtil.gson;
-
 import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableMap;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaEnvironment;
 import com.klarna.mobile.sdk.api.KlarnaEventHandler;
@@ -19,10 +16,8 @@ import com.klarna.mobile.sdk.api.signin.KlarnaSignInSDK;
 import com.klarna.mobile.sdk.reactnative.common.event.KlarnaEventHandlerEventsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
 
@@ -102,10 +97,12 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
 
     @Override
     public void onError(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
-        KlarnaSignInData data = getInstanceData(klarnaComponent);
-        if (data != null) {
-            if (data.promise != null) {
-                KlarnaEventHandlerEventsUtil.sendKlarnaMobileSDKError(data, klarnaMobileSDKError);
+        if (klarnaMobileSDKError.isFatal()) {
+            KlarnaSignInData data = getInstanceData(klarnaComponent);
+            if (data != null) {
+                if (data.promise != null) {
+                    KlarnaEventHandlerEventsUtil.sendKlarnaMobileSDKError(data, klarnaMobileSDKError);
+                }
             }
         }
     }
