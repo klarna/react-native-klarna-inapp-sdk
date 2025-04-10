@@ -66,7 +66,7 @@ public class KlarnaEventHandlerEventsUtil {
             put(PARAM_NAME_PRODUCT_EVENT, eventMap);
         }});
         if (signInData.promise != null) {
-            signInData.promise.reject(EVENT_NAME_ON_EVENT, params);
+            signInData.promise.resolve(params);
         }
     }
 
