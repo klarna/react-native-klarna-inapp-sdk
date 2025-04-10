@@ -12,6 +12,7 @@ import HomeScreen from './src/home/HomeScreen';
 import PaymentsScreen from './src/payments/PaymentsScreen';
 import StandaloneWebViewScreen from './src/standalonewebview/StandaloneWebViewScreen';
 import KlarnaCheckoutScreen from './src/checkout/KlarnaCheckoutScreen';
+import SignInScreen from './src/signIn/SignInScreen.tsx';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -29,6 +30,7 @@ const AppStack = () => {
         component={StandaloneWebViewScreen}
       />
       <Stack.Screen name="KlarnaCheckout" component={KlarnaCheckoutScreen} />
+      <Stack.Screen name="SignIn" component={SignInScreen} />
     </Stack.Navigator>
   );
 };
@@ -46,6 +48,7 @@ type AppStackParamList = {
   Payments: undefined;
   StandaloneWebView: undefined;
   KlarnaCheckout: undefined;
+  SignIn: undefined;
 };
 
 export type {AppStackParamList};
