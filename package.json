@@ -1,7 +1,7 @@
 {
   "name": "react-native-klarna-inapp-sdk",
   "title": "Klarna Mobile SDK React Native",
-  "version": "2.3.13",
+  "version": "2.3.15",
   "description": "This library wraps Klarna Mobile SDK and exposes its functionality as React Native components.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
