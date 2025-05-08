@@ -71,11 +71,14 @@ public class KlarnaEventHandlerEventsUtil {
     }
 
     public static void sendKlarnaMobileSDKError(@NonNull KlarnaSignInData signInData, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
+        String stringifiedParams = ParserUtil.toJson(klarnaMobileSDKError.getParams());
+        String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
         WritableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_NAME, klarnaMobileSDKError.getName());
             put(PARAM_NAME_MESSAGE, klarnaMobileSDKError.getMessage());
             put(PARAM_NAME_IS_FATAL, klarnaMobileSDKError.isFatal());
             put(PARAM_NAME_SESSION_ID, klarnaMobileSDKError.getSessionId());
+            put(PARAM_NAME_PARAMS, paramsJson);
         }});
         if (signInData.promise != null) {
             signInData.promise.reject(EVENT_NAME_ON_ERROR, eventMap);

@@ -196,11 +196,13 @@ tokenizationId:(NSString *)tokenizationId
         if (signInData.rejecter == nil) {
             RCTLog(@"Missing 'rejecter' callback prop.");
         } else {
-            NSError * errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
+            NSString *params = [SerializationUtil serializeDictionaryToJsonString: [error getParams]];
+            NSError *errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
                 @"name": error.name,
                 @"message": error.message,
                 @"isFatal": error.isFatal ? @"true" : @"false",
-                @"sessionId": error.sessionId
+                @"sessionId": error.sessionId,
+                @"params": params
             }];
             signInData.rejecter(@"", error.message, errorEvent);
         }

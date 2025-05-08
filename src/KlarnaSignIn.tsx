@@ -88,8 +88,9 @@ export class KlarnaSignIn {
           const sdkError: KlarnaMobileSDKError = {
             isFatal: errorInfo.isFatal,
             message: errorInfo.message,
-            name: errorInfo.action,
+            name: errorInfo.name,
             sessionId: errorInfo.sessionId,
+            params: errorInfo.params,
           };
           reject(sdkError);
         });
