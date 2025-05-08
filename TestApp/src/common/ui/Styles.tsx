@@ -108,6 +108,10 @@ const styles = StyleSheet.create({
     width: '100%',
     flexGrow: 1,
   },
+  signInTextFieldStyle: {
+    marginBottom: 20,
+    width: '80%',
+  },
 });
 
 export default styles;
