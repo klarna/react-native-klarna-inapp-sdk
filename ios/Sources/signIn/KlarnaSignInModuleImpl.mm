@@ -11,6 +11,7 @@
 #import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"
 #import <React/RCTLog.h>
 #import "KlarnaSignInData.h"
+#import "KlarnaSignInEventsMapper.h"
 
 @interface KlarnaSignInModuleImp()<KlarnaEventHandler, ASWebAuthenticationPresentationContextProviding>
 
@@ -161,7 +162,7 @@ tokenizationId:(NSString *)tokenizationId
     if ([event.action isEqual: @"klarnaSignInUserCancelled"]) {
         NSString *errorMsg = @"User canceled the sign-in process.";
         NSError * error = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
-                @"name": event.action,
+            @"name": [KlarnaSignInEventsMapper mapSignInEventName: event.action],
                 @"message": errorMsg,
                 @"isFatal": @"false",
                 @"sessionId": event.sessionId
@@ -198,7 +199,7 @@ tokenizationId:(NSString *)tokenizationId
         } else {
             NSString *params = [SerializationUtil serializeDictionaryToJsonString: [error getParams]];
             NSError *errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
-                @"name": error.name,
+                @"name": [KlarnaSignInEventsMapper mapSignInErrorName: error.name],
                 @"message": error.message,
                 @"isFatal": error.isFatal ? @"true" : @"false",
                 @"sessionId": error.sessionId,

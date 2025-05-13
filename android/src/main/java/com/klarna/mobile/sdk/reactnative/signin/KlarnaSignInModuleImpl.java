@@ -119,8 +119,9 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
             switch (klarnaProductEvent.getAction()) {
                 case KlarnaSignInEvent.USER_CANCELLED:
                     if (data.promise != null) {
+                        String eventName = KlarnaSignInEventsMapper.mapSignInEventName(klarnaProductEvent.getAction());
                         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_NAME, klarnaProductEvent.getAction());
+                            put(KlarnaEventHandlerEventsUtil.PARAM_NAME_NAME, eventName);
                             put(KlarnaEventHandlerEventsUtil.PARAM_NAME_MESSAGE, "User canceled the sign-in process.");
                             put(KlarnaEventHandlerEventsUtil.PARAM_NAME_IS_FATAL, false);
                             put(KlarnaEventHandlerEventsUtil.PARAM_NAME_SESSION_ID, klarnaProductEvent.getSessionId());

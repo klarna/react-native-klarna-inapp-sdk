@@ -13,6 +13,7 @@ import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ParserUtil;
 import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInData;
+import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInEventsMapper;
 
 import java.util.HashMap;
 
@@ -57,8 +58,9 @@ public class KlarnaEventHandlerEventsUtil {
     public static void sendKlarnaProductEvent(@NonNull KlarnaSignInData signInData, @NonNull KlarnaProductEvent klarnaProductEvent) {
         String stringifiedParams = ParserUtil.toJson(klarnaProductEvent.getParams());
         String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
+        String eventName = KlarnaSignInEventsMapper.mapSignInEventName(klarnaProductEvent.getAction());
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-            put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
+            put(PARAM_NAME_ACTION, eventName);
             put(PARAM_NAME_SESSION_ID, klarnaProductEvent.getSessionId());
             put(PARAM_NAME_PARAMS, paramsJson);
         }});
@@ -73,8 +75,9 @@ public class KlarnaEventHandlerEventsUtil {
     public static void sendKlarnaMobileSDKError(@NonNull KlarnaSignInData signInData, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
         String stringifiedParams = ParserUtil.toJson(klarnaMobileSDKError.getParams());
         String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
+        String errorName = KlarnaSignInEventsMapper.mapSignInErrorName(klarnaMobileSDKError.getName());
         WritableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-            put(PARAM_NAME_NAME, klarnaMobileSDKError.getName());
+            put(PARAM_NAME_NAME, errorName);
             put(PARAM_NAME_MESSAGE, klarnaMobileSDKError.getMessage());
             put(PARAM_NAME_IS_FATAL, klarnaMobileSDKError.isFatal());
             put(PARAM_NAME_SESSION_ID, klarnaMobileSDKError.getSessionId());
