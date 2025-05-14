@@ -11,7 +11,7 @@ export interface KlarnaSignInProps {
 }
 
 // declare a class that receive the KlarnaSignInProps in the initializer and expose a method to sign in
-export class KlarnaSignIn {
+export class KlarnaSignInSDK {
   readonly environment: KlarnaEnvironment;
   readonly region: KlarnaRegion;
   readonly returnUrl: string;
@@ -24,7 +24,9 @@ export class KlarnaSignIn {
     this.instanceId = instanceId;
   }
 
-  static async createInstance(props: KlarnaSignInProps): Promise<KlarnaSignIn> {
+  static async createInstance(
+    props: KlarnaSignInProps
+  ): Promise<KlarnaSignInSDK> {
     return new Promise((resolve, reject) => {
       let instanceId = Math.random().toString(36).substring(2, 15);
       RNKlarnaSignIn.init(
@@ -34,7 +36,7 @@ export class KlarnaSignIn {
         props.returnUrl
       )
         .then((_) => {
-          resolve(new KlarnaSignIn(props, instanceId));
+          resolve(new KlarnaSignInSDK(props, instanceId));
         })
         .catch((error) => {
           reject(error);

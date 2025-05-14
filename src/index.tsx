@@ -1,4 +1,4 @@
 export * from './KlarnaPaymentView';
 export * from './KlarnaStandaloneWebView';
 export * from './KlarnaCheckoutView';
-export * from './KlarnaSignIn';
+export * from './KlarnaSignInSDK';

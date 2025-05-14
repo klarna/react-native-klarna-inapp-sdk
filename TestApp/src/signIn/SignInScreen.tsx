@@ -3,7 +3,7 @@ import {ScrollView, TextInput, Text, useColorScheme, View} from 'react-native';
 import styles, {backgroundStyle} from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button.tsx';
-import {KlarnaSignIn} from 'react-native-klarna-inapp-sdk';
+import {KlarnaSignInSDK} from 'react-native-klarna-inapp-sdk';
 import {KlarnaEnvironment} from '../../../src/types/common/KlarnaEnvironment.ts';
 import {KlarnaRegion} from '../../../src/types/common/KlarnaRegion.ts';
 
@@ -16,7 +16,9 @@ export default function SignInScreen() {
   const [locale, setLocale] = useState('');
   const [tokenizationId, setTokenizationId] = useState('');
   const [event, setEvent] = useState<string>();
-  const [klarnaSignIn, setKlarnaSignIn] = useState<KlarnaSignIn | null>(null);
+  const [klarnaSignIn, setKlarnaSignIn] = useState<KlarnaSignInSDK | null>(
+    null,
+  );
 
   const onEvent = (...params: Array<string | boolean | null>) => {
     console.log('onEvent', params);
@@ -82,7 +84,7 @@ export default function SignInScreen() {
               );
               klarnaSignIn?.dispose();
             }
-            KlarnaSignIn.createInstance({
+            KlarnaSignInSDK.createInstance({
               environment: KlarnaEnvironment.Staging,
               region: KlarnaRegion.EU,
               returnUrl: 'in-app-test://siwk',
