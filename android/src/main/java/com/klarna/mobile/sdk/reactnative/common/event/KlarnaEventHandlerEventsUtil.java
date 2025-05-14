@@ -87,4 +87,13 @@ public class KlarnaEventHandlerEventsUtil {
             signInData.promise.reject(EVENT_NAME_ON_ERROR, eventMap);
         }
     }
+
+    public static void sendInvalidOrNullReturnUrlError(@NonNull Promise promise) {
+        WritableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
+            put(PARAM_NAME_NAME, "KlarnaSignInInvalidReturnURL");
+            put(PARAM_NAME_MESSAGE, "Invalid or null return URL");
+            put(PARAM_NAME_IS_FATAL, true);
+        }});
+        promise.reject(EVENT_NAME_ON_ERROR, eventMap);
+    }
 }

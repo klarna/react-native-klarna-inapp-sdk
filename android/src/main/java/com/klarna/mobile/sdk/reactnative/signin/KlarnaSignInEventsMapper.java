@@ -7,6 +7,7 @@ import java.util.Map;
 public class KlarnaSignInEventsMapper {
     public static String mapSignInErrorName(String key) {
         Map<String, String> errorsMap = new HashMap<>();
+        errorsMap.put("InvalidReturnUrlError", "KlarnaSignInInvalidReturnURL");
         errorsMap.put("KlarnaSignInErrorInvalidCustomTabsReturnUrl", "KlarnaSignInInvalidReturnURL");
         errorsMap.put("KlarnaSignInErrorAlreadyInProgress", "KlarnaSignInAlreadyInProgress");
         errorsMap.put("klarnaSignInAuthorizationFailed", "KlarnaSignInAuthorizationFailed");
@@ -15,6 +16,9 @@ public class KlarnaSignInEventsMapper {
         errorsMap.put("klarnaSignInInvalidPresentationContext", "KlarnaSignInInvalidPresentationContext");
         errorsMap.put("KlarnaSignInErrorInvalidScope", "KlarnaSignInInvalidScope");
         errorsMap.put("KlarnaSignInErrorMissingTokenizationCallback", "KlarnaSignInMissingTokenizationId");
+        if (errorsMap.get(key) == null) {
+            return key;
+        }
         return errorsMap.get(key);
     }
 
@@ -22,6 +26,9 @@ public class KlarnaSignInEventsMapper {
         Map<String, String> eventsMap = new HashMap<>();
         eventsMap.put("KlarnaSignInToken", "KlarnaSignInToken");
         eventsMap.put("KlarnaSignInUserCancelled", "KlarnaSignInUserCancelled");
+        if (eventsMap.get(key) == null) {
+            return key;
+        }
         return eventsMap.get(key);
     }
 }

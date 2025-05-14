@@ -39,7 +39,15 @@ export class KlarnaSignInSDK {
           resolve(new KlarnaSignInSDK(props, instanceId));
         })
         .catch((error) => {
-          reject(error);
+          const errorInfo = error.userInfo;
+          const sdkError: KlarnaMobileSDKError = {
+            isFatal: errorInfo.isFatal,
+            message: errorInfo.message,
+            name: errorInfo.name,
+            sessionId: errorInfo.sessionId,
+            params: errorInfo.params,
+          };
+          reject(sdkError);
         });
     });
   }

@@ -94,6 +94,10 @@
         rejecter:(RCTPromiseRejectBlock)reject {
     KlarnaEnvironment * env = [self environmentFrom: environment];
     KlarnaRegion * reg = [self regionFrom: region];
+    if (returnUrl.length == 0) {
+        [self rejectWithInvalidURL: reject];
+        return;
+    }
     NSURL *url = [NSURL URLWithString: returnUrl];
     if (url != nil) {
         if (@available(iOS 13.0, *)) {
@@ -108,8 +112,7 @@
             [self rejectWithInvalidiOSVersionSupported: reject];
         }
     } else {
-        RCTLog(@"Invalid returnUrl provided");
-        reject(@"RNKlarnaSignIn", @"Invalid returnUrl provided", nil);
+        [self rejectWithInvalidURL: reject];
     }
 }
 
@@ -144,6 +147,16 @@ tokenizationId:(NSString *)tokenizationId
 - (void)rejectWithInvalidiOSVersionSupported:(RCTPromiseRejectBlock) rejectBlock {
     NSString *msg = @"KlarnaSignIn is supported from iOS version 13.0";
     rejectBlock(@"RNKlarnaSignIn", msg, nil);
+}
+
+- (void)rejectWithInvalidURL:(RCTPromiseRejectBlock) rejectBlock {
+    NSString *msg = @"Invalid returnURL, it can not be empty or nil.";
+    NSError *errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
+        @"name": @"KlarnaSignInInvalidReturnUrl",
+        @"message": msg,
+        @"isFatal": @"true"
+    }];
+    rejectBlock(@"", msg, errorEvent);
 }
 
 // MARK: - KlarnaEventHandler Methods
