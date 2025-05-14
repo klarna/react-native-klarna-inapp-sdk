@@ -158,24 +158,11 @@ tokenizationId:(NSString *)tokenizationId
         RCTLog(@"Missing 'resolver' callback prop.");
         return;
     }
-
-    if ([event.action isEqual: @"klarnaSignInUserCancelled"]) {
-        NSString *errorMsg = @"User canceled the sign-in process.";
-        NSError * error = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
-            @"name": [KlarnaSignInEventsMapper mapSignInEventName: event.action],
-                @"message": errorMsg,
-                @"isFatal": @"false",
-                @"sessionId": event.sessionId
-        }];
-
-        signInData.rejecter(@"", errorMsg, error);
-        return;
-    }
     
     NSString *params = [SerializationUtil serializeDictionaryToJsonString: [event getParams]];
     NSDictionary *resolvedEvent = @{
         @"productEvent": @{
-            @"action": event.action,
+            @"action": [KlarnaSignInEventsMapper mapSignInEventName: event.action],
             @"sessionId": event.sessionId,
             @"params": params
         }
