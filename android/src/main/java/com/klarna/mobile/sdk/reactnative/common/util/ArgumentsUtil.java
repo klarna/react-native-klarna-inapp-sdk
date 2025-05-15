@@ -6,8 +6,14 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.internal.Util;
 
 public class ArgumentsUtil {
 
@@ -58,5 +64,39 @@ public class ArgumentsUtil {
             }
         }
         return array;
+    }
+
+    public static WritableMap createMapUsingJSONString(Map<String, Object> sourceMap) {
+        String jsonString = ParserUtil.toJson(sourceMap);
+        WritableMap map = Arguments.createMap();
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            map = jsonToWritableMap(jsonObject);
+        } catch (JSONException e) {
+            System.out.println("JSONException occurred: " + e.getMessage());
+        }
+        return map;
+    }
+
+    private static WritableMap jsonToWritableMap(JSONObject jsonObject) throws JSONException {
+        WritableMap map = Arguments.createMap();
+        for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
+            String key = it.next();
+            Object value = jsonObject.get(key);
+            if (value instanceof JSONObject) {
+                map.putMap(key, jsonToWritableMap((JSONObject) value));
+            } else if (value instanceof Boolean) {
+                map.putBoolean(key, (Boolean) value);
+            } else if (value instanceof Integer) {
+                map.putInt(key, (Integer) value);
+            } else if (value instanceof Double) {
+                map.putDouble(key, (Double) value);
+            } else if (value instanceof String) {
+                map.putString(key, (String) value);
+            } else {
+                map.putNull(key);
+            }
+        }
+        return map;
     }
 }

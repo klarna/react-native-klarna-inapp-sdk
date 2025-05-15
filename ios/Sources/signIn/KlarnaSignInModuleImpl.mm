@@ -171,16 +171,18 @@ tokenizationId:(NSString *)tokenizationId
         RCTLog(@"Missing 'resolver' callback prop.");
         return;
     }
+    NSMutableDictionary<NSString *, id> *resolvedEvent = [NSMutableDictionary dictionaryWithDictionary: @{
+        @"action": [KlarnaSignInEventsMapper mapSignInEventName: event.action],
+        @"sessionId": event.sessionId,
+    }];
     NSMutableDictionary *updatedParams = [NSMutableDictionary new];
     [[event getParams] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
         NSString *updatedKey = [KlarnaSignInEventsMapper mapSignInParamName: key];
         [updatedParams setValue: obj forKey: updatedKey];
     }];
-    NSDictionary *resolvedEvent = @{
-        @"action": [KlarnaSignInEventsMapper mapSignInEventName: event.action],
-        @"sessionId": event.sessionId,
-        @"params": updatedParams
-    };
+    if ([updatedParams count] > 0) {
+        [resolvedEvent setValue: updatedParams forKey: @"params"];
+    }
     signInData.resolver(resolvedEvent);
 }
 
@@ -198,17 +200,17 @@ tokenizationId:(NSString *)tokenizationId
         if (signInData.rejecter == nil) {
             RCTLog(@"Missing 'rejecter' callback prop.");
         } else {
-            NSDictionary *params = [error getParams];
-            if (!params) {
-                params = @{};
-            }
-            NSError *errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
+            NSMutableDictionary<NSString *, id> *infoDict = [NSMutableDictionary dictionaryWithDictionary: @{
                 @"name": [KlarnaSignInEventsMapper mapSignInErrorName: error.name],
                 @"message": error.message,
                 @"isFatal": error.isFatal ? @"true" : @"false",
                 @"sessionId": error.sessionId,
-                @"params": params
             }];
+            NSDictionary *params = [error getParams];
+            if ([params count] > 0) {
+                [infoDict setValue: params forKey: @"params"];
+            }
+            NSError *errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: infoDict];
             signInData.rejecter(@"", error.message, errorEvent);
         }
     }
