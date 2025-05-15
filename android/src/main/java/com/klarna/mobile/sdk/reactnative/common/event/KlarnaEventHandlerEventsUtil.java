@@ -16,6 +16,7 @@ import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInData;
 import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInEventsMapper;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class KlarnaEventHandlerEventsUtil {
 
@@ -56,32 +57,33 @@ public class KlarnaEventHandlerEventsUtil {
     }
 
     public static void sendKlarnaProductEvent(@NonNull KlarnaSignInData signInData, @NonNull KlarnaProductEvent klarnaProductEvent) {
-        String stringifiedParams = ParserUtil.toJson(klarnaProductEvent.getParams());
-        String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
+        if (klarnaProductEvent.getAction().equals("KlarnaSignInUserAuth")) {
+            return;
+        }
+        Map<String, Object> updatedParams = new HashMap<>();
+        for(Map.Entry<String, Object> entry : klarnaProductEvent.getParams().entrySet()) {
+            String updatedKey = KlarnaSignInEventsMapper.mapSignInParamName(entry.getKey());
+            updatedParams.put(updatedKey, entry.getValue());
+        }
         String eventName = KlarnaSignInEventsMapper.mapSignInEventName(klarnaProductEvent.getAction());
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_ACTION, eventName);
             put(PARAM_NAME_SESSION_ID, klarnaProductEvent.getSessionId());
-            put(PARAM_NAME_PARAMS, paramsJson);
-        }});
-        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-            put(PARAM_NAME_PRODUCT_EVENT, eventMap);
+            put(PARAM_NAME_PARAMS, updatedParams);
         }});
         if (signInData.promise != null) {
-            signInData.promise.resolve(params);
+            signInData.promise.resolve(eventMap);
         }
     }
 
     public static void sendKlarnaMobileSDKError(@NonNull KlarnaSignInData signInData, @NonNull KlarnaMobileSDKError klarnaMobileSDKError) {
-        String stringifiedParams = ParserUtil.toJson(klarnaMobileSDKError.getParams());
-        String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
         String errorName = KlarnaSignInEventsMapper.mapSignInErrorName(klarnaMobileSDKError.getName());
         WritableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_NAME, errorName);
             put(PARAM_NAME_MESSAGE, klarnaMobileSDKError.getMessage());
             put(PARAM_NAME_IS_FATAL, klarnaMobileSDKError.isFatal());
             put(PARAM_NAME_SESSION_ID, klarnaMobileSDKError.getSessionId());
-            put(PARAM_NAME_PARAMS, paramsJson);
+            put(PARAM_NAME_PARAMS, klarnaMobileSDKError.getParams());
         }});
         if (signInData.promise != null) {
             signInData.promise.reject(EVENT_NAME_ON_ERROR, eventMap);

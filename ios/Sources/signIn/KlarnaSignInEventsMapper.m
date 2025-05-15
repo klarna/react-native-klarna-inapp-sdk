@@ -40,4 +40,15 @@
     }
 }
 
++(NSString *)mapSignInParamName:(NSString *)paramName {
+    NSDictionary *signInParamsMap = @{
+        @"klarnaToken": @"KlarnaSignInToken"
+    };
+    NSString *mappedParam = signInParamsMap[paramName];
+    if (mappedParam) {
+        return mappedParam;
+    } else {
+        return paramName;
+    }
+}
 @end

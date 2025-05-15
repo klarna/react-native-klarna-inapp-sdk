@@ -53,8 +53,19 @@ export default function SignInScreen() {
     klarnaSignIn
       ?.signIn(clientId, scope, market, locale, tokenizationId)
       .then(r => {
-        console.log('Sign in success with result: ', r);
-        onEvent('Sign in success with result: ', JSON.stringify(r));
+        switch (r.action) {
+          case 'KlarnaSignInUserCancelled':
+            console.log('User cancelled sign in');
+            onEvent('User cancelled sign in');
+            return;
+          case 'KlarnaSignInToken':
+            console.log('Token params received: ', r.params);
+            onEvent('Token received: ', JSON.stringify(r.params?.['KlarnaSignInToken']['access_token']));
+            return;
+          default:
+            console.log('Sign in event received: ', r.params);
+            onEvent('Sign in event received: ', JSON.stringify(r));
+        }
       })
       .catch(e => {
         console.error('Sign in failed with error: ', e);
@@ -95,7 +106,8 @@ export default function SignInScreen() {
                 setEvent(
                   _ =>
                     'KlarnaSignIn instance created: ' +
-                    JSON.stringify(instance),
+                    JSON.stringify(instance) +
+                    '\n',
                 );
               })
               .catch(e => {
@@ -103,7 +115,8 @@ export default function SignInScreen() {
                 setEvent(
                   _ =>
                     'KlarnaSignIn instance creation failed: ' +
-                    JSON.stringify(e),
+                    JSON.stringify(e) +
+                    '\n',
                 );
               });
           }}

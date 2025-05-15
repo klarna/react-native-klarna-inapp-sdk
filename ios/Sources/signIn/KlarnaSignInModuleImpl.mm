@@ -171,14 +171,15 @@ tokenizationId:(NSString *)tokenizationId
         RCTLog(@"Missing 'resolver' callback prop.");
         return;
     }
-    
-    NSString *params = [SerializationUtil serializeDictionaryToJsonString: [event getParams]];
+    NSMutableDictionary *updatedParams = [NSMutableDictionary new];
+    [[event getParams] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+        NSString *updatedKey = [KlarnaSignInEventsMapper mapSignInParamName: key];
+        [updatedParams setValue: obj forKey: updatedKey];
+    }];
     NSDictionary *resolvedEvent = @{
-        @"productEvent": @{
-            @"action": [KlarnaSignInEventsMapper mapSignInEventName: event.action],
-            @"sessionId": event.sessionId,
-            @"params": params
-        }
+        @"action": [KlarnaSignInEventsMapper mapSignInEventName: event.action],
+        @"sessionId": event.sessionId,
+        @"params": updatedParams
     };
     signInData.resolver(resolvedEvent);
 }
@@ -197,7 +198,10 @@ tokenizationId:(NSString *)tokenizationId
         if (signInData.rejecter == nil) {
             RCTLog(@"Missing 'rejecter' callback prop.");
         } else {
-            NSString *params = [SerializationUtil serializeDictionaryToJsonString: [error getParams]];
+            NSDictionary *params = [error getParams];
+            if (!params) {
+                params = @{};
+            }
             NSError *errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
                 @"name": [KlarnaSignInEventsMapper mapSignInErrorName: error.name],
                 @"message": error.message,

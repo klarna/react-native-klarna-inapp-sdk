@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KlarnaSignInEventsMapper : NSObject
 +(NSString *)mapSignInErrorName:(NSString *)errorName;
 +(NSString *)mapSignInEventName:(NSString *)eventName;
++(NSString *)mapSignInParamName:(NSString *)paramName;
 @end
 
 NS_ASSUME_NONNULL_END

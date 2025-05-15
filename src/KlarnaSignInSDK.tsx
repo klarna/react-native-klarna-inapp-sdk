@@ -62,7 +62,7 @@ export class KlarnaSignInSDK {
     market: string,
     locale: string,
     tokenizationId: string
-  ): Promise<KlarnaProductEvent | KlarnaMobileSDKError> {
+  ): Promise<KlarnaProductEvent> {
     const scopes = scope.split(' ');
     const tokenizationScopes = [
       'payment:customer_not_present',

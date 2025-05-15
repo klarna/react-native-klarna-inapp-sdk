@@ -31,4 +31,10 @@ public class KlarnaSignInEventsMapper {
         }
         return eventsMap.get(key);
     }
+
+    public static String mapSignInParamName(String key) {
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("KlarnaSignInToken", "KlarnaSignInToken");
+        return paramsMap.get(key);
+    }
 }
