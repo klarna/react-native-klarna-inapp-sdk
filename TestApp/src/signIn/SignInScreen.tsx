@@ -55,21 +55,31 @@ export default function SignInScreen() {
       .then(r => {
         switch (r.action) {
           case 'KlarnaSignInUserCancelled':
-            console.log('User cancelled sign in');
-            onEvent('User cancelled sign in');
-            return;
+            console.log('User cancelled sign in', JSON.stringify(r, null, 2));
+            onEvent('User cancelled sign in', JSON.stringify(r, null, 2));
+            break;
           case 'KlarnaSignInToken':
-            console.log('Token params received: ', r.params);
-            onEvent('Token received: ', JSON.stringify(r.params?.['KlarnaSignInToken']['access_token']));
-            return;
+            console.log(
+              'Token params received: ',
+              JSON.stringify(r.params, null, 2),
+            );
+            onEvent(
+              'Token received: ',
+              JSON.stringify(r.params?.KlarnaSignInToken.access_token, null, 2),
+            );
+            break;
           default:
-            console.log('Sign in event received: ', r.params);
-            onEvent('Sign in event received: ', JSON.stringify(r));
+            console.log(
+              'Sign in event received: ',
+              JSON.stringify(r.params, null, 2),
+            );
+            onEvent('Sign in event received: ', JSON.stringify(r, null, 2));
+            break;
         }
       })
       .catch(e => {
         console.error('Sign in failed with error: ', e);
-        onEvent('Sign in failed with error: ', JSON.stringify(e));
+        onEvent('Sign in failed with error: ', JSON.stringify(e, null, 2));
       });
   }
 
@@ -106,16 +116,19 @@ export default function SignInScreen() {
                 setEvent(
                   _ =>
                     'KlarnaSignIn instance created: ' +
-                    JSON.stringify(instance) +
+                    JSON.stringify(instance, null, 2) +
                     '\n',
                 );
               })
               .catch(e => {
-                console.error('KlarnaSignIn instance creation failed: ', e);
+                console.error(
+                  'KlarnaSignIn instance creation failed: ',
+                  JSON.stringify(e, null, 2),
+                );
                 setEvent(
                   _ =>
                     'KlarnaSignIn instance creation failed: ' +
-                    JSON.stringify(e) +
+                    JSON.stringify(e, null, 2) +
                     '\n',
                 );
               });
