@@ -27,6 +27,16 @@ export class KlarnaSignInSDK {
   static async createInstance(
     props: KlarnaSignInProps
   ): Promise<KlarnaSignInSDK> {
+    if (props.returnUrl.trim() === '') {
+      return new Promise((_, reject) => {
+        const sdkError: KlarnaMobileSDKError = {
+          isFatal: true,
+          message: 'Invalid or null return URL',
+          name: 'KlarnaSignInMissingReturnUrl',
+        };
+        reject(sdkError);
+      });
+    }
     return new Promise((resolve, reject) => {
       let instanceId = Math.random().toString(36).substring(2, 15);
       RNKlarnaSignIn.init(
@@ -76,7 +86,7 @@ export class KlarnaSignInSDK {
         const sdkError: KlarnaMobileSDKError = {
           isFatal: false,
           message: `Found ${tokenizationScopes} in scope but tokenizationId is empty.`,
-          name: 'klarnaSignInMissingTokenizationId',
+          name: 'KlarnaSignInMissingTokenizationId',
         };
         reject(sdkError);
       });

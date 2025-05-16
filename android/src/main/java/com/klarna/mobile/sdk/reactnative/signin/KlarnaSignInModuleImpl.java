@@ -69,10 +69,6 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
     public void init(String instanceId, String environment, String region, String returnUrl, Promise promise) {
         KlarnaEnvironment env = environmentFrom(environment);
         KlarnaRegion reg = regionFrom(region);
-        if (returnUrl.isEmpty()) {
-            KlarnaEventHandlerEventsUtil.sendInvalidOrNullReturnUrlError(promise);
-            return;
-        }
         reactAppContext.runOnUiQueueThread(() -> {
             KlarnaSignInSDK signInInstance = new KlarnaSignInSDK(reactAppContext.getCurrentActivity(), returnUrl, this, env, reg);
             KlarnaSignInData signInData = new KlarnaSignInData(instanceId, signInInstance);

@@ -94,12 +94,8 @@
         rejecter:(RCTPromiseRejectBlock)reject {
     KlarnaEnvironment * env = [self environmentFrom: environment];
     KlarnaRegion * reg = [self regionFrom: region];
-    if (returnUrl.length == 0) {
-        [self rejectWithInvalidURL: reject];
-        return;
-    }
     NSURL *url = [NSURL URLWithString: returnUrl];
-    if (url != nil) {
+    if (url != nil && url.scheme != nil) {
         if (@available(iOS 13.0, *)) {
             KlarnaSignInSDK *signInInstance = [[KlarnaSignInSDK alloc] initWithEnvironment: env
                                                                                     region: reg
@@ -150,7 +146,7 @@ tokenizationId:(NSString *)tokenizationId
 }
 
 - (void)rejectWithInvalidURL:(RCTPromiseRejectBlock) rejectBlock {
-    NSString *msg = @"Invalid returnURL, it can not be empty or nil.";
+    NSString *msg = @"Invalid or null return URL.";
     NSError *errorEvent = [NSError errorWithDomain:@"com.klarnamobilesdk" code: 0001 userInfo: @{
         @"name": @"KlarnaSignInInvalidReturnUrl",
         @"message": msg,
