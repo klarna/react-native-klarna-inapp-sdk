@@ -18,7 +18,7 @@ export interface Spec extends TurboModule {
     scope: string,
     market: string,
     locale: string,
-    tokenizationId: string
+    tokenizationId?: string
   ): Promise<KlarnaProductEvent>;
 }
 

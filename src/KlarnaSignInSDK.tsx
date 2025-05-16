@@ -71,7 +71,7 @@ export class KlarnaSignInSDK {
     scope: string,
     market: string,
     locale: string,
-    tokenizationId: string
+    tokenizationId?: string
   ): Promise<KlarnaProductEvent> {
     const scopes = scope.split(' ');
     const tokenizationScopes = [
@@ -81,7 +81,10 @@ export class KlarnaSignInSDK {
     const isTokenizationScopeIncluded = tokenizationScopes.some((value) =>
       scopes.includes(value)
     );
-    if (isTokenizationScopeIncluded && tokenizationId.trim() === '') {
+    if (
+      isTokenizationScopeIncluded &&
+      (!tokenizationId || tokenizationId.trim() === '')
+    ) {
       return new Promise((_, reject) => {
         const sdkError: KlarnaMobileSDKError = {
           isFatal: false,
