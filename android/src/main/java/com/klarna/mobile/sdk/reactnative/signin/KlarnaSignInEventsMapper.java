@@ -10,7 +10,7 @@ public class KlarnaSignInEventsMapper {
         errorsMap.put("InvalidReturnUrlError", "KlarnaSignInInvalidReturnURL");
         errorsMap.put("KlarnaSignInErrorInvalidCustomTabsReturnUrl", "KlarnaSignInInvalidReturnURL");
         errorsMap.put("KlarnaSignInErrorAlreadyInProgress", "KlarnaSignInAlreadyInProgress");
-        errorsMap.put("klarnaSignInAuthorizationFailed", "KlarnaSignInAuthorizationFailed");
+        errorsMap.put("KlarnaSignInErrorSignInFailed", "KlarnaSignInAuthorizationFailed");
         errorsMap.put("KlarnaSignInErrorInvalidClientID", "KlarnaSignInInvalidClientID");
         errorsMap.put("KlarnaSignInErrorInvalidMarket", "KlarnaSignInInvalidMarket");
         errorsMap.put("klarnaSignInInvalidPresentationContext", "KlarnaSignInInvalidPresentationContext");
