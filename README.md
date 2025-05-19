@@ -11,6 +11,7 @@ currently has the following components:
 - `KlarnaPaymentView` to integrate Klarna Payments
 - `KlarnaStandaloneWebView` to integrate Klarna Standalone WebView
 - `KlarnaCheckoutView` to integrate Klarna Checkout
+- `KlarnaSignInSDK` to integrate Klarna Sign In
 
 This repository also includes a test application that you can use to see how it works.
 
