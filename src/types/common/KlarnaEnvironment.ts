@@ -1,4 +1,4 @@
 export enum KlarnaEnvironment {
   Playground = 'playground',
-  Production = 'production'
+  Production = 'production',
 }
