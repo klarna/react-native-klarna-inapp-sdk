@@ -106,7 +106,7 @@ export default function SignInScreen() {
               klarnaSignIn?.dispose();
             }
             KlarnaSignInSDK.createInstance({
-              environment: KlarnaEnvironment.Staging,
+              environment: KlarnaEnvironment.Playground,
               region: KlarnaRegion.EU,
               returnUrl: 'in-app-test://siwk',
             })
