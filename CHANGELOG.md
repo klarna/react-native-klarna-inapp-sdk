@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.4.0] - 2025-05-19
 - Added KlarnaSignInSDK implementation.
+- Updated the native iOS SDK version to 2.6.29
 
 ## [2.3.15] - 2025-05-05
 - Updated the native Android SDK version to 2.6.28
