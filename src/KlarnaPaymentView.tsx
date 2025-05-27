@@ -73,7 +73,7 @@ export class KlarnaPaymentView extends Component<
         /* eslint-disable-next-line react-native/no-inline-styles */
         style={{
           width: '100%',
-          height: this.state.nativeViewHeight,
+          minHeight: this.state.nativeViewHeight,
           flexShrink: 1,
         }}
         category={this.props.category || ''}
