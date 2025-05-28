@@ -46,7 +46,7 @@ export class KlarnaCheckoutView extends Component<
         /* eslint-disable-next-line react-native/no-inline-styles */
         style={{
           width: '100%',
-          minHeight: this.state.nativeViewHeight,
+          height: this.state.nativeViewHeight,
           flexShrink: 1,
         }}
         returnUrl={this.props.returnUrl || ''}
