@@ -29,6 +29,7 @@ export class KlarnaCheckoutView extends Component<
   checkoutViewRef: RefObject<
     Component<RNKlarnaCheckoutViewProps> & Readonly<NativeMethods>
   >;
+  private snippet: string | null = null;
 
   constructor(props: KlarnaCheckoutViewProps) {
     super(props);
@@ -102,11 +103,20 @@ export class KlarnaCheckoutView extends Component<
             this.setState({ nativeViewHeight: newHeight });
           }
         }}
+        onCheckoutViewReady={() => {
+          console.log('onCheckoutViewReady');
+          if (this.snippet !== null) {
+            console.log('Setting the snippet...');
+            this.setSnippet(this.snippet);
+            this.snippet = null;
+          }
+        }}
       />
     );
   }
 
   setSnippet = (snippet: string) => {
+    this.snippet = snippet;
     const view = this.checkoutViewRef.current;
     if (view != null) {
       RNKlarnaCheckoutViewCommands.setSnippet(view, snippet);

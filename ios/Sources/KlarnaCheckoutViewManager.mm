@@ -15,6 +15,7 @@ RCT_EXPORT_VIEW_PROPERTY(returnUrl, NSString)
 RCT_EXPORT_VIEW_PROPERTY(onEvent, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onError, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onResized, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onCheckoutViewReady, RCTDirectEventBlock)
 
 - (UIView *)view
 {

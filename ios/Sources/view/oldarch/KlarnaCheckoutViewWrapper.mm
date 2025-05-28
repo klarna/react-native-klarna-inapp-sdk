@@ -9,10 +9,20 @@
 @interface KlarnaCheckoutViewWrapper () <KlarnaEventHandler, KlarnaSizingDelegate>
 
 @property (nonatomic, strong) KlarnaCheckoutView* actualCheckoutView;
+@property (nonatomic, assign) BOOL isCheckoutViewReadyEventSent;
 
 @end
 
 @implementation KlarnaCheckoutViewWrapper
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.isCheckoutViewReadyEventSent = NO;
+    }
+    return self;
+}
 
 #pragma mark - React Native Overrides
 
@@ -29,6 +39,7 @@
 }
 
 - (void) initializeActualCheckoutView {
+    self.isCheckoutViewReadyEventSent = NO;
     self.actualCheckoutView = [[KlarnaCheckoutView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl] eventHandler:self];
     self.actualCheckoutView.sizingDelegate = self;
     
@@ -50,6 +61,25 @@
     [self.actualCheckoutView layoutSubviews];
 }
 
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    if (!self.window) {
+        self.isCheckoutViewReadyEventSent = NO;
+    }
+}
+
+- (void)didSetProps:(NSArray<NSString *> *)changedProps {
+    [super didSetProps:changedProps];
+    [self sendCheckoutViewReadyEvent];
+}
+
+- (void)sendCheckoutViewReadyEvent {
+    if (self.actualCheckoutView && self.onCheckoutViewReady && !self.isCheckoutViewReadyEventSent) {
+        self.onCheckoutViewReady(@{});
+        self.isCheckoutViewReadyEventSent = YES;
+    }
+}
+
 #pragma mark - KlarnaCheckoutView Methods
 
 - (void)setSnippet:(NSString *)snippet {
@@ -63,7 +93,6 @@
 - (void)resume {
     [self.actualCheckoutView resume];
 }
-
 
 #pragma mark - KlarnaEventHandler
 
