@@ -30,6 +30,7 @@ export class KlarnaCheckoutView extends Component<
     Component<RNKlarnaCheckoutViewProps> & Readonly<NativeMethods>
   >;
   private snippet: string | null = null;
+  private isCheckoutViewReady = false;
 
   constructor(props: KlarnaCheckoutViewProps) {
     super(props);
@@ -37,6 +38,7 @@ export class KlarnaCheckoutView extends Component<
       nativeViewHeight: 0,
     };
     this.checkoutViewRef = React.createRef();
+    this.isCheckoutViewReady = false;
   }
 
   render() {
@@ -104,6 +106,7 @@ export class KlarnaCheckoutView extends Component<
           }
         }}
         onCheckoutViewReady={() => {
+          this.isCheckoutViewReady = true;
           console.log('onCheckoutViewReady');
           if (this.snippet) {
             console.log('Setting the snippet...');
@@ -118,21 +121,21 @@ export class KlarnaCheckoutView extends Component<
   setSnippet = (snippet: string) => {
     this.snippet = snippet;
     const view = this.checkoutViewRef.current;
-    if (view != null) {
+    if (view != null && this.isCheckoutViewReady) {
       RNKlarnaCheckoutViewCommands.setSnippet(view, snippet);
     }
   };
 
   suspend = () => {
     const view = this.checkoutViewRef.current;
-    if (view != null) {
+    if (view != null && this.isCheckoutViewReady) {
       RNKlarnaCheckoutViewCommands.suspend(view);
     }
   };
 
   resume = () => {
     const view = this.checkoutViewRef.current;
-    if (view != null) {
+    if (view != null && this.isCheckoutViewReady) {
       RNKlarnaCheckoutViewCommands.resume(view);
     }
   };
