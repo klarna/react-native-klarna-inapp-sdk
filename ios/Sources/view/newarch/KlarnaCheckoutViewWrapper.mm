@@ -1,31 +1,28 @@
 #if RCT_NEW_ARCH_ENABLED
 
-#import "../KlarnaCheckoutViewWrapper.h"
-#import "../../common/RNMobileSDKUtils.h"
-
 #import <AVFoundation/AVFoundation.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>
-
 #import <react/renderer/components/RNKlarnaMobileSDK/ComponentDescriptors.h>
 #import <react/renderer/components/RNKlarnaMobileSDK/EventEmitters.h>
 #import <react/renderer/components/RNKlarnaMobileSDK/Props.h>
 #import <react/renderer/components/RNKlarnaMobileSDK/RCTComponentViewHelpers.h>
-
+#import "../KlarnaCheckoutViewWrapper.h"
+#import "../../common/RNMobileSDKUtils.h"
 #import "RCTFabricComponentsPlugins.h"
 
 using namespace facebook::react;
 
 @interface KlarnaCheckoutViewWrapper () <KlarnaEventHandler, KlarnaSizingDelegate, RCTRNKlarnaCheckoutViewViewProtocol>
 
-@property (nonatomic, strong) KlarnaCheckoutView* actualCheckoutView;
+@property (nonatomic, strong) KlarnaCheckoutView* klarnaCheckoutView;
 @property (nonatomic, assign) BOOL isCheckoutViewReadyEventSent;
 
 @end
 
 @implementation KlarnaCheckoutViewWrapper
 
-#pragma mark - RN KlarnaCheckoutView
+#pragma mark - Initialization
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -53,7 +50,7 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
     RCTRNKlarnaCheckoutViewHandleCommand(self, commandName, args);
 }
 
-#pragma mark - RN KlarnaCheckoutView Props
+#pragma mark - KlarnaCheckoutView Props Update
 
 - (void)updateProps:(const facebook::react::Props::Shared &)props oldProps:(const facebook::react::Props::Shared &)oldProps {
     const auto &oldViewProps = *std::static_pointer_cast<RNKlarnaCheckoutViewProps const>(_props);
@@ -61,10 +58,10 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
     
     if (oldViewProps.returnUrl != newViewProps.returnUrl) {
         NSString * newReturnUrl = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
-        if (self.actualCheckoutView != nil) {
-            self.actualCheckoutView.returnURL = [NSURL URLWithString:newReturnUrl];
+        if (self.klarnaCheckoutView != nil) {
+            self.klarnaCheckoutView.returnURL = [NSURL URLWithString:newReturnUrl];
         } else {
-            [self initializeActualCheckoutView:newReturnUrl];
+            [self initializeKlarnaCheckoutView:newReturnUrl];
         }
     }
     
@@ -75,7 +72,7 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
 {
     [super updateEventEmitter:eventEmitter];
 
-    if (!self.isCheckoutViewReadyEventSent && self.actualCheckoutView != nil && _eventEmitter) {
+    if (!self.isCheckoutViewReadyEventSent && self.klarnaCheckoutView != nil && _eventEmitter) {
         RCTLogInfo(@"Sending onCheckoutViewReady event.");
         std::dynamic_pointer_cast<const RNKlarnaCheckoutViewEventEmitter>(_eventEmitter)
             ->onCheckoutViewReady({});
@@ -85,35 +82,46 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
     }
 }
 
-#pragma mark - RN KlarnaCheckoutView Methods
+#pragma mark - KlarnaCheckoutView Setup
 
-- (void)initializeActualCheckoutView:(NSString*)returnUrl {
+- (void)initializeKlarnaCheckoutView:(NSString*)returnUrl {
     self.isCheckoutViewReadyEventSent = NO;
-    self.actualCheckoutView = [[KlarnaCheckoutView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl] eventHandler:self];
-    self.actualCheckoutView.sizingDelegate = self;
+    self.klarnaCheckoutView = [[KlarnaCheckoutView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl] eventHandler:self];
+    self.klarnaCheckoutView.sizingDelegate = self;
     
-    self.actualCheckoutView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.klarnaCheckoutView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self addSubview:self.actualCheckoutView];
+    [self addSubview:self.klarnaCheckoutView];
 
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
-                                             [self.actualCheckoutView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                                             [self.actualCheckoutView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-                                             [self.actualCheckoutView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-                                             [self.actualCheckoutView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
+                                             [self.klarnaCheckoutView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                             [self.klarnaCheckoutView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                             [self.klarnaCheckoutView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                                             [self.klarnaCheckoutView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
                                             ]];
 }
 
+#pragma mark - Methods Exposed to React Native
+
 - (void)setSnippet:(NSString *)snippet {
-    [self.actualCheckoutView setSnippet:snippet];
+    [self.klarnaCheckoutView setSnippet:snippet];
 }
 
 - (void)suspend {
-    [self.actualCheckoutView suspend];
+    [self.klarnaCheckoutView suspend];
 }
 
 - (void)resume {
-    [self.actualCheckoutView resume];
+    [self.klarnaCheckoutView resume];
+}
+
+#pragma mark - UIView Lifecycle
+
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    if (!self.window) {
+        self.isCheckoutViewReadyEventSent = NO;
+    }
 }
 
 #pragma mark - KlarnaEventHandler
@@ -136,7 +144,7 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
 
 - (void)klarnaComponent:(id<KlarnaComponent>)klarnaComponent encounteredError:(KlarnaError *)error {
     if (_eventEmitter) {
-        RCTLogInfo(@"Sending onEvent event");
+        RCTLogInfo(@"Sending onError event");
         std::dynamic_pointer_cast<const RNKlarnaCheckoutViewEventEmitter>(_eventEmitter)
         ->onError(RNKlarnaCheckoutViewEventEmitter::OnError{
             .error = {
@@ -146,7 +154,7 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
             }
         });
     } else {
-        RCTLogInfo(@"Could not send onEvent event. _eventEmitter is nil!");
+        RCTLogInfo(@"Could not send onError event. _eventEmitter is nil!");
     }
 }
 
@@ -161,13 +169,6 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
         });
     } else {
         RCTLogInfo(@"Could not send onResized event. _eventEmitter is nil!");
-    }
-}
-
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-    if (!self.window) {
-        self.isCheckoutViewReadyEventSent = NO;
     }
 }
 
