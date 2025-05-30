@@ -23,6 +23,8 @@ public class WebViewResizeObserver {
     private static final String JS_INTERFACE_NAME = "NativeResizeObserver";
     private final WeakReference<WebViewResizeObserverCallback> callback;
     private final TargetElement targetElement;
+    private boolean isJavascriptInterfaceAdded = false;
+    private boolean isListenerInjected = false;
 
     public WebViewResizeObserver(WebViewResizeObserverCallback callback, TargetElement targetElement) {
         this.callback = new WeakReference<>(callback);
@@ -30,13 +32,17 @@ public class WebViewResizeObserver {
     }
 
     public void addJavascriptInterface(WebView webView) {
-        if (webView != null) {
+        if (webView != null && !isJavascriptInterfaceAdded) {
             webView.addJavascriptInterface(this, JS_INTERFACE_NAME);
+            isJavascriptInterfaceAdded = true;
         }
     }
 
     public void injectListener(WebView webView) {
-        injectScript(webView, initScript());
+        if (!isListenerInjected) {
+            injectScript(webView, initScript());
+            isListenerInjected = true;
+        }
     }
 
     /**
