@@ -105,7 +105,7 @@ export class KlarnaCheckoutView extends Component<
         }}
         onCheckoutViewReady={() => {
           console.log('onCheckoutViewReady');
-          if (this.snippet !== null) {
+          if (this.snippet) {
             console.log('Setting the snippet...');
             this.setSnippet(this.snippet);
             this.snippet = null;
