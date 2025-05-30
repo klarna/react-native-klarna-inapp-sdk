@@ -74,7 +74,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
             }
             eventSender.sendOnResizedEvent(resizeObserverWrapperView.getView(), newHeight);
         });
-        view.addInterfaceToWebView();
+        view.addJavascriptInterfaceToWebView();
 
         view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
@@ -140,7 +140,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     public void setSnippet(ResizeObserverWrapperView<KlarnaCheckoutView> view, String snippet) {
         if (snippet != null && !snippet.isEmpty()) {
             view.getView().setSnippet(snippet);
-            view.addInterfaceToWebView();
+            view.addJavascriptInterfaceToWebView();
             // Delay the injection of the resize observer to ensure the web view is ready
             final Handler handler = new Handler();
             handler.postDelayed(view::injectListenerToWebView, 500);
