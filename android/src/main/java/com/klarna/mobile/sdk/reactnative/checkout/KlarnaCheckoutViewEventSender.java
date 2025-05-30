@@ -8,7 +8,6 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.api.checkout.KlarnaCheckoutView;
-import com.klarna.mobile.sdk.reactnative.common.event.ComponentEvent;
 import com.klarna.mobile.sdk.reactnative.common.event.ComponentEventSender;
 import com.klarna.mobile.sdk.reactnative.common.event.KlarnaEventHandlerEventsUtil;
 import com.klarna.mobile.sdk.reactnative.common.ui.ResizeObserverWrapperView;
@@ -23,6 +22,7 @@ import java.util.Map;
 public class KlarnaCheckoutViewEventSender extends ComponentEventSender<ResizeObserverWrapperView<KlarnaCheckoutView>> {
 
     private static final String EVENT_NAME_ON_RESIZED = "onResized";
+    private static final String EVENT_NAME_ON_CHECKOUT_VIEW_READY = "onCheckoutViewReady";
 
     KlarnaCheckoutViewEventSender(@NonNull final Map<WeakReference<ResizeObserverWrapperView<KlarnaCheckoutView>>, EventDispatcher> viewToDispatcher) {
         super(viewToDispatcher);
@@ -33,7 +33,8 @@ public class KlarnaCheckoutViewEventSender extends ComponentEventSender<ResizeOb
         return Arrays.asList(
                 KlarnaEventHandlerEventsUtil.EVENT_NAME_ON_EVENT,
                 KlarnaEventHandlerEventsUtil.EVENT_NAME_ON_ERROR,
-                EVENT_NAME_ON_RESIZED
+                EVENT_NAME_ON_RESIZED,
+                EVENT_NAME_ON_CHECKOUT_VIEW_READY
         );
     }
 
@@ -52,5 +53,9 @@ public class KlarnaCheckoutViewEventSender extends ComponentEventSender<ResizeOb
                 }}
         );
         postEventForView(view, EVENT_NAME_ON_RESIZED, params);
+    }
+
+    public void sendOnKlarnaCheckoutViewReadyEvent(@Nullable KlarnaCheckoutView view) {
+        postEventForView(view, EVENT_NAME_ON_CHECKOUT_VIEW_READY, null);
     }
 }

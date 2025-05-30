@@ -1,6 +1,7 @@
 package com.klarna.mobile.sdk.reactnative.checkout;
 
 import android.os.Handler;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,10 +45,10 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
 
     public KlarnaCheckoutViewManager(ReactApplicationContext reactApplicationContext) {
         super();
-        this.viewToDispatcher = new HashMap<>();
-        this.reactAppContext = reactApplicationContext;
-        this.eventSender = new KlarnaCheckoutViewEventSender(viewToDispatcher);
-        this.eventHandler = new KlarnaCheckoutViewEventHandler(eventSender);
+        viewToDispatcher = new HashMap<>();
+        reactAppContext = reactApplicationContext;
+        eventSender = new KlarnaCheckoutViewEventSender(viewToDispatcher);
+        eventHandler = new KlarnaCheckoutViewEventHandler(eventSender);
     }
 
     @NonNull
@@ -68,15 +69,24 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
         viewToDispatcher.put(new WeakReference<>(view), eventDispatcher);
 
         view.initiateWebViewResizeObserver(WebViewResizeObserver.TargetElement.CHECKOUT_CONTAINER, (resizeObserverWrapperView, newHeight) -> {
-            if (resizeObserverWrapperView == null) {
-                return;
-            }
-            if (eventDispatcher == null) {
+            if (resizeObserverWrapperView == null || eventDispatcher == null) {
                 return;
             }
             eventSender.sendOnResizedEvent(resizeObserverWrapperView.getView(), newHeight);
         });
         view.addInterfaceToWebView();
+
+        view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(@NonNull View v) {
+                eventSender.sendOnKlarnaCheckoutViewReadyEvent(view.getView());
+                v.removeOnAttachStateChangeListener(this);
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(@NonNull View v) {
+            }
+        });
 
         return view;
     }
@@ -128,11 +138,13 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
 
     @Override
     public void setSnippet(ResizeObserverWrapperView<KlarnaCheckoutView> view, String snippet) {
-        view.getView().setSnippet(snippet);
-        view.addInterfaceToWebView();
-        // Delay the injection of the resize observer to ensure the web view is ready
-        final Handler handler = new Handler();
-        handler.postDelayed(view::injectListenerToWebView, 500);
+        if (snippet != null && !snippet.isEmpty()) {
+            view.getView().setSnippet(snippet);
+            view.addInterfaceToWebView();
+            // Delay the injection of the resize observer to ensure the web view is ready
+            final Handler handler = new Handler();
+            handler.postDelayed(view::injectListenerToWebView, 500);
+        }
     }
 
     @Override
