@@ -29,8 +29,10 @@ public class WebViewResizeObserver {
         this.targetElement = targetElement;
     }
 
-    public void addInterface(WebView webView) {
-        webView.addJavascriptInterface(this, JS_INTERFACE_NAME);
+    public void addJavascriptInterface(WebView webView) {
+        if (webView != null) {
+            webView.addJavascriptInterface(this, JS_INTERFACE_NAME);
+        }
     }
 
     public void injectListener(WebView webView) {
@@ -62,12 +64,12 @@ public class WebViewResizeObserver {
     }
 
     private void injectScript(WebView webView, String script) {
-        String tryCatchScript = "try {\n" +
+        String scriptWrappedInTryCatch = "try {\n" +
                 "    " + script + "\n" +
                 "} catch (error) {\n" +
                 "    console.error(\"inject failed\")\n" +
                 "}";
-        evaluateJSCompat(webView, tryCatchScript);
+        evaluateJSCompat(webView, scriptWrappedInTryCatch);
     }
 
     /**
@@ -77,6 +79,9 @@ public class WebViewResizeObserver {
      * @param script  The script to be evaluated
      */
     private void evaluateJSCompat(WebView webView, String script) {
+        if (webView == null) {
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             webView.evaluateJavascript(script, null);
         } else {
