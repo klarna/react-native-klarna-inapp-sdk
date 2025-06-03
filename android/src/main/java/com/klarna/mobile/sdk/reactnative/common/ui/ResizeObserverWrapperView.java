@@ -49,10 +49,10 @@ public class ResizeObserverWrapperView<T extends ViewGroup> extends WrapperView<
         this.webViewResizeObserver = new WebViewResizeObserver(webViewResizeObserverCallback, targetElement);
     }
 
-    public void addInterfaceToWebView() {
+    public void addJavascriptInterfaceToWebView() {
         WebView webView = findWebView(getView());
         if (webView != null && webViewResizeObserver != null) {
-            webViewResizeObserver.addInterface(webView);
+            webViewResizeObserver.addJavascriptInterface(webView);
         }
     }
 
@@ -63,6 +63,7 @@ public class ResizeObserverWrapperView<T extends ViewGroup> extends WrapperView<
         }
     }
 
+    @Nullable
     private WebView findWebView(T view) {
         if (view == null) {
             return null;

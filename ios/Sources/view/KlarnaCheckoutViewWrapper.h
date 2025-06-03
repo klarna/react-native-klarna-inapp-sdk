@@ -8,9 +8,7 @@
 #import <React/RCTView.h>
 #endif
 
-
 NS_ASSUME_NONNULL_BEGIN
-
 
 #if RCT_NEW_ARCH_ENABLED
 @interface KlarnaCheckoutViewWrapper : RCTViewComponentView
@@ -20,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onEvent;
 @property (nonatomic, copy) RCTDirectEventBlock onError;
 @property (nonatomic, copy) RCTDirectEventBlock onResized;
+@property (nonatomic, copy) RCTDirectEventBlock onCheckoutViewReady;
 
 @property (nonatomic, strong) NSString* returnUrl;
 
@@ -37,6 +36,5 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resume;
 
 @end
-
 
 NS_ASSUME_NONNULL_END

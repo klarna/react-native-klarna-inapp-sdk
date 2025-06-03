@@ -1,25 +1,36 @@
 #if !RCT_NEW_ARCH_ENABLED
 
+#import <React/RCTLog.h>
 #import "../KlarnaCheckoutViewWrapper.h"
 #import "../../common/RNMobileSDKUtils.h"
-
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
-#import <React/RCTLog.h>
 
 @interface KlarnaCheckoutViewWrapper () <KlarnaEventHandler, KlarnaSizingDelegate>
 
-@property (nonatomic, strong) KlarnaCheckoutView* actualCheckoutView;
+@property (nonatomic, strong) KlarnaCheckoutView* klarnaCheckoutView;
+@property (nonatomic, assign) BOOL isCheckoutViewReadyEventSent;
 
 @end
 
 @implementation KlarnaCheckoutViewWrapper
 
-#pragma mark - React Native Overrides
+#pragma mark - Initialization
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.isCheckoutViewReadyEventSent = NO;
+    }
+    return self;
+}
+
+#pragma mark - React Native Property Setters
 
 - (void) setReturnUrl:(NSString *)returnUrl {
     _returnUrl = returnUrl;
     if (returnUrl.length > 0) {
-        self.actualCheckoutView.returnURL = [NSURL URLWithString:self.returnUrl];
+        self.klarnaCheckoutView.returnURL = [NSURL URLWithString:self.returnUrl];
     }
     [self evaluateProps];
 }
@@ -28,42 +39,69 @@
     [self initializeActualCheckoutView];
 }
 
+#pragma mark - KlarnaCheckoutView Setup
+
 - (void) initializeActualCheckoutView {
-    self.actualCheckoutView = [[KlarnaCheckoutView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl] eventHandler:self];
-    self.actualCheckoutView.sizingDelegate = self;
+    self.isCheckoutViewReadyEventSent = NO;
+    self.klarnaCheckoutView = [[KlarnaCheckoutView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl] eventHandler:self];
+    self.klarnaCheckoutView.sizingDelegate = self;
     
-    self.actualCheckoutView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.klarnaCheckoutView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self addSubview:self.actualCheckoutView];
+    [self addSubview:self.klarnaCheckoutView];
 
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
-                                             [self.actualCheckoutView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                                             [self.actualCheckoutView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-                                             [self.actualCheckoutView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-                                             [self.actualCheckoutView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
+                                             [self.klarnaCheckoutView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                             [self.klarnaCheckoutView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                             [self.klarnaCheckoutView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                                             [self.klarnaCheckoutView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
                                             ]];
 }
 
+#pragma mark - Layout
+
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.actualCheckoutView.frame = self.bounds;
-    [self.actualCheckoutView layoutSubviews];
+    self.klarnaCheckoutView.frame = self.bounds;
+    [self.klarnaCheckoutView layoutSubviews];
 }
 
-#pragma mark - KlarnaCheckoutView Methods
+#pragma mark - UIView Lifecycle
+
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    if (!self.window) {
+        self.isCheckoutViewReadyEventSent = NO;
+    }
+}
+
+#pragma mark - React Native Lifecycle
+
+- (void)didSetProps:(NSArray<NSString *> *)changedProps {
+    [super didSetProps:changedProps];
+    [self sendCheckoutViewReadyEvent];
+}
+
+- (void)sendCheckoutViewReadyEvent {
+    if (self.klarnaCheckoutView && self.onCheckoutViewReady && !self.isCheckoutViewReadyEventSent) {
+        self.isCheckoutViewReadyEventSent = YES;
+        self.onCheckoutViewReady(@{});
+    }
+}
+
+#pragma mark - Methods Exposed to React Native
 
 - (void)setSnippet:(NSString *)snippet {
-    [self.actualCheckoutView setSnippet:snippet];
+    [self.klarnaCheckoutView setSnippet:snippet];
 }
 
 - (void)suspend {
-    [self.actualCheckoutView suspend];
+    [self.klarnaCheckoutView suspend];
 }
 
 - (void)resume {
-    [self.actualCheckoutView resume];
+    [self.klarnaCheckoutView resume];
 }
-
 
 #pragma mark - KlarnaEventHandler
 

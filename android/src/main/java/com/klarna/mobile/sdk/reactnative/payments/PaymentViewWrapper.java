@@ -36,7 +36,7 @@ public class PaymentViewWrapper extends LinearLayout implements WebViewResizeObs
         resizeObserver = new WebViewResizeObserver(this, WebViewResizeObserver.TargetElement.PAYMENT_CONTAINER);
         WebView webView = getPaymentViewWebView();
         if (webView != null) {
-            resizeObserver.addInterface(webView);
+            resizeObserver.addJavascriptInterface(webView);
         }
     }
 

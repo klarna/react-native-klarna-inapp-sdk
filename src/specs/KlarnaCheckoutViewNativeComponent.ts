@@ -30,6 +30,7 @@ export interface RNKlarnaCheckoutViewProps extends ViewProps {
       readonly height: string;
     }>
   >;
+  readonly onCheckoutViewReady?: DirectEventHandler<{}>;
 }
 
 type KlarnaCheckoutViewNativeComponentType =
