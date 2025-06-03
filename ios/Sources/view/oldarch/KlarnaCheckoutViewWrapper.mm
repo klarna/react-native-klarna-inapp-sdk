@@ -1,9 +1,9 @@
 #if !RCT_NEW_ARCH_ENABLED
 
-#import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>
 #import "../KlarnaCheckoutViewWrapper.h"
 #import "../../common/RNMobileSDKUtils.h"
+#import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
 @interface KlarnaCheckoutViewWrapper () <KlarnaEventHandler, KlarnaSizingDelegate>
 

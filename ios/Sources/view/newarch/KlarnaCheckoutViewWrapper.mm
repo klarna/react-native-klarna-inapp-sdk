@@ -1,7 +1,6 @@
 #if RCT_NEW_ARCH_ENABLED
 
 #import <AVFoundation/AVFoundation.h>
-#import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>
 #import <react/renderer/components/RNKlarnaMobileSDK/ComponentDescriptors.h>
 #import <react/renderer/components/RNKlarnaMobileSDK/EventEmitters.h>
@@ -10,6 +9,7 @@
 #import "../KlarnaCheckoutViewWrapper.h"
 #import "../../common/RNMobileSDKUtils.h"
 #import "RCTFabricComponentsPlugins.h"
+#import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
 using namespace facebook::react;
 
