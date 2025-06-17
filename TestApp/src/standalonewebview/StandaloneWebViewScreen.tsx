@@ -1,6 +1,6 @@
-import {Keyboard, Text, TextInput, View} from 'react-native';
+import { Keyboard, Text, TextInput, View } from 'react-native';
 import styles from '../common/ui/Styles';
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KlarnaStandaloneWebView,
   KlarnaWebViewKlarnaMessageEvent,
@@ -99,7 +99,8 @@ export default function StandaloneWebViewScreen() {
       /* eslint-disable-next-line react-native/no-inline-styles */
       style={{
         flex: 1,
-      }}>
+      }}
+    >
       <View
         /* eslint-disable-next-line react-native/no-inline-styles */
         style={{
@@ -107,7 +108,8 @@ export default function StandaloneWebViewScreen() {
           width: '100%',
           alignItems: 'center',
           padding: 10,
-        }}>
+        }}
+      >
         {renderUrlTextInput()}
       </View>
       <View style={styles.buttonsContainer}>

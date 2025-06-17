@@ -28,7 +28,7 @@ const AppStack = () => {
   );
 };
 
-export default function App(): JSX.Element {
+function App() {
   return (
     <NavigationContainer>
       <AppStack />
@@ -44,4 +44,5 @@ type AppStackParamList = {
   SignIn: undefined;
 };
 
+export default App;
 export type {AppStackParamList};

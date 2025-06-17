@@ -1,7 +1,7 @@
-import {Keyboard, Text, TextInput, useColorScheme, View} from 'react-native';
-import {KlarnaCheckoutView} from 'react-native-klarna-inapp-sdk';
-import React, {useRef, useState} from 'react';
-import styles, {backgroundStyle} from '../common/ui/Styles';
+import { Keyboard, Text, TextInput, useColorScheme, View } from 'react-native';
+import { KlarnaCheckoutView } from 'react-native-klarna-inapp-sdk';
+import React, { useRef, useState } from 'react';
+import styles, { backgroundStyle } from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
 import testProps from '../common/util/TestProps';
 

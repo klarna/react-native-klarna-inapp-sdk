@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import {NativeModules, Platform, Text, View} from 'react-native';
+import React, { useRef, useState } from 'react';
+import { NativeModules, Platform, Text, View } from 'react-native';
 import {
   KlarnaPaymentsSDKError,
   KlarnaPaymentView,
