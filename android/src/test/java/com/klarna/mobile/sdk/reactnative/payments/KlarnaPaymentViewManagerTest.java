@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.Collections;
@@ -42,7 +41,8 @@ public class KlarnaPaymentViewManagerTest {
     @Before
     public void setup() {
         Application application = ApplicationProvider.getApplicationContext();
-        ReactApplicationContext reactContext = new ReactApplicationContext(application);
+        ReactApplicationContext reactContext = Mockito.mock(ReactApplicationContext.class);
+        Mockito.when(reactContext.getApplicationContext()).thenAnswer(invocation -> application);
 
         manager = new KlarnaPaymentViewManager(reactContext);
 
