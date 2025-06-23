@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -35,7 +28,7 @@ const AppStack = () => {
   );
 };
 
-export default function App(): JSX.Element {
+function App() {
   return (
     <NavigationContainer>
       <AppStack />
@@ -51,4 +44,5 @@ type AppStackParamList = {
   SignIn: undefined;
 };
 
+export default App;
 export type {AppStackParamList};

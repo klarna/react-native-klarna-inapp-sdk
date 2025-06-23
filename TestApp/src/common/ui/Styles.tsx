@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export function backgroundStyle(style: any, isDarkMode: boolean) {
   return [style, background(isDarkMode)];

@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {ScrollView, TextInput, useColorScheme, View} from 'react-native';
-import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
+import React, { useState } from 'react';
+import { ScrollView, TextInput, useColorScheme, View } from 'react-native';
+import styles, { backgroundStyle, Colors } from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import PaymentsContainer from './PaymentsContainer';
 
@@ -41,11 +41,13 @@ export default function PaymentsScreen() {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      style={backgroundStyle(styles.scrollView, isDarkMode)}>
+      style={backgroundStyle(styles.scrollView, isDarkMode)}
+    >
       <View
         style={{
           backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        }}>
+        }}
+      >
         {renderSetTokenInput()}
         {paymentMethods.map(paymentMethod => {
           return (

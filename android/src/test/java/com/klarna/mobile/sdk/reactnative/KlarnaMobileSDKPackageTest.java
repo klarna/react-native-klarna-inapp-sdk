@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.klarna.mobile.sdk.reactnative.KlarnaMobileSDKPackage;
 import com.klarna.mobile.sdk.reactnative.checkout.KlarnaCheckoutViewManager;
 import com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaSignInModuleSpec;
@@ -17,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.List;
@@ -30,7 +30,8 @@ public class KlarnaMobileSDKPackageTest {
     @Before
     public void setup() {
         application = ApplicationProvider.getApplicationContext();
-        reactContext = new ReactApplicationContext(application);
+        reactContext = Mockito.mock(ReactApplicationContext.class);
+        Mockito.when(reactContext.getApplicationContext()).thenAnswer(invocation -> application);
     }
 
     @Test
