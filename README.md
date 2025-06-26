@@ -27,8 +27,8 @@ This repository also includes a test application that you can use to see how it 
 
 ### Documentations
 
-* [Overview](https://docs.klarna.com/mobile-sdk/)
-* [Using the Mobile SDK on React Native](https://docs.klarna.com/mobile-sdk/reactnative/)
+* [Overview](https://docs.klarna.com/payments/mobile-payments/before-you-start/introduction-mobile-integrations/)
+* [Using the Mobile SDK on React Native](https://docs.klarna.com/payments/mobile-payments/integrate-with-mobile-sdk/reactnative/native-view/)
 
 ## Getting started
 
