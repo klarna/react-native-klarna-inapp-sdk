@@ -19,7 +19,6 @@ import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
 import com.klarna.mobile.sdk.reactnative.common.ui.ResizeObserverWrapperView;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaCheckoutViewSpec;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
@@ -37,15 +36,15 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     /**
      * Store a map of views to event dispatchers so we send up events via the right views.
      */
-    private final WeakHashMap<ResizeObserverWrapperView<KlarnaCheckoutView>, EventDispatcher> viewToDispatcher;
-    private final Map<KlarnaCheckoutView, ResizeObserverWrapperView<KlarnaCheckoutView>> checkoutViewToResizeObserverWrapperMap = new HashMap<>();
+    private final Map<ResizeObserverWrapperView<KlarnaCheckoutView>, EventDispatcher> viewToDispatcher;
+    private final Map<KlarnaCheckoutView, ResizeObserverWrapperView<KlarnaCheckoutView>> checkoutViewToResizeObserverWrapperMap = new WeakHashMap<>();
+    private final Map<ResizeObserverWrapperView<KlarnaCheckoutView>, Integer> setSnippetRetriesMap = new WeakHashMap<>();
+    private final Map<ResizeObserverWrapperView<KlarnaCheckoutView>, String> snippetMap = new WeakHashMap<>();
 
     private final KlarnaCheckoutViewEventSender eventSender;
     private final KlarnaCheckoutViewEventHandler eventHandler;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable javascriptInterfaceInjectionRunnable;
-    private String snippet = null;
-    private int setSnippetRetries = 0;
 
     public KlarnaCheckoutViewManager(ReactApplicationContext reactApplicationContext) {
         super();
@@ -53,16 +52,20 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
         reactAppContext = reactApplicationContext;
         eventSender = new KlarnaCheckoutViewEventSender(viewToDispatcher);
         eventHandler = new KlarnaCheckoutViewEventHandler(eventSender, klarnaCheckoutView -> {
-            if (setSnippetRetries >= MAX_SET_SNIPPET_RETRIES) {
+            ResizeObserverWrapperView<KlarnaCheckoutView> resizeObserverWrapperView =
+                    checkoutViewToResizeObserverWrapperMap.get(klarnaCheckoutView);
+            if (resizeObserverWrapperView == null) {
                 return;
             }
+            Integer retries = setSnippetRetriesMap.getOrDefault(resizeObserverWrapperView, 0);
+            if (retries == null || retries >= MAX_SET_SNIPPET_RETRIES) {
+                return;
+            }
+            String snippet = snippetMap.get(resizeObserverWrapperView);
             handler.postDelayed(() -> {
                 if (klarnaCheckoutView != null && klarnaCheckoutView.getHeight() == 0) {
-                    ResizeObserverWrapperView<KlarnaCheckoutView> resizeObserverWrapperView = checkoutViewToResizeObserverWrapperMap.get(klarnaCheckoutView);
-                    if (resizeObserverWrapperView != null) {
-                        setSnippet(resizeObserverWrapperView, snippet);
-                        setSnippetRetries++;
-                    }
+                    setSnippet(resizeObserverWrapperView, snippet);
+                    setSnippetRetriesMap.put(resizeObserverWrapperView, retries + 1);
                 }
             }, 500);
         });
@@ -156,8 +159,6 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
 
     @Override
     public void setSnippet(ResizeObserverWrapperView<KlarnaCheckoutView> view, String snippet) {
-        this.snippet = snippet;
-
         if (view == null) {
             return;
         }
@@ -170,6 +171,8 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
         if (snippet == null || snippet.isEmpty()) {
             return;
         }
+
+        snippetMap.put(view, snippet);
 
         klarnaCheckoutView.setSnippet(snippet);
         view.addJavascriptInterfaceToWebView();
