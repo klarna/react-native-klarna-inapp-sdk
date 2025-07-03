@@ -1,4 +1,11 @@
-import { Keyboard, Text, TextInput, useColorScheme, View } from 'react-native';
+import {
+  Keyboard,
+  ScrollView,
+  Text,
+  TextInput,
+  useColorScheme,
+  View,
+} from 'react-native';
 import { KlarnaCheckoutView } from 'react-native-klarna-inapp-sdk';
 import React, { useRef, useState } from 'react';
 import styles, { backgroundStyle } from '../common/ui/Styles';
@@ -85,17 +92,19 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
         </View>
         <Text {...testProps('state_events')}>{eventState}</Text>
       </View>
-      <KlarnaCheckoutView
-        ref={checkoutViewRef}
-        style={styles.columnItemFill}
-        returnUrl={'returnUrl://'}
-        onEvent={klarnaProductEvent => {
-          onEvent(JSON.stringify(klarnaProductEvent));
-        }}
-        onError={error => {
-          onEvent(JSON.stringify(error));
-        }}
-      />
+      <ScrollView>
+        <KlarnaCheckoutView
+          ref={checkoutViewRef}
+          style={styles.columnItemFill}
+          returnUrl={'returnUrl://'}
+          onEvent={klarnaProductEvent => {
+            onEvent(JSON.stringify(klarnaProductEvent));
+          }}
+          onError={error => {
+            onEvent(JSON.stringify(error));
+          }}
+        />
+      </ScrollView>
     </View>
   );
 }

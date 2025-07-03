@@ -10,15 +10,28 @@ import com.klarna.mobile.sdk.api.component.KlarnaComponent;
 
 public class KlarnaCheckoutViewEventHandler implements KlarnaEventHandler {
 
-    private final KlarnaCheckoutViewEventSender klarnaCheckoutViewEventSender;
+    public interface OnLoadListener {
+        void onLoad(KlarnaCheckoutView klarnaCheckoutView);
+    }
 
-    public KlarnaCheckoutViewEventHandler(KlarnaCheckoutViewEventSender klarnaCheckoutViewEventSender) {
+    private static final String EVENT_LOAD = "load";
+    private final KlarnaCheckoutViewEventSender klarnaCheckoutViewEventSender;
+    private final OnLoadListener onLoadListener;
+
+    public KlarnaCheckoutViewEventHandler(@NonNull KlarnaCheckoutViewEventSender klarnaCheckoutViewEventSender, OnLoadListener onLoadListener) {
         this.klarnaCheckoutViewEventSender = klarnaCheckoutViewEventSender;
+        this.onLoadListener = onLoadListener;
     }
 
     @Override
     public void onEvent(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaProductEvent klarnaProductEvent) {
         if (klarnaComponent instanceof KlarnaCheckoutView) {
+            String eventName = klarnaProductEvent.getAction();
+            if (EVENT_LOAD.equalsIgnoreCase(eventName)) {
+                if (onLoadListener != null) {
+                    onLoadListener.onLoad((KlarnaCheckoutView) klarnaComponent);
+                }
+            }
             klarnaCheckoutViewEventSender.sendKlarnaProductEvent((KlarnaCheckoutView) klarnaComponent, klarnaProductEvent);
         }
     }

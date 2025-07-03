@@ -12,14 +12,13 @@ import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.reactnative.common.ui.WrapperView;
 
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Map;
 
 public abstract class ComponentEventSender<T extends View> {
-    private final Map<WeakReference<T>, EventDispatcher> viewToDispatcher;
+    private final Map<T, EventDispatcher> viewToDispatcher;
 
-    protected ComponentEventSender(@NonNull final Map<WeakReference<T>, EventDispatcher> viewToDispatcher) {
+    protected ComponentEventSender(@NonNull final Map<T, EventDispatcher> viewToDispatcher) {
         this.viewToDispatcher = viewToDispatcher;
     }
 
@@ -50,15 +49,14 @@ public abstract class ComponentEventSender<T extends View> {
         if (view == null) {
             return null;
         }
-        for (WeakReference<T> reference : viewToDispatcher.keySet()) {
-            T viewReference = reference.get();
-            if (viewReference != null && viewReference == view) {
-                return viewReference;
+        for (T reference : viewToDispatcher.keySet()) {
+            if (reference != null && reference == view) {
+                return reference;
             }
-            if (viewReference instanceof WrapperView) {
-                View wrappedView = ((WrapperView) viewReference).getView();
+            if (reference instanceof WrapperView) {
+                View wrappedView = ((WrapperView) reference).getView();
                 if (wrappedView == view) {
-                    return viewReference;
+                    return reference;
                 }
             }
         }
