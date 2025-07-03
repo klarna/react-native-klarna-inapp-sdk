@@ -18,7 +18,7 @@ public class KlarnaCheckoutViewEventHandler implements KlarnaEventHandler {
     private final KlarnaCheckoutViewEventSender klarnaCheckoutViewEventSender;
     private final OnLoadListener onLoadListener;
 
-    public KlarnaCheckoutViewEventHandler(KlarnaCheckoutViewEventSender klarnaCheckoutViewEventSender, OnLoadListener onLoadListener) {
+    public KlarnaCheckoutViewEventHandler(@NonNull KlarnaCheckoutViewEventSender klarnaCheckoutViewEventSender, OnLoadListener onLoadListener) {
         this.klarnaCheckoutViewEventSender = klarnaCheckoutViewEventSender;
         this.onLoadListener = onLoadListener;
     }

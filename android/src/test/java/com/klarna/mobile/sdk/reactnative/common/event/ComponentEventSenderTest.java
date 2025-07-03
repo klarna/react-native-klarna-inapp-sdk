@@ -16,7 +16,6 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,14 +29,14 @@ public class ComponentEventSenderTest {
     private TestEventSender testEventSender;
     private View view;
     private EventDispatcher eventDispatcher;
-    private Map<WeakReference<View>, EventDispatcher> viewToDispatcher;
+    private Map<View, EventDispatcher> viewToDispatcher;
 
     @Before
     public void setUp() {
         view = Mockito.mock(View.class);
         eventDispatcher = Mockito.mock(EventDispatcher.class);
         viewToDispatcher = new HashMap<>() {{
-            put(new WeakReference<>(view), eventDispatcher);
+            put(view, eventDispatcher);
         }};
         testEventSender = new TestEventSender(viewToDispatcher);
 
@@ -76,7 +75,7 @@ public class ComponentEventSenderTest {
     }
 
     private class TestEventSender extends ComponentEventSender<View> {
-        public TestEventSender(Map<WeakReference<View>, EventDispatcher> viewToDispatcher) {
+        public TestEventSender(Map<View, EventDispatcher> viewToDispatcher) {
             super(viewToDispatcher);
         }
 

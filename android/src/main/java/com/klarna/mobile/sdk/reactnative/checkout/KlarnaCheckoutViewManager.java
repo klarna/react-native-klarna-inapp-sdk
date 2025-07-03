@@ -19,10 +19,10 @@ import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
 import com.klarna.mobile.sdk.reactnative.common.ui.ResizeObserverWrapperView;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaCheckoutViewSpec;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 
 public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeObserverWrapperView<KlarnaCheckoutView>> {
 
@@ -37,7 +37,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     /**
      * Store a map of views to event dispatchers so we send up events via the right views.
      */
-    private final Map<WeakReference<ResizeObserverWrapperView<KlarnaCheckoutView>>, EventDispatcher> viewToDispatcher;
+    private final WeakHashMap<ResizeObserverWrapperView<KlarnaCheckoutView>, EventDispatcher> viewToDispatcher;
     private final Map<KlarnaCheckoutView, ResizeObserverWrapperView<KlarnaCheckoutView>> checkoutViewToResizeObserverWrapperMap = new HashMap<>();
 
     private final KlarnaCheckoutViewEventSender eventSender;
@@ -49,7 +49,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
 
     public KlarnaCheckoutViewManager(ReactApplicationContext reactApplicationContext) {
         super();
-        viewToDispatcher = new HashMap<>();
+        viewToDispatcher = new WeakHashMap<>();
         reactAppContext = reactApplicationContext;
         eventSender = new KlarnaCheckoutViewEventSender(viewToDispatcher);
         eventHandler = new KlarnaCheckoutViewEventHandler(eventSender, klarnaCheckoutView -> {
@@ -84,7 +84,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
 
         // Each view has its own event dispatcher.
         EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), view.getId());
-        viewToDispatcher.put(new WeakReference<>(view), eventDispatcher);
+        viewToDispatcher.put(view, eventDispatcher);
 
         view.initiateWebViewResizeObserver(WebViewResizeObserver.TargetElement.CHECKOUT_CONTAINER, (resizeObserverWrapperView, newHeight) -> {
             if (resizeObserverWrapperView == null || eventDispatcher == null) {

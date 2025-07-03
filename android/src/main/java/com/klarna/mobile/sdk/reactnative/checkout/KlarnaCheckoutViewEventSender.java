@@ -13,7 +13,6 @@ import com.klarna.mobile.sdk.reactnative.common.event.KlarnaEventHandlerEventsUt
 import com.klarna.mobile.sdk.reactnative.common.ui.ResizeObserverWrapperView;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 
-import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class KlarnaCheckoutViewEventSender extends ComponentEventSender<ResizeOb
     private static final String EVENT_NAME_ON_RESIZED = "onResized";
     private static final String EVENT_NAME_ON_CHECKOUT_VIEW_READY = "onCheckoutViewReady";
 
-    KlarnaCheckoutViewEventSender(@NonNull final Map<WeakReference<ResizeObserverWrapperView<KlarnaCheckoutView>>, EventDispatcher> viewToDispatcher) {
+    KlarnaCheckoutViewEventSender(@NonNull final Map<ResizeObserverWrapperView<KlarnaCheckoutView>, EventDispatcher> viewToDispatcher) {
         super(viewToDispatcher);
     }
 
