@@ -1,7 +1,10 @@
 package com.klarna.mobile.sdk.reactnative.common.ui;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -23,6 +26,7 @@ public class ResizeObserverWrapperView<T extends ViewGroup> extends WrapperView<
     private WebViewResizeObserver webViewResizeObserver;
     private WebViewResizeObserver.WebViewResizeObserverCallback webViewResizeObserverCallback;
     private OnResizedListener<T> onResizedListener;
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     public ResizeObserverWrapperView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -43,10 +47,34 @@ public class ResizeObserverWrapperView<T extends ViewGroup> extends WrapperView<
                 OnResizedListener<T> listener = onResizedListenerWeakReference.get();
                 if (listener != null) {
                     listener.onResized(ResizeObserverWrapperView.this, value);
+                    int height = convertDpToPx(value);
+                    for (int i = 0; i < getChildCount(); i++) {
+                        View view = getChildAt(i);
+                        setViewHeight(view, height);
+                    }
                 }
             }
         };
         this.webViewResizeObserver = new WebViewResizeObserver(webViewResizeObserverCallback, targetElement);
+    }
+
+    private void setViewHeight(View view, int heightInPx) {
+        if (view == null || heightInPx < 0) {
+            return;
+        }
+        handler.post(() -> {
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            if (layoutParams != null) {
+                layoutParams.height = heightInPx;
+            } else {
+                layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightInPx);
+            }
+            view.setLayoutParams(layoutParams);
+        });
+    }
+
+    private int convertDpToPx(int value) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, getResources().getDisplayMetrics());
     }
 
     public void addJavascriptInterfaceToWebView() {

@@ -26,31 +26,46 @@ import java.util.Objects;
 
 public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeObserverWrapperView<KlarnaCheckoutView>> {
 
+    private static final int MAX_SET_SNIPPET_RETRIES = 3;
     public static final String KLARNA_CHECKOUT_VIEW_REACT_CLASS = "RNKlarnaCheckoutView";
-
     // Commands that can be triggered from RN
     public static final String COMMAND_SET_SNIPPET = "setSnippet";
     public static final String COMMAND_SUSPEND = "suspend";
     public static final String COMMAND_RESUME = "resume";
 
     private final ReactApplicationContext reactAppContext;
-
     /**
      * Store a map of views to event dispatchers so we send up events via the right views.
      */
     private final Map<WeakReference<ResizeObserverWrapperView<KlarnaCheckoutView>>, EventDispatcher> viewToDispatcher;
+    private final Map<KlarnaCheckoutView, ResizeObserverWrapperView<KlarnaCheckoutView>> checkoutViewToResizeObserverWrapperMap = new HashMap<>();
 
     private final KlarnaCheckoutViewEventSender eventSender;
     private final KlarnaCheckoutViewEventHandler eventHandler;
-    private Runnable javascriptInterfaceInjectionRunnable;
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable javascriptInterfaceInjectionRunnable;
+    private String snippet = null;
+    private int setSnippetRetries = 0;
 
     public KlarnaCheckoutViewManager(ReactApplicationContext reactApplicationContext) {
         super();
         viewToDispatcher = new HashMap<>();
         reactAppContext = reactApplicationContext;
         eventSender = new KlarnaCheckoutViewEventSender(viewToDispatcher);
-        eventHandler = new KlarnaCheckoutViewEventHandler(eventSender);
+        eventHandler = new KlarnaCheckoutViewEventHandler(eventSender, klarnaCheckoutView -> {
+            if (setSnippetRetries >= MAX_SET_SNIPPET_RETRIES) {
+                return;
+            }
+            handler.postDelayed(() -> {
+                if (klarnaCheckoutView != null && klarnaCheckoutView.getHeight() == 0) {
+                    ResizeObserverWrapperView<KlarnaCheckoutView> resizeObserverWrapperView = checkoutViewToResizeObserverWrapperMap.get(klarnaCheckoutView);
+                    if (resizeObserverWrapperView != null) {
+                        setSnippet(resizeObserverWrapperView, snippet);
+                        setSnippetRetries++;
+                    }
+                }
+            }, 500);
+        });
     }
 
     @NonNull
@@ -64,6 +79,8 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     protected ResizeObserverWrapperView<KlarnaCheckoutView> createViewInstance(@NonNull ThemedReactContext themedReactContext) {
         KlarnaCheckoutView klarnaCheckoutView = new KlarnaCheckoutView(reactAppContext.getCurrentActivity(), null, 0, eventHandler);
         ResizeObserverWrapperView<KlarnaCheckoutView> view = new ResizeObserverWrapperView<>(reactAppContext, null, klarnaCheckoutView);
+
+        checkoutViewToResizeObserverWrapperMap.put(klarnaCheckoutView, view);
 
         // Each view has its own event dispatcher.
         EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), view.getId());
@@ -139,6 +156,8 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
 
     @Override
     public void setSnippet(ResizeObserverWrapperView<KlarnaCheckoutView> view, String snippet) {
+        this.snippet = snippet;
+
         if (view == null) {
             return;
         }
