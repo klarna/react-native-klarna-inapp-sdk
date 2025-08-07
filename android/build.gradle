@@ -31,8 +31,6 @@ def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }
 
-def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
-
 def supportsNamespace() {
   def parsed = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')
   def major = parsed[0].toInteger()
@@ -46,6 +44,9 @@ def supportsNamespace() {
   return major >= 8
 }
 
+plugins {
+    id "org.jetbrains.kotlin.plugin.serialization" version "2.2.0"
+}
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 if (isNewArchitectureEnabled()) {
@@ -109,13 +110,19 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:${getExtOrFallback('reactnativeVersion', '+')}"
 
-    implementation 'com.klarna.mobile:sdk:2.6.29'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${getExtOrDefault('kotlinVersion')}"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:${getExtOrDefault('kotlinVersion')}"
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0'
+
+    implementation 'com.klarna.mobile:sdk:2.7.1'
 
     testImplementation "junit:junit:4.13.2"
     testImplementation 'androidx.test:core:1.5.0'
     testImplementation "org.robolectric:robolectric:4.11.1"
     testImplementation "org.mockito:mockito-core:3.12.4"
     testImplementation "org.mockito:mockito-inline:3.12.4"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${getExtOrDefault('kotlinVersion')}"
+    testImplementation "io.mockk:mockk:1.14.5"
 }
 
 // removed from the docs but we can keep it

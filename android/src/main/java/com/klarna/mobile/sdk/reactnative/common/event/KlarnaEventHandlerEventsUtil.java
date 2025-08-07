@@ -5,19 +5,16 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import com.google.gson.reflect.TypeToken;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
-import com.klarna.mobile.sdk.api.signin.model.KlarnaSignInToken;
+import com.klarna.mobile.sdk.reactnative.common.serializer.DynamicMapSerializer;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ParserUtil;
 import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInData;
 import com.klarna.mobile.sdk.reactnative.signin.KlarnaSignInEventsMapper;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +32,7 @@ public class KlarnaEventHandlerEventsUtil {
     private static final String PARAM_NAME_PRODUCT_EVENT = "productEvent";
 
     public static <T extends View> void sendKlarnaProductEvent(@NonNull ComponentEventSender<T> componentEventSender, @Nullable View view, @NonNull KlarnaProductEvent klarnaProductEvent) {
-        String stringifiedParams = ParserUtil.toJson(klarnaProductEvent.getParams());
+        String stringifiedParams = ParserUtil.INSTANCE.toJson(DynamicMapSerializer.INSTANCE, klarnaProductEvent.getParams());
         String paramsJson = stringifiedParams == null ? "{}" : stringifiedParams;
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
             put(PARAM_NAME_ACTION, klarnaProductEvent.getAction());
