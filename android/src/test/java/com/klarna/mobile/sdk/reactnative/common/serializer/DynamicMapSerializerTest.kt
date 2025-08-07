@@ -1,7 +1,7 @@
 package com.klarna.mobile.sdk.reactnative.common.serializer
 
 import com.klarna.mobile.sdk.reactnative.common.util.ParserUtil
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -25,14 +25,16 @@ class DynamicMapSerializerTest {
         )
 
         val jsonString = json.encodeToString(DynamicMapSerializer, map)
-        val expectedJson = """{"nullValue":null,"booleanValue":true,"intValue":42,"longValue":123456789,"floatValue":3.14,"doubleValue":2.71828,"stringValue":"hello","charValue":"A"}"""
+        val expectedJson =
+            """{"nullValue":null,"booleanValue":true,"intValue":42,"longValue":123456789,"floatValue":3.14,"doubleValue":2.71828,"stringValue":"hello","charValue":"A"}"""
 
         assertEquals(expectedJson, jsonString)
     }
 
     @Test
     fun `test deserialization of primitive values`() {
-        val jsonString = """{"nullValue":null,"booleanValue":true,"intValue":42,"longValue":123456789,"floatValue":3.14,"doubleValue":2.71828,"stringValue":"hello"}"""
+        val jsonString =
+            """{"nullValue":null,"booleanValue":true,"intValue":42,"longValue":123456789,"floatValue":3.14,"doubleValue":2.71828,"stringValue":"hello"}"""
 
         val map = json.decodeFromString(DynamicMapSerializer, jsonString)
 
@@ -129,7 +131,8 @@ class DynamicMapSerializerTest {
         )
 
         val jsonString = json.encodeToString(DynamicMapSerializer, complex)
-        val expectedJson = """{"name":"Complex","properties":{"nested":[{"id":1,"value":"first"},{"id":2,"value":"second"}]},"tags":["important","test"]}"""
+        val expectedJson =
+            """{"name":"Complex","properties":{"nested":[{"id":1,"value":"first"},{"id":2,"value":"second"}]},"tags":["important","test"]}"""
 
         assertEquals(expectedJson, jsonString)
     }
@@ -143,6 +146,7 @@ class DynamicMapSerializerTest {
             val city: String,
             val zipCode: String
         )
+
         data class TestDataClass1(
             val name: String,
             val age: Int,
@@ -163,7 +167,8 @@ class DynamicMapSerializerTest {
         val jsonString = json.encodeToString(DynamicMapSerializer, map)
 
         // Expected JSON structure
-        val expectedJson = """{"person":{"name":"John Doe","age":30,"address":{"street":"123 Main St","city":"Anytown","zipCode":"12345"}},"simpleValue":42}"""
+        val expectedJson =
+            """{"person":{"name":"John Doe","age":30,"address":{"street":"123 Main St","city":"Anytown","zipCode":"12345"}},"simpleValue":42}"""
 
         // Verify serialization
         assertEquals(ParserUtil.parse(expectedJson), ParserUtil.parse(jsonString))
@@ -183,5 +188,42 @@ class DynamicMapSerializerTest {
         assertEquals("123 Main St", deserializedAddress["street"])
         assertEquals("Anytown", deserializedAddress["city"])
         assertEquals("12345", deserializedAddress["zipCode"])
+    }
+
+    @Test
+    fun `test serialization and deserialization of serializable objects`() {
+        // Define a serializable class
+        @Serializable
+        data class SerializableUser(
+            val id: Int,
+            val username: String
+        )
+
+        // Create test data with serializable object
+        val user = SerializableUser(id = 1001, username = "testuser")
+        val map = mapOf(
+            "user" to user,
+            "timestamp" to 1634567890L
+        )
+
+        // Serialize
+        val jsonString = json.encodeToString(DynamicMapSerializer, map)
+
+        // Expected JSON structure
+        val expectedJson = """{"user":{"id":1001,"username":"testuser"},"timestamp":1634567890}"""
+
+        // Verify serialization
+        assertEquals(ParserUtil.parse(expectedJson), ParserUtil.parse(jsonString))
+
+        // Deserialize
+        val deserializedMap = json.decodeFromString(DynamicMapSerializer, jsonString)
+
+        // Verify deserialization
+        assertEquals(1634567890L, deserializedMap["timestamp"])
+
+        // Check the serializable object
+        val deserializedUser = deserializedMap["user"] as Map<String, Any?>
+        assertEquals(1001L, deserializedUser["id"])
+        assertEquals("testuser", deserializedUser["username"])
     }
 }

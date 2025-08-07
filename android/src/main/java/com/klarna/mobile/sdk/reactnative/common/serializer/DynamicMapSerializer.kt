@@ -19,6 +19,8 @@ import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.longOrNull
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.serializerOrNull
 import kotlin.reflect.full.memberProperties
 
 object DynamicMapSerializer : KSerializer<Map<String, Any?>> {
@@ -33,7 +35,7 @@ object DynamicMapSerializer : KSerializer<Map<String, Any?>> {
         val jsonObject =
             buildJsonObject {
                 value.forEach { (key, any) ->
-                    put(key, serializeValue(any))
+                    put(key, serializeValue(any, jsonEncoder))
                 }
             }
         jsonEncoder.encodeJsonElement(jsonObject)
@@ -45,7 +47,7 @@ object DynamicMapSerializer : KSerializer<Map<String, Any?>> {
         return jsonObject.mapValues { (_, element) -> deserializeValue(element) }
     }
 
-    private fun serializeValue(value: Any?): JsonElement =
+    private fun serializeValue(value: Any?, encoder: JsonEncoder): JsonElement =
         when (value) {
             null -> JsonNull
             is Boolean -> JsonPrimitive(value)
@@ -61,34 +63,43 @@ object DynamicMapSerializer : KSerializer<Map<String, Any?>> {
             is Map<*, *> -> {
                 buildJsonObject {
                     value.forEach { (k, v) ->
-                        put(k.toString(), serializeValue(v))
+                        put(k.toString(), serializeValue(v, encoder))
                     }
                 }
             }
+
             is Collection<*> -> {
                 buildJsonArray {
-                    value.forEach { add(serializeValue(it)) }
+                    value.forEach { add(serializeValue(it, encoder)) }
                 }
             }
+
             is Array<*> -> {
                 buildJsonArray {
-                    value.forEach { add(serializeValue(it)) }
+                    value.forEach { add(serializeValue(it, encoder)) }
                 }
             }
-            else ->  {
-                // Check if it's a data class
-                if (value::class.isData) {
-                    // Convert data class to Map by using reflection
-                    val properties = value::class.memberProperties
-                        .associate { it.name to it.call(value) }
 
-                    buildJsonObject {
-                        properties.forEach { (k, v) ->
-                            put(k, serializeValue(v))
+            else -> {
+                serializerFor(encoder.serializersModule, value)?.let { serializer ->
+                    // Use the serializer to convert the object to JsonElement
+                    val jsonElement = encoder.json.encodeToJsonElement(serializer, value)
+                    jsonElement
+                } ?: run {
+                    // Check if it's a data class
+                    if (value::class.isData) {
+                        // Convert data class to Map by using reflection
+                        val properties = value::class.memberProperties
+                            .associate { it.name to it.call(value) }
+
+                        buildJsonObject {
+                            properties.forEach { (k, v) ->
+                                put(k, serializeValue(v, encoder))
+                            }
                         }
+                    } else {
+                        JsonPrimitive(value.toString()) // Fallback to string representation
                     }
-                } else {
-                    JsonPrimitive(value.toString()) // Fallback to string representation
                 }
             }
         }
@@ -105,12 +116,23 @@ object DynamicMapSerializer : KSerializer<Map<String, Any?>> {
                     element.content.contains('.') -> {
                         element.doubleOrNull ?: element.floatOrNull ?: element.content
                     }
+
                     else -> {
                         element.longOrNull ?: element.intOrNull ?: element.content
                     }
                 }
             }
+
             is JsonObject -> element.mapValues { (_, value) -> deserializeValue(value) }
             is JsonArray -> element.map { deserializeValue(it) }
         }
+
+    private fun serializerFor(
+        serializersModule: SerializersModule,
+        obj: Any?,
+    ): KSerializer<Any>? {
+        return obj?.let {
+            serializersModule.serializerOrNull(obj::class.java)
+        }
+    }
 }
