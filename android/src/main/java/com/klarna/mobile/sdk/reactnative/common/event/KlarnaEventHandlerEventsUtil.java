@@ -61,9 +61,10 @@ public class KlarnaEventHandlerEventsUtil {
             return;
         }
         Map<String, Object> updatedParams = new HashMap<>();
-        for(Map.Entry<String, Object> entry : klarnaProductEvent.getParams().entrySet()) {
+        for (Map.Entry<String, Object> entry : klarnaProductEvent.getParams().entrySet()) {
             String updatedKey = KlarnaSignInEventsMapper.mapSignInParamName(entry.getKey());
-            updatedParams.put(updatedKey, entry.getValue());
+            Object updatedValue = KlarnaSignInEventsMapper.transformSignInParamValue(entry.getKey(), entry.getValue());
+            updatedParams.put(updatedKey, updatedValue);
         }
         String eventName = KlarnaSignInEventsMapper.mapSignInEventName(klarnaProductEvent.getAction());
         ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
