@@ -8,10 +8,11 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.EventDispatcher;
-import com.google.gson.Gson;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebView;
+import com.klarna.mobile.sdk.reactnative.common.serializer.DynamicMapSerializer;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
+import com.klarna.mobile.sdk.reactnative.common.util.ParserUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -39,7 +40,6 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_PARAMS = "params";
     private static final String PARAM_NAME_DID_CRASH = "didCrash";
 
-    private final Gson gson = new Gson();
     private final WeakReference<ReactContext> reactContextWeakReference;
     private final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher;
 
@@ -78,7 +78,7 @@ public class KlarnaStandaloneWebViewEventSender {
     public void sendKlarnaMessageEvent(@Nullable KlarnaStandaloneWebView view, @NonNull KlarnaProductEvent klarnaProductEvent) {
         String paramsJson = "{}";
         try {
-            paramsJson = gson.toJson(klarnaProductEvent.getParams());
+            paramsJson = ParserUtil.INSTANCE.toJson(DynamicMapSerializer.INSTANCE, klarnaProductEvent.getParams());
         } catch (Exception ignored) {
         }
         String finalParamsJson = paramsJson;

@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.klarna.mobile.sdk.reactnative.common.serializer.DynamicMapSerializer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,8 +13,6 @@ import org.json.JSONObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.internal.Util;
 
 public class ArgumentsUtil {
 
@@ -67,7 +66,7 @@ public class ArgumentsUtil {
     }
 
     public static WritableMap createMapUsingJSONString(Map<String, Object> sourceMap) {
-        String jsonString = ParserUtil.toJson(sourceMap);
+        String jsonString = ParserUtil.INSTANCE.toJson(DynamicMapSerializer.INSTANCE, sourceMap);
         WritableMap map = Arguments.createMap();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
