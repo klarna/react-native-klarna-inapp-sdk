@@ -3,6 +3,7 @@
 #import "../KlarnaStandaloneWebViewWrapper.h"
 
 #import <AVFoundation/AVFoundation.h>
+#import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>
 

@@ -9,6 +9,7 @@
 #import "../KlarnaCheckoutViewWrapper.h"
 #import "../../common/RNMobileSDKUtils.h"
 #import "RCTFabricComponentsPlugins.h"
+#import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
 using namespace facebook::react;

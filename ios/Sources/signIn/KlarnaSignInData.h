@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"
 #import <React/RCTBridgeModule.h>
 
