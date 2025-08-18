@@ -2,6 +2,7 @@
 
 #import "../PaymentViewWrapper.h"
 
+#import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 #import <React/RCTLog.h>
 

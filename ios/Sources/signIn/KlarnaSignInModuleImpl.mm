@@ -8,6 +8,7 @@
 #import "KlarnaSignInModuleImpl.h"
 #import "../common/RNMobileSDKUtils.h"
 #import <AuthenticationServices/AuthenticationServices.h>
+#import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import "KlarnaMobileSDK/KlarnaMobileSDK-Swift.h"
 #import <React/RCTLog.h>
 #import "KlarnaSignInData.h"

@@ -3,6 +3,7 @@
 #import <React/RCTLog.h>
 #import "../KlarnaCheckoutViewWrapper.h"
 #import "../../common/RNMobileSDKUtils.h"
+#import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
 @interface KlarnaCheckoutViewWrapper () <KlarnaEventHandler, KlarnaSizingDelegate>

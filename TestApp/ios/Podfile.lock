@@ -8,9 +8,9 @@ PODS:
   - hermes-engine (0.80.0):
     - hermes-engine/Pre-built (= 0.80.0)
   - hermes-engine/Pre-built (0.80.0)
-  - KlarnaMobileSDK (2.6.29):
-    - KlarnaMobileSDK/basic (= 2.6.29)
-  - KlarnaMobileSDK/basic (2.6.29)
+  - KlarnaMobileSDK (2.7.2):
+    - KlarnaMobileSDK/basic (= 2.7.2)
+  - KlarnaMobileSDK/basic (2.7.2)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1651,14 +1651,14 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-klarna-inapp-sdk (2.4.2):
+  - react-native-klarna-inapp-sdk (2.4.4):
     - boost
     - DoubleConversion
     - fast_float
     - fmt
     - glog
     - hermes-engine
-    - KlarnaMobileSDK (= 2.6.29)
+    - KlarnaMobileSDK (= 2.7.2)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -2554,7 +2554,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 7068e976238b29e97b3bafd09a994542af7d5c0b
-  KlarnaMobileSDK: 5aecb635b9dd1f49d869d4aed5c7225aaffd1b4a
+  KlarnaMobileSDK: 52bc4ef6f675c8dda45bc99c2c8a11e12a856928
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: ff787f6c860a1b97dd1bc27264b61d23ad1994da
   RCTRequired: 664eb8399ed8a83e26ab65af7c2ad390f7e61696
@@ -2588,7 +2588,7 @@ SPEC CHECKSUMS:
   React-logger: dce52a571ba0e0149c3f0fcc6866cbc0c8552c5e
   React-Mapbuffer: f5754c33877eaf36e4c76c613b35615a181c85c5
   React-microtasksnativemodule: 23df6374a3ac422d8c2927839bcaeed61fee3dad
-  react-native-klarna-inapp-sdk: d17da3fdd6a0e7510700fa7e3fa127bf68dbc271
+  react-native-klarna-inapp-sdk: a9a620fdb1540e64f0528db961c377790886bf06
   react-native-safe-area-context: c98c858bd57e01b4047f957934f0a34b173028fb
   React-NativeModulesApple: e16d5c133019987285f001fbf1461a861e40426f
   React-oscompat: 7c0a341cc31e350da71ddf2e46de0a845d1d1626
