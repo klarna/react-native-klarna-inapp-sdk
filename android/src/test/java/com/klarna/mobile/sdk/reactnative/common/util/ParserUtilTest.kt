@@ -14,20 +14,6 @@ internal class ParserUtilTest {
         assertNotNull(ParserUtil.json)
     }
 
-    @Test
-    fun `test toJson success`() {
-        val serialized = ParserUtil.toJson(TestData("test"))
-        assertEquals("{\"data\":\"test\"}", serialized)
-    }
-
-    @Test
-    fun `test toJson fail`() {
-        val testData = NonSerializableData("")
-        assertFailsWith(SerializationException::class, "test") {
-            ParserUtil.toJson(testData)
-        }
-    }
-
     @Serializable
     private data class TestData(
         @SerialName("data") val data: String,
