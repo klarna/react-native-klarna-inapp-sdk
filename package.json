@@ -98,5 +98,20 @@
       "module",
       "typescript"
     ]
+  },
+  "codegenConfig": {
+    "name": "RNKlarnaMobileSDK",
+    "type": "all",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "com.klarna.mobile.sdk.reactnative"
+    },
+    "ios": {
+      "componentProvider": {
+        "RNKlarnaStandaloneWebView": "KlarnaStandaloneWebViewWrapper",
+        "RNKlarnaCheckoutView": "KlarnaCheckoutViewWrapper",
+        "RNKlarnaPaymentView": "PaymentViewWrapper"
+      }
+    }
   }
 }
