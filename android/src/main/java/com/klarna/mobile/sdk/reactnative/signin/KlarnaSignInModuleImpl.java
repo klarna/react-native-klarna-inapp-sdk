@@ -38,21 +38,25 @@ public class KlarnaSignInModuleImpl implements KlarnaEventHandler {
     /* Module private methods */
 
     private KlarnaEnvironment environmentFrom(@NonNull String value) {
-        return switch (value) {
-            case "playground" -> KlarnaEnvironment.PLAYGROUND;
-            case "staging" -> KlarnaEnvironment.STAGING;
-            default -> KlarnaEnvironment.PRODUCTION;
-        };
-
+        switch (value) {
+            case "playground":
+                return KlarnaEnvironment.PLAYGROUND;
+            case "staging":
+                return KlarnaEnvironment.STAGING;
+            default:
+                return KlarnaEnvironment.PRODUCTION;
+        }
     }
 
     private KlarnaRegion regionFrom(@NonNull String value) {
-        return switch (value) {
-            case "na" -> KlarnaRegion.NA;
-            case "oc" -> KlarnaRegion.OC;
-            default -> KlarnaRegion.EU;
-        };
-
+        switch (value) {
+            case "na":
+                return KlarnaRegion.NA;
+            case "oc":
+                return KlarnaRegion.OC;
+            default:
+                return KlarnaRegion.EU;
+        }
     }
 
     private KlarnaSignInData getInstanceData(KlarnaComponent component) {
