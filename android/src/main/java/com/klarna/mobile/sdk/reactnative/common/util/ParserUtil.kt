@@ -19,9 +19,5 @@ object ParserUtil {
         return res
     }
 
-    inline fun <reified T> toJson(
-        src: T,
-    ): String = json.encodeToString(src)
-
     fun parse(json: String): JsonElement = this.json.parseToJsonElement(json)
 }

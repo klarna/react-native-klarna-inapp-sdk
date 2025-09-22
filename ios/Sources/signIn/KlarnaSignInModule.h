@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import <KlarnaMobileSDK/KlarnaMobileSDK.h>
+#ifdef RCT_NEW_ARCH_ENABLED
 #import <RNKlarnaMobileSDK/RNKlarnaMobileSDK.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
