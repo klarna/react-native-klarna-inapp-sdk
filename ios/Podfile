@@ -49,7 +49,7 @@ target 'RNKlarnaMobileSDK' do
   # use_frameworks!
 
   # Pods for RNKlarnaMobileSDK
-  pod 'KlarnaMobileSDK', '2.6.29'
+  pod 'KlarnaMobileSDK', '2.7.3'
 
   target 'RNKlarnaMobileSDKTests' do
     # Pods for testing

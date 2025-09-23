@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.6] - 2025-09-22
+- Kotlin and kotlin serialization versions downgraded to be compatible with kotlin versions < 2.0.0
+- Changes added to allow Java version 8 compatibility.
+- Updated iOS SDK version to 2.7.3
+
 ## [2.4.5] - 2025-08-18
 - Updated the native iOS SDK version to 2.7.2.
 
