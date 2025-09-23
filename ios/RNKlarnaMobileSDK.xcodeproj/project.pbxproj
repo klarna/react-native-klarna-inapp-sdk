@@ -338,11 +338,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/basic/KlarnaCore.framework/KlarnaCore",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/basic/KlarnaMobileSDK.framework/KlarnaMobileSDK",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaMobileSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
