@@ -41,6 +41,10 @@ export class KlarnaCheckoutView extends Component<
     this.isCheckoutViewReady = false;
   }
 
+  componentWillUnmount() {
+    this.isCheckoutViewReady = false;
+  }
+
   render() {
     return (
       <RNKlarnaCheckoutView
