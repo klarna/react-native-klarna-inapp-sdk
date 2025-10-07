@@ -3,6 +3,7 @@ package com.klarna.mobile.sdk.reactnative.checkout;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,13 +58,36 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
             if (resizeObserverWrapperView == null) {
                 return;
             }
+
             Integer retries = setSnippetRetriesMap.getOrDefault(resizeObserverWrapperView, 0);
             if (retries == null || retries >= MAX_SET_SNIPPET_RETRIES) {
                 return;
             }
+
             String snippet = snippetMap.get(resizeObserverWrapperView);
+            if (snippet == null) {
+                return;
+            }
+
             handler.postDelayed(() -> {
-                if (klarnaCheckoutView != null && klarnaCheckoutView.getHeight() == 0) {
+                if (klarnaCheckoutView == null) {
+                    return;
+                }
+
+                boolean shouldRetry = false;
+
+                if (klarnaCheckoutView.getHeight() == 0) {
+                    shouldRetry = true;
+                }
+
+                if (klarnaCheckoutView.getChildAt(0) instanceof WebView) {
+                    WebView internalWebView = (WebView) klarnaCheckoutView.getChildAt(0);
+                    if (internalWebView != null && internalWebView.getHeight() == 0) {
+                        shouldRetry = true;
+                    }
+                }
+
+                if (shouldRetry) {
                     setSnippet(resizeObserverWrapperView, snippet);
                     setSnippetRetriesMap.put(resizeObserverWrapperView, retries + 1);
                 }

@@ -41,6 +41,10 @@ export class KlarnaCheckoutView extends Component<
     this.isCheckoutViewReady = false;
   }
 
+  componentWillUnmount() {
+    this.isCheckoutViewReady = false;
+  }
+
   render() {
     return (
       <RNKlarnaCheckoutView
@@ -101,13 +105,13 @@ export class KlarnaCheckoutView extends Component<
         ) => {
           const newHeight = Number(event.nativeEvent.height);
           if (newHeight !== this.state.nativeViewHeight) {
-            console.log('onResized', newHeight);
+            console.log(`onResized: new height is ${newHeight}`);
             this.setState({ nativeViewHeight: newHeight });
           }
         }}
         onCheckoutViewReady={() => {
           this.isCheckoutViewReady = true;
-          console.log('onCheckoutViewReady');
+          console.log('Native checkout view is ready.');
           if (this.snippet) {
             console.log('Setting the snippet...');
             this.setSnippet(this.snippet);
@@ -123,6 +127,10 @@ export class KlarnaCheckoutView extends Component<
     const view = this.checkoutViewRef.current;
     if (view != null && this.isCheckoutViewReady) {
       RNKlarnaCheckoutViewCommands.setSnippet(view, snippet);
+    } else {
+      console.log(
+        'setSnippet: checkout view is not ready yet. Will set snippet once ready.'
+      );
     }
   };
 
@@ -130,6 +138,8 @@ export class KlarnaCheckoutView extends Component<
     const view = this.checkoutViewRef.current;
     if (view != null && this.isCheckoutViewReady) {
       RNKlarnaCheckoutViewCommands.suspend(view);
+    } else {
+      console.log('suspend: checkout view is not ready.');
     }
   };
 
@@ -137,6 +147,8 @@ export class KlarnaCheckoutView extends Component<
     const view = this.checkoutViewRef.current;
     if (view != null && this.isCheckoutViewReady) {
       RNKlarnaCheckoutViewCommands.resume(view);
+    } else {
+      console.log('resume: checkout view is not ready.');
     }
   };
 }
