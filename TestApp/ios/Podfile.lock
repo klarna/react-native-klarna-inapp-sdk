@@ -8,9 +8,9 @@ PODS:
   - hermes-engine (0.80.0):
     - hermes-engine/Pre-built (= 0.80.0)
   - hermes-engine/Pre-built (0.80.0)
-  - KlarnaMobileSDK (2.7.3):
-    - KlarnaMobileSDK/basic (= 2.7.3)
-  - KlarnaMobileSDK/basic (2.7.3)
+  - KlarnaMobileSDK (2.8.1):
+    - KlarnaMobileSDK/basic (= 2.8.1)
+  - KlarnaMobileSDK/basic (2.8.1)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1658,7 +1658,7 @@ PODS:
     - fmt
     - glog
     - hermes-engine
-    - KlarnaMobileSDK (= 2.7.3)
+    - KlarnaMobileSDK (= 2.8.1)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -2554,7 +2554,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 7068e976238b29e97b3bafd09a994542af7d5c0b
-  KlarnaMobileSDK: 664a100c07817202e0c3f3d77ed6e42967c21245
+  KlarnaMobileSDK: 5c3d064082e683353fc76a9fcd771ceea30f0f35
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: ff787f6c860a1b97dd1bc27264b61d23ad1994da
   RCTRequired: 664eb8399ed8a83e26ab65af7c2ad390f7e61696
