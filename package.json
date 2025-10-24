@@ -111,6 +111,9 @@
         "RNKlarnaStandaloneWebView": "KlarnaStandaloneWebViewWrapper",
         "RNKlarnaCheckoutView": "KlarnaCheckoutViewWrapper",
         "RNKlarnaPaymentView": "PaymentViewWrapper"
+      },
+      "modulesProvider": {
+        "RNKlarnaSignIn": "KlarnaSignInModule"
       }
     }
   }
