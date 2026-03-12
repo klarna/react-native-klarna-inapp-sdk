@@ -1,24 +1,27 @@
 name: Publish to npm
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Library"]
+    types:
+      - completed
     branches:
       - master
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
     permissions:
-      contents: read
-      id-token: write
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Enable corepack
-        run: corepack enable
+      - name: Setup
+        uses: ./.github/actions/setup
 
-      - name: Setup Node.js
+      - name: Setup Node.js for npm publish
         uses: actions/setup-node@v4
         with:
           node-version: '20.9.0'
@@ -37,24 +40,25 @@ jobs:
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install dependencies
-        if: steps.version-check.outputs.should_publish == 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Build package
-        if: steps.version-check.outputs.should_publish == 'true'
-        run: yarn prepack
-
       - name: Publish to npm
         if: steps.version-check.outputs.should_publish == 'true'
-        run: npm publish --provenance --access public
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub release
+        if: steps.version-check.outputs.should_publish == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version-check.outputs.local_version }}
+          name: ${{ steps.version-check.outputs.local_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Summary
         run: |
           if [ "${{ steps.version-check.outputs.should_publish }}" == "true" ]; then
-            echo "### ✅ Published v${{ steps.version-check.outputs.local_version }} to npm" >> "$GITHUB_STEP_SUMMARY"
+            echo "### Published v${{ steps.version-check.outputs.local_version }} to npm" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "### ⏭️ Skipped publish — v${{ steps.version-check.outputs.local_version }} already exists on npm" >> "$GITHUB_STEP_SUMMARY"
+            echo "### Skipped publish - v${{ steps.version-check.outputs.local_version }} already exists on npm" >> "$GITHUB_STEP_SUMMARY"
           fi
