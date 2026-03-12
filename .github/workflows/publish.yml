@@ -1,0 +1,60 @@
+name: Publish to npm
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.9.0'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Check if version already published
+        id: version-check
+        run: |
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
+          echo "local_version=$LOCAL_VERSION" >> "$GITHUB_OUTPUT"
+          if npm view react-native-klarna-inapp-sdk@"$LOCAL_VERSION" version 2>/dev/null; then
+            echo "Version $LOCAL_VERSION already exists on npm. Skipping publish."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version $LOCAL_VERSION not found on npm. Will publish."
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install dependencies
+        if: steps.version-check.outputs.should_publish == 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Build package
+        if: steps.version-check.outputs.should_publish == 'true'
+        run: yarn prepack
+
+      - name: Publish to npm
+        if: steps.version-check.outputs.should_publish == 'true'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.version-check.outputs.should_publish }}" == "true" ]; then
+            echo "### ✅ Published v${{ steps.version-check.outputs.local_version }} to npm" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### ⏭️ Skipped publish — v${{ steps.version-check.outputs.local_version }} already exists on npm" >> "$GITHUB_STEP_SUMMARY"
+          fi
