@@ -2,6 +2,7 @@ import React, { Component, type RefObject } from 'react';
 import {
   type NativeMethods,
   type NativeSyntheticEvent,
+  StyleSheet,
   type ViewStyle,
 } from 'react-native';
 import type { KlarnaMobileSDKError } from './types/common/KlarnaMobileSDKError';
@@ -77,7 +78,7 @@ export class KlarnaOSMView extends Component<
       <RNKlarnaOSMView
         ref={this.osmViewRef}
         style={[
-          { width: '100%', overflow: 'hidden' },
+          styles.container,
           this.props.style,
           { height: this.state.nativeViewHeight },
         ]}
@@ -145,5 +146,12 @@ export class KlarnaOSMView extends Component<
     }
   };
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    overflow: 'hidden',
+  },
+});
 
 export default KlarnaOSMView;
