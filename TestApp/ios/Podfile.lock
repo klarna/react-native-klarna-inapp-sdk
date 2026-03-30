@@ -8,9 +8,11 @@ PODS:
   - hermes-engine (0.14.0):
     - hermes-engine/Pre-built (= 0.14.0)
   - hermes-engine/Pre-built (0.14.0)
-  - KlarnaMobileSDK (2.10.2):
-    - KlarnaMobileSDK/basic (= 2.10.2)
-  - KlarnaMobileSDK/basic (2.10.2)
+  - KlarnaMobileSDK (2.11.2):
+    - KlarnaMobileSDK/basic (= 2.11.2)
+  - KlarnaMobileSDK/basic (2.11.2):
+    - KlarnaMobileSDK/core
+  - KlarnaMobileSDK/core (2.11.2)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1895,14 +1897,14 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-klarna-inapp-sdk (2.4.10):
+  - react-native-klarna-inapp-sdk (2.5.0):
     - boost
     - DoubleConversion
     - fast_float
     - fmt
     - glog
     - hermes-engine
-    - KlarnaMobileSDK (= 2.10.2)
+    - KlarnaMobileSDK (= 2.11.2)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -2889,8 +2891,8 @@ SPEC CHECKSUMS:
   FBLazyVector: a293a88992c4c33f0aee184acab0b64a08ff9458
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
-  hermes-engine: 91ca203015d7e4dd799fd3ad1ce2de958467d50e
-  KlarnaMobileSDK: 7971288298945f4448b474c09e8c662715f5a733
+  hermes-engine: a4de30ce1e5b5864e79b90eedd76ad4386be7a5f
+  KlarnaMobileSDK: e2076ef6d4994aee3fb9dc7d41f5f1fb849b279e
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
   RCTRequired: f3540eee8094231581d40c5c6d41b0f170237a81
@@ -2927,7 +2929,7 @@ SPEC CHECKSUMS:
   React-logger: 9e597cbeda7b8cc8aa8fb93860dade97190f69cc
   React-Mapbuffer: 20046c0447efaa7aace0b76085aa9bb35b0e8105
   React-microtasksnativemodule: 0e837de56519c92d8a2e3097717df9497feb33cb
-  react-native-klarna-inapp-sdk: 0086deb5131275e1b4d01eb794f35dac897d0e29
+  react-native-klarna-inapp-sdk: 85f5280711cfa0e7d900ea9c7aa4c6046cb0cc90
   react-native-safe-area-context: 45b4257b9801cbf615bfc71ddcbb6d808dd32945
   React-NativeModulesApple: 1a378198515f8e825c5931a7613e98da69320cee
   React-networking: bfd1695ada5a57023006ce05823ac5391c3ce072
@@ -2968,4 +2970,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 443e80732c1761d67d1c791c5ed66f6de09cbb2d
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.16.2

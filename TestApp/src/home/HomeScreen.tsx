@@ -81,6 +81,38 @@ export default function HomeScreen() {
           Klarna Sign In
         </Text>
       </View>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}
+      >
+        <Text
+          style={styles.navMenuItem}
+          {...testProps('navKlarnaExpressCheckout')}
+          onPress={() => {
+            console.log('Navigating to ExpressCheckout');
+            navigation.navigate('ExpressCheckout');
+          }}
+        >
+          Klarna Express Checkout
+        </Text>
+      </View>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}
+      >
+        <Text
+          style={styles.navMenuItem}
+          {...testProps('navKlarnaOSM')}
+          onPress={() => {
+            console.log('Navigating to KlarnaOSM');
+            navigation.navigate('KlarnaOSM');
+          }}
+        >
+          Klarna On-site Messaging
+        </Text>
+      </View>
     </ScrollView>
   );
 }

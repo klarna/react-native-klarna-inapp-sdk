@@ -114,7 +114,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:${getExtOrDefault('kotlinVersion')}"
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
 
-    implementation 'com.klarna.mobile:sdk:2.9.1'
+    implementation 'com.klarna.mobile:sdk:2.11.1'
+    // Required: KlarnaExpressCheckoutButton extends ConstraintLayout.
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     testImplementation "junit:junit:4.13.2"
     testImplementation 'androidx.test:core:1.5.0'

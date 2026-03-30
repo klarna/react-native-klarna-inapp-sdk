@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 
 public class WrapperView<T extends View> extends FrameLayout {
 
@@ -19,7 +19,7 @@ public class WrapperView<T extends View> extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public WrapperView(ReactApplicationContext context, AttributeSet attrs, T view) {
+    public WrapperView(ReactContext context, AttributeSet attrs, T view) {
         super(context, attrs);
         this.view = view;
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
