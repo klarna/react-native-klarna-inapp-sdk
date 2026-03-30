@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -16,7 +16,7 @@ import {
   KlarnaButtonShape,
   KlarnaButtonStyle,
 } from 'react-native-klarna-inapp-sdk';
-import styles, {backgroundStyle, Colors} from '../common/ui/Styles';
+import styles, { backgroundStyle, Colors } from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
 import OptionPicker from '../common/ui/view/OptionPicker';
 import testProps from '../common/util/TestProps';
@@ -26,7 +26,8 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
   // Session
   type SessionType = 'clientSideSession' | 'serverSideSession';
-  const [sessionType, setSessionType] = useState<SessionType>('clientSideSession');
+  const [sessionType, setSessionType] =
+    useState<SessionType>('clientSideSession');
   const [clientId, setClientId] = useState('');
   const [clientToken, setClientToken] = useState('');
   const [locale, setLocale] = useState('en-US');
@@ -39,11 +40,17 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
   // Style
   const [theme, setTheme] = useState<KlarnaButtonTheme>(KlarnaButtonTheme.Dark);
-  const [shape, setShape] = useState<KlarnaButtonShape>(KlarnaButtonShape.RoundedRect);
-  const [buttonStyle, setButtonStyle] = useState<KlarnaButtonStyle>(KlarnaButtonStyle.Filled);
+  const [shape, setShape] = useState<KlarnaButtonShape>(
+    KlarnaButtonShape.RoundedRect,
+  );
+  const [buttonStyle, setButtonStyle] = useState<KlarnaButtonStyle>(
+    KlarnaButtonStyle.Filled,
+  );
 
   // Environment
-  const [environment, setEnvironment] = useState<KlarnaEnvironment>(KlarnaEnvironment.Playground);
+  const [environment, setEnvironment] = useState<KlarnaEnvironment>(
+    KlarnaEnvironment.Playground,
+  );
   const [region, setRegion] = useState<KlarnaRegion>(KlarnaRegion.EU);
 
   // Button visibility
@@ -76,7 +83,8 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      style={backgroundStyle(styles.scrollView, isDarkMode)}>
+      style={backgroundStyle(styles.scrollView, isDarkMode)}
+    >
       <View style={styles.screenContent}>
         {/* Session Type */}
         <OptionPicker
@@ -200,7 +208,10 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
         />
 
         {/* Create Button */}
-        <View style={styles.buttonsContainer} {...testProps('createExpressCheckoutButton')}>
+        <View
+          style={styles.buttonsContainer}
+          {...testProps('createExpressCheckoutButton')}
+        >
           <Button
             onPress={createButton}
             title="Create Express Checkout Button"
@@ -214,8 +225,8 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
               key={buttonKey}
               sessionOptions={
                 sessionType === 'clientSideSession'
-                  ? {clientId}
-                  : {clientToken}
+                  ? { clientId }
+                  : { clientToken }
               }
               locale={locale}
               environment={environment}
@@ -246,7 +257,8 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
         <Text
           style={localStyles.eventLog}
           selectable
-          {...testProps('state_events')}>
+          {...testProps('state_events')}
+        >
           {events.length > 0 ? events.join('\n\n') : 'No events yet.'}
         </Text>
 

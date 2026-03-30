@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import styles, {Colors} from '../Styles';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import styles, { Colors } from '../Styles';
 
 type OptionPickerProps<T extends string> = {
   label: string;
@@ -34,12 +34,14 @@ export default function OptionPicker<T extends string>({
                 disabled && localStyles.chipDisabled,
               ]}
               onPress={() => onSelect(option)}
-              disabled={disabled}>
+              disabled={disabled}
+            >
               <Text
                 style={[
                   localStyles.chipText,
                   isSelected && localStyles.chipTextSelected,
-                ]}>
+                ]}
+              >
                 {formatOption ? formatOption(option) : option}
               </Text>
             </TouchableOpacity>

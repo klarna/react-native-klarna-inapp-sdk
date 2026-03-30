@@ -56,7 +56,10 @@ function OptionPicker({
   testId?: string;
 }) {
   return (
-    <View style={localStyles.pickerContainer} {...(testId ? testProps(testId) : {})}>
+    <View
+      style={localStyles.pickerContainer}
+      {...(testId ? testProps(testId) : {})}
+    >
       <Text style={localStyles.pickerLabel}>{label}</Text>
       <View style={localStyles.optionsRow}>
         {options.map(option => {
@@ -69,12 +72,14 @@ function OptionPicker({
                 localStyles.optionChip,
                 isSelected && localStyles.optionChipSelected,
               ]}
-              onPress={() => onSelect(option)}>
+              onPress={() => onSelect(option)}
+            >
               <Text
                 style={[
                   localStyles.optionChipText,
                   isSelected && localStyles.optionChipTextSelected,
-                ]}>
+                ]}
+              >
                 {displayLabel}
               </Text>
             </Pressable>
@@ -99,7 +104,10 @@ function ColorPicker({
   testId?: string;
 }) {
   return (
-    <View style={localStyles.pickerContainer} {...(testId ? testProps(testId) : {})}>
+    <View
+      style={localStyles.pickerContainer}
+      {...(testId ? testProps(testId) : {})}
+    >
       <Text style={localStyles.pickerLabel}>{label}</Text>
       <View style={localStyles.optionsRow}>
         {options.map(option => {
@@ -113,12 +121,14 @@ function ColorPicker({
                   localStyles.optionChip,
                   isSelected && localStyles.optionChipSelected,
                 ]}
-                onPress={() => onSelect(option)}>
+                onPress={() => onSelect(option)}
+              >
                 <Text
                   style={[
                     localStyles.optionChipText,
                     isSelected && localStyles.optionChipTextSelected,
-                  ]}>
+                  ]}
+                >
                   none
                 </Text>
               </Pressable>
@@ -132,11 +142,16 @@ function ColorPicker({
                 { backgroundColor: hex },
                 isSelected && localStyles.colorChipSelected,
               ]}
-              onPress={() => onSelect(option)}>
-              <Text style={[
-                localStyles.colorChipText,
-                { color: option === 'black' || option === 'green' ? '#FFF' : '#000' },
-              ]}>
+              onPress={() => onSelect(option)}
+            >
+              <Text
+                style={[
+                  localStyles.colorChipText,
+                  option === 'black' || option === 'green'
+                    ? localStyles.colorChipTextLight
+                    : localStyles.colorChipTextDark,
+                ]}
+              >
                 {isSelected ? option : ''}
               </Text>
             </Pressable>
@@ -159,7 +174,9 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
   const [bgColor, setBgColor] = useState<string>('');
   const [textColor, setTextColor] = useState<string>('');
   const [eventState, setEventState] = useState<string>('');
-  const [renderParams, setRenderParams] = useState<OSMRenderParams | null>(null);
+  const [renderParams, setRenderParams] = useState<OSMRenderParams | null>(
+    null,
+  );
   const renderKey = useRef(0);
 
   const onEvent = (...params: Array<string | boolean | null>) => {
@@ -170,10 +187,12 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
   return (
     <KeyboardAvoidingView
       style={backgroundStyle(styles.column, isDarkMode)}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       <ScrollView
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{paddingBottom: 60}}>
+        contentContainerStyle={localStyles.scrollContent}
+      >
         <TextInput
           style={styles.tokenInput}
           defaultValue={clientId}
@@ -334,5 +353,14 @@ const localStyles = StyleSheet.create({
   colorChipText: {
     fontSize: 9,
     fontWeight: 'bold',
+  },
+  colorChipTextLight: {
+    color: '#FFF',
+  },
+  colorChipTextDark: {
+    color: '#000',
+  },
+  scrollContent: {
+    paddingBottom: 60,
   },
 });
