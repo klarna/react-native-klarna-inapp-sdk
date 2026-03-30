@@ -9,7 +9,7 @@ The test app includes the following screens to demonstrate SDK features:
 - **Klarna Checkout** – Integration with Klarna Checkout
 - **Klarna Sign In** – Integration with Klarna Sign In
 - **Klarna On-site Messaging** – Integration with Klarna On-site Messaging (OSM)
-
+- **Klarna Express Checkout** – Integration with Klarna Express Checkout
 # Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
