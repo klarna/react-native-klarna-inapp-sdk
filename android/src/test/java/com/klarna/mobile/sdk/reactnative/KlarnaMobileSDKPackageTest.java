@@ -8,9 +8,11 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.klarna.mobile.sdk.reactnative.checkout.KlarnaCheckoutViewManager;
+import com.klarna.mobile.sdk.reactnative.expresscheckout.KlarnaExpressCheckoutViewManager;
 import com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaSignInModuleSpec;
 import com.klarna.mobile.sdk.reactnative.standalonewebview.KlarnaStandaloneWebViewManager;
+import com.klarna.mobile.sdk.reactnative.osm.KlarnaOSMViewManager;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,9 +50,11 @@ public class KlarnaMobileSDKPackageTest {
         List<ViewManager> nativeModules = paymentViewPackage.createViewManagers(reactContext);
         Assert.assertNotNull(nativeModules);
         Assert.assertFalse(nativeModules.isEmpty());
-        Assert.assertEquals(3, nativeModules.size());
+        Assert.assertEquals(5, nativeModules.size());
         Assert.assertTrue(nativeModules.get(0) instanceof KlarnaPaymentViewManager);
         Assert.assertTrue(nativeModules.get(1) instanceof KlarnaStandaloneWebViewManager);
         Assert.assertTrue(nativeModules.get(2) instanceof KlarnaCheckoutViewManager);
+        Assert.assertTrue(nativeModules.get(3) instanceof KlarnaExpressCheckoutViewManager);
+        Assert.assertTrue(nativeModules.get(4) instanceof KlarnaOSMViewManager);
     }
 }

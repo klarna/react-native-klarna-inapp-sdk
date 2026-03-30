@@ -112,6 +112,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: '80%',
   },
+  screenContent: {
+    padding: 10,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 6,
+    paddingHorizontal: 10,
+  },
+  card: {
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: Colors.lighter,
+    borderRadius: 6,
+  },
 });
 
 export default styles;

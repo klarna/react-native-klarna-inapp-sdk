@@ -21,10 +21,6 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (id)init {
     self = [super init];
-    [self initializeKlarnaStandaloneWebView];
-    self.klarnaStandaloneWebView.delegate = self;
-    self.klarnaStandaloneWebView.eventHandler = self;
-    [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
     return self;
 }
 
@@ -67,7 +63,11 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 - (void)setReturnUrl:(NSString *)returnUrl {
     _returnUrl = returnUrl;
     if (returnUrl.length > 0) {
-        self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:self.returnUrl];
+        if (self.klarnaStandaloneWebView == nil) {
+            [self initializeKlarnaStandaloneWebView];
+        } else {
+            self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:self.returnUrl];
+        }
     }
 }
 
@@ -79,18 +79,16 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 - (void)initializeKlarnaStandaloneWebView {
-    if (self.returnUrl != nil && self.returnUrl.length > 0) {
-        self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl]];
-    } else {
-        // TODO: initWithReturnURL expects a non-null URL. What should we do here if returnUrl is null?
-        self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:@"returnUrl://"]];
-    }
-    
+    self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl]];
+    self.klarnaStandaloneWebView.delegate = self;
+    self.klarnaStandaloneWebView.eventHandler = self;
+    [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
+
     self.klarnaStandaloneWebView.translatesAutoresizingMaskIntoConstraints = NO;
 
     [self addSubview:self.klarnaStandaloneWebView];
     [self setWebViewBackgroundToTransparent];
-    
+
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
                                              [self.klarnaStandaloneWebView.topAnchor constraintEqualToAnchor:self.topAnchor],
                                              [self.klarnaStandaloneWebView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],

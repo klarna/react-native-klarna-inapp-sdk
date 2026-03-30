@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/Sources/**/*.{pch,h,m,mm,swift}"
   s.requires_arc = true
+  s.swift_version = '5.0'
 
   s.prefix_header_file = 'ios/Sources/PrefixHeader.pch'
 
@@ -48,5 +49,5 @@ Pod::Spec.new do |s|
    end
   end
 
-  s.dependency 'KlarnaMobileSDK', '2.10.2'
+  s.dependency 'KlarnaMobileSDK', '2.11.2'
 end
