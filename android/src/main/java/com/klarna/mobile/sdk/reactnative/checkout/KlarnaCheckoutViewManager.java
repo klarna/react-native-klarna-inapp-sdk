@@ -33,7 +33,6 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     public static final String COMMAND_SUSPEND = "suspend";
     public static final String COMMAND_RESUME = "resume";
 
-    private final ReactApplicationContext reactAppContext;
     /**
      * Store a map of views to event dispatchers so we send up events via the right views.
      */
@@ -47,10 +46,9 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable javascriptInterfaceInjectionRunnable;
 
-    public KlarnaCheckoutViewManager(ReactApplicationContext reactApplicationContext) {
+    public KlarnaCheckoutViewManager() {
         super();
         viewToDispatcher = new WeakHashMap<>();
-        reactAppContext = reactApplicationContext;
         eventSender = new KlarnaCheckoutViewEventSender(viewToDispatcher);
         eventHandler = new KlarnaCheckoutViewEventHandler(eventSender, klarnaCheckoutView -> {
             ResizeObserverWrapperView<KlarnaCheckoutView> resizeObserverWrapperView =
@@ -74,11 +72,7 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
                     return;
                 }
 
-                boolean shouldRetry = false;
-
-                if (klarnaCheckoutView.getHeight() == 0) {
-                    shouldRetry = true;
-                }
+                boolean shouldRetry = klarnaCheckoutView.getHeight() == 0;
 
                 if (klarnaCheckoutView.getChildAt(0) instanceof WebView) {
                     WebView internalWebView = (WebView) klarnaCheckoutView.getChildAt(0);
@@ -104,8 +98,8 @@ public class KlarnaCheckoutViewManager extends RNKlarnaCheckoutViewSpec<ResizeOb
     @NonNull
     @Override
     protected ResizeObserverWrapperView<KlarnaCheckoutView> createViewInstance(@NonNull ThemedReactContext themedReactContext) {
-        KlarnaCheckoutView klarnaCheckoutView = new KlarnaCheckoutView(reactAppContext.getCurrentActivity(), null, 0, eventHandler);
-        ResizeObserverWrapperView<KlarnaCheckoutView> view = new ResizeObserverWrapperView<>(reactAppContext, null, klarnaCheckoutView);
+        KlarnaCheckoutView klarnaCheckoutView = new KlarnaCheckoutView(themedReactContext.getCurrentActivity(), null, 0, eventHandler);
+        ResizeObserverWrapperView<KlarnaCheckoutView> view = new ResizeObserverWrapperView<>(themedReactContext, null, klarnaCheckoutView);
 
         checkoutViewToResizeObserverWrapperMap.put(klarnaCheckoutView, view);
 

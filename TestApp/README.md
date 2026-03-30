@@ -1,5 +1,15 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
+# Available Screens
+
+The test app includes the following screens to demonstrate SDK features:
+
+- **Klarna Payments** – Integration with Klarna Payments
+- **Klarna Standalone WebView** – Integration with Klarna Standalone WebView
+- **Klarna Checkout** – Integration with Klarna Checkout
+- **Klarna Sign In** – Integration with Klarna Sign In
+- **Klarna On-site Messaging** – Integration with Klarna On-site Messaging (OSM)
+
 # Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.

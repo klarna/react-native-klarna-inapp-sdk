@@ -28,6 +28,7 @@ public abstract class ComponentEventSender<T extends View> {
         }
     }
 
+    @Nullable
     protected ComponentEvent createEvent(@Nullable View view, @NonNull String eventName, @Nullable WritableMap params) {
         T viewReference = getView(view);
         if (viewReference == null) {
@@ -40,7 +41,10 @@ public abstract class ComponentEventSender<T extends View> {
         T viewReference = getView(view);
         if (viewReference != null) {
             EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) viewReference.getContext(), viewReference.getId());
-            postEvent(eventDispatcher, createEvent(viewReference, eventName, params));
+            ComponentEvent event = createEvent(viewReference, eventName, params);
+            if (event != null) {
+                postEvent(eventDispatcher, event);
+            }
         }
     }
 

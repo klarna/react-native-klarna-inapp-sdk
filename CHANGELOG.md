@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-03-27
+- Added support for On-Site Messaging (OSM).
+- Added support for Klarna Express Checkout (KEC).
+- Updated iOS SDK version to 2.11.2
+- Updated Android SDK version to 2.11.1
+
 ## [2.4.10] - 2025-11-04
 - Added `modulesProvider` values to the iOS `codegenConfig` settings in the `package.json` file.
 

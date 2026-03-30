@@ -6,6 +6,8 @@ import PaymentsScreen from './src/payments/PaymentsScreen';
 import StandaloneWebViewScreen from './src/standalonewebview/StandaloneWebViewScreen';
 import KlarnaCheckoutScreen from './src/checkout/KlarnaCheckoutScreen';
 import SignInScreen from './src/signIn/SignInScreen.tsx';
+import KlarnaExpressCheckoutScreen from './src/expresscheckout/KlarnaExpressCheckoutScreen';
+import KlarnaOSMScreen from './src/osm/KlarnaOSMScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -24,6 +26,8 @@ const AppStack = () => {
       />
       <Stack.Screen name="KlarnaCheckout" component={KlarnaCheckoutScreen} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="ExpressCheckout" component={KlarnaExpressCheckoutScreen} />
+      <Stack.Screen name="KlarnaOSM" component={KlarnaOSMScreen} />
     </Stack.Navigator>
   );
 };
@@ -42,6 +46,8 @@ type AppStackParamList = {
   StandaloneWebView: undefined;
   KlarnaCheckout: undefined;
   SignIn: undefined;
+  ExpressCheckout: undefined;
+  KlarnaOSM: undefined;
 };
 
 export default App;

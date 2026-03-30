@@ -19,6 +19,7 @@ using namespace facebook::react;
 @interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate, KlarnaEventHandler, RCTRNKlarnaStandaloneWebViewViewProtocol>
 
 @property (nonatomic, strong) KlarnaStandaloneWebView *klarnaStandaloneWebView;
+@property (nonatomic, strong) NSString *returnUrl;
 
 typedef void (^WebViewOperation)(WKWebView *);
 
@@ -31,11 +32,6 @@ NSString *const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 - (id)init {
     self = [super init];
-    // TODO: What should we pass here for 'returnUrl'?
-    [self initializeKlarnaStandaloneWebView: @"returnUrl://"];
-    self.klarnaStandaloneWebView.delegate = self;
-    self.klarnaStandaloneWebView.eventHandler = self;
-    [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
     return self;
 }
 
@@ -82,13 +78,17 @@ NSString *const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 
 #pragma mark - React Native Overrides
 
-- (void)initializeKlarnaStandaloneWebView:(nonnull NSString*)returnUrl {
-    self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:returnUrl]];
+- (void)initializeKlarnaStandaloneWebView {
+    self.klarnaStandaloneWebView = [[KlarnaStandaloneWebView alloc] initWithReturnURL:[NSURL URLWithString:self.returnUrl]];
+    self.klarnaStandaloneWebView.delegate = self;
+    self.klarnaStandaloneWebView.eventHandler = self;
+    [self.klarnaStandaloneWebView addObserver:self forKeyPath:PROPERTY_NAME_ESTIMATED_PROGRESS options:NSKeyValueObservingOptionNew context:nil];
+
     self.klarnaStandaloneWebView.translatesAutoresizingMaskIntoConstraints = NO;
-    
+
     [self addSubview:self.klarnaStandaloneWebView];
     [self setWebViewBackgroundToTransparent];
-    
+
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
                                             [self.klarnaStandaloneWebView.topAnchor constraintEqualToAnchor:self.topAnchor],
                                              [self.klarnaStandaloneWebView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
@@ -141,17 +141,24 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 {
     const auto &oldViewProps = *std::static_pointer_cast<RNKlarnaStandaloneWebViewProps const>(_props);
     const auto &newViewProps = *std::static_pointer_cast<RNKlarnaStandaloneWebViewProps const>(props);
-    
+
     if (oldViewProps.returnUrl != newViewProps.returnUrl) {
         NSString *newReturnUrl = [[NSString alloc] initWithUTF8String: newViewProps.returnUrl.c_str()];
-        self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:newReturnUrl];
+        self.returnUrl = newReturnUrl;
+        if (newReturnUrl.length > 0) {
+            if (self.klarnaStandaloneWebView == nil) {
+                [self initializeKlarnaStandaloneWebView];
+            } else {
+                self.klarnaStandaloneWebView.returnURL = [NSURL URLWithString:newReturnUrl];
+            }
+        }
     }
-    
+
     WebViewOperation setBounces = ^(WKWebView *webView) {
         webView.scrollView.bounces = newViewProps.bounces;
     };
     [self applyOperationToWebViews:setBounces];
-    
+
     [super updateProps:props oldProps:oldProps];
 }
 

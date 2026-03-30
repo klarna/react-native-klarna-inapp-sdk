@@ -12,6 +12,7 @@ currently has the following components:
 - `KlarnaStandaloneWebView` to integrate Klarna Standalone WebView
 - `KlarnaCheckoutView` to integrate Klarna Checkout
 - `KlarnaSignInSDK` to integrate Klarna Sign In
+- `KlarnaOSMView` to integrate Klarna On-site Messaging
 
 This repository also includes a test application that you can use to see how it works.
 

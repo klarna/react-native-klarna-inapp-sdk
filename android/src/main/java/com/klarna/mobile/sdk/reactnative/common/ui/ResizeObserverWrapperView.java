@@ -12,7 +12,7 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
 
 import java.lang.ref.WeakReference;
@@ -32,7 +32,7 @@ public class ResizeObserverWrapperView<T extends ViewGroup> extends WrapperView<
         super(context, attrs, defStyleAttr);
     }
 
-    public ResizeObserverWrapperView(ReactApplicationContext context, AttributeSet attrs, T view) {
+    public ResizeObserverWrapperView(ReactContext context, AttributeSet attrs, T view) {
         super(context, attrs, view);
     }
 
