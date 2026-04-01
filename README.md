@@ -14,7 +14,8 @@ currently has the following components:
 - `KlarnaSignInSDK` to integrate Klarna Sign In
 - `KlarnaOSMView` to integrate Klarna On-site Messaging
 - `KlarnaExpressCheckoutView` to integrate Klarna Express Checkout
-This repository also includes a test application that you can use to see how it works.
+
+This repository also includes a test application that you can use to see how different integrations work.
 
 ### SDK for Other Platforms
 
