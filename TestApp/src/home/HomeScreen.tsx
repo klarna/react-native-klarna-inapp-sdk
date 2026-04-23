@@ -113,6 +113,22 @@ export default function HomeScreen() {
           Klarna On-site Messaging
         </Text>
       </View>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}
+      >
+        <Text
+          style={styles.navMenuItem}
+          {...testProps('navKlarnaNetworkIntegrations')}
+          onPress={() => {
+            console.log('Navigating to Klarna Network Integrations');
+            navigation.navigate('KlarnaNetworkIntegrations');
+          }}
+        >
+          Klarna Network Integrations
+        </Text>
+      </View>
     </ScrollView>
   );
 }

@@ -10,8 +10,8 @@ import styles, { backgroundStyle } from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button.tsx';
 import { KlarnaSignInSDK } from 'react-native-klarna-inapp-sdk';
-import { KlarnaEnvironment } from '../../../src/types/common/KlarnaEnvironment.ts';
-import { KlarnaRegion } from '../../../src/types/common/KlarnaRegion.ts';
+import { KlarnaEnvironment } from 'react-native-klarna-inapp-sdk';
+import { KlarnaRegion } from 'react-native-klarna-inapp-sdk';
 
 export default function SignInScreen() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,22 +23,22 @@ export default function SignInScreen() {
   const [tokenizationId, setTokenizationId] = useState('');
   const [event, setEvent] = useState<string>();
   const [klarnaSignIn, setKlarnaSignIn] = useState<KlarnaSignInSDK | null>(
-    null,
+    null
   );
 
   const onEvent = (...params: Array<string | boolean | null>) => {
     console.log('onEvent', params);
-    setEvent(prevState =>
+    setEvent((prevState) =>
       prevState
         ? `${prevState} ${params.join('\n ----- \n')}`
-        : params.join('\n ----- \n'),
+        : params.join('\n ----- \n')
     );
   };
 
   const renderTextField = (
     label: string,
     value: string,
-    setValue: (text: string) => void,
+    setValue: (text: string) => void
   ) => {
     return (
       <View style={styles.signInTextFieldStyle}>
@@ -58,7 +58,7 @@ export default function SignInScreen() {
   function handleSignIn() {
     klarnaSignIn
       ?.signIn(clientId, scope, market, locale, tokenizationId)
-      .then(r => {
+      .then((r) => {
         switch (r.action) {
           case 'KlarnaSignInUserCancelled':
             console.log('User cancelled sign in', JSON.stringify(r, null, 2));
@@ -67,23 +67,23 @@ export default function SignInScreen() {
           case 'KlarnaSignInToken':
             console.log(
               'Token params received: ',
-              JSON.stringify(r.params, null, 2),
+              JSON.stringify(r.params, null, 2)
             );
             onEvent(
               'Token received: ',
-              JSON.stringify(r.params?.KlarnaSignInToken.access_token, null, 2),
+              JSON.stringify(r.params?.KlarnaSignInToken.access_token, null, 2)
             );
             break;
           default:
             console.log(
               'Sign in event received: ',
-              JSON.stringify(r.params, null, 2),
+              JSON.stringify(r.params, null, 2)
             );
             onEvent('Sign in event received: ', JSON.stringify(r, null, 2));
             break;
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.error('Sign in failed with error: ', e);
         onEvent('Sign in failed with error: ', JSON.stringify(e, null, 2));
       });
@@ -108,7 +108,7 @@ export default function SignInScreen() {
             if (klarnaSignIn != null) {
               console.log(
                 'Disposing of previous KlarnaSignIn instance: ',
-                klarnaSignIn?.instanceId,
+                klarnaSignIn?.instanceId
               );
               klarnaSignIn?.dispose();
             }
@@ -117,26 +117,26 @@ export default function SignInScreen() {
               region: KlarnaRegion.EU,
               returnUrl: 'in-app-test://siwk',
             })
-              .then(instance => {
+              .then((instance) => {
                 console.log('KlarnaSignIn instance created: ', instance);
                 setKlarnaSignIn(instance);
                 setEvent(
-                  _ =>
+                  (_) =>
                     'KlarnaSignIn instance created: ' +
                     JSON.stringify(instance, null, 2) +
-                    '\n',
+                    '\n'
                 );
               })
-              .catch(e => {
+              .catch((e) => {
                 console.error(
                   'KlarnaSignIn instance creation failed: ',
-                  JSON.stringify(e, null, 2),
+                  JSON.stringify(e, null, 2)
                 );
                 setEvent(
-                  _ =>
+                  (_) =>
                     'KlarnaSignIn instance creation failed: ' +
                     JSON.stringify(e, null, 2) +
-                    '\n',
+                    '\n'
                 );
               });
           }}
@@ -147,7 +147,7 @@ export default function SignInScreen() {
           title="Sign In"
           onPress={() => {
             console.log(
-              'Klarna sign in with KlarnaMobileSDK should start now on the native side',
+              'Klarna sign in with KlarnaMobileSDK should start now on the native side'
             );
             handleSignIn();
           }}

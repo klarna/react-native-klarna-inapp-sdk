@@ -1,6 +1,6 @@
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
-import type { KlarnaProductEvent } from 'src/types/common/KlarnaProductEvent';
+import { KlarnaProductEvent } from '../types/common/KlarnaProductEvent';
 
 export interface Spec extends TurboModule {
   init(

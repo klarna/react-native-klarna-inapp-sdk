@@ -1,6 +1,6 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './src/home/HomeScreen';
 import PaymentsScreen from './src/payments/PaymentsScreen';
 import StandaloneWebViewScreen from './src/standalonewebview/StandaloneWebViewScreen';
@@ -8,6 +8,7 @@ import KlarnaCheckoutScreen from './src/checkout/KlarnaCheckoutScreen';
 import SignInScreen from './src/signIn/SignInScreen.tsx';
 import KlarnaExpressCheckoutScreen from './src/expresscheckout/KlarnaExpressCheckoutScreen';
 import KlarnaOSMScreen from './src/osm/KlarnaOSMScreen';
+import KlarnaNetworkIntegrationsScreen from './src/network-integrations/KlarnaNetworkIntegrationsScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -17,7 +18,7 @@ const AppStack = () => {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{title: 'Klarna Mobile SDK Test App'}}
+        options={{ title: 'Klarna Mobile SDK Test App' }}
       />
       <Stack.Screen name="Payments" component={PaymentsScreen} />
       <Stack.Screen
@@ -26,8 +27,16 @@ const AppStack = () => {
       />
       <Stack.Screen name="KlarnaCheckout" component={KlarnaCheckoutScreen} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
-      <Stack.Screen name="ExpressCheckout" component={KlarnaExpressCheckoutScreen} />
+      <Stack.Screen
+        name="ExpressCheckout"
+        component={KlarnaExpressCheckoutScreen}
+      />
       <Stack.Screen name="KlarnaOSM" component={KlarnaOSMScreen} />
+      <Stack.Screen
+        name="KlarnaNetworkIntegrations"
+        component={KlarnaNetworkIntegrationsScreen}
+        options={{ title: 'Klarna Network Integrations' }}
+      />
     </Stack.Navigator>
   );
 };
@@ -48,7 +57,8 @@ type AppStackParamList = {
   SignIn: undefined;
   ExpressCheckout: undefined;
   KlarnaOSM: undefined;
+  KlarnaNetworkIntegrations: undefined;
 };
 
 export default App;
-export type {AppStackParamList};
+export type { AppStackParamList };

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		025F17D8BF405605B1E9CC65 /* libPods-RNKlarnaMobileSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0095AC5BE5939D5EC9625201 /* libPods-RNKlarnaMobileSDK.a */; };
 		0DB3516A77E13682BFCA4E64 /* KlarnaExpressCheckoutViewWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33C84BA7615CC01128CA31E5 /* KlarnaExpressCheckoutViewWrapper.mm */; };
 		42BC05FF2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 42BC05FE2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.mm */; };
 		42BC06032AC586C50044A9FE /* KlarnaStandaloneWebViewWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 42BC06022AC586C50044A9FE /* KlarnaStandaloneWebViewWrapper.mm */; };
@@ -28,8 +29,7 @@
 		A1B2C3D62D8700010000003A /* KlarnaOSMViewWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D62D8700010000003B /* KlarnaOSMViewWrapperTests.m */; };
 		AB2E3AF1EF7D600B7C2BB129 /* KlarnaExpressCheckoutViewWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E25B2ABA81ABBC6F987AF54 /* KlarnaExpressCheckoutViewWrapper.mm */; };
 		B3E7B58A1CC2AC0600A0062D /* KlarnaPaymentViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* KlarnaPaymentViewManager.mm */; };
-		C950FFE559BF35928E94BF8D /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7837F2C76927FD0EC420C40 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */; };
-		DF4C69429315E34435B953E8 /* libPods-RNKlarnaMobileSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF5062264E440DC969A15ACA /* libPods-RNKlarnaMobileSDK.a */; };
+		C4322C103A49DE677440A55B /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA32BFC473648C68FE140F44 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */; };
 		F3A8B9C202AB3456000DECBA /* KlarnaExpressCheckoutViewWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A8B9C102AB3456000DECBA /* KlarnaExpressCheckoutViewWrapperTests.m */; };
 /* End PBXBuildFile section */
 
@@ -56,16 +56,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0095AC5BE5939D5EC9625201 /* libPods-RNKlarnaMobileSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNKlarnaMobileSDK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		12F2DBCAAC01A760C139AA95 /* KlarnaExpressCheckoutViewWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaExpressCheckoutViewWrapper.h; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRNKlarnaMobileSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNKlarnaMobileSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		162FB3924FC0CAB605BB10A7 /* KlarnaExpressCheckoutButtonDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaExpressCheckoutButtonDelegateProxy.swift; sourceTree = "<group>"; };
-		19C9876CD048B49EB4361DB8 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig"; sourceTree = "<group>"; };
+		215805694FE97D67AC33D085 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2BACF326903DA3FED8FD0076 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		33C84BA7615CC01128CA31E5 /* KlarnaExpressCheckoutViewWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaExpressCheckoutViewWrapper.mm; sourceTree = "<group>"; };
-		3FC0A2F5614F1B06C1249CA3 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
 		42BC05FD2AC57D950044A9FE /* KlarnaStandaloneWebViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaStandaloneWebViewManager.h; sourceTree = "<group>"; };
 		42BC05FE2AC57E110044A9FE /* KlarnaStandaloneWebViewManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaStandaloneWebViewManager.mm; sourceTree = "<group>"; };
 		42BC06022AC586C50044A9FE /* KlarnaStandaloneWebViewWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaStandaloneWebViewWrapper.mm; sourceTree = "<group>"; };
 		42BC06042AC588180044A9FE /* KlarnaStandaloneWebViewWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaStandaloneWebViewWrapper.mm; sourceTree = "<group>"; };
+		4A1615226E049FC4A863EC0D /* Pods-RNKlarnaMobileSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK.release.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK/Pods-RNKlarnaMobileSDK.release.xcconfig"; sourceTree = "<group>"; };
+		576072AD3AD3BF71A307289C /* Pods-RNKlarnaMobileSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK.debug.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK/Pods-RNKlarnaMobileSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		7917D752255C45FB00E16799 /* RNKlarnaMobileSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RNKlarnaMobileSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7917D754255C45FB00E16799 /* PaymentViewWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentViewWrapperTests.m; sourceTree = "<group>"; };
 		7917D756255C45FB00E16799 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,7 +84,6 @@
 		79BD26022BCD56D400D2D92A /* RNMobileSDKUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNMobileSDKUtils.h; sourceTree = "<group>"; };
 		79BD26032BCD572600D2D92A /* RNMobileSDKUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RNMobileSDKUtils.mm; sourceTree = "<group>"; };
 		79E2A0B02BFBA653002923A5 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		7A4208B9D3B0F45669A2E06F /* Pods-RNKlarnaMobileSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK.release.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK/Pods-RNKlarnaMobileSDK.release.xcconfig"; sourceTree = "<group>"; };
 		9E25B2ABA81ABBC6F987AF54 /* KlarnaExpressCheckoutViewWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaExpressCheckoutViewWrapper.mm; sourceTree = "<group>"; };
 		A1B2C3D42602130000AABBCC /* KlarnaStandaloneWebViewWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KlarnaStandaloneWebViewWrapperTests.m; sourceTree = "<group>"; };
 		A1B2C3D42D8600010000001E /* KlarnaOSMViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaOSMViewManager.h; sourceTree = "<group>"; };
@@ -90,14 +92,13 @@
 		A1B2C3D42D8600010000002B /* KlarnaOSMViewWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaOSMViewWrapper.mm; sourceTree = "<group>"; };
 		A1B2C3D42D8600010000002C /* KlarnaOSMViewWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaOSMViewWrapper.mm; sourceTree = "<group>"; };
 		A1B2C3D62D8700010000003B /* KlarnaOSMViewWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KlarnaOSMViewWrapperTests.m; sourceTree = "<group>"; };
-		B074D4744315BBCD94D119E9 /* Pods-RNKlarnaMobileSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNKlarnaMobileSDK.debug.xcconfig"; path = "Target Support Files/Pods-RNKlarnaMobileSDK/Pods-RNKlarnaMobileSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* KlarnaPaymentViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KlarnaPaymentViewManager.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* KlarnaPaymentViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaPaymentViewManager.mm; sourceTree = "<group>"; };
 		BC11876CCED1F9FF63141F96 /* KlarnaExpressCheckoutViewManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KlarnaExpressCheckoutViewManager.mm; sourceTree = "<group>"; };
 		D18B14E1C87FBEC83B253DF6 /* KlarnaExpressCheckoutViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlarnaExpressCheckoutViewManager.h; sourceTree = "<group>"; };
+		D589EB112F850789005BB9DC /* KlarnaCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = KlarnaCore.xcframework; path = Pods/KlarnaMobileSDK/KlarnaCore.xcframework; sourceTree = "<group>"; };
 		F3A8B9C102AB3456000DECBA /* KlarnaExpressCheckoutViewWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KlarnaExpressCheckoutViewWrapperTests.m; sourceTree = "<group>"; };
-		F7837F2C76927FD0EC420C40 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF5062264E440DC969A15ACA /* libPods-RNKlarnaMobileSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNKlarnaMobileSDK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA32BFC473648C68FE140F44 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF4C69429315E34435B953E8 /* libPods-RNKlarnaMobileSDK.a in Frameworks */,
+				025F17D8BF405605B1E9CC65 /* libPods-RNKlarnaMobileSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,7 +115,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7917D757255C45FB00E16799 /* libRNKlarnaMobileSDK.a in Frameworks */,
-				C950FFE559BF35928E94BF8D /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a in Frameworks */,
+				C4322C103A49DE677440A55B /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,10 +146,10 @@
 		63E5D4CBB935C268EFA6C6E9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B074D4744315BBCD94D119E9 /* Pods-RNKlarnaMobileSDK.debug.xcconfig */,
-				7A4208B9D3B0F45669A2E06F /* Pods-RNKlarnaMobileSDK.release.xcconfig */,
-				3FC0A2F5614F1B06C1249CA3 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig */,
-				19C9876CD048B49EB4361DB8 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig */,
+				576072AD3AD3BF71A307289C /* Pods-RNKlarnaMobileSDK.debug.xcconfig */,
+				4A1615226E049FC4A863EC0D /* Pods-RNKlarnaMobileSDK.release.xcconfig */,
+				215805694FE97D67AC33D085 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig */,
+				2BACF326903DA3FED8FD0076 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -251,8 +252,9 @@
 		CE954ABC354059DF5E32C8CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FF5062264E440DC969A15ACA /* libPods-RNKlarnaMobileSDK.a */,
-				F7837F2C76927FD0EC420C40 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */,
+				D589EB112F850789005BB9DC /* KlarnaCore.xcframework */,
+				0095AC5BE5939D5EC9625201 /* libPods-RNKlarnaMobileSDK.a */,
+				FA32BFC473648C68FE140F44 /* libPods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -264,7 +266,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNKlarnaMobileSDK" */;
 			buildPhases = (
-				16ACFD32579653CA379E1EFA /* [CP] Check Pods Manifest.lock */,
+				E75293069B271158121761B6 /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -282,12 +284,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7917D75A255C45FB00E16799 /* Build configuration list for PBXNativeTarget "RNKlarnaMobileSDKTests" */;
 			buildPhases = (
-				F3202A1F4D06889426784FDA /* [CP] Check Pods Manifest.lock */,
+				819DB824EDF07129D7ED6AEC /* [CP] Check Pods Manifest.lock */,
 				7917D74E255C45FB00E16799 /* Sources */,
 				7917D74F255C45FB00E16799 /* Frameworks */,
 				7917D750255C45FB00E16799 /* Resources */,
-				EA91F2D2A6F440BAD442A23C /* [CP] Embed Pods Frameworks */,
-				F8812278ACEE51F742D42DB3 /* [CP] Copy Pods Resources */,
+				BA18709C3836AA06136E2793 /* [CP] Embed Pods Frameworks */,
+				03C8AB18A1F1F5F755FBC088 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -347,53 +349,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		16ACFD32579653CA379E1EFA /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-RNKlarnaMobileSDK-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EA91F2D2A6F440BAD442A23C /* [CP] Embed Pods Frameworks */ = {
+		03C8AB18A1F1F5F755FBC088 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/basic/KlarnaCore.framework/KlarnaCore",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/basic/KlarnaMobileSDK.framework/KlarnaMobileSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/basic/KlarnaPayments.framework/KlarnaPayments",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+				"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaMobileSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaPayments.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F3202A1F4D06889426784FDA /* [CP] Check Pods Manifest.lock */ = {
+		819DB824EDF07129D7ED6AEC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -415,22 +389,52 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F8812278ACEE51F742D42DB3 /* [CP] Copy Pods Resources */ = {
+		BA18709C3836AA06136E2793 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/basic/KlarnaMobileSDK.framework/KlarnaMobileSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/basic/KlarnaPayments.framework/KlarnaPayments",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/core/KlarnaCore.framework/KlarnaCore",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/KlarnaMobileSDK/core-webview/KlarnaCoreWebView.framework/KlarnaCoreWebView",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaMobileSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaPayments.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KlarnaCoreWebView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests/Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E75293069B271158121761B6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RNKlarnaMobileSDK-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -533,6 +537,7 @@
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
 			};
 			name = Debug;
 		};
@@ -579,18 +584,18 @@
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B074D4744315BBCD94D119E9 /* Pods-RNKlarnaMobileSDK.debug.xcconfig */;
+			baseConfigurationReference = 576072AD3AD3BF71A307289C /* Pods-RNKlarnaMobileSDK.debug.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
@@ -604,12 +609,11 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A4208B9D3B0F45669A2E06F /* Pods-RNKlarnaMobileSDK.release.xcconfig */;
+			baseConfigurationReference = 4A1615226E049FC4A863EC0D /* Pods-RNKlarnaMobileSDK.release.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
@@ -623,7 +627,7 @@
 		};
 		7917D75B255C45FB00E16799 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3FC0A2F5614F1B06C1249CA3 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig */;
+			baseConfigurationReference = 215805694FE97D67AC33D085 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -652,7 +656,7 @@
 		};
 		7917D75C255C45FB00E16799 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19C9876CD048B49EB4361DB8 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig */;
+			baseConfigurationReference = 2BACF326903DA3FED8FD0076 /* Pods-RNKlarnaMobileSDK-RNKlarnaMobileSDKTests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

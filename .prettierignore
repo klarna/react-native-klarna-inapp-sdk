@@ -1,0 +1,3 @@
+TestApp/ios/Pods/**
+TestApp/android/build/**
+TestApp/vendor/**

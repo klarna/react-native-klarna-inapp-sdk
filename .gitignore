@@ -73,8 +73,11 @@ lib/
 # CUSTOM
 
 # pods nonsense
-ios/Pods
-ios/Podfile.lock
+**/ios/Pods
+**/ios/Podfile.lock
+
+# android build artifacts
+**/android/build
 
 # fastlane
 fastlane/report.xml

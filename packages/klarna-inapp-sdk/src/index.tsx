@@ -11,3 +11,5 @@ export * from './types/button/KlarnaButtonShape';
 export * from './types/button/KlarnaButtonStyle';
 export * from './KlarnaOSMView';
 export * from './types/common/KlarnaTheme';
+export { KlarnaEnvironment } from './types/common/KlarnaEnvironment';
+export { KlarnaRegion } from './types/common/KlarnaRegion';

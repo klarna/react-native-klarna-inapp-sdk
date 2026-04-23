@@ -201,8 +201,7 @@ interface KlarnaWebViewNativeEvent {
   readonly canGoForward: boolean;
 }
 
-export interface KlarnaWebViewNavigationEvent
-  extends KlarnaWebViewNativeEvent {}
+export interface KlarnaWebViewNavigationEvent extends KlarnaWebViewNativeEvent {}
 
 export interface KlarnaWebViewError extends KlarnaWebViewNativeEvent {
   readonly code: number;

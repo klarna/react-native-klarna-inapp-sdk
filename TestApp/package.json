@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --appId com.klarna.mobile.sdk.reactnative.testapp.debug",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
@@ -15,45 +15,39 @@
     "bundle:android-dev": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "bundle:ios": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle",
     "bundle:ios-dev": "react-native bundle --platform ios --dev true --entry-file index.js --bundle-output ios/main.jsbundle",
+    "build:android": "cd android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a",
+    "build:ios": "cd ios && xcodebuild -workspace TestApp.xcworkspace -scheme TestApp -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO",
     "pods": "pod-install --quiet"
   },
   "dependencies": {
+    "@babel/runtime": "^7.25.0",
     "@react-navigation/native": "^7.1.11",
     "@react-navigation/native-stack": "^7.3.16",
     "react": "19.2.3",
     "react-native": "0.83.0",
-    "react-native-safe-area-context": "^5.4.1",
+    "react-native-klarna-inapp-sdk": "workspace:*",
+    "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.19.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "19.1.2",
-    "@react-native-community/cli-platform-android": "19.0.0",
-    "@react-native-community/cli-platform-ios": "19.0.0",
+    "@react-native-community/cli": "20.0.0",
+    "@react-native-community/cli-platform-android": "20.0.0",
+    "@react-native-community/cli-platform-ios": "20.0.0",
     "@react-native/babel-preset": "0.83.0",
-    "@react-native/eslint-config": "0.83.0",
     "@react-native/metro-config": "0.83.0",
     "@react-native/typescript-config": "0.83.0",
     "@types/jest": "^30.0.0",
     "@types/react": "^19.2.0",
     "@types/react-test-renderer": "^19.1.0",
-    "@typescript-eslint/eslint-plugin": "^6.6.0",
-    "@typescript-eslint/parser": "^6.6.0",
     "babel-jest": "^30.0.0",
     "babel-plugin-module-resolver": "^5.0.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-jest": "^27.2.3",
-    "eslint-plugin-prettier": "^5.0.0",
     "jest": "^30.0.0",
-    "prettier": "^3.5.3",
-    "react-test-renderer": "19.2.3",
-    "typescript": "5.2.2"
+    "react-test-renderer": "19.2.3"
   },
   "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "yarn@4.9.2"
+    "node": ">=20"
+  }
 }

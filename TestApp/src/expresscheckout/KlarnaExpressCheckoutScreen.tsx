@@ -41,15 +41,15 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
   // Style
   const [theme, setTheme] = useState<KlarnaButtonTheme>(KlarnaButtonTheme.Dark);
   const [shape, setShape] = useState<KlarnaButtonShape>(
-    KlarnaButtonShape.RoundedRect,
+    KlarnaButtonShape.RoundedRect
   );
   const [buttonStyle, setButtonStyle] = useState<KlarnaButtonStyle>(
-    KlarnaButtonStyle.Filled,
+    KlarnaButtonStyle.Filled
   );
 
   // Environment
   const [environment, setEnvironment] = useState<KlarnaEnvironment>(
-    KlarnaEnvironment.Playground,
+    KlarnaEnvironment.Playground
   );
   const [region, setRegion] = useState<KlarnaRegion>(KlarnaRegion.EU);
 
@@ -62,19 +62,19 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
   // Response client token
   const [responseClientToken, setResponseClientToken] = useState<string | null>(
-    null,
+    null
   );
 
   const addEvent = (event: string) => {
     console.log('KEC Event:', event);
-    setEvents(prev => {
+    setEvents((prev) => {
       const updated = [...prev, `[${prev.length + 1}] ${event}`];
       return updated;
     });
   };
 
   const createButton = () => {
-    setButtonKey(prev => prev + 1);
+    setButtonKey((prev) => prev + 1);
     setShowButton(true);
     setEvents([]);
     setResponseClientToken(null);
@@ -238,11 +238,11 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
               autoFinalize={autoFinalize}
               collectShippingAddress={collectShippingAddress}
               sessionData={sessionData}
-              onAuthorized={response => {
+              onAuthorized={(response) => {
                 addEvent(`onAuthorized: ${JSON.stringify(response, null, 2)}`);
                 setResponseClientToken(response.clientToken || null);
               }}
-              onError={error => {
+              onError={(error) => {
                 addEvent(`onError: ${error.name}: ${error.message}`);
                 setResponseClientToken(null);
               }}

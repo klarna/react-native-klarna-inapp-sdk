@@ -1,41 +1,42 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
-const path = require('path');
-const escape = require('escape-string-regexp');
-const pak = require('../package.json');
-
-const root = path.resolve(__dirname, '..');
-const modules = Object.keys({ ...pak.peerDependencies });
 
 /**
  * Metro configuration
  * https://reactnative.dev/docs/metro
  *
- * @type {import('@react-native/metro-config').MetroConfig}
+ * @type {import('metro-config').MetroConfig}
  */
+const path = require('path');
+const fs = require('fs');
+
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, '..');
+const workspaceNodeModules = path.resolve(workspaceRoot, 'node_modules');
+
+const packagesDir = path.resolve(workspaceRoot, 'packages');
+const packagesWatchFolders = fs
+  .readdirSync(packagesDir, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => path.join(packagesDir, entry.name));
+
 const config = {
-  watchFolders: [root],
-
-  // We need to make sure that only one version is loaded for peerDependencies
-  // So we block them at the root, and alias them to the versions in example's node_modules
+  // Watch packages for changes
+  watchFolders: [workspaceNodeModules, ...packagesWatchFolders],
   resolver: {
-    blockList: modules.map(
-      (m) =>
-        new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`)
-    ),
-
-    extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name);
-      return acc;
-    }, {}),
-  },
-
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
+    // Look for modules in both local and workspace root node_modules
+    nodeModulesPaths: [
+      path.resolve(projectRoot, 'node_modules'),
+      path.resolve(workspaceRoot, 'node_modules'),
+    ],
+    // This fix is needed to prevent duplicate module resolution of react/react-native from the nested node_modules inside each library package.
+    // Since both the TestApp and the library packages live in the same workspace and share the same node_modules,
+    // Metro can get confused and resolve react/react-native from the nested node_modules in each library package instead of the workspace root, leading to runtime errors due to incompatible versions.
+    // Removing this will cause a TurboModuleRegistry "module not found" error when running the test app.
+    // The blockList forces Metro to fall through to the workspace root's version for all react/react-native imports.
+    blockList: [
+      /packages\/.*\/node_modules\/react-native\/.*/,
+      /packages\/.*\/node_modules\/react\/.*/,
+    ],
   },
 };
 

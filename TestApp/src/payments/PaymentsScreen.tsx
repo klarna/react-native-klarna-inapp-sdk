@@ -31,7 +31,7 @@ export default function PaymentsScreen() {
         multiline={true}
         blurOnSubmit={true}
         {...testProps('setTokenInput')}
-        onChangeText={text => {
+        onChangeText={(text) => {
           setClientToken(text);
         }}
       />
@@ -49,7 +49,7 @@ export default function PaymentsScreen() {
         }}
       >
         {renderSetTokenInput()}
-        {paymentMethods.map(paymentMethod => {
+        {paymentMethods.map((paymentMethod) => {
           return (
             <PaymentsContainer
               key={paymentMethod}
