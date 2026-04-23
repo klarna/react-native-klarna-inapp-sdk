@@ -28,5 +28,4 @@ runs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: |
         yarn install --frozen-lockfile
-        (cd TestApp;yarn install --frozen-lockfile)
       shell: bash
