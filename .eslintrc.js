@@ -1,13 +1,11 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: ['tsconfig.base.json', 'packages/*/tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: [
-    '@typescript-eslint/eslint-plugin'
-  ],
+  plugins: ['@typescript-eslint/eslint-plugin'],
   root: true,
   env: {
     jest: true,
@@ -15,7 +13,10 @@ module.exports = {
   ignorePatterns: [
     '.eslintrc.js',
     'lib/**/*',
-    'TestApp/**/*'
+    'android/**/*',
+    'ios/**/*',
+    'node_modules/**/*',
+    'TestApp/**/*',
   ],
   extends: ['@react-native', 'prettier'],
 };

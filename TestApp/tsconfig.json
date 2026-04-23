@@ -1,10 +1,4 @@
 {
-  "extends": "@react-native/typescript-config",
-  "compilerOptions": {
-    "paths": {
-      "react-native-klarna-inapp-sdk": [
-        "../src/index"
-      ]
-    }
-  }
+  "extends": "../tsconfig.base.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

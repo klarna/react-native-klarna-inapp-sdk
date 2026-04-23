@@ -32,7 +32,7 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
         multiline={true}
         blurOnSubmit={true}
         {...testProps('snippetInput')}
-        onChangeText={text => {
+        onChangeText={(text) => {
           setSnippet(text);
         }}
       />
@@ -97,10 +97,10 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
           ref={checkoutViewRef}
           style={styles.columnItemFill}
           returnUrl={'returnUrl://'}
-          onEvent={klarnaProductEvent => {
+          onEvent={(klarnaProductEvent) => {
             onEvent(JSON.stringify(klarnaProductEvent));
           }}
-          onError={error => {
+          onError={(error) => {
             onEvent(JSON.stringify(error));
           }}
         />

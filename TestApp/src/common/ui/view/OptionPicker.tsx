@@ -23,7 +23,7 @@ export default function OptionPicker<T extends string>({
     <View style={localStyles.optionRow}>
       <Text style={styles.title}>{label}</Text>
       <View style={localStyles.optionChips}>
-        {options.map(option => {
+        {options.map((option) => {
           const isSelected = selected === option;
           return (
             <TouchableOpacity

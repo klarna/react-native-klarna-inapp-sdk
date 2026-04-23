@@ -8,28 +8,31 @@
 
 This library wraps Klarna Mobile SDK and exposes its functionality as React Native components. It
 currently has the following components:
+
 - `KlarnaPaymentView` to integrate Klarna Payments
 - `KlarnaStandaloneWebView` to integrate Klarna Standalone WebView
 - `KlarnaCheckoutView` to integrate Klarna Checkout
 - `KlarnaSignInSDK` to integrate Klarna Sign In
 - `KlarnaOSMView` to integrate Klarna On-site Messaging
 - `KlarnaExpressCheckoutView` to integrate Klarna Express Checkout
-This repository also includes a test application that you can use to see how it works.
+
+This repository also includes a test application that you can use to see how different integrations work.
 
 ### SDK for Other Platforms
 
-* [Android](https://github.com/klarna/klarna-mobile-sdk-android)
-* [iOS](https://github.com/klarna/klarna-mobile-sdk)
-* [Flutter](https://github.com/klarna/klarna-mobile-sdk-flutter)
+- [Android](https://github.com/klarna/klarna-mobile-sdk-android)
+- [iOS](https://github.com/klarna/klarna-mobile-sdk-ios)
+- [Flutter](https://github.com/klarna/klarna-mobile-sdk-flutter)
 
 ## Requirements
-* iOS 10 or later.
-* Android 4.4 or later.
+
+- iOS 10 or later.
+- Android 4.4 or later.
 
 ### Documentations
 
-* [Overview](https://docs.klarna.com/payments/mobile-payments/before-you-start/introduction-mobile-integrations/)
-* [Using the Mobile SDK on React Native](https://docs.klarna.com/payments/mobile-payments/integrate-with-mobile-sdk/reactnative/native-view/)
+- [Overview](https://docs.klarna.com/payments/mobile-payments/before-you-start/introduction-mobile-integrations/)
+- [Using the Mobile SDK on React Native](https://docs.klarna.com/payments/mobile-payments/integrate-with-mobile-sdk/reactnative/native-view/)
 
 ## Getting started
 
@@ -68,6 +71,7 @@ allprojects {
     }
 }
 ```
+
 ## Support
 
 If you are having any issues using the SDK in your project or if you think that something is wrong with the SDK itself, please follow our [support guide](https://github.com/klarna/react-native-klarna-inapp-sdk/blob/master/SUPPORT.md).
@@ -82,6 +86,7 @@ This project is licensed under
 [Apache License, Version 2.0](https://github.com/klarna/react-native-klarna-inapp-sdk/blob/master/LICENSE).
 
 <!-- Markdown images & links -->
+
 [npm-badge]: https://img.shields.io/npm/v/react-native-klarna-inapp-sdk?style=flat-square
 [npm-url]: https://www.npmjs.com/package/react-native-klarna-inapp-sdk
 [dependency-badge]: https://img.shields.io/npm/dependency-version/react-native-klarna-inapp-sdk/peer/react-native?style=flat-square

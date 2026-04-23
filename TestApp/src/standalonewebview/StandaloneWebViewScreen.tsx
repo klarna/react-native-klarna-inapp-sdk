@@ -32,7 +32,7 @@ export default function StandaloneWebViewScreen() {
         style={styles.urlInput}
         defaultValue={url}
         placeholder="Enter the URL to load..."
-        onChangeText={text => {
+        onChangeText={(text) => {
           setUrl(text);
         }}
       />

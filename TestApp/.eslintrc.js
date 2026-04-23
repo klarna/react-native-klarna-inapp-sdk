@@ -5,18 +5,11 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: [
-    '@typescript-eslint/eslint-plugin'
-  ],
+  plugins: ['@typescript-eslint/eslint-plugin'],
   root: true,
   env: {
     jest: true,
   },
-  ignorePatterns: [
-    '.eslintrc.js'
-  ],
-  extends: [
-    '@react-native',
-    'prettier',
-  ],
+  ignorePatterns: ['.eslintrc.js'],
+  extends: ['@react-native', 'prettier'],
 };

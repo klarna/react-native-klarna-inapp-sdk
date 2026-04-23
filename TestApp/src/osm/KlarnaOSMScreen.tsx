@@ -35,11 +35,11 @@ const COLORS = ['', 'black', 'white', 'yellow', 'green', 'red'];
 
 const COLOR_HEX: Record<string, string> = {
   '': '',
-  black: '#000000',
-  white: '#FFFFFF',
-  yellow: '#FFFF00',
-  green: '#00FF00',
-  red: '#FF0000',
+  'black': '#000000',
+  'white': '#FFFFFF',
+  'yellow': '#FFFF00',
+  'green': '#00FF00',
+  'red': '#FF0000',
 };
 
 function OptionPicker({
@@ -62,7 +62,7 @@ function OptionPicker({
     >
       <Text style={localStyles.pickerLabel}>{label}</Text>
       <View style={localStyles.optionsRow}>
-        {options.map(option => {
+        {options.map((option) => {
           const isSelected = selected === option;
           const displayLabel = option === '' ? 'none' : option;
           return (
@@ -110,7 +110,7 @@ function ColorPicker({
     >
       <Text style={localStyles.pickerLabel}>{label}</Text>
       <View style={localStyles.optionsRow}>
-        {options.map(option => {
+        {options.map((option) => {
           const isSelected = selected === option;
           const hex = COLOR_HEX[option];
           if (option === '') {
@@ -175,7 +175,7 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
   const [textColor, setTextColor] = useState<string>('');
   const [eventState, setEventState] = useState<string>('');
   const [renderParams, setRenderParams] = useState<OSMRenderParams | null>(
-    null,
+    null
   );
   const renderKey = useRef(0);
 
@@ -198,21 +198,21 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
           defaultValue={clientId}
           placeholder="Client ID"
           {...testProps('clientIdInput')}
-          onChangeText={text => setClientId(text)}
+          onChangeText={(text) => setClientId(text)}
         />
         <TextInput
           style={styles.tokenInput}
           defaultValue={placementKey}
           placeholder="Placement Key"
           {...testProps('placementKeyInput')}
-          onChangeText={text => setPlacementKey(text)}
+          onChangeText={(text) => setPlacementKey(text)}
         />
         <TextInput
           style={styles.tokenInput}
           defaultValue={locale}
           placeholder="Locale (e.g. en-us)"
           {...testProps('localeInput')}
-          onChangeText={text => setLocale(text)}
+          onChangeText={(text) => setLocale(text)}
         />
         <TextInput
           style={styles.tokenInput}
@@ -220,7 +220,9 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
           placeholder="Purchase Amount (minor units)"
           keyboardType="number-pad"
           {...testProps('purchaseAmountInput')}
-          onChangeText={text => setPurchaseAmount(text.replace(/[^0-9]/g, ''))}
+          onChangeText={(text) =>
+            setPurchaseAmount(text.replace(/[^0-9]/g, ''))
+          }
         />
         <OptionPicker
           label="Environment"
@@ -293,7 +295,7 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
             backgroundColor={renderParams.bgColor || undefined}
             textColor={renderParams.textColor || undefined}
             returnUrl={'returnUrl://'}
-            onError={error => {
+            onError={(error) => {
               onEvent(JSON.stringify(error));
             }}
           />

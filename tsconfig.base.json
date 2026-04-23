@@ -1,0 +1,12 @@
+{
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "noEmit": false,
+    "types": ["jest"],
+    "paths": {
+      "react-native-klarna-inapp-sdk": ["./packages/klarna-inapp-sdk/src/index"]
+    }
+  },
+  "include": ["packages/**/src/**/*.ts", "packages/**/src/**/*.tsx"],
+  "exclude": ["**/node_modules", "**/Pods"]
+}
