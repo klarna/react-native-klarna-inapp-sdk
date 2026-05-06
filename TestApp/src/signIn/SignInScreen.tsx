@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  TextInput,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { ScrollView, Text, useColorScheme, View } from 'react-native';
 import styles, { backgroundStyle } from '../common/ui/Styles';
-import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button.tsx';
+import TextField from '../common/ui/view/TextField';
 import { KlarnaSignInSDK } from 'react-native-klarna-inapp-sdk';
 import { KlarnaEnvironment } from 'react-native-klarna-inapp-sdk';
 import { KlarnaRegion } from 'react-native-klarna-inapp-sdk';
@@ -32,26 +26,6 @@ export default function SignInScreen() {
       prevState
         ? `${prevState} ${params.join('\n ----- \n')}`
         : params.join('\n ----- \n')
-    );
-  };
-
-  const renderTextField = (
-    label: string,
-    value: string,
-    setValue: (text: string) => void
-  ) => {
-    return (
-      <View style={styles.signInTextFieldStyle}>
-        <Text style={styles.title}>{label}</Text>
-        <TextInput
-          autoCapitalize="none"
-          style={styles.tokenInput}
-          value={value}
-          placeholder={`Enter ${label}`}
-          onChangeText={setValue}
-          {...testProps(`${label}Input`)}
-        />
-      </View>
     );
   };
 
@@ -95,11 +69,46 @@ export default function SignInScreen() {
       style={backgroundStyle(styles.scrollView, isDarkMode)}
     >
       <View style={styles.container}>
-        {renderTextField('Client ID', clientId, setClientId)}
-        {renderTextField('Scope', scope, setScope)}
-        {renderTextField('Market', market, setMarket)}
-        {renderTextField('Locale', locale, setLocale)}
-        {renderTextField('Tokenization ID', tokenizationId, setTokenizationId)}
+        <TextField
+          label="Client ID"
+          value={clientId}
+          onChangeText={setClientId}
+          containerStyle={styles.signInTextFieldStyle}
+          placeholder="Enter Client ID"
+          testID="Client IDInput"
+        />
+        <TextField
+          label="Scope"
+          value={scope}
+          onChangeText={setScope}
+          containerStyle={styles.signInTextFieldStyle}
+          placeholder="Enter Scope"
+          testID="ScopeInput"
+        />
+        <TextField
+          label="Market"
+          value={market}
+          onChangeText={setMarket}
+          containerStyle={styles.signInTextFieldStyle}
+          placeholder="Enter Market"
+          testID="MarketInput"
+        />
+        <TextField
+          label="Locale"
+          value={locale}
+          onChangeText={setLocale}
+          containerStyle={styles.signInTextFieldStyle}
+          placeholder="Enter Locale"
+          testID="LocaleInput"
+        />
+        <TextField
+          label="Tokenization ID"
+          value={tokenizationId}
+          onChangeText={setTokenizationId}
+          containerStyle={styles.signInTextFieldStyle}
+          placeholder="Enter Tokenization ID"
+          testID="Tokenization IDInput"
+        />
       </View>
       <View style={styles.buttonsContainer}>
         <Button

@@ -1,9 +1,3 @@
-# Sample App
-TestApp
-
-# Integrations Tests
-integration-tests
-
 # npm
 .npmrc
 npm-debug.log
@@ -18,15 +12,22 @@ node_modules
 
 # Built generated
 android/*/build
+android/build
 ios/build
 ios/DerivedData
 build
+
+# Test coverage
+coverage
 
 # Local configuration file (sdk path, etc)
 android/local.properties
 
 # Gradle generated files
 android/.gradle
+
+# IDE settings
+android/.settings
 
 # Signing files
 android/.signing
@@ -48,6 +49,9 @@ ios/Pods
 ios/xcuserdata/
 project.xcworkspace
 
+# Unit tests
+ios/Tests
+
 # OS-specific files
 .DS_Store
 .DS_Store?
@@ -62,11 +66,16 @@ logs
 # BUCK
 buck-out/
 \.buckd/
+
+# Android signing
 *.keystore
 
-# Bundler
+# klarna-inapp-sdk only — integration test suite
+integration-tests
+
+# klarna-inapp-sdk only — CocoaPods managed via Bundler
 Gemfile
 Gemfile.lock
 
-# fastlane
+# klarna-inapp-sdk only — release automation
 fastlane

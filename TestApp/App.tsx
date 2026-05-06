@@ -8,7 +8,6 @@ import KlarnaCheckoutScreen from './src/checkout/KlarnaCheckoutScreen';
 import SignInScreen from './src/signIn/SignInScreen.tsx';
 import KlarnaExpressCheckoutScreen from './src/expresscheckout/KlarnaExpressCheckoutScreen';
 import KlarnaOSMScreen from './src/osm/KlarnaOSMScreen';
-import KlarnaNetworkIntegrationsScreen from './src/network-integrations/KlarnaNetworkIntegrationsScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -32,11 +31,6 @@ const AppStack = () => {
         component={KlarnaExpressCheckoutScreen}
       />
       <Stack.Screen name="KlarnaOSM" component={KlarnaOSMScreen} />
-      <Stack.Screen
-        name="KlarnaNetworkIntegrations"
-        component={KlarnaNetworkIntegrationsScreen}
-        options={{ title: 'Klarna Network Integrations' }}
-      />
     </Stack.Navigator>
   );
 };
@@ -57,7 +51,6 @@ type AppStackParamList = {
   SignIn: undefined;
   ExpressCheckout: undefined;
   KlarnaOSM: undefined;
-  KlarnaNetworkIntegrations: undefined;
 };
 
 export default App;
