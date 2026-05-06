@@ -11082,15 +11082,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pod-install@npm:^0.1.0":
-  version: 0.1.39
-  resolution: "pod-install@npm:0.1.39"
-  bin:
-    pod-install: build/index.js
-  checksum: 10/9be0b3ac5217ac990081a1ef02f4294efcff04bcff85cfbfb4054bc47cd6c163dbc7b814f7af44014b42b70ceaa2c9a7e1e1890d5e91fb3b4d0e133a113600fc
-  languageName: node
-  linkType: hard
-
 "possible-typed-array-names@npm:^1.0.0":
   version: 1.1.0
   resolution: "possible-typed-array-names@npm:1.1.0"
@@ -11394,7 +11385,6 @@ __metadata:
     "@types/react-native": "npm:^0.72.2"
     jest: "npm:^29.2.1"
     metro-react-native-babel-preset: "npm:0.76.8"
-    pod-install: "npm:^0.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.72.4"
     react-native-builder-bob: "npm:^0.20.0"

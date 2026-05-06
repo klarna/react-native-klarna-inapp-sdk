@@ -1,6 +1,6 @@
 {
   "name": "klarna-mobile-sdk-monorepo",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -19,18 +19,17 @@
     "typescript": "^5.0.2"
   },
   "scripts": {
-    "clean": "yarn workspaces foreach --all --parallel run clean",
+    "clean": "del-cli 'packages/*/lib' 'packages/*/android/build' 'packages/*/android/.gradle' 'packages/*/android/.settings' 'packages/*/ios/Pods' 'packages/*/ios/build' 'packages/*/coverage' 'TestApp/ios/Pods' 'TestApp/ios/build' 'TestApp/android/build' 'TestApp/android/app/build' 'TestApp/android/.gradle' 'TestApp/android/app/src/main/assets' 'TestApp/node_modules' 'packages/*/node_modules' 'node_modules'",
     "lint": "yarn workspaces foreach --all --parallel run lint",
     "prettier": "prettier --check \"{,packages/**/,TestApp/**/}*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "lint:fix": "yarn workspaces foreach --all --parallel run lint:fix",
     "prettier:fix": "prettier --write \"{,packages/**/,TestApp/**/}*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "test": "yarn workspaces foreach --all --parallel run test",
     "test:ios": "yarn workspaces foreach --all --parallel run test:ios",
-    "test:android": "yarn workspaces foreach --all --parallel run test:android",
+    "test:android": "cd TestApp/android && ./gradlew testDebugUnitTest --console=verbose && cd ../..",
     "run:ios": "yarn workspace TestApp ios",
     "run:android": "yarn workspace TestApp android",
     "typecheck": "yarn workspaces foreach --all --parallel run typecheck",
-    "pods": "yarn workspaces foreach --all --exclude TestApp run pods",
     "build:android": "yarn workspace TestApp build:android",
     "build:ios": "yarn workspace TestApp build:ios",
     "prepack": "yarn workspaces foreach --all --exclude TestApp --parallel run prepack"
