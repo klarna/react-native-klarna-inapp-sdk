@@ -11,12 +11,17 @@
 #import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
-#if __has_include("react_native_klarna_inapp_sdk-Swift.h")
-#import "react_native_klarna_inapp_sdk-Swift.h"
-#elif __has_include("RNKlarnaMobileSDK-Swift.h")
-#import "RNKlarnaMobileSDK-Swift.h"
+// CocoaPods publishes the auto-generated Swift compatibility header at two
+// different locations depending on linkage mode:
+//   - use_frameworks!: inside the framework bundle, reached via the bracketed
+//     form below (Expo + expo-build-properties enables this for Firebase, etc.)
+//   - default (static library): a flat per-target build dir, reached via the
+//     quoted form.
+// Both names use the pod's CocoaPods-derived snake_case (s.name).
+#if __has_include(<react_native_klarna_inapp_sdk/react_native_klarna_inapp_sdk-Swift.h>)
+#import <react_native_klarna_inapp_sdk/react_native_klarna_inapp_sdk-Swift.h>
 #else
-#import <RNKlarnaMobileSDK/RNKlarnaMobileSDK-Swift.h>
+#import "react_native_klarna_inapp_sdk-Swift.h"
 #endif
 
 using namespace facebook::react;
