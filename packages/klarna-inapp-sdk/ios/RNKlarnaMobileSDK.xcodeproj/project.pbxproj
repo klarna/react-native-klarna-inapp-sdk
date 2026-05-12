@@ -601,6 +601,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_MODULE_NAME = react_native_klarna_inapp_sdk;
 				PRODUCT_NAME = RNKlarnaMobileSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -619,6 +620,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_MODULE_NAME = react_native_klarna_inapp_sdk;
 				PRODUCT_NAME = RNKlarnaMobileSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
