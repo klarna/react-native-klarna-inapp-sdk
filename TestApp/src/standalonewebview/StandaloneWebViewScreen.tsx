@@ -1,5 +1,5 @@
 import { Keyboard, Text, TextInput, View } from 'react-native';
-import styles from '../common/ui/Styles';
+import styles, { useTheme } from '../common/ui/Styles';
 import React, { useRef, useState } from 'react';
 import {
   KlarnaStandaloneWebView,
@@ -13,6 +13,7 @@ import Button from '../common/ui/view/Button';
 import testProps from '../common/util/TestProps.tsx';
 
 export default function StandaloneWebViewScreen() {
+  const theme = useTheme();
   const klarnaStandaloneWebViewRef = useRef<KlarnaStandaloneWebView>(null);
   const [url, setUrl] = useState('');
   const [eventState, setEventState] = useState<string>();
@@ -29,7 +30,8 @@ export default function StandaloneWebViewScreen() {
         autoCorrect={false}
         autoCapitalize={'none'}
         numberOfLines={1}
-        style={styles.urlInput}
+        style={[styles.urlInput, { color: theme.text }]}
+        placeholderTextColor={theme.placeholder}
         defaultValue={url}
         placeholder="Enter the URL to load..."
         onChangeText={(text) => {
@@ -99,6 +101,7 @@ export default function StandaloneWebViewScreen() {
       /* eslint-disable-next-line react-native/no-inline-styles */
       style={{
         flex: 1,
+        backgroundColor: theme.background,
       }}
     >
       <View
@@ -118,7 +121,9 @@ export default function StandaloneWebViewScreen() {
         {renderGoBackButton()}
         {renderGoForwardButton()}
       </View>
-      <Text {...testProps('state_events')}>{eventState}</Text>
+      <Text style={{ color: theme.text }} {...testProps('state_events')}>
+        {eventState}
+      </Text>
       <KlarnaStandaloneWebView
         ref={klarnaStandaloneWebViewRef}
         /* eslint-disable-next-line react-native/no-inline-styles */

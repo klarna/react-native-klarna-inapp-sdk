@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import testProps from '../../util/TestProps';
-import styles from '../Styles';
+import styles, { useTheme } from '../Styles';
 
 interface TextFieldProps {
   label: string;
@@ -30,12 +30,16 @@ export default function TextField({
   labelStyle,
   testID,
 }: TextFieldProps) {
+  const theme = useTheme();
   return (
     <View style={[localStyles.container, containerStyle]}>
-      <Text style={[styles.title, labelStyle]}>{label}</Text>
+      <Text style={[styles.title, { color: theme.text }, labelStyle]}>
+        {label}
+      </Text>
       <TextInput
         autoCapitalize="none"
-        style={styles.tokenInput}
+        style={[styles.tokenInput, { color: theme.text }]}
+        placeholderTextColor={theme.placeholder}
         value={value}
         placeholder={placeholder ?? label}
         onChangeText={onChangeText}

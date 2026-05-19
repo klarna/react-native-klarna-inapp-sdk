@@ -1,7 +1,7 @@
 {
   "name": "react-native-klarna-inapp-sdk",
   "title": "Klarna Mobile SDK React Native",
-  "version": "2.5.4",
+  "version": "2.6.0",
   "description": "This library wraps Klarna Mobile SDK and exposes its functionality as React Native components.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -37,7 +37,7 @@
     "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
     "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "test:ios": "cd ios && xcodebuild test -workspace RNKlarnaMobileSDK.xcworkspace -scheme RNKlarnaMobileSDK -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro'",
+    "test:ios": "cd ios && xcodebuild test -workspace RNKlarnaMobileSDK.xcworkspace -scheme RNKlarnaMobileSDK -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath build/DerivedData",
     "TestApp": "yarn --cwd ../../TestApp"
   },
   "keywords": [

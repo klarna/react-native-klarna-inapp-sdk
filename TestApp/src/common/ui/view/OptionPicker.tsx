@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import styles, { Colors } from '../Styles';
+import styles, { Colors, useTheme } from '../Styles';
 
 type OptionPickerProps<T extends string> = {
   label: string;
@@ -19,9 +19,10 @@ export default function OptionPicker<T extends string>({
   formatOption,
   disabled = false,
 }: OptionPickerProps<T>) {
+  const theme = useTheme();
   return (
     <View style={localStyles.optionRow}>
-      <Text style={styles.title}>{label}</Text>
+      <Text style={[styles.title, { color: theme.text }]}>{label}</Text>
       <View style={localStyles.optionChips}>
         {options.map((option) => {
           const isSelected = selected === option;
@@ -30,6 +31,7 @@ export default function OptionPicker<T extends string>({
               key={option}
               style={[
                 localStyles.chip,
+                { backgroundColor: theme.optionItem },
                 isSelected && localStyles.chipSelected,
                 disabled && localStyles.chipDisabled,
               ]}
@@ -39,6 +41,7 @@ export default function OptionPicker<T extends string>({
               <Text
                 style={[
                   localStyles.chipText,
+                  { color: theme.text },
                   isSelected && localStyles.chipTextSelected,
                 ]}
               >
@@ -65,7 +68,6 @@ const localStyles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,
-    backgroundColor: Colors.light,
   },
   chipSelected: {
     backgroundColor: Colors.pink,
@@ -75,7 +77,6 @@ const localStyles = StyleSheet.create({
   },
   chipText: {
     fontSize: 13,
-    color: Colors.dark,
   },
   chipTextSelected: {
     color: Colors.white,

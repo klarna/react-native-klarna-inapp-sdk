@@ -1,19 +1,12 @@
-import {
-  Keyboard,
-  ScrollView,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Keyboard, ScrollView, Text, TextInput, View } from 'react-native';
 import { KlarnaCheckoutView } from 'react-native-klarna-inapp-sdk';
 import React, { useRef, useState } from 'react';
-import styles, { backgroundStyle } from '../common/ui/Styles';
+import styles, { useTheme } from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
 import testProps from '../common/util/TestProps';
 
 export default function KlarnaCheckoutScreen(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const theme = useTheme();
   const checkoutViewRef = useRef<KlarnaCheckoutView>(null);
   const [snippet, setSnippet] = useState<string>();
   const [eventState, setEventState] = useState<string>();
@@ -26,7 +19,8 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
   const renderSnippetInput = () => {
     return (
       <TextInput
-        style={styles.tokenInput}
+        style={[styles.tokenInput, { color: theme.text }]}
+        placeholderTextColor={theme.placeholder}
         defaultValue={snippet}
         placeholder="Checkout snippet here..."
         multiline={true}
@@ -82,7 +76,7 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
   };
 
   return (
-    <View style={backgroundStyle(styles.column, isDarkMode)}>
+    <View style={[styles.column, { backgroundColor: theme.background }]}>
       <View style={styles.columnHeader}>
         {renderSnippetInput()}
         <View style={styles.buttonsContainer}>
@@ -90,7 +84,9 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
           {renderSuspendButton()}
           {renderResumeButton()}
         </View>
-        <Text {...testProps('state_events')}>{eventState}</Text>
+        <Text style={{ color: theme.text }} {...testProps('state_events')}>
+          {eventState}
+        </Text>
       </View>
       <ScrollView>
         <KlarnaCheckoutView

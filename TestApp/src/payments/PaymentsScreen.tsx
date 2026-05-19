@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { ScrollView, TextInput, useColorScheme, View } from 'react-native';
-import styles, { backgroundStyle, Colors } from '../common/ui/Styles';
+import { ScrollView, TextInput, View } from 'react-native';
+import styles, { useTheme } from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import PaymentsContainer from './PaymentsContainer';
 
 let authToken = ''; // set your token here
 
 export default function PaymentsScreen() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const theme = useTheme();
 
   const [clientToken, setClientToken] = useState(authToken);
 
@@ -25,7 +25,8 @@ export default function PaymentsScreen() {
   const renderSetTokenInput = () => {
     return (
       <TextInput
-        style={styles.tokenInput}
+        style={[styles.tokenInput, { color: theme.text }]}
+        placeholderTextColor={theme.placeholder}
         defaultValue={clientToken}
         placeholder="Set client token here..."
         multiline={true}
@@ -41,13 +42,9 @@ export default function PaymentsScreen() {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      style={backgroundStyle(styles.scrollView, isDarkMode)}
+      style={[styles.scrollView, { backgroundColor: theme.background }]}
     >
-      <View
-        style={{
-          backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        }}
-      >
+      <View style={{ backgroundColor: theme.surface }}>
         {renderSetTokenInput()}
         {paymentMethods.map((paymentMethod) => {
           return (

@@ -8,6 +8,11 @@ import KlarnaCheckoutScreen from './src/checkout/KlarnaCheckoutScreen';
 import SignInScreen from './src/signIn/SignInScreen.tsx';
 import KlarnaExpressCheckoutScreen from './src/expresscheckout/KlarnaExpressCheckoutScreen';
 import KlarnaOSMScreen from './src/osm/KlarnaOSMScreen';
+import KlarnaNetworkInitializationScreen from './src/network-integrations/KlarnaNetworkInitializationScreen';
+import KlarnaNetworkIntegrationsScreen from './src/network-integrations/KlarnaNetworkIntegrationsScreen.tsx';
+import KlarnaNetworkMessagingScreen from './src/network-integrations/KlarnaNetworkMessagingScreen';
+import KlarnaSessionScreen from './src/network-integrations/KlarnaSessionScreen.tsx';
+import type { Klarna } from '@klarna/react-native-klarna-network-core';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -31,6 +36,26 @@ const AppStack = () => {
         component={KlarnaExpressCheckoutScreen}
       />
       <Stack.Screen name="KlarnaOSM" component={KlarnaOSMScreen} />
+      <Stack.Screen
+        name="KlarnaNetworkInitialization"
+        component={KlarnaNetworkInitializationScreen}
+        options={{ title: 'Klarna Network Initialization' }}
+      />
+      <Stack.Screen
+        name="KlarnaNetworkIntegrations"
+        component={KlarnaNetworkIntegrationsScreen}
+        options={{ title: 'Klarna Network Integrations' }}
+      />
+      <Stack.Screen
+        name="KlarnaSession"
+        component={KlarnaSessionScreen}
+        options={{ title: 'Klarna Session' }}
+      />
+      <Stack.Screen
+        name="KlarnaNetworkMessaging"
+        component={KlarnaNetworkMessagingScreen}
+        options={{ title: 'Klarna Network Messaging' }}
+      />
     </Stack.Navigator>
   );
 };
@@ -51,6 +76,10 @@ type AppStackParamList = {
   SignIn: undefined;
   ExpressCheckout: undefined;
   KlarnaOSM: undefined;
+  KlarnaNetworkInitialization: undefined;
+  KlarnaNetworkIntegrations: { sdk: Klarna };
+  KlarnaSession: { sdk: Klarna };
+  KlarnaNetworkMessaging: { sdk: Klarna };
 };
 
 export default App;

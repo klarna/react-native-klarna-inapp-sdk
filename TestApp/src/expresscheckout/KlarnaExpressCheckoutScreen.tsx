@@ -5,7 +5,6 @@ import {
   Switch,
   Text,
   TextInput,
-  useColorScheme,
   View,
 } from 'react-native';
 import {
@@ -16,13 +15,14 @@ import {
   KlarnaButtonShape,
   KlarnaButtonStyle,
 } from 'react-native-klarna-inapp-sdk';
-import styles, { backgroundStyle, Colors } from '../common/ui/Styles';
+import styles, { useTheme } from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
 import OptionPicker from '../common/ui/view/OptionPicker';
 import testProps from '../common/util/TestProps';
 
 export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const theme = useTheme();
+  const titleStyle = [styles.title, { color: theme.text }];
 
   // Session
   type SessionType = 'clientSideSession' | 'serverSideSession';
@@ -39,7 +39,9 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
   const [collectShippingAddress, setCollectShippingAddress] = useState(false);
 
   // Style
-  const [theme, setTheme] = useState<KlarnaButtonTheme>(KlarnaButtonTheme.Dark);
+  const [buttonTheme, setButtonTheme] = useState<KlarnaButtonTheme>(
+    KlarnaButtonTheme.Dark
+  );
   const [shape, setShape] = useState<KlarnaButtonShape>(
     KlarnaButtonShape.RoundedRect
   );
@@ -83,7 +85,7 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      style={backgroundStyle(styles.scrollView, isDarkMode)}
+      style={[styles.scrollView, { backgroundColor: theme.background }]}
     >
       <View style={styles.screenContent}>
         {/* Session Type */}
@@ -97,9 +99,10 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
         {/* Client ID / Token input */}
         {sessionType === 'clientSideSession' ? (
           <View>
-            <Text style={styles.title}>Client ID</Text>
+            <Text style={titleStyle}>Client ID</Text>
             <TextInput
-              style={styles.tokenInput}
+              style={[styles.tokenInput, { color: theme.text }]}
+              placeholderTextColor={theme.placeholder}
               value={clientId}
               onChangeText={setClientId}
               placeholder="Client ID"
@@ -108,9 +111,10 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
           </View>
         ) : (
           <View>
-            <Text style={styles.title}>Client Token</Text>
+            <Text style={titleStyle}>Client Token</Text>
             <TextInput
-              style={styles.tokenInput}
+              style={[styles.tokenInput, { color: theme.text }]}
+              placeholderTextColor={theme.placeholder}
               value={clientToken}
               onChangeText={setClientToken}
               placeholder="Client Token"
@@ -121,9 +125,10 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
         {/* Locale */}
         <View>
-          <Text style={styles.title}>Locale</Text>
+          <Text style={titleStyle}>Locale</Text>
           <TextInput
-            style={styles.tokenInput}
+            style={[styles.tokenInput, { color: theme.text }]}
+            placeholderTextColor={theme.placeholder}
             value={locale}
             onChangeText={setLocale}
             placeholder="e.g. en-US"
@@ -133,9 +138,10 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
         {/* Return URL */}
         <View>
-          <Text style={styles.title}>Return URL</Text>
+          <Text style={titleStyle}>Return URL</Text>
           <TextInput
-            style={styles.tokenInput}
+            style={[styles.tokenInput, { color: theme.text }]}
+            placeholderTextColor={theme.placeholder}
             value={returnUrl}
             onChangeText={setReturnUrl}
             placeholder="e.g. https://klarna.com"
@@ -145,9 +151,10 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
         {/* Session Data */}
         <View>
-          <Text style={styles.title}>Session Data</Text>
+          <Text style={titleStyle}>Session Data</Text>
           <TextInput
-            style={styles.tokenInput}
+            style={[styles.tokenInput, { color: theme.text }]}
+            placeholderTextColor={theme.placeholder}
             value={sessionData}
             onChangeText={setSessionData}
             placeholder="Optional session data"
@@ -157,13 +164,13 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
         {/* Auto Finalize */}
         <View style={styles.switchRow}>
-          <Text style={styles.title}>Auto Finalize</Text>
+          <Text style={titleStyle}>Auto Finalize</Text>
           <Switch value={autoFinalize} onValueChange={setAutoFinalize} />
         </View>
 
         {/* Collect Shipping Address */}
         <View style={styles.switchRow}>
-          <Text style={styles.title}>Collect Shipping Address</Text>
+          <Text style={titleStyle}>Collect Shipping Address</Text>
           <Switch
             value={collectShippingAddress}
             onValueChange={setCollectShippingAddress}
@@ -174,8 +181,8 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
         <OptionPicker
           label="Theme"
           options={Object.values(KlarnaButtonTheme)}
-          selected={theme}
-          onSelect={setTheme}
+          selected={buttonTheme}
+          onSelect={setButtonTheme}
         />
 
         <OptionPicker
@@ -232,7 +239,7 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
               environment={environment}
               region={region}
               returnUrl={returnUrl}
-              theme={theme}
+              theme={buttonTheme}
               shape={shape}
               buttonStyle={buttonStyle}
               autoFinalize={autoFinalize}
@@ -251,11 +258,17 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
         )}
 
         {/* Events Log */}
-        <Text style={styles.title}>
+        <Text style={titleStyle}>
           Events {events.length > 0 ? `(${events.length})` : ''}
         </Text>
         <Text
-          style={localStyles.eventLog}
+          style={[
+            localStyles.eventLog,
+            {
+              color: theme.text,
+              backgroundColor: theme.card,
+            },
+          ]}
           selectable
           {...testProps('state_events')}
         >
@@ -264,9 +277,12 @@ export default function KlarnaExpressCheckoutScreen(): React.JSX.Element {
 
         {/* Response Client Token */}
         {responseClientToken != null && (
-          <View style={styles.card}>
-            <Text style={styles.title}>Response Client Token</Text>
-            <Text style={localStyles.responseTokenText} selectable>
+          <View style={[styles.card, { backgroundColor: theme.card }]}>
+            <Text style={titleStyle}>Response Client Token</Text>
+            <Text
+              style={[localStyles.responseTokenText, { color: theme.text }]}
+              selectable
+            >
               {responseClientToken}
             </Text>
           </View>
@@ -282,15 +298,12 @@ const localStyles = StyleSheet.create({
   },
   responseTokenText: {
     fontSize: 12,
-    color: Colors.dark,
     marginBottom: 8,
     fontFamily: 'monospace',
   },
   eventLog: {
     fontSize: 12,
-    color: Colors.dark,
     padding: 10,
-    backgroundColor: Colors.lighter,
     borderRadius: 6,
     minHeight: 40,
     marginBottom: 20,
