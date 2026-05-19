@@ -1,13 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 
-export function backgroundStyle(style: any, isDarkMode: boolean) {
-  return [style, background(isDarkMode)];
-}
-
-export function background(isDarkMode: boolean) {
-  return {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+export function foregroundColor(isDarkMode: boolean) {
+  return isDarkMode ? Colors.white : '#333333';
 }
 
 export const Colors = {
@@ -20,6 +14,37 @@ export const Colors = {
   black: '#000',
   pink: '#ffc0cb',
 };
+
+export type Theme = {
+  text: string;
+  placeholder: string | undefined;
+  background: string;
+  card: string;
+  surface: string;
+  optionItem: string;
+};
+
+const lightTheme: Theme = {
+  text: '#333333',
+  placeholder: undefined,
+  background: Colors.lighter,
+  card: Colors.lighter,
+  surface: Colors.white,
+  optionItem: Colors.light,
+};
+
+const darkTheme: Theme = {
+  text: Colors.white,
+  placeholder: Colors.lightGray,
+  background: Colors.darker,
+  card: Colors.dark,
+  surface: Colors.black,
+  optionItem: Colors.dark,
+};
+
+export function useTheme(): Theme {
+  return useColorScheme() === 'dark' ? darkTheme : lightTheme;
+}
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -76,7 +101,6 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    color: '#333333',
     marginBottom: 5,
   },
   buttonsContainer: {
@@ -125,7 +149,6 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 10,
     padding: 10,
-    backgroundColor: Colors.lighter,
     borderRadius: 6,
   },
 });

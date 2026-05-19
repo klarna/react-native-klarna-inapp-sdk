@@ -6,13 +6,12 @@ import {
   ScrollView,
   Text,
   TextInput,
-  useColorScheme,
   View,
   StyleSheet,
 } from 'react-native';
 import { KlarnaOSMView } from 'react-native-klarna-inapp-sdk';
 import React, { useRef, useState } from 'react';
-import styles, { backgroundStyle, Colors } from '../common/ui/Styles';
+import styles, { Colors, useTheme } from '../common/ui/Styles';
 import Button from '../common/ui/view/Button';
 import testProps from '../common/util/TestProps';
 
@@ -163,16 +162,16 @@ function ColorPicker({
 }
 
 export default function KlarnaOSMScreen(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const theme = useTheme();
   const [clientId, setClientId] = useState<string>('');
   const [placementKey, setPlacementKey] = useState<string>('');
   const [locale, setLocale] = useState<string>('en-us');
   const [purchaseAmount, setPurchaseAmount] = useState<string>('');
   const [environment, setEnvironment] = useState<string>('playground');
   const [region, setRegion] = useState<string>('eu');
-  const [theme, setTheme] = useState<string>('automatic');
+  const [osmTheme, setOsmTheme] = useState<string>('automatic');
   const [bgColor, setBgColor] = useState<string>('');
-  const [textColor, setTextColor] = useState<string>('');
+  const [osmTextColor, setOsmTextColor] = useState<string>('');
   const [eventState, setEventState] = useState<string>('');
   const [renderParams, setRenderParams] = useState<OSMRenderParams | null>(
     null
@@ -186,7 +185,7 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
 
   return (
     <KeyboardAvoidingView
-      style={backgroundStyle(styles.column, isDarkMode)}
+      style={[styles.column, { backgroundColor: theme.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
@@ -194,28 +193,32 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
         contentContainerStyle={localStyles.scrollContent}
       >
         <TextInput
-          style={styles.tokenInput}
+          style={[styles.tokenInput, { color: theme.text }]}
+          placeholderTextColor={theme.placeholder}
           defaultValue={clientId}
           placeholder="Client ID"
           {...testProps('clientIdInput')}
           onChangeText={(text) => setClientId(text)}
         />
         <TextInput
-          style={styles.tokenInput}
+          style={[styles.tokenInput, { color: theme.text }]}
+          placeholderTextColor={theme.placeholder}
           defaultValue={placementKey}
           placeholder="Placement Key"
           {...testProps('placementKeyInput')}
           onChangeText={(text) => setPlacementKey(text)}
         />
         <TextInput
-          style={styles.tokenInput}
+          style={[styles.tokenInput, { color: theme.text }]}
+          placeholderTextColor={theme.placeholder}
           defaultValue={locale}
           placeholder="Locale (e.g. en-us)"
           {...testProps('localeInput')}
           onChangeText={(text) => setLocale(text)}
         />
         <TextInput
-          style={styles.tokenInput}
+          style={[styles.tokenInput, { color: theme.text }]}
+          placeholderTextColor={theme.placeholder}
           defaultValue={purchaseAmount}
           placeholder="Purchase Amount (minor units)"
           keyboardType="number-pad"
@@ -241,8 +244,8 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
         <OptionPicker
           label="Theme"
           options={THEMES}
-          selected={theme}
-          onSelect={setTheme}
+          selected={osmTheme}
+          onSelect={setOsmTheme}
           testId="themePicker"
         />
         <ColorPicker
@@ -255,8 +258,8 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
         <ColorPicker
           label="Text Color"
           options={COLORS}
-          selected={textColor}
-          onSelect={setTextColor}
+          selected={osmTextColor}
+          onSelect={setOsmTextColor}
           testId="textColorPicker"
         />
         <View style={styles.buttonsContainer}>
@@ -271,16 +274,18 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
                 purchaseAmount,
                 environment,
                 region,
-                theme,
+                theme: osmTheme,
                 bgColor: COLOR_HEX[bgColor] || '',
-                textColor: COLOR_HEX[textColor] || '',
+                textColor: COLOR_HEX[osmTextColor] || '',
               });
               Keyboard.dismiss();
             }}
             title="Render"
           />
         </View>
-        <Text {...testProps('state_events')}>{eventState}</Text>
+        <Text style={{ color: theme.text }} {...testProps('state_events')}>
+          {eventState}
+        </Text>
         {renderParams && (
           <KlarnaOSMView
             key={renderKey.current}

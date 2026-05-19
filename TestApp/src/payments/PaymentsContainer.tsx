@@ -4,7 +4,7 @@ import {
   KlarnaPaymentsSDKError,
   KlarnaPaymentView,
 } from 'react-native-klarna-inapp-sdk';
-import styles from '../common/ui/Styles';
+import styles, { useTheme } from '../common/ui/Styles';
 import testProps from '../common/util/TestProps';
 import Button from '../common/ui/view/Button';
 
@@ -14,6 +14,7 @@ interface PaymentsContainerProps {
 }
 
 export default function PaymentsContainer(props: PaymentsContainerProps) {
+  const theme = useTheme();
   const paymentViewRef = useRef<KlarnaPaymentView>(null);
   const [eventState, setEventState] = useState<string>();
 
@@ -76,7 +77,9 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
   const renderPaymentMethod = () => {
     return (
       <View style={styles.container} key={props.paymentMethodName}>
-        <Text style={styles.title}>{props.paymentMethodName}</Text>
+        <Text style={[styles.title, { color: theme.text }]}>
+          {props.paymentMethodName}
+        </Text>
         <View style={styles.paymentContainer}>
           <KlarnaPaymentView
             ref={paymentViewRef}
@@ -107,7 +110,10 @@ export default function PaymentsContainer(props: PaymentsContainerProps) {
           />
         </View>
         {actionButtons()}
-        <Text {...testProps('state_' + props.paymentMethodName)}>
+        <Text
+          style={{ color: theme.text }}
+          {...testProps('state_' + props.paymentMethodName)}
+        >
           {eventState}
         </Text>
       </View>

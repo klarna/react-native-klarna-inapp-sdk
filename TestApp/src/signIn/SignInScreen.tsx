@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, useColorScheme, View } from 'react-native';
-import styles, { backgroundStyle } from '../common/ui/Styles';
+import { ScrollView, Text, View } from 'react-native';
+import styles, { useTheme } from '../common/ui/Styles';
 import Button from '../common/ui/view/Button.tsx';
 import TextField from '../common/ui/view/TextField';
 import { KlarnaSignInSDK } from 'react-native-klarna-inapp-sdk';
@@ -8,7 +8,8 @@ import { KlarnaEnvironment } from 'react-native-klarna-inapp-sdk';
 import { KlarnaRegion } from 'react-native-klarna-inapp-sdk';
 
 export default function SignInScreen() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const theme = useTheme();
+  const titleStyle = [styles.title, { color: theme.text }];
 
   const [clientId, setClientId] = useState('');
   const [scope, setScope] = useState('');
@@ -66,7 +67,7 @@ export default function SignInScreen() {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      style={backgroundStyle(styles.scrollView, isDarkMode)}
+      style={[styles.scrollView, { backgroundColor: theme.background }]}
     >
       <View style={styles.container}>
         <TextField
@@ -162,8 +163,8 @@ export default function SignInScreen() {
           }}
         />
       </View>
-      <Text style={styles.title}>"Events Log"</Text>
-      <Text style={styles.title}>{event}</Text>
+      <Text style={titleStyle}>"Events Log"</Text>
+      <Text style={titleStyle}>{event}</Text>
     </ScrollView>
   );
 }

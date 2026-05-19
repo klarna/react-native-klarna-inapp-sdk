@@ -19,6 +19,14 @@ end
 target 'TestApp' do
   config = use_native_modules!
 
+  pod 'react-native-klarna-network-core',
+    :path => '../../node_modules/@klarna/react-native-klarna-network-core',
+    :testspecs => ['Tests']
+
+  pod 'react-native-klarna-network-messaging',
+    :path => '../../node_modules/@klarna/react-native-klarna-network-messaging',
+    :testspecs => ['Tests']
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
