@@ -52,7 +52,7 @@ jobs:
           #   echo "Publishing $pkg_dir"
           #   (cd "$pkg_dir" && npm publish --provenance --access public)
           # done
-          (cd packages/klarna-network && npm publish --provenance --access public)
+          (cd packages/klarna-network-core && npm publish --provenance --access public)
           (cd packages/klarna-network-messaging && npm publish --provenance --access public)
 
       - name: Create GitHub release
