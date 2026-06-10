@@ -1,6 +1,6 @@
 {
   "name": "@klarna/react-native-klarna-network-core",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "React Native module for Klarna Network SDK initialization and configuration",
   "main": "./src/index.tsx",
   "codegenConfig": {

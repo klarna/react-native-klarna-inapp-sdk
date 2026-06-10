@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-06-10
+
+- Added Klarna Network Payment and payment button integration via the new `@klarna/react-native-klarna-network-payment` package.
+
 ## [2.6.0] - 2026-05-18
 
 - Added Klarna Messaging integration as part of Klarna Network with the new `KlarnaNetworkMessaging` module — exposed in React Native via the new `@klarna/react-native-klarna-network-messaging` package (Fabric `KlarnaMessagingPlacementView`).

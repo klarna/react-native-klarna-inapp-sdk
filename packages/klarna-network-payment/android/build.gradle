@@ -1,0 +1,95 @@
+def klarnaNetworkCorePkgJson = providers.exec {
+  commandLine "node", "--print",
+    "require.resolve('@klarna/react-native-klarna-network-core/package.json')"
+}.standardOutput.asText.get().trim()
+
+apply from: "${file(klarnaNetworkCorePkgJson).parent}/android/klarna-network-versions.gradle"
+
+buildscript {
+  ext.KlarnaNetworkPayment = [
+    kotlinVersion: "2.0.21",
+    minSdkVersion: 21,
+    compileSdkVersion: 36,
+    targetSdkVersion: 36
+  ]
+
+  ext.getExtOrDefault = { prop ->
+    if (rootProject.ext.has(prop)) {
+      return rootProject.ext.get(prop)
+    }
+
+    return KlarnaNetworkPayment[prop]
+  }
+
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "com.android.tools.build:gradle:8.7.2"
+    // noinspection DifferentKotlinGradleVersion
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
+  }
+}
+
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+apply plugin: "com.facebook.react"
+
+android {
+  namespace "com.klarna.mobile.sdk.reactnative.klarnanetwork.payment"
+
+  compileSdkVersion getExtOrDefault("compileSdkVersion")
+
+  defaultConfig {
+    minSdkVersion getExtOrDefault("minSdkVersion")
+    targetSdkVersion getExtOrDefault("targetSdkVersion")
+  }
+
+  buildFeatures {
+    buildConfig true
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+
+  lint {
+    disable "GradleCompatible"
+  }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+
+repositories {
+  mavenCentral()
+  google()
+  maven {
+    url 'https://x.klarnacdn.net/mobile-sdk/'
+  }
+}
+
+dependencies {
+  implementation "com.facebook.react:react-android"
+
+  implementation "com.klarna.mobile.sdk:klarna-network-payment:${klarnaNetworkVersions.klarnaMobileSdkVersion}"
+  implementation "com.klarna.mobile.sdk:klarna-network-payment-button:${klarnaNetworkVersions.klarnaMobileSdkVersion}"
+  compileOnly project(":klarna_react-native-klarna-network-core")
+
+  testImplementation project(":klarna_react-native-klarna-network-core")
+  testImplementation "junit:junit:4.13.2"
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${getExtOrDefault('kotlinVersion')}"
+  testImplementation "io.mockk:mockk:1.14.5"
+}

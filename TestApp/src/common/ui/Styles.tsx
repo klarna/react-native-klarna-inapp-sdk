@@ -22,6 +22,7 @@ export type Theme = {
   card: string;
   surface: string;
   optionItem: string;
+  buttonText: string;
 };
 
 const lightTheme: Theme = {
@@ -31,6 +32,7 @@ const lightTheme: Theme = {
   card: Colors.lighter,
   surface: Colors.white,
   optionItem: Colors.light,
+  buttonText: Colors.white,
 };
 
 const darkTheme: Theme = {
@@ -40,6 +42,7 @@ const darkTheme: Theme = {
   card: Colors.dark,
   surface: Colors.black,
   optionItem: Colors.dark,
+  buttonText: Colors.black,
 };
 
 export function useTheme(): Theme {
@@ -73,7 +76,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     padding: 10,
-    margin: 20,
   },
   urlInput: {
     borderColor: 'gray',
