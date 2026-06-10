@@ -2,7 +2,7 @@ import { Klarna } from '@klarna/react-native-klarna-network-core';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import type { AppStackParamList } from '../../App';
 import styles, { useTheme } from '../common/ui/Styles';
 import Button from '../common/ui/view/Button.tsx';
@@ -100,12 +100,14 @@ export default function KlarnaNetworkInitializationScreen() {
           onChangeText={setSessionToken}
           labelStyle={networkStyles.fieldLabel}
         />
-        <TextField
-          label="App Return URL"
-          value={returnUrl}
-          onChangeText={setReturnUrl}
-          labelStyle={networkStyles.fieldLabel}
-        />
+        {Platform.OS !== 'android' && (
+          <TextField
+            label="App Return URL"
+            value={returnUrl}
+            onChangeText={setReturnUrl}
+            labelStyle={networkStyles.fieldLabel}
+          />
+        )}
         <View style={networkStyles.buttonSpacing}>
           <Button title="Initialize" onPress={handleInitialize} />
         </View>

@@ -23,6 +23,10 @@ target 'TestApp' do
     :path => '../../node_modules/@klarna/react-native-klarna-network-core',
     :testspecs => ['Tests']
 
+  pod 'react-native-klarna-network-payment',
+    :path => '../../node_modules/@klarna/react-native-klarna-network-payment',
+    :testspecs => ['Tests']
+
   pod 'react-native-klarna-network-messaging',
     :path => '../../node_modules/@klarna/react-native-klarna-network-messaging',
     :testspecs => ['Tests']

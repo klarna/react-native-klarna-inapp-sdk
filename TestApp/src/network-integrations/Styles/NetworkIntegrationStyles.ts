@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '../../common/ui/Styles';
 
 const networkIntegrationStyles = StyleSheet.create({
   container: {
@@ -11,6 +12,21 @@ const networkIntegrationStyles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'left',
     marginBottom: 6,
+  },
+  logLabel: {
+    marginTop: 12,
+    fontSize: 14,
+  },
+  logContainer: {
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: Colors.lightGray,
+    borderRadius: 4,
+    minHeight: 400,
+    padding: 8,
+  },
+  logText: {
+    fontSize: 12,
   },
   fieldContainer: {
     marginBottom: 8,
@@ -59,6 +75,9 @@ const networkIntegrationStyles = StyleSheet.create({
   infoText: {
     color: '#040',
     fontSize: 13,
+  },
+  loadingIndicator: {
+    marginTop: 12,
   },
 });
 

@@ -6,3 +6,5 @@ export type { KlarnaConfiguration } from './types/KlarnaConfiguration';
 export type { KlarnaNetwork } from './KlarnaNetwork';
 export type { KlarnaNetworkSession } from './Session/KlarnaNetworkSession';
 export { KlarnaTheme } from './types/KlarnaTheme';
+export type { KlarnaAddress } from './types/KlarnaAddress';
+export type { KlarnaCustomerProfile } from './types/KlarnaCustomerProfile';

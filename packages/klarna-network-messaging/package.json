@@ -1,6 +1,6 @@
 {
   "name": "@klarna/react-native-klarna-network-messaging",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "React Native module for Klarna Network Messaging placements",
   "main": "./src/index.tsx",
   "codegenConfig": {
@@ -94,7 +94,7 @@
     "typescript": "^5.0.2"
   },
   "peerDependencies": {
-    "@klarna/react-native-klarna-network-core": ">=2.5.1",
+    "@klarna/react-native-klarna-network-core": "2.7.0",
     "react": ">=18.2.0",
     "react-native": ">=0.76.0 <1.0.x"
   },

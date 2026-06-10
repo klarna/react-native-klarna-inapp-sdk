@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   install_modules_dependencies(s)
 
-  s.dependency 'KlarnaMobileSDK/kncore', '2.11.6'
+  s.dependency 'KlarnaMobileSDK/kncore', '2.11.7'
 
   s.test_spec 'Tests' do |ts|
     ts.source_files = 'ios/Tests/**/*.swift'

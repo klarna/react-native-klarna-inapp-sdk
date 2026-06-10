@@ -30,12 +30,16 @@ export default function KlarnaNetworkIntegrationsScreen() {
       contentInsetAdjustmentBehavior="automatic"
       style={[styles.scrollView, { backgroundColor: theme.background }]}
     >
+      {/* KlarnaNetworkPayment Module */}
       <View style={{ backgroundColor: theme.surface }}>
         <Text
           style={navItemStyle}
-          onPress={() => navigation.navigate('KlarnaSession', { sdk })}
+          onPress={() => {
+            console.log('Navigating to KlarnaNetworkPayment');
+            navigation.navigate('KlarnaNetworkPayment', { sdk });
+          }}
         >
-          Klarna Session
+          Klarna Network Payment
         </Text>
       </View>
       {/* KlarnaNetworkMessaging Module */}
@@ -46,6 +50,15 @@ export default function KlarnaNetworkIntegrationsScreen() {
           onPress={() => navigation.navigate('KlarnaNetworkMessaging', { sdk })}
         >
           Klarna Network Messaging
+        </Text>
+      </View>
+      {/* KlarnaNetworkCore Module */}
+      <View style={{ backgroundColor: theme.surface }}>
+        <Text
+          style={navItemStyle}
+          onPress={() => navigation.navigate('KlarnaSession', { sdk })}
+        >
+          Klarna Session
         </Text>
       </View>
     </ScrollView>
