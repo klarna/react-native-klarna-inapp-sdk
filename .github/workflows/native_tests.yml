@@ -39,10 +39,9 @@ jobs:
       - name: Prepare iOS
         uses: ./.github/actions/prepare-ios
 
-      - name: Install Lib cocoapods
+      - name: Install Test App cocoapods
         run: |
           pod repo update
-          (cd packages/klarna-inapp-sdk/ios && pod install --verbose)
           (cd TestApp/ios && pod install --verbose)
 
       - name: Run Unit Tests for iOS
