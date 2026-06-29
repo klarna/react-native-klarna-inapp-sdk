@@ -7,13 +7,14 @@
 //
 
 #import <XCTest/XCTest.h>
+
+#if !RCT_NEW_ARCH_ENABLED
 #import <OCMock/OCMock.h>
 #import <React/RCTComponent.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
-#import "../Sources/KlarnaPaymentViewManager.h"
-
-#import "../Sources/view/PaymentViewWrapper.h"
+#import "../../Sources/KlarnaPaymentViewManager.h"
+#import "../../Sources/view/PaymentViewWrapper.h"
 
 @interface PaymentViewWrapper ()
 
@@ -55,10 +56,10 @@
 - (void)test_categoryIsSet {
     // GIVEN
     OCMStub([self.paymentViewWrapper initializeActualPaymentView]);
-    
+
     // WHEN
     [self.paymentViewWrapper setCategory: @"testCategory"];
-    
+
     // THEN
     XCTAssertEqual(self.paymentViewWrapper.category, @"testCategory");
     OCMVerify([self.paymentViewWrapper evaluateProps]);
@@ -67,10 +68,10 @@
 - (void)test_evaluatePropsWithoutCategory {
     // GIVEN
     OCMReject([self.paymentViewWrapper initializeActualPaymentView]);
-    
+
     // WHEN
     [self.paymentViewWrapper evaluateProps];
-    
+
     // THEN
 }
 
@@ -78,10 +79,10 @@
     // GIVEN
     OCMStub([self.paymentViewWrapper initializeActualPaymentView]);
     self.paymentViewWrapper.category = @"test";
-    
+
     // WHEN
     [self.paymentViewWrapper evaluateProps];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper initializeActualPaymentView]);
 }
@@ -93,10 +94,10 @@
     OCMStub([mockConstraints activateConstraints:OCMOCK_ANY]);
     NSArray *mockPlaceholderArray = OCMClassMock([NSArray class]);
     OCMStub([mockPlaceholderArray initWithObjects:OCMArg.anyObjectRef count:OCMArg.anyPointer]);
-    
+
     // WHEN
     [self.paymentViewWrapper initializeActualPaymentView];
-    
+
     // THEN
     XCTAssertFalse(self.actualPaymentViewMock.translatesAutoresizingMaskIntoConstraints);
     OCMVerify([((UIView *)self.paymentViewWrapper) addSubview:self.actualPaymentViewMock]);
@@ -188,12 +189,12 @@
 - (void)test_onInitialized {
     // GIVEN
     [self.paymentViewWrapper setOnInitialized:^(NSDictionary *body) {
-        
+
     }];
-    
+
     // WHEN
     [self initializePaymentView];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onInitialized]);
 }
@@ -205,13 +206,13 @@
             [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaLoadedWithPaymentView:self.actualPaymentViewMock];
         });
     [self.paymentViewWrapper setOnLoaded:^(NSDictionary *body) {
-        
+
     }];
-    
+
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper loadPaymentViewWithSessionData:NULL];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onLoaded]);
 }
@@ -223,13 +224,13 @@
             [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaLoadedPaymentReviewWithPaymentView:self.actualPaymentViewMock];
         });
     [self.paymentViewWrapper setOnLoadedPaymentReview:^(NSDictionary *body) {
-        
+
     }];
-    
+
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper loadPaymentReview];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onLoadedPaymentReview]);
 }
@@ -241,13 +242,13 @@
             [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaAuthorizedWithPaymentView:self.actualPaymentViewMock approved:true authToken:@"authToken" finalizeRequired:true];
         });
     [self.paymentViewWrapper setOnAuthorized:^(NSDictionary *body) {
-        
+
     }];
-    
+
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper authorizePaymentViewWithAutoFinalize:false sessionData:NULL];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onAuthorized]);
 }
@@ -259,13 +260,13 @@
             [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaReauthorizedWithPaymentView:self.actualPaymentViewMock approved:true authToken:@"authToken"];
         });
     [self.paymentViewWrapper setOnReauthorized:^(NSDictionary *body) {
-        
+
     }];
-    
+
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper reauthorizePaymentViewWithSessionData:NULL];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onReauthorized]);
 }
@@ -277,13 +278,13 @@
             [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper) klarnaFinalizedWithPaymentView:self.actualPaymentViewMock approved:true authToken:@"authToken"];
         });
     [self.paymentViewWrapper setOnFinalized:^(NSDictionary *body) {
-        
+
     }];
-    
+
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper finalizePaymentViewWithSessionData:NULL];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onFinalized]);
 }
@@ -302,13 +303,13 @@
                     klarnaFailedInPaymentView:self.actualPaymentViewMock withError:mockError];
         });
     [self.paymentViewWrapper setOnError:^(NSDictionary *body) {
-        
+
     }];
-    
+
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper finalizePaymentViewWithSessionData:NULL];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onError]);
 }
@@ -324,9 +325,10 @@
     // WHEN
     [self initializePaymentView];
     [self.paymentViewWrapper loadPaymentViewWithSessionData:NULL];
-    
+
     // THEN
     OCMVerify([self.paymentViewWrapper onResized]);
 }
 
 @end
+#endif // !RCT_NEW_ARCH_ENABLED

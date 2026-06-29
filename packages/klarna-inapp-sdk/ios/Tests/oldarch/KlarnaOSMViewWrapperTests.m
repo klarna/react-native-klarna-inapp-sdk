@@ -1,10 +1,12 @@
 #import <XCTest/XCTest.h>
+
+#if !RCT_NEW_ARCH_ENABLED
 #import <OCMock/OCMock.h>
 #import <React/RCTComponent.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
-#import "../Sources/view/KlarnaOSMViewWrapper.h"
+#import "../../Sources/view/KlarnaOSMViewWrapper.h"
 
 @interface KlarnaOSMViewWrapper () <KlarnaEventHandler, KlarnaSizingDelegate>
 
@@ -448,3 +450,4 @@
 }
 
 @end
+#endif // !RCT_NEW_ARCH_ENABLED

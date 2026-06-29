@@ -77,6 +77,10 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
 
   return (
     <View style={[styles.column, { backgroundColor: theme.background }]}>
+      <Text style={{ color: 'orange', padding: 8, textAlign: 'center' }}>
+        ⚠️ Deprecated: KCO has been migrated to Kustom Mobile SDK and is no
+        longer supported in the react-native-klarna-inapp-sdk.
+      </Text>
       <View style={styles.columnHeader}>
         {renderSnippetInput()}
         <View style={styles.buttonsContainer}>

@@ -2,6 +2,7 @@ import Foundation
 import KlarnaCore
 import KlarnaNetworkCore
 import KlarnaNetworkPayment
+import KlarnaNetworkPaymentButton
 @_spi(RNKlarnaNetworkCore) import react_native_klarna_network_core
 
 @objc(KlarnaPaymentButtonViewImpl)
