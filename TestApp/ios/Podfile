@@ -19,6 +19,10 @@ end
 target 'TestApp' do
   config = use_native_modules!
 
+  pod 'react-native-klarna-inapp-sdk',
+    :path => '../../node_modules/react-native-klarna-inapp-sdk',
+    :testspecs => ['Tests']
+
   pod 'react-native-klarna-network-core',
     :path => '../../node_modules/@klarna/react-native-klarna-network-core',
     :testspecs => ['Tests']

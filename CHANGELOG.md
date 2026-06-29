@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2026-06-29
+
+- Updated the native iOS SDK version to 2.12.0
+- Updated the native Android SDK version to 2.12.0
+- :warning: **Deprecation**: KCO integrations and support has been officially deprecated and will be removed in future versions of the klarna-inapp-sdk package. Please migrate to [Kustom Mobile SDK](https://docs.kustom.co/contents/checkout/integrate-kco-in-your-mobile/introduction) if you are integrating KCO via `KlarnaCheckoutView`, `KlarnaHybridSDK` or `KlarnaStandaloneWebView`.
+
 ## [2.7.0] - 2026-06-10
 
 - Added Klarna Network Payment and payment button integration via the new `@klarna/react-native-klarna-network-payment` package.

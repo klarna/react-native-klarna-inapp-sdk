@@ -1,9 +1,11 @@
 #import <XCTest/XCTest.h>
+
+#if !RCT_NEW_ARCH_ENABLED
 #import <OCMock/OCMock.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
-#import "../Sources/view/KlarnaStandaloneWebViewWrapper.h"
+#import "../../Sources/view/KlarnaStandaloneWebViewWrapper.h"
 
 @interface KlarnaStandaloneWebViewWrapper ()
 
@@ -103,3 +105,4 @@
 }
 
 @end
+#endif // !RCT_NEW_ARCH_ENABLED

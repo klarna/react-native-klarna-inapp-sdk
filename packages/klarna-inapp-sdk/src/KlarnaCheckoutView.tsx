@@ -11,6 +11,9 @@ import RNKlarnaCheckoutView, {
   type RNKlarnaCheckoutViewProps,
 } from './specs/KlarnaCheckoutViewNativeComponent';
 
+/**
+ * @deprecated KCO has been migrated to Kustom Mobile SDK and is no longer supported in the react-native-klarna-inapp-sdk.
+ */
 export interface KlarnaCheckoutViewProps {
   style?: ViewStyle;
   readonly returnUrl: string;
@@ -21,7 +24,9 @@ export interface KlarnaCheckoutViewProps {
 interface KlarnaCheckoutViewState {
   nativeViewHeight: number;
 }
-
+/**
+ * @deprecated KCO has been migrated to Kustom Mobile SDK and is no longer supported in the react-native-klarna-inapp-sdk.
+ */
 export class KlarnaCheckoutView extends Component<
   KlarnaCheckoutViewProps,
   KlarnaCheckoutViewState
