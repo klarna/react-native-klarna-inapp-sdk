@@ -19,8 +19,8 @@ Pod::Spec.new do |s|
 
   install_modules_dependencies(s)
 
-  s.dependency 'KlarnaMobileSDK/KlarnaNetworkPayment', '2.12.0'
-  s.dependency 'KlarnaMobileSDK/KlarnaNetworkPaymentButton', '2.12.0'
+  s.dependency 'KlarnaMobileSDK/KlarnaNetworkPayment', '2.13.1'
+  s.dependency 'KlarnaMobileSDK/KlarnaNetworkPaymentButton', '2.13.1'
   s.dependency 'react-native-klarna-network-core', s.version.to_s
 
   s.test_spec 'Tests' do |ts|

@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   install_modules_dependencies(s)
 
-  s.dependency 'KlarnaMobileSDK/KlarnaNetworkMessaging', '2.12.0'
+  s.dependency 'KlarnaMobileSDK/KlarnaNetworkMessaging', '2.13.1'
   s.dependency 'react-native-klarna-network-core', s.version.to_s
 
   s.test_spec 'Tests' do |ts|
