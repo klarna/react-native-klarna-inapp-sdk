@@ -11,10 +11,11 @@ currently has the following components:
 
 - `KlarnaPaymentView` to integrate Klarna Payments
 - `KlarnaStandaloneWebView` to integrate Klarna Standalone WebView
-- `KlarnaCheckoutView` to integrate Klarna Checkout
 - `KlarnaSignInSDK` to integrate Klarna Sign In
 - `KlarnaOSMView` to integrate Klarna On-site Messaging
 - `KlarnaExpressCheckoutView` to integrate Klarna Express Checkout
+
+**Important:** ⚠️ _KCO integrations and support has been officially deprecated and will be removed in future versions of the SDK. Please migrate to [Kustom Mobile SDK](https://docs.kustom.co/contents/checkout/integrate-kco-in-your-mobile/introduction) if you are integrating KCO via `KlarnaCheckoutView`, or `KlarnaStandaloneWebView`._
 
 This repository also includes a test application that you can use to see how different integrations work.
 

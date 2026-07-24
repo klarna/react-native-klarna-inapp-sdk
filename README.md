@@ -7,12 +7,12 @@ This is a **Yarn workspaces monorepo** containing all Klarna React Native SDK pa
 
 ## Packages
 
-| Package                                                                                        | Description                                                                      |
-| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [`react-native-klarna-inapp-sdk`](packages/klarna-inapp-sdk/README.md)                         | Klarna payment views, checkout, sign-in, and standalone webview components       |
-| [`@klarna/react-native-klarna-network-core`](packages/klarna-network-core/README.md)           | Core network module shared by Klarna Network SDKs                                |
-| [`@klarna/react-native-klarna-network-messaging`](packages/klarna-network-messaging/README.md) | Klarna Network messaging placements (Fabric `KlarnaMessagingPlacementView`)      |
-| [`@klarna/react-native-klarna-network-payment`](packages/klarna-network-payment/README.md)     | Klarna Network payment request and payment button (Fabric `KlarnaPaymentButton`) |
+| Package                                                                                        | Description                                                                                |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [`react-native-klarna-inapp-sdk`](packages/klarna-inapp-sdk/README.md)                         | Klarna payment views, checkout (⚠️ deprecated), sign-in, and standalone webview components |
+| [`@klarna/react-native-klarna-network-core`](packages/klarna-network-core/README.md)           | Core network module shared by Klarna Network SDKs                                          |
+| [`@klarna/react-native-klarna-network-messaging`](packages/klarna-network-messaging/README.md) | Klarna Network messaging placements (Fabric `KlarnaMessagingPlacementView`)                |
+| [`@klarna/react-native-klarna-network-payment`](packages/klarna-network-payment/README.md)     | Klarna Network payment request and payment button (Fabric `KlarnaPaymentButton`)           |
 
 ## SDK for Other Platforms
 
