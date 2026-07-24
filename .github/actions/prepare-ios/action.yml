@@ -7,7 +7,7 @@ runs:
     - name: Select Xcode
       shell: bash
       run: |
-        sudo xcode-select -s /Applications/Xcode_26.0.1.app
+        sudo xcode-select -s /Applications/Xcode_26.3.app
         xcodebuild -version
     - name: Cache Pods
       uses: actions/cache@v4
