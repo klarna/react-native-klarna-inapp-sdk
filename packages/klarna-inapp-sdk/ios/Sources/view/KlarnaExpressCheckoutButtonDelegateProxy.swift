@@ -2,16 +2,19 @@ import Foundation
 import KlarnaCore
 import KlarnaPayments
 
+// KEC types are qualified with `KlarnaPayments.` to avoid an "ambiguous for type
+// lookup" error: the `KlarnaMobileSDK` umbrella also re-exports them as typealiases.
+
 /// A Swift class that implements the pure-Swift `KlarnaExpressCheckoutButtonDelegate` protocol
 /// and forwards events to closures that can be set from Obj-C++ wrapper code.
-@objc public class KlarnaExpressCheckoutButtonDelegateProxy: NSObject, KlarnaExpressCheckoutButtonDelegate {
+@objc public class KlarnaExpressCheckoutButtonDelegateProxy: NSObject, KlarnaPayments.KlarnaExpressCheckoutButtonDelegate {
 
     @objc public var onAuthorizedHandler: ((_ response: NSDictionary) -> Void)?
     @objc public var onErrorHandler: ((_ name: String, _ message: String, _ isFatal: Bool) -> Void)?
 
     public func onAuthorized(
-        view: KlarnaExpressCheckoutButton,
-        response: KlarnaExpressCheckoutButtonAuthorizationResponse
+        view: KlarnaPayments.KlarnaExpressCheckoutButton,
+        response: KlarnaPayments.KlarnaExpressCheckoutButtonAuthorizationResponse
     ) {
         let responseDict: NSDictionary = [
             "showForm": response.showForm,
@@ -28,7 +31,7 @@ import KlarnaPayments
     }
 
     public func onError(
-        view: KlarnaExpressCheckoutButton,
+        view: KlarnaPayments.KlarnaExpressCheckoutButton,
         error: KlarnaError
     ) {
         onErrorHandler?(error.name, error.message, error.isFatal)
@@ -54,18 +57,18 @@ import KlarnaPayments
         sessionData: String?,
         environment: String?,
         region: String?
-    ) -> KlarnaExpressCheckoutButton? {
+    ) -> KlarnaPayments.KlarnaExpressCheckoutButton? {
         // Build session options based on the explicit sessionType.
-        let sessionOptions: KlarnaExpressCheckoutSessionOptions
+        let sessionOptions: KlarnaPayments.KlarnaExpressCheckoutSessionOptions
         if sessionType == "clientToken" {
-            sessionOptions = KlarnaExpressCheckoutSessionOptions.ServerSideSession(
+            sessionOptions = KlarnaPayments.KlarnaExpressCheckoutSessionOptions.ServerSideSession(
                 clientToken: clientToken ?? "",
                 autoFinalize: autoFinalize,
                 collectShippingAddress: collectShippingAddress,
                 sessionData: sessionData
             )
         } else {
-            sessionOptions = KlarnaExpressCheckoutSessionOptions.ClientSideSession(
+            sessionOptions = KlarnaPayments.KlarnaExpressCheckoutSessionOptions.ClientSideSession(
                 clientId: clientId ?? "",
                 sessionData: sessionData ?? "",
                 autoFinalize: autoFinalize,
@@ -103,7 +106,7 @@ import KlarnaPayments
             }
         }
 
-        let styleConfig = KlarnaExpressCheckoutButtonStyleConfiguration(
+        let styleConfig = KlarnaPayments.KlarnaExpressCheckoutButtonStyleConfiguration(
             theme: buttonTheme,
             shape: buttonShape,
             style: klarnaButtonStyle
@@ -130,7 +133,7 @@ import KlarnaPayments
             }
         }
 
-        let options = KlarnaExpressCheckoutButtonOptions(
+        let options = KlarnaPayments.KlarnaExpressCheckoutButtonOptions(
             sessionOptions: sessionOptions,
             returnUrl: returnUrl,
             delegate: delegate,
@@ -140,6 +143,6 @@ import KlarnaPayments
             region: klarnaRegion
         )
 
-        return KlarnaExpressCheckoutButton(options: options)
+        return KlarnaPayments.KlarnaExpressCheckoutButton(options: options)
     }
 }
