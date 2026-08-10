@@ -1,12 +1,13 @@
 {
   "name": "TestApp",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android --appId com.klarna.mobile.sdk.reactnative.testapp.debug",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
+    "test:android": "cd android && ./gradlew testDebugUnitTest --console=verbose",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
     "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
@@ -16,7 +17,8 @@
     "bundle:ios": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle",
     "bundle:ios-dev": "react-native bundle --platform ios --dev true --entry-file index.js --bundle-output ios/main.jsbundle",
     "build:android": "cd android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a",
-    "build:ios": "cd ios && xcodebuild -workspace TestApp.xcworkspace -scheme TestApp -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO"
+    "build:ios": "cd ios && xcodebuild -workspace TestApp.xcworkspace -scheme TestApp -configuration Debug -sdk iphonesimulator -derivedDataPath ./DerivedData CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO",
+    "pods": "cd ios && BUNDLE_GEMFILE=../Gemfile bundle exec pod install"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.0",

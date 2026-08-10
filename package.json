@@ -1,6 +1,6 @@
 {
   "name": "klarna-mobile-sdk-monorepo",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -26,9 +26,10 @@
     "prettier:fix": "prettier --write \"{,packages/**/,TestApp/**/}*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "test": "yarn workspaces foreach --all --parallel run test",
     "test:ios": "yarn workspaces foreach --all run test:ios",
-    "test:android": "cd TestApp/android && ./gradlew testDebugUnitTest --console=verbose && cd ../..",
+    "test:android": "yarn workspace TestApp test:android",
     "run:ios": "yarn workspace TestApp ios",
     "run:android": "yarn workspace TestApp android",
+    "pods": "yarn workspace TestApp pods",
     "typecheck": "yarn workspaces foreach --all --parallel run typecheck",
     "build:android": "yarn workspace TestApp build:android",
     "build:ios": "yarn workspace TestApp build:ios",
