@@ -1,3 +1,3 @@
 ext.klarnaNetworkVersions = [
-  klarnaMobileSdkVersion: "2.13.1"
+  klarnaMobileSdkVersion: "2.14.0"
 ]
