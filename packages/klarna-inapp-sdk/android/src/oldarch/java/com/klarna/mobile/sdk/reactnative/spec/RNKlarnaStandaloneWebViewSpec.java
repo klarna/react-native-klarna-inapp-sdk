@@ -20,4 +20,6 @@ public abstract class RNKlarnaStandaloneWebViewSpec<T extends View> extends Simp
     public abstract void goBack(T view);
 
     public abstract void reload(T view);
+
+    public abstract void stopLoading(T view);
 }

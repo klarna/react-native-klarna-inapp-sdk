@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -41,6 +40,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     public static final String COMMAND_GO_FORWARD = "goForward";
     public static final String COMMAND_GO_BACK = "goBack";
     public static final String COMMAND_RELOAD = "reload";
+    public static final String COMMAND_STOP_LOADING = "stopLoading";
 
     private static final String OVER_SCROLL_MODE_ALWAYS = "always";
     private static final String OVER_SCROLL_MODE_CONTENT = "content";
@@ -76,6 +76,10 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
 
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, @Nullable WebResourceRequest request, @Nullable WebResourceError error) {
+            // Do not send a navigation error event if the request is not for the main frame.
+            if (request != null && !request.isForMainFrame()) {
+                return;
+            }
             if (error != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 klarnaStandaloneWebViewEventSender.sendNavigationErrorEvent(view, error.getErrorCode(), error.getDescription().toString());
             }
@@ -178,6 +182,9 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
             case COMMAND_RELOAD:
                 reload(root);
                 break;
+            case COMMAND_STOP_LOADING:
+                stopLoading(root);
+                break;
         }
     }
 
@@ -199,6 +206,11 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     @Override
     public void reload(KlarnaStandaloneWebView view) {
         view.reload();
+    }
+
+    @Override
+    public void stopLoading(KlarnaStandaloneWebView view) {
+        view.stopLoading();
     }
 
     /**

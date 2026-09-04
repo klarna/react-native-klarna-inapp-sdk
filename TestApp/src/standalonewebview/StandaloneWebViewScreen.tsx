@@ -96,6 +96,19 @@ export default function StandaloneWebViewScreen() {
     );
   };
 
+  const renderStopLoadingButton = () => {
+    return (
+      <View>
+        <Button
+          onPress={() => {
+            klarnaStandaloneWebViewRef.current?.stopLoading();
+          }}
+          title="Stop Loading"
+        />
+      </View>
+    );
+  };
+
   return (
     <View
       /* eslint-disable-next-line react-native/no-inline-styles */
@@ -118,6 +131,7 @@ export default function StandaloneWebViewScreen() {
       <View style={styles.buttonsContainer}>
         {renderLoadUrlButton()}
         {renderReloadButton()}
+        {renderStopLoadingButton()}
         {renderGoBackButton()}
         {renderGoForwardButton()}
       </View>
