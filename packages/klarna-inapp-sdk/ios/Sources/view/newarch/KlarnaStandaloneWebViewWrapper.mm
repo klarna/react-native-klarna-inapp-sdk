@@ -123,7 +123,7 @@ NSString *const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         static const auto defaultProps = std::make_shared<const RNKlarnaStandaloneWebViewProps>();
         _props = defaultProps;
     }
-    
+
     return self;
 }
 
@@ -209,6 +209,13 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFailProvisionalNavigation:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
+    // A cancelled navigation is not a failure. WebKit reports NSURLErrorCancelled for a
+    // deliberate stopLoading, for redirects, and when a new load starts before the previous
+    // one finished, so reporting it as onError would send false errors to integrators.
+    if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+        return;
+    }
+
     if (_eventEmitter) {
         RCTLogInfo(@"Sending onError event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
@@ -229,6 +236,13 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFail:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
+    // A cancelled navigation is not a failure. WebKit reports NSURLErrorCancelled for a
+    // deliberate stopLoading, for redirects, and when a new load starts before the previous
+    // one finished, so reporting it as onError would send false errors to integrators.
+    if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+        return;
+    }
+
     if (_eventEmitter) {
         RCTLogInfo(@"Sending onError event");
         std::dynamic_pointer_cast<const RNKlarnaStandaloneWebViewEventEmitter>(_eventEmitter)
@@ -292,15 +306,19 @@ Class<RCTComponentViewProtocol>RNKlarnaStandaloneWebViewCls(void)
     [self.klarnaStandaloneWebView reload];
 }
 
+- (void)stopLoading {
+    [self.klarnaStandaloneWebView stopLoading];
+}
+
 - (NSString *)serializeDictionaryToJsonString:(NSDictionary<NSString *, id<NSCoding>> *)dictionary {
     if (!dictionary) {
         RCTLog(@"Dictionary is nil");
         return @"{}";
     }
-    
+
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&error];
-    
+
     if (!jsonData) {
         return @"{}";
     } else {

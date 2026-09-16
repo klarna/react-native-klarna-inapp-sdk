@@ -106,10 +106,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   buttonsContainer: {
-    width: '100%',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'center',
+    rowGap: 8,
     margin: 10,
   },
   button: {
