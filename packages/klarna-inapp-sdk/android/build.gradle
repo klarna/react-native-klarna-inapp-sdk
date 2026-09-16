@@ -114,7 +114,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:${getExtOrDefault('kotlinVersion')}"
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
 
-    implementation 'com.klarna.mobile:sdk:2.13.1'
+    implementation 'com.klarna.mobile:sdk:2.14.1'
     // Required: KlarnaExpressCheckoutButton extends ConstraintLayout.
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
@@ -125,6 +125,8 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:3.12.4"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${getExtOrDefault('kotlinVersion')}"
     testImplementation "io.mockk:mockk:1.14.5"
+    // JavaScript engine, so tests can parse the scripts we inject into web views.
+    testImplementation "org.mozilla:rhino:1.7.15.1"
 }
 
 // removed from the docs but we can keep it

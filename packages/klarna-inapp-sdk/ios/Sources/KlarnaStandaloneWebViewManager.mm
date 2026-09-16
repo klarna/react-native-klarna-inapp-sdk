@@ -71,4 +71,15 @@ RCT_EXPORT_METHOD(reload:(nonnull NSNumber*)reactTag) {
     }];
 }
 
+RCT_EXPORT_METHOD(stopLoading:(nonnull NSNumber*)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        KlarnaStandaloneWebViewWrapper* view = (KlarnaStandaloneWebViewWrapper*) viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:KlarnaStandaloneWebViewWrapper.class]) {
+            RCTLogError(@"Can't find KlarnaStandaloneWebViewWrapper with tag #%@", reactTag);
+            return;
+        }
+        [view stopLoading];
+    }];
+}
+
 @end

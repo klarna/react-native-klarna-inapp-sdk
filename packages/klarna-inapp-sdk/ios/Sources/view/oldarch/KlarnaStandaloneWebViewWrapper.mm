@@ -53,7 +53,7 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
     [event addEntriesFromDictionary:@{
           @"progress": [NSNumber numberWithDouble: progress] // could use self.klarnaStandaloneWebView.estimatedProgress
         }];
-    
+
     self.onLoadProgress(@{@"progressEvent": event});
 
 }
@@ -137,6 +137,10 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
     [self.klarnaStandaloneWebView reload];
 }
 
+- (void)stopLoading {
+    [self.klarnaStandaloneWebView stopLoading];
+}
+
 #pragma mark - KlarnaStandaloneWebViewDelegate methods
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didCommit:(WKNavigation * _Nonnull)navigation {
@@ -158,6 +162,13 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFailProvisionalNavigation:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
+    // A cancelled navigation is not a failure. WebKit reports NSURLErrorCancelled for a
+    // deliberate stopLoading, for redirects, and when a new load starts before the previous
+    // one finished, so reporting it as onError would send false errors to integrators.
+    if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+        return;
+    }
+
     if (!self.onError) {
         RCTLog(@"Missing 'onError' callback prop.");
         return;
@@ -171,6 +182,13 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFail:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
+    // A cancelled navigation is not a failure. WebKit reports NSURLErrorCancelled for a
+    // deliberate stopLoading, for redirects, and when a new load starts before the previous
+    // one finished, so reporting it as onError would send false errors to integrators.
+    if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+        return;
+    }
+
     if (!self.onError) {
         RCTLog(@"Missing 'onError' callback prop.");
         return;
@@ -190,7 +208,7 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         RCTLog(@"Missing 'onKlarnaMessage' callback prop.");
         return;
     }
-    
+
     self.onKlarnaMessage(@{
         @"klarnaMessageEvent": @{
             @"action": event.action,
@@ -210,10 +228,10 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         RCTLog(@"Dictionary is nil");
         return @"{}";
     }
-    
+
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&error];
-    
+
     if (!jsonData) {
         return @"{}";
     } else {

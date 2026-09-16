@@ -4,6 +4,8 @@ import android.os.Build;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.lang.ref.WeakReference;
 
 public class WebViewResizeObserver {
@@ -21,6 +23,8 @@ public class WebViewResizeObserver {
     }
 
     private static final String JS_INTERFACE_NAME = "NativeResizeObserver";
+    @VisibleForTesting
+    static final String JS_PAYMENT_OBSERVER_HANDLE = "__klarnaRnPaymentResizeObserver";
     private final WeakReference<WebViewResizeObserverCallback> callback;
     private final TargetElement targetElement;
 
@@ -106,14 +110,25 @@ public class WebViewResizeObserver {
                         "            if (listener != null) {\n" +
                         "                listener.onResized(height);\n" +
                         "                console.log('Container size sent to native: ', height);\n" +
+                        "            } else {\n" +
+                        "                console.error('Native resize observer not found.');\n" +
                         "            }\n" +
+                        "        } else {\n" +
+                        "            console.error('Content rect not found.');\n" +
                         "        }\n" +
                         "    }\n" +
                         "});\n");
                 scriptBuilder.append("console.log('Resize observer initialized.');\n");
                 scriptBuilder.append("if (container != null) {\n" +
+                        "    if (typeof (window." + JS_PAYMENT_OBSERVER_HANDLE + " || {}).disconnect === 'function') {\n" +
+                        "        window." + JS_PAYMENT_OBSERVER_HANDLE + ".disconnect();\n" +
+                        "        console.log('Previous resize observer disconnected.');\n" +
+                        "    }\n" +
+                        "    window." + JS_PAYMENT_OBSERVER_HANDLE + " = resizeObserver;\n" +
                         "    resizeObserver.observe(container);\n" +
                         "    console.log('Resize observer set to component.');\n" +
+                        "} else {\n" +
+                        "    console.error('Resize observer container not found.');\n" +
                         "}\n");
                 scriptBuilder.append("console.log('Resize observer injection finished.');");
                 break;
@@ -140,34 +155,6 @@ public class WebViewResizeObserver {
                         "             });\n");
                 break;
         }
-        scriptBuilder.append("console.log('Resize observer container selected: ', container);\n" +
-                "const containerHeight = container.offsetHeight;\n" +
-                "console.log('Container height: ', containerHeight);\n");
-        scriptBuilder.append("const resizeObserver = new ResizeObserver((entries) => {\n" +
-                "    console.log('Container size changed.', entries);\n" +
-                "    for (let entry of entries) {\n" +
-                "        console.log('New dimensions found: ', entry);\n" +
-                "        if (entry.contentRect) {\n" +
-                "            const height = entry.contentRect.height;\n" +
-                "            const listener = window.NativeResizeObserver;\n" +
-                "            if (listener != null) {\n" +
-                "                listener.onResized(height);\n" +
-                "                console.log('Container size sent to native: ', height);\n" +
-                "            } else {\n" +
-                "                console.error('Native resize observer not found.');\n" +
-                "            }\n" +
-                "        } else {\n" +
-                "            console.error('Content rect not found.');\n" +
-                "        }\n" +
-                "    }\n" +
-                "});\n");
-        scriptBuilder.append("console.log('Resize observer initialized.');\n");
-        scriptBuilder.append("if (container != null) {\n" +
-                "    resizeObserver.observe(container);\n" +
-                "    console.log('Resize observer set to component.');\n" +
-                "}\n");
-        scriptBuilder.append("console.log('Resize observer injection finished.');");
-
         return scriptBuilder.toString();
     }
 }

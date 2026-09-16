@@ -39,6 +39,8 @@ export class KlarnaStandaloneWebView extends Component<
     Component<RNKlarnaStandaloneWebViewProps> & Readonly<NativeMethods>
   >;
 
+  private shouldSuppressStopEvent: boolean = false;
+
   constructor(props: KlarnaWebViewProps) {
     super(props);
     this.standaloneWebViewRef = React.createRef();
@@ -65,6 +67,7 @@ export class KlarnaStandaloneWebView extends Component<
             }>
           >
         ) => {
+          this.shouldSuppressStopEvent = false;
           if (this.props.onLoadStart != null) {
             this.props.onLoadStart(event.nativeEvent.navigationEvent);
           }
@@ -82,6 +85,13 @@ export class KlarnaStandaloneWebView extends Component<
             }>
           >
         ) => {
+          // On Android, stopping a load triggers the platform's page finished
+          // callback, which arrives here as onLoadEnd alongside onLoadProgress
+          // updates of 100. All of them are dropped so that stopLoading()
+          // emits nothing on either platform.
+          if (this.shouldSuppressStopEvent) {
+            return;
+          }
           if (this.props.onLoadEnd != null) {
             this.props.onLoadEnd(event.nativeEvent.navigationEvent);
           }
@@ -101,6 +111,7 @@ export class KlarnaStandaloneWebView extends Component<
             }>
           >
         ) => {
+          this.shouldSuppressStopEvent = false;
           if (this.props.onError != null) {
             this.props.onError(event.nativeEvent.error);
           }
@@ -119,6 +130,13 @@ export class KlarnaStandaloneWebView extends Component<
             }>
           >
         ) => {
+          // A stopped load reports no further progress. Android reports it as
+          // a finished page, with progress 100 more than once, and updates that
+          // were already in flight can arrive after the stop as well. The flag
+          // stays armed until the next load starts, so all of them are dropped.
+          if (this.shouldSuppressStopEvent) {
+            return;
+          }
           if (this.props.onLoadProgress != null) {
             this.props.onLoadProgress(event.nativeEvent.progressEvent);
           }
@@ -189,6 +207,14 @@ export class KlarnaStandaloneWebView extends Component<
     const view = this.standaloneWebViewRef.current;
     if (view != null) {
       RNKlarnaStandaloneWebViewCommands.reload(view);
+    }
+  };
+
+  stopLoading = () => {
+    const view = this.standaloneWebViewRef.current;
+    if (view != null) {
+      this.shouldSuppressStopEvent = true;
+      RNKlarnaStandaloneWebViewCommands.stopLoading(view);
     }
   };
 }

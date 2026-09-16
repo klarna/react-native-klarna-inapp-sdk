@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2026-09-16
+
+- Added a `stopLoading` method to `KlarnaStandaloneWebView` to cancel an in-progress page load.
+- Fixed the Klarna payment view on Android not updating its height when its content size changed.
+- Updated the native Android SDK version to 2.14.1
+- Updated the native iOS SDK version to 2.13.2
+
 ## [2.8.2] - 2026-08-07
 
 - Fixed an iOS build failure for Klarna Express Checkout (KEC) caused by an ambiguous `KlarnaExpressCheckoutButton` type lookup between the `KlarnaPayments` and `KlarnaMobileSDK` modules.
