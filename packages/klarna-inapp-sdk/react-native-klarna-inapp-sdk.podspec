@@ -42,7 +42,7 @@ Pod::Spec.new do |s|
     end
   end
 
-  s.dependency 'KlarnaMobileSDK', '2.13.2'
+  s.dependency 'KlarnaMobileSDK', '2.14.0'
 
   s.test_spec 'Tests' do |ts|
     ts.source_files = 'ios/Tests/**/*.{h,m,mm,swift}'

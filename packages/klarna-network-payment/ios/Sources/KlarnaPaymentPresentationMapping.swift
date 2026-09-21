@@ -46,17 +46,20 @@ private extension KlarnaPaymentPresentationPaymentOption {
     }
 }
 
-private extension KlarnaPaymentPresentationText {
+private extension KlarnaPaymentPresentationText.PlainText {
     func toDictionary() -> NSDictionary {
         let dict = NSMutableDictionary()
-        switch self {
-        case .plainText(let text):
-            dict["type"] = "plainText"
-            dict["text"] = text
-        case .attributedText(let parts):
-            dict["type"] = "attributedText"
-            dict["parts"] = parts?.map { $0.toDictionary() } ?? NSNull()
-        }
+        dict["type"] = "plainText"
+        dict["text"] = text
+        return dict
+    }
+}
+
+private extension KlarnaPaymentPresentationText.AttributedText {
+    func toDictionary() -> NSDictionary {
+        let dict = NSMutableDictionary()
+        dict["type"] = "attributedText"
+        dict["parts"] = parts?.map { $0.toDictionary() } ?? NSNull()
         return dict
     }
 }
@@ -65,7 +68,7 @@ private extension KlarnaPaymentPresentationTextPart {
     func toDictionary() -> NSDictionary {
         let dict = NSMutableDictionary()
         switch self {
-        case .plain(let styles, let text):
+        case .plainText(let styles, let text):
             dict["type"] = "plain"
             dict["text"] = text
             dict["styles"] = styles?.map { $0.rawValue } ?? NSNull()
