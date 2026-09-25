@@ -45,4 +45,9 @@ jobs:
           (cd TestApp/ios && pod install --verbose)
 
       - name: Run Unit Tests for iOS
+        # The macos-26 image puts the Metal toolchain ahead of XcodeDefault in TOOLCHAINS,
+        # so TOOLCHAIN_DIR resolves to Metal.xctoolchain, which lacks the Swift back-deploy
+        # libs (swiftCompatibility56) and the ObjC-only test bundle fails to link.
+        env:
+          TOOLCHAINS: com.apple.dt.toolchain.XcodeDefault
         run: yarn test:ios
