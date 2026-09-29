@@ -10,7 +10,7 @@ runs:
         sudo xcode-select -s /Applications/Xcode_26.3.app
         xcodebuild -version
     - name: Cache Pods
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           TestApp/ios/Pods
