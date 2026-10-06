@@ -1,0 +1,4 @@
+if [ -z "${KEP_CANCEL_TRAP:-}" ]; then
+  export KEP_CANCEL_TRAP=1
+  trap '[ $? -eq 75 ] && : > "$WORKSPACE/.kepci.cancelled"' EXIT
+fi
