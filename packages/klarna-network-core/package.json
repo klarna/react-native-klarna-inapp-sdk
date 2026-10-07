@@ -1,6 +1,6 @@
 {
   "name": "@klarna/react-native-klarna-network-core",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "description": "React Native package for Klarna Network SDK initialization and configuration",
   "main": "./src/index.tsx",
   "codegenConfig": {
@@ -66,7 +66,7 @@
   "scripts": {
     "prepack": "bob build",
     "test": "jest",
-    "test:ios": "xcodebuild test -workspace ../../TestApp/ios/TestApp.xcworkspace -scheme 'react-native-klarna-network-core-Unit-Tests' -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath build/DerivedData",
+    "test:ios": "bash -c 'if [ -f ../../scripts/run-ios-tests.sh ]; then bash ../../scripts/run-ios-tests.sh \"$0\"; else xcodebuild test -workspace ../../TestApp/ios/TestApp.xcworkspace -scheme \"$0\" -destination \"platform=iOS Simulator,name=iPhone 17 Pro\" -derivedDataPath build/DerivedData; fi' react-native-klarna-network-core-Unit-Tests",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
     "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
