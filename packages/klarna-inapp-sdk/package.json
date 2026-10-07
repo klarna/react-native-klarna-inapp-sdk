@@ -1,7 +1,7 @@
 {
   "name": "react-native-klarna-inapp-sdk",
   "title": "Klarna Mobile SDK React Native",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "description": "React Native package for Klarna Mobile SDK.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -37,7 +37,7 @@
     "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
     "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "test:ios": "xcodebuild test -workspace ../../TestApp/ios/TestApp.xcworkspace -scheme 'react-native-klarna-inapp-sdk-Unit-Tests' -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath build/DerivedData",
+    "test:ios": "bash -c 'if [ -f ../../scripts/run-ios-tests.sh ]; then bash ../../scripts/run-ios-tests.sh \"$0\"; else xcodebuild test -workspace ../../TestApp/ios/TestApp.xcworkspace -scheme \"$0\" -destination \"platform=iOS Simulator,name=iPhone 17 Pro\" -derivedDataPath build/DerivedData; fi' react-native-klarna-inapp-sdk-Unit-Tests",
     "TestApp": "yarn --cwd ../../TestApp"
   },
   "keywords": [
