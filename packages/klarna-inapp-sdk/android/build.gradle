@@ -48,7 +48,11 @@ plugins {
     id "org.jetbrains.kotlin.plugin.serialization" version "1.9.25"
 }
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+// AGP 9 built-in Kotlin registers 'kotlin' itself; applying the plugin again fails.
+if (project.extensions.findByName('kotlin') == null) {
+    apply plugin: 'kotlin-android'
+}
+
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
 }
