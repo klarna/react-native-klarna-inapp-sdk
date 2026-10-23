@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 
-import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.uimanager.ThemedReactContext;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentViewCallback;
 import com.klarna.mobile.sdk.reactnative.common.WebViewResizeObserver;
@@ -25,12 +25,12 @@ public class PaymentViewWrapper extends LinearLayout implements WebViewResizeObs
 
     private final OnResizedListener onResizedListener;
 
-    public PaymentViewWrapper(ReactApplicationContext context, AttributeSet attrs, KlarnaPaymentViewCallback paymentViewCallback, OnResizedListener onResizedListener) {
+    public PaymentViewWrapper(ThemedReactContext context, AttributeSet attrs, KlarnaPaymentViewCallback paymentViewCallback, OnResizedListener onResizedListener) {
         super(context, attrs);
         this.onResizedListener = onResizedListener;
         // Add KlarnaPaymentView
         ViewGroup.LayoutParams webViewParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        paymentView = new KlarnaPaymentView(getReactAppContext().getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
+        paymentView = new KlarnaPaymentView(context.getCurrentActivity(), attrs); // Insure we use activity and not application context for dialogs.
         paymentView.registerPaymentViewCallback(paymentViewCallback);
         addView(paymentView, webViewParams);
         resizeObserver = new WebViewResizeObserver(this, WebViewResizeObserver.TargetElement.PAYMENT_CONTAINER);
@@ -60,13 +60,6 @@ public class PaymentViewWrapper extends LinearLayout implements WebViewResizeObs
             }
         }
         return null;
-    }
-
-    /**
-     * Returns the app context the wrapper was initialized with.
-     */
-    private ReactApplicationContext getReactAppContext() {
-        return (ReactApplicationContext) getContext();
     }
 
     @Override

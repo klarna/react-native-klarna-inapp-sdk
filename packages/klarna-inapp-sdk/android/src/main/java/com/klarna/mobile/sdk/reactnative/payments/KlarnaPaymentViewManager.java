@@ -3,7 +3,6 @@ package com.klarna.mobile.sdk.reactnative.payments;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -21,10 +20,12 @@ import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaPaymentViewSpec;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * Wraps the Payment Views being exposed to JS.
@@ -41,15 +42,11 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
 
     public static final String REACT_CLASS = "RNKlarnaPaymentView";
 
-    private final ReactApplicationContext reactAppContext;
+    // The views this manager created, so the SDK callbacks can find their wrapper.
+    private final Set<PaymentViewWrapper> wrappers = Collections.newSetFromMap(new WeakHashMap<>());
 
-    // Store a list of views to event dispatchers so we send up events via the right views.
-    private final Map<WeakReference<PaymentViewWrapper>, EventDispatcher> viewToDispatcher;
-
-    public KlarnaPaymentViewManager(ReactApplicationContext reactApplicationContext) {
+    public KlarnaPaymentViewManager() {
         super();
-        this.viewToDispatcher = new HashMap<>();
-        this.reactAppContext = reactApplicationContext;
     }
 
     @NonNull
@@ -61,12 +58,8 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     @NonNull
     @Override
     public PaymentViewWrapper createViewInstance(@NonNull ThemedReactContext context) {
-        PaymentViewWrapper view = new PaymentViewWrapper(reactAppContext, null, this, this);
-
-        // Each view has its own event dispatcher.
-        EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) view.getContext(), view.getId());
-        viewToDispatcher.put(new WeakReference<>(view), dispatcher);
-
+        PaymentViewWrapper view = new PaymentViewWrapper(context, null, this, this);
+        wrappers.add(view);
         return view;
     }
 
@@ -215,7 +208,9 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     private void postEventForView(String eventName, WritableMap additionalParams, PaymentViewWrapper wrapper) {
         if (wrapper != null) {
             KlarnaPaymentEvent event = new KlarnaPaymentEvent(wrapper.getId(), eventName, additionalParams);
-            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactAppContext, wrapper.getId());
+            // Use the view's own React context. On the old architecture RN reuses this manager after a JS reload,
+            // so a context stored when the manager was created no longer reaches JS.
+            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag((ReactContext) wrapper.getContext(), wrapper.getId());
             if (eventDispatcher != null) {
                 eventDispatcher.dispatchEvent(event);
             }
@@ -330,10 +325,8 @@ public class KlarnaPaymentViewManager extends RNKlarnaPaymentViewSpec<PaymentVie
     }
 
     private PaymentViewWrapper wrapperForPaymentView(KlarnaPaymentView paymentView) {
-        for (WeakReference<PaymentViewWrapper> reference : viewToDispatcher.keySet()) {
-            PaymentViewWrapper wrapper = reference.get();
-
-            if (wrapper != null && wrapper.paymentView == paymentView) {
+        for (PaymentViewWrapper wrapper : wrappers) {
+            if (wrapper.paymentView == paymentView) {
                 return wrapper;
             }
         }

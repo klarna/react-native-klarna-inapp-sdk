@@ -1,6 +1,7 @@
 package com.klarna.mobile.sdk.reactnative.standalonewebview;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 import android.webkit.RenderProcessGoneDetail;
@@ -10,14 +11,13 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
-import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaEventHandler;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
@@ -26,10 +26,9 @@ import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebView;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebViewClient;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaStandaloneWebViewSpec;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 
 public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpec<KlarnaStandaloneWebView> {
 
@@ -46,10 +45,11 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     private static final String OVER_SCROLL_MODE_CONTENT = "content";
     private static final String OVER_SCROLL_MODE_NEVER = "never";
 
-    // Store a list of views to event dispatchers so we send up events via the right views.
-    private final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher;
+    // The React context of each view, used to send its events. On the old architecture RN reuses this
+    // manager after a JS reload, so events can't go through a context stored when the manager was created.
+    // The context holds the host Activity, so onDropViewInstance removes the entry rather than leaving it to GC.
+    private final Map<KlarnaStandaloneWebView, ReactContext> viewToReactContext = new WeakHashMap<>();
     private final KlarnaStandaloneWebViewEventSender klarnaStandaloneWebViewEventSender;
-    private final ReactApplicationContext reactAppContext;
     private final KlarnaEventHandler klarnaEventHandler = new KlarnaEventHandler() {
         @Override
         public void onEvent(@NonNull KlarnaComponent klarnaComponent, @NonNull KlarnaProductEvent klarnaProductEvent) {
@@ -63,7 +63,8 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
             // Not used as of now
         }
     };
-    private final KlarnaStandaloneWebViewClient klarnaStandaloneWebViewClient = new KlarnaStandaloneWebViewClient() {
+    @VisibleForTesting
+    final KlarnaStandaloneWebViewClient klarnaStandaloneWebViewClient = new KlarnaStandaloneWebViewClient() {
         @Override
         public void onPageStarted(@Nullable KlarnaStandaloneWebView view, @Nullable String url, @Nullable Bitmap favicon) {
             klarnaStandaloneWebViewEventSender.sendNavigationEvent(view, KlarnaStandaloneWebViewEvent.Event.ON_LOAD_START, url);
@@ -81,13 +82,19 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
                 return;
             }
             if (error != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                klarnaStandaloneWebViewEventSender.sendNavigationErrorEvent(view, error.getErrorCode(), error.getDescription().toString());
+                Uri requestUrl = request != null ? request.getUrl() : null;
+                String failingUrl = requestUrl != null ? requestUrl.toString() : null;
+                klarnaStandaloneWebViewEventSender.sendNavigationErrorEvent(view, error.getErrorCode(), error.getDescription().toString(), failingUrl);
             }
         }
 
         @Override
         public void onReceivedError(@Nullable KlarnaStandaloneWebView view, int errorCode, @Nullable String description, @Nullable String failingUrl) {
-            klarnaStandaloneWebViewEventSender.sendNavigationErrorEvent(view, errorCode, description);
+            // From API 23, WebView reports main-frame errors to this deprecated callback as well as
+            // the one above, so only send the event here on older versions to send it once.
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                klarnaStandaloneWebViewEventSender.sendNavigationErrorEvent(view, errorCode, description, failingUrl);
+            }
         }
 
         @Override
@@ -105,11 +112,9 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         }
     };
 
-    public KlarnaStandaloneWebViewManager(ReactApplicationContext reactContext) {
+    public KlarnaStandaloneWebViewManager() {
         super();
-        this.reactAppContext = reactContext;
-        viewToDispatcher = new HashMap<>();
-        klarnaStandaloneWebViewEventSender = new KlarnaStandaloneWebViewEventSender(reactContext, viewToDispatcher);
+        klarnaStandaloneWebViewEventSender = new KlarnaStandaloneWebViewEventSender(viewToReactContext);
     }
 
     @ReactProp(name = "returnUrl")
@@ -236,7 +241,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     @Override
     protected KlarnaStandaloneWebView createViewInstance(@NonNull ThemedReactContext themedReactContext) {
         KlarnaStandaloneWebView klarnaStandaloneWebView = new KlarnaStandaloneWebView(
-                /* context */ reactAppContext.getCurrentActivity(), // needs to be activity for SDK dialogs to work
+                /* context */ themedReactContext.getCurrentActivity(), // needs to be activity for SDK dialogs to work
                 /* attrs */ null,
                 /* defStyleAttr */ 0,
                 /* webViewClient */ klarnaStandaloneWebViewClient,
@@ -246,10 +251,14 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
                 /* theme */ null,
                 /* resourceEndpoint */ null,
                 /* returnURL */ null);
-        // Each view has its own event dispatcher.
-        EventDispatcher dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactAppContext, klarnaStandaloneWebView.getId());
-        viewToDispatcher.put(new WeakReference<>(klarnaStandaloneWebView), dispatcher);
+        viewToReactContext.put(klarnaStandaloneWebView, themedReactContext);
         return klarnaStandaloneWebView;
+    }
+
+    @Override
+    public void onDropViewInstance(@NonNull KlarnaStandaloneWebView view) {
+        viewToReactContext.remove(view);
+        super.onDropViewInstance(view);
     }
 
 }

@@ -7,16 +7,16 @@ import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManage
 import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_LOAD_PAYMENT_REVIEW;
 import static com.klarna.mobile.sdk.reactnative.payments.KlarnaPaymentViewManager.COMMAND_REAUTHORIZE;
 
-import android.app.Application;
-
-import androidx.test.core.app.ApplicationProvider;
+import android.content.Context;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.JavaOnlyArray;
 import com.facebook.react.bridge.JavaOnlyMap;
-import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.UIManagerHelper;
+import com.facebook.react.uimanager.events.EventDispatcher;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentView;
 import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
 
@@ -25,6 +25,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
@@ -40,11 +42,7 @@ public class KlarnaPaymentViewManagerTest {
 
     @Before
     public void setup() {
-        Application application = ApplicationProvider.getApplicationContext();
-        ReactApplicationContext reactContext = Mockito.mock(ReactApplicationContext.class);
-        Mockito.when(reactContext.getApplicationContext()).thenAnswer(invocation -> application);
-
-        manager = new KlarnaPaymentViewManager(reactContext);
+        manager = new KlarnaPaymentViewManager();
 
         wrapper = Mockito.mock(PaymentViewWrapper.class);
         wrapper.paymentView = Mockito.mock(KlarnaPaymentView.class);
@@ -181,5 +179,36 @@ public class KlarnaPaymentViewManagerTest {
         Assert.assertEquals("testInvalidField", invalidFields.getString(0));
 
         Assert.assertEquals("testSessionId", map.getString("sessionId"));
+    }
+
+    @Test
+    public void testEventsAreSentThroughTheViewsOwnReactContext() {
+        // On the old architecture, RN keeps view managers across JS reloads, so each view must use
+        // the React context it was created with.
+        ThemedReactContext viewContext = Mockito.mock(ThemedReactContext.class);
+        EventDispatcher viewEventDispatcher = Mockito.mock(EventDispatcher.class);
+        EventDispatcher otherEventDispatcher = Mockito.mock(EventDispatcher.class);
+        KlarnaPaymentView paymentView = Mockito.mock(KlarnaPaymentView.class);
+
+        // A real wrapper creates a native KlarnaPaymentView, so the mock only keeps its context, like a real view.
+        try (MockedConstruction<PaymentViewWrapper> ignored = Mockito.mockConstruction(PaymentViewWrapper.class, (mock, context) -> {
+            Mockito.when(mock.getContext()).thenReturn((Context) context.arguments().get(0));
+            Mockito.when(mock.getId()).thenReturn(7);
+            mock.paymentView = paymentView;
+        }); MockedStatic<UIManagerHelper> mockedStaticUiManagerHelper = Mockito.mockStatic(UIManagerHelper.class)) {
+            mockedStaticUiManagerHelper.when(() -> UIManagerHelper.getEventDispatcherForReactTag(Mockito.any(), Mockito.anyInt()))
+                    .thenReturn(otherEventDispatcher);
+            mockedStaticUiManagerHelper.when(() -> UIManagerHelper.getEventDispatcherForReactTag(Mockito.eq(viewContext), Mockito.anyInt()))
+                    .thenReturn(viewEventDispatcher);
+
+            manager.createViewInstance(viewContext);
+            manager.onInitialized(paymentView);
+
+            ArgumentCaptor<KlarnaPaymentEvent> captor = ArgumentCaptor.forClass(KlarnaPaymentEvent.class);
+            Mockito.verify(viewEventDispatcher).dispatchEvent(captor.capture());
+            Assert.assertEquals("onInitialized", captor.getValue().getEventName());
+            Assert.assertEquals(7, captor.getValue().getViewTag());
+            Mockito.verifyNoInteractions(otherEventDispatcher);
+        }
     }
 }
