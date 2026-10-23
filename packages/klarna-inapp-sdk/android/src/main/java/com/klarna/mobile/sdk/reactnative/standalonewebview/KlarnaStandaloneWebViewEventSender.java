@@ -14,7 +14,6 @@ import com.klarna.mobile.sdk.reactnative.common.serializer.DynamicMapSerializer;
 import com.klarna.mobile.sdk.reactnative.common.util.ArgumentsUtil;
 import com.klarna.mobile.sdk.reactnative.common.util.ParserUtil;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ import java.util.Map;
 public class KlarnaStandaloneWebViewEventSender {
 
     private static final String PARAM_NAME_NAVIGATION_EVENT = "navigationEvent";
-    private static final String PARAM_NAME_NAVIGATION_ERROR = "navigationError";
+    private static final String PARAM_NAME_ERROR = "error";
     private static final String PARAM_NAME_PROGRESS_EVENT = "progressEvent";
     private static final String PARAM_NAME_KLARNA_MESSAGE_EVENT = "klarnaMessageEvent";
     private static final String PARAM_NAME_RENDER_PROCESS_GONE_EVENT = "renderProcessGoneEvent";
@@ -40,12 +39,10 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_PARAMS = "params";
     private static final String PARAM_NAME_DID_CRASH = "didCrash";
 
-    private final WeakReference<ReactContext> reactContextWeakReference;
-    private final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher;
+    private final Map<KlarnaStandaloneWebView, ReactContext> viewToReactContext;
 
-    KlarnaStandaloneWebViewEventSender(@NonNull ReactContext reactContext, @NonNull final Map<WeakReference<KlarnaStandaloneWebView>, EventDispatcher> viewToDispatcher) {
-        this.reactContextWeakReference = new WeakReference<>(reactContext);
-        this.viewToDispatcher = viewToDispatcher;
+    KlarnaStandaloneWebViewEventSender(@NonNull final Map<KlarnaStandaloneWebView, ReactContext> viewToReactContext) {
+        this.viewToReactContext = viewToReactContext;
     }
 
     public void sendLoadProgressEvent(@Nullable KlarnaStandaloneWebView view, int progress) {
@@ -57,12 +54,12 @@ public class KlarnaStandaloneWebViewEventSender {
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS, params, view);
     }
 
-    public void sendNavigationErrorEvent(@Nullable KlarnaStandaloneWebView view, int code, String description) {
-        WritableMap webViewMap = buildWebViewMap(view, null);
+    public void sendNavigationErrorEvent(@Nullable KlarnaStandaloneWebView view, int code, String description, @Nullable String url) {
+        WritableMap webViewMap = buildWebViewMap(view, url);
         webViewMap.putDouble(PARAM_NAME_CODE, code);
         webViewMap.putString(PARAM_NAME_DESCRIPTION, description);
         WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
-            put(PARAM_NAME_NAVIGATION_ERROR, webViewMap);
+            put(PARAM_NAME_ERROR, webViewMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_ERROR, params, view);
     }
@@ -110,28 +107,14 @@ public class KlarnaStandaloneWebViewEventSender {
      * @param view             source native view
      */
     private void postEventForView(KlarnaStandaloneWebViewEvent.Event event, WritableMap additionalParams, @Nullable KlarnaStandaloneWebView view) {
-        KlarnaStandaloneWebView klarnaStandaloneWebView = getKlarnaStandaloneWebView(view);
-        if (klarnaStandaloneWebView != null) {
-            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContextWeakReference.get(), klarnaStandaloneWebView.getId());
+        ReactContext reactContext = view != null ? viewToReactContext.get(view) : null;
+        if (reactContext != null) {
+            EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, view.getId());
             if (eventDispatcher != null) {
-                KlarnaStandaloneWebViewEvent e = new KlarnaStandaloneWebViewEvent(klarnaStandaloneWebView.getId(), event.name, additionalParams);
+                KlarnaStandaloneWebViewEvent e = new KlarnaStandaloneWebViewEvent(view.getId(), event.name, additionalParams);
                 eventDispatcher.dispatchEvent(e);
             }
         }
-    }
-
-    @Nullable
-    private KlarnaStandaloneWebView getKlarnaStandaloneWebView(@Nullable KlarnaStandaloneWebView klarnaStandaloneWebView) {
-        if (klarnaStandaloneWebView == null) {
-            return null;
-        }
-        for (WeakReference<KlarnaStandaloneWebView> reference : viewToDispatcher.keySet()) {
-            KlarnaStandaloneWebView webView = reference.get();
-            if (webView != null && webView == klarnaStandaloneWebView) {
-                return webView;
-            }
-        }
-        return null;
     }
 
     private WritableMap buildWebViewMap(KlarnaStandaloneWebView webView, String url) {

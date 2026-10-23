@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.4] - 2026-10-23
+
+- Fixed `KlarnaStandaloneWebView` and `KlarnaPaymentView` events not reaching JS on Android after the JS bundle is reloaded in-process on the old architecture.
+- Fixed `KlarnaStandaloneWebView` `onError` on Android firing twice for one failed page load, and its payload now uses the `error` key like iOS.
+- The Android `KlarnaPaymentViewManager` and `KlarnaStandaloneWebViewManager` no longer take a `ReactApplicationContext`. If you create them yourself, use their no-argument constructors.
+
 ## [2.9.3] - 2026-10-12
 
 - Updated the native iOS SDK version to 2.16.0
