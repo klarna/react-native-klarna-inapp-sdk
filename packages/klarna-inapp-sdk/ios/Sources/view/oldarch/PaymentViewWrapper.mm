@@ -164,7 +164,7 @@
     
     self.onError(@{
         @"error": @{
-            @"action": error.action,
+            @"action": error.action ?: @"",
             @"isFatal": [NSNumber numberWithBool:error.isFatal],
             @"message": error.message,
             @"name": error.name

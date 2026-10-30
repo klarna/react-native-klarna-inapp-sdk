@@ -314,6 +314,33 @@
     OCMVerify([self.paymentViewWrapper onError]);
 }
 
+- (void)test_onErrorWithNilAction {
+    // GIVEN
+    KlarnaPaymentError *mockError = OCMClassMock([KlarnaPaymentError class]);
+    OCMStub([mockError action]).andReturn(nil);
+    OCMStub([mockError isFatal]).andReturn(true);
+    OCMStub([mockError message]).andReturn(@"errorMessage");
+    OCMStub([mockError name]).andReturn(@"errorName");
+    OCMStub([self.actualPaymentViewMock finaliseWithJsonData:OCMOCK_ANY])
+        ._andDo(^(NSInvocation *invocation) {
+            [((id<KlarnaPaymentEventListener>)self.paymentViewWrapper)
+                    klarnaFailedInPaymentView:self.actualPaymentViewMock withError:mockError];
+        });
+    __block NSDictionary *receivedBody = nil;
+    [self.paymentViewWrapper setOnError:^(NSDictionary *body) {
+        receivedBody = body;
+    }];
+
+    // WHEN
+    [self initializePaymentView];
+    [self.paymentViewWrapper finalizePaymentViewWithSessionData:NULL];
+
+    // THEN
+    XCTAssertEqualObjects(receivedBody[@"error"][@"action"], @"");
+    XCTAssertEqualObjects(receivedBody[@"error"][@"message"], @"errorMessage");
+    XCTAssertEqualObjects(receivedBody[@"error"][@"name"], @"errorName");
+}
+
 - (void)test_klarnaResizedWithPaymentView {
     // GIVEN
     CGFloat size = CGFLOAT_MAX;

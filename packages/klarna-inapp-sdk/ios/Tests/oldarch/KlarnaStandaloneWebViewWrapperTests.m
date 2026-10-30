@@ -7,7 +7,7 @@
 
 #import "../../Sources/view/KlarnaStandaloneWebViewWrapper.h"
 
-@interface KlarnaStandaloneWebViewWrapper ()
+@interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate>
 
 // Expose private properties and methods for testing
 @property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
@@ -102,6 +102,87 @@
 
     // THEN
     OCMVerify([self.wrapper initializeKlarnaStandaloneWebView]);
+}
+
+#pragma mark - onError Tests
+
+- (void)test_didFailProvisionalNavigation_sendsFailingUrlWhenWebViewHasNoUrl {
+    // WHEN
+    NSDictionary *payload = [self onErrorPayloadForFailure:^(KlarnaStandaloneWebViewWrapper *wrapper, id webView, NSError *error) {
+        [wrapper klarnaStandaloneWebView:webView didFailProvisionalNavigation:OCMClassMock([WKNavigation class]) withError:error];
+    }];
+
+    // THEN
+    [self assertErrorPayload:payload];
+}
+
+- (void)test_didFail_sendsErrorDictionaryWhenWebViewHasNoUrl {
+    // The native SDK reports failures before anything loads through didFail:.
+    // WHEN
+    NSDictionary *payload = [self onErrorPayloadForFailure:^(KlarnaStandaloneWebViewWrapper *wrapper, id webView, NSError *error) {
+        [wrapper klarnaStandaloneWebView:webView didFail:OCMClassMock([WKNavigation class]) withError:error];
+    }];
+
+    // THEN
+    [self assertErrorPayload:payload];
+}
+
+- (void)test_didFail_ignoresCancelledNavigation {
+    // GIVEN
+    __block BOOL called = NO;
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    wrapper.onError = ^(NSDictionary *body) { called = YES; };
+    NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
+
+    // WHEN
+    [wrapper klarnaStandaloneWebView:OCMClassMock([KlarnaStandaloneWebView class]) didFail:OCMClassMock([WKNavigation class]) withError:error];
+
+    // THEN
+    XCTAssertFalse(called);
+}
+
+- (void)test_didFailProvisionalNavigation_ignoresCancelledNavigation {
+    // GIVEN
+    __block BOOL called = NO;
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    wrapper.onError = ^(NSDictionary *body) { called = YES; };
+    NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
+
+    // WHEN
+    [wrapper klarnaStandaloneWebView:OCMClassMock([KlarnaStandaloneWebView class]) didFailProvisionalNavigation:OCMClassMock([WKNavigation class]) withError:error];
+
+    // THEN
+    XCTAssertFalse(called);
+}
+
+#pragma mark - Helpers
+
+- (NSDictionary *)onErrorPayloadForFailure:(void (^)(KlarnaStandaloneWebViewWrapper *wrapper, id webView, NSError *error))failure {
+    // A web view whose first load failed has no URL and no title.
+    id webView = OCMClassMock([KlarnaStandaloneWebView class]);
+    OCMStub([webView url]).andReturn(nil);
+    OCMStub([webView title]).andReturn(nil);
+    NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+                                         code:NSURLErrorCannotFindHost
+                                     userInfo:@{
+        NSURLErrorFailingURLErrorKey: [NSURL URLWithString:@"https://nonexistent.invalid/"],
+        NSLocalizedDescriptionKey: @"A server with the specified hostname could not be found.",
+    }];
+
+    __block NSDictionary *payload = nil;
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    wrapper.onError = ^(NSDictionary *body) { payload = body[@"error"]; };
+
+    failure(wrapper, webView, error);
+    return payload;
+}
+
+- (void)assertErrorPayload:(NSDictionary *)payload {
+    XCTAssertTrue([payload isKindOfClass:[NSDictionary class]]);
+    XCTAssertEqualObjects(payload[@"url"], @"https://nonexistent.invalid/");
+    XCTAssertEqualObjects(payload[@"title"], @"");
+    XCTAssertEqualObjects(payload[@"code"], @(NSURLErrorCannotFindHost));
+    XCTAssertEqualObjects(payload[@"description"], @"A server with the specified hostname could not be found.");
 }
 
 @end

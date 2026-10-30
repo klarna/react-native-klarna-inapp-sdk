@@ -20,3 +20,19 @@
 }
 
 @end
+
+@implementation RNMSDKNavigationErrorUtil
+
++ (NSString *)urlStringForWebViewURL:(NSURL *)url error:(NSError *)error {
+    id failingURL = error.userInfo[NSURLErrorFailingURLErrorKey];
+    if ([failingURL isKindOfClass:[NSURL class]] && [failingURL absoluteString].length > 0) {
+        return [failingURL absoluteString];
+    }
+    id failingURLString = error.userInfo[NSURLErrorFailingURLStringErrorKey];
+    if ([failingURLString isKindOfClass:[NSString class]] && [failingURLString length] > 0) {
+        return failingURLString;
+    }
+    return url.absoluteString ?: @"";
+}
+
+@end

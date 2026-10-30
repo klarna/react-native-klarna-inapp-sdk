@@ -7,6 +7,7 @@
 #import <react/renderer/components/RNKlarnaMobileSDK/Props.h>
 #import <react/renderer/components/RNKlarnaMobileSDK/RCTComponentViewHelpers.h>
 #import "../KlarnaExpressCheckoutViewWrapper.h"
+#import "../../common/RNMobileSDKUtils.h"
 #import "RCTFabricComponentsPlugins.h"
 #import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
@@ -97,12 +98,12 @@ Class<RCTComponentViewProtocol> RNKlarnaExpressCheckoutViewCls(void)
                     .showForm = [[response objectForKey:@"showForm"] boolValue],
                     .approved = [[response objectForKey:@"approved"] boolValue],
                     .finalizedRequired = [[response objectForKey:@"finalizedRequired"] boolValue],
-                    .clientToken = std::string([([response objectForKey:@"clientToken"] ?: @"") UTF8String]),
-                    .authorizationToken = std::string([([response objectForKey:@"authorizationToken"] ?: @"") UTF8String]),
-                    .sessionId = std::string([([response objectForKey:@"sessionId"] ?: @"") UTF8String]),
-                    .collectedShippingAddress = std::string([([response objectForKey:@"collectedShippingAddress"] ?: @"") UTF8String]),
-                    .merchantReference1 = std::string([([response objectForKey:@"merchantReference1"] ?: @"") UTF8String]),
-                    .merchantReference2 = std::string([([response objectForKey:@"merchantReference2"] ?: @"") UTF8String]),
+                    .clientToken = RNMSDKStdString([response objectForKey:@"clientToken"]),
+                    .authorizationToken = RNMSDKStdString([response objectForKey:@"authorizationToken"]),
+                    .sessionId = RNMSDKStdString([response objectForKey:@"sessionId"]),
+                    .collectedShippingAddress = RNMSDKStdString([response objectForKey:@"collectedShippingAddress"]),
+                    .merchantReference1 = RNMSDKStdString([response objectForKey:@"merchantReference1"]),
+                    .merchantReference2 = RNMSDKStdString([response objectForKey:@"merchantReference2"]),
                 }
             });
         }
@@ -118,8 +119,8 @@ Class<RCTComponentViewProtocol> RNKlarnaExpressCheckoutViewCls(void)
         if (emitter) {
             emitter->onError(RNKlarnaExpressCheckoutViewEventEmitter::OnError{
                 .error = {
-                    .name = std::string([name UTF8String]),
-                    .message = std::string([message UTF8String]),
+                    .name = RNMSDKStdString(name),
+                    .message = RNMSDKStdString(message),
                     .isFatal = isFatal,
                 }
             });
@@ -211,7 +212,7 @@ Class<RCTComponentViewProtocol> RNKlarnaExpressCheckoutViewCls(void)
                 auto emitter = std::dynamic_pointer_cast<const RNKlarnaExpressCheckoutViewEventEmitter>(strongSelf->_eventEmitter);
                 if (emitter) {
                     emitter->onResized(RNKlarnaExpressCheckoutViewEventEmitter::OnResized{
-                        .height = std::string([[[NSNumber numberWithFloat:height] stringValue] UTF8String]),
+                        .height = RNMSDKStdString([[NSNumber numberWithFloat:height] stringValue]),
                     });
                 }
             }

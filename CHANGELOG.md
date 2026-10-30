@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.5] - 2026-10-29
+
+- Updated the native iOS SDK version to 2.16.1
+- Fixed an iOS crash in `KlarnaStandaloneWebView` when a page fails before anything has loaded, for example with no network.
+- On iOS, `KlarnaStandaloneWebView` `onError` now reports the URL that failed to load instead of the web view's current URL, matching Android.
+- On iOS with the old architecture, `KlarnaStandaloneWebView` `onError` now always sends the error details (`url`, `title`, `code`, `description`), and `description` is now the readable error message.
+- Fixed an iOS crash on the old architecture when a `KlarnaPaymentView` error has no action.
+
 ## [2.9.4] - 2026-10-23
 
 - Fixed `KlarnaStandaloneWebView` and `KlarnaPaymentView` events not reaching JS on Android after the JS bundle is reloaded in-process on the old architecture.
