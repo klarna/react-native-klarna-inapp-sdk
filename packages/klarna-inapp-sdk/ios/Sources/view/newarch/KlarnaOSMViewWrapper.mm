@@ -267,8 +267,8 @@ Class<RCTComponentViewProtocol> RNKlarnaOSMViewCls(void)
         if (emitter) {
             emitter->onError(RNKlarnaOSMViewEventEmitter::OnError{
                 .error = {
-                    .name = std::string([error.name UTF8String]),
-                    .message = std::string([error.message UTF8String]),
+                    .name = RNMSDKStdString(error.name),
+                    .message = RNMSDKStdString(error.message),
                     .isFatal = error.isFatal,
                 }
             });
@@ -283,7 +283,7 @@ Class<RCTComponentViewProtocol> RNKlarnaOSMViewCls(void)
         auto emitter = std::dynamic_pointer_cast<const RNKlarnaOSMViewEventEmitter>(_eventEmitter);
         if (emitter) {
             emitter->onResized(RNKlarnaOSMViewEventEmitter::OnResized{
-                .height = std::string([[[NSNumber numberWithFloat:height] stringValue] UTF8String]),
+                .height = RNMSDKStdString([[NSNumber numberWithFloat:height] stringValue]),
             });
         }
     }

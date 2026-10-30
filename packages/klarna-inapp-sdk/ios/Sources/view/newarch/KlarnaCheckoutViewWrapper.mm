@@ -134,8 +134,8 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
         std::dynamic_pointer_cast<const RNKlarnaCheckoutViewEventEmitter>(_eventEmitter)
         ->onEvent(RNKlarnaCheckoutViewEventEmitter::OnEvent{
             .productEvent = {
-                .action = std::string([event.action UTF8String]),
-                .params = std::string([serializedParams UTF8String]),
+                .action = RNMSDKStdString(event.action),
+                .params = RNMSDKStdString(serializedParams),
             }
         });
     } else {
@@ -149,8 +149,8 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
         std::dynamic_pointer_cast<const RNKlarnaCheckoutViewEventEmitter>(_eventEmitter)
         ->onError(RNKlarnaCheckoutViewEventEmitter::OnError{
             .error = {
-                .name = std::string([error.name UTF8String]),
-                .message = std::string([error.message UTF8String]),
+                .name = RNMSDKStdString(error.name),
+                .message = RNMSDKStdString(error.message),
                 .isFatal = error.isFatal,
             }
         });
@@ -166,7 +166,7 @@ Class<RCTComponentViewProtocol> RNKlarnaCheckoutViewCls(void)
         RCTLogInfo(@"Sending onResized event");
         std::dynamic_pointer_cast<const RNKlarnaCheckoutViewEventEmitter>(_eventEmitter)
         ->onResized(RNKlarnaCheckoutViewEventEmitter::OnResized{
-            .height = std::string([[[NSNumber numberWithFloat:height] stringValue] UTF8String]),
+            .height = RNMSDKStdString([[NSNumber numberWithFloat:height] stringValue]),
         });
     } else {
         RCTLogInfo(@"Could not send onResized event. _eventEmitter is nil!");

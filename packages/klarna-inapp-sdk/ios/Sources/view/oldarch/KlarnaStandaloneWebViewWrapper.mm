@@ -1,6 +1,7 @@
 #if !RCT_NEW_ARCH_ENABLED
 
 #import "../KlarnaStandaloneWebViewWrapper.h"
+#import "../../common/RNMobileSDKUtils.h"
 
 #import <KlarnaMobileSDK/KlarnaMobileSDK.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
@@ -173,12 +174,7 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         RCTLog(@"Missing 'onError' callback prop.");
         return;
     }
-    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
-    [event addEntriesFromDictionary:@{
-            @"code": @(error.code),
-            @"description": error.description,
-        }];
-    self.onError(@{@"error": event});
+    self.onError(@{@"error": [self errorDict:webView error:error]});
 }
 
 - (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView didFail:(WKNavigation * _Nonnull)navigation withError:(NSError * _Nonnull)error {
@@ -193,12 +189,7 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         RCTLog(@"Missing 'onError' callback prop.");
         return;
     }
-    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
-    [event addEntriesFromDictionary:@{
-            @"code": @(error.code),
-            @"description": error.description,
-        }];
-    self.onError(@{@"error": error});
+    self.onError(@{@"error": [self errorDict:webView error:error]});
 }
 
 #pragma mark - KlarnaEventHandler methods
@@ -249,6 +240,16 @@ NSString * const PROPERTY_NAME_ESTIMATED_PROGRESS = @"estimatedProgress";
         @"canGoForward" : @(webView.canGoForward)
       };
     return [[NSMutableDictionary alloc] initWithDictionary: event];
+}
+
+- (NSMutableDictionary<NSString *, id> *)errorDict:(KlarnaStandaloneWebView * _Nonnull)webView error:(NSError * _Nonnull)error {
+    NSMutableDictionary<NSString *, id> *event = [self webViewDict:webView];
+    [event addEntriesFromDictionary:@{
+            @"url": [RNMSDKNavigationErrorUtil urlStringForWebViewURL:webView.url error:error],
+            @"code": @(error.code),
+            @"description": error.localizedDescription ?: @"",
+        }];
+    return event;
 }
 
 - (void)applyOperationToWebViews:(WebViewOperation)operation {

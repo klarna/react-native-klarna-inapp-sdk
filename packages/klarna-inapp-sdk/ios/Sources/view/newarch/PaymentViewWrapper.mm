@@ -1,6 +1,7 @@
 #if RCT_NEW_ARCH_ENABLED
 
 #import "../PaymentViewWrapper.h"
+#import "../../common/RNMobileSDKUtils.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <KlarnaMobileSDK/KlarnaMobileSDK.h>
@@ -110,7 +111,7 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onAuthorized(RNKlarnaPaymentViewEventEmitter::OnAuthorized{
             .approved = approved,
-            .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
+            .authToken = RNMSDKStdString(authToken),
             .finalizeRequired = finalizeRequired
         });
     }
@@ -120,7 +121,7 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onReauthorized(RNKlarnaPaymentViewEventEmitter::OnReauthorized{
             .approved = approved,
-            .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
+            .authToken = RNMSDKStdString(authToken),
         });
     }
 }
@@ -130,7 +131,7 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onFinalized(RNKlarnaPaymentViewEventEmitter::OnFinalized{
             .approved = approved,
-            .authToken = authToken == nil ? "" : std::string([authToken UTF8String]),
+            .authToken = RNMSDKStdString(authToken),
         });
     }
 }
@@ -140,10 +141,10 @@ using namespace facebook::react;
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onError(RNKlarnaPaymentViewEventEmitter::OnError{
             .error = {
-                .action = std::string([error.action UTF8String]),
+                .action = RNMSDKStdString(error.action),
                 .isFatal = error.isFatal,
-                .message = std::string([error.message UTF8String]),
-                .name = std::string([error.name UTF8String]),
+                .message = RNMSDKStdString(error.message),
+                .name = RNMSDKStdString(error.name),
             }
         });
     }
@@ -153,7 +154,7 @@ using namespace facebook::react;
     if(_eventEmitter){
         std::dynamic_pointer_cast<const RNKlarnaPaymentViewEventEmitter>(_eventEmitter)
         ->onResized(RNKlarnaPaymentViewEventEmitter::OnResized{
-            .height = std::string([[[NSNumber numberWithFloat:newHeight] stringValue] UTF8String])
+            .height = RNMSDKStdString([[NSNumber numberWithFloat:newHeight] stringValue])
         });
     }
 }
