@@ -1,22 +1,31 @@
-import { Keyboard, Text, TextInput, View } from 'react-native';
+import { Keyboard, ScrollView, Text, TextInput, View } from 'react-native';
 import styles, { useTheme } from '../common/ui/Styles';
 import React, { useRef, useState } from 'react';
 import {
   KlarnaStandaloneWebView,
+  KlarnaTheme,
   KlarnaWebViewKlarnaMessageEvent,
   KlarnaWebViewError,
   KlarnaWebViewNavigationEvent,
   KlarnaWebViewProgressEvent,
   KlarnaWebViewRenderProcessGoneEvent,
+  KlarnaWebViewSource,
 } from 'react-native-klarna-inapp-sdk';
 import Button from '../common/ui/view/Button';
+import OptionPicker from '../common/ui/view/OptionPicker';
 import testProps from '../common/util/TestProps.tsx';
+
+type ThemeOption = KlarnaTheme | 'unset';
+const themeOptions: ThemeOption[] = ['unset', ...Object.values(KlarnaTheme)];
 
 export default function StandaloneWebViewScreen() {
   const theme = useTheme();
   const klarnaStandaloneWebViewRef = useRef<KlarnaStandaloneWebView>(null);
   const [url, setUrl] = useState('');
   const [eventState, setEventState] = useState<string>();
+  const [source, setSource] = useState<KlarnaWebViewSource>();
+  const sourceLoads = useRef(0);
+  const [webViewTheme, setWebViewTheme] = useState<ThemeOption>('unset');
 
   const logEvent = (...params: Array<string>) => {
     console.log('onEvent', params);
@@ -52,6 +61,28 @@ export default function StandaloneWebViewScreen() {
             Keyboard.dismiss();
           }}
           title="Load URL"
+        />
+      </View>
+    );
+  };
+
+  // Loads through the source prop and echoes the request; the Cookie header is stored as cookies first.
+  const renderLoadWithSourceButton = () => {
+    return (
+      <View>
+        <Button
+          onPress={() => {
+            sourceLoads.current += 1;
+            setSource({
+              uri: url !== '' ? url : 'https://httpbin.org/anything',
+              headers: {
+                'Cookie': 'testapp_source=1',
+                'X-TestApp-Load': String(sourceLoads.current),
+              },
+            });
+            Keyboard.dismiss();
+          }}
+          title="Load With Source"
         />
       </View>
     );
@@ -109,6 +140,19 @@ export default function StandaloneWebViewScreen() {
     );
   };
 
+  const renderThemePicker = () => {
+    return (
+      <View style={styles.screenContent}>
+        <OptionPicker
+          label="Theme"
+          options={themeOptions}
+          selected={webViewTheme}
+          onSelect={setWebViewTheme}
+        />
+      </View>
+    );
+  };
+
   return (
     <View
       /* eslint-disable-next-line react-native/no-inline-styles */
@@ -130,14 +174,18 @@ export default function StandaloneWebViewScreen() {
       </View>
       <View style={styles.buttonsContainer}>
         {renderLoadUrlButton()}
+        {renderLoadWithSourceButton()}
         {renderReloadButton()}
         {renderStopLoadingButton()}
         {renderGoBackButton()}
         {renderGoForwardButton()}
       </View>
-      <Text style={{ color: theme.text }} {...testProps('state_events')}>
-        {eventState}
-      </Text>
+      {renderThemePicker()}
+      <ScrollView style={styles.eventsContainer}>
+        <Text style={{ color: theme.text }} {...testProps('state_events')}>
+          {eventState}
+        </Text>
+      </ScrollView>
       <KlarnaStandaloneWebView
         ref={klarnaStandaloneWebViewRef}
         /* eslint-disable-next-line react-native/no-inline-styles */
@@ -145,6 +193,8 @@ export default function StandaloneWebViewScreen() {
           flex: 1,
         }}
         returnUrl={'returnUrl://'}
+        source={source}
+        theme={webViewTheme === 'unset' ? undefined : webViewTheme}
         onLoadStart={(event: KlarnaWebViewNavigationEvent) => {
           logEvent('onLoadStart', JSON.stringify(event));
         }}

@@ -73,6 +73,63 @@ allprojects {
 }
 ```
 
+## KlarnaStandaloneWebView: `source` and cookies
+
+Use `source` to load a merchant page that needs its own session, for example when migrating from
+`react-native-webview`'s `source={{ uri, headers: { Cookie } }}`.
+
+```tsx
+<KlarnaStandaloneWebView
+  returnUrl="myapp://klarna"
+  source={{
+    uri: 'https://www.example.com/checkout',
+    headers: { 'Cookie': `session=${sessionId}`, 'X-Store-Id': storeId },
+  }}
+  sharedCookiesEnabled // iOS only, default false
+  onError={(error) => console.warn(error.code, error.description)}
+/>
+```
+
+### `source`
+
+- Loads on mount and whenever `uri` or `headers` change, like `react-native-webview`. `load(url)` works as
+  before.
+- `uri` needs a scheme and a host. Use `https`; cookies for an `http` uri are stored without `Secure`.
+- Headers are sent with the first request and its same-origin redirects. Both platforms drop them on a
+  redirect to another origin.
+- Klarna hosts (`klarna.com`, `klarna.net`, `klarnacdn.net`, `klarnaservices.com`, `klarnaevt.com` and their
+  subdomains) never receive `source` headers or cookies; a `source` with headers for a Klarna host is
+  rejected.
+- A `Cookie` header (in any letter case) is not sent as a header. Its cookies are stored for the host of
+  `uri` before the page loads: host-only, path `/`, `Secure` on `https`, not `HttpOnly`, and kept for the
+  session. They replace same-name cookies the request would otherwise have sent.
+- Cookies follow normal cookie scoping: by host, not port or scheme origin. A redirect to another port of the
+  same host still sends them; only headers are dropped on a cross-origin redirect.
+- An invalid `source` is reported through `onError` with code `-1` and the reason in `description`, and
+  nothing is loaded.
+- **Cookie store:** Android uses the app-wide `CookieManager` and iOS the default `WKWebsiteDataStore`, so
+  other web views in your app see these cookies too. They persist like any other web view cookie.
+
+### `sharedCookiesEnabled` (iOS only)
+
+- Copies every cookie in `HTTPCookieStorage.shared` into the web view before each load. The copy is not
+  filtered by host, so it includes any Klarna cookies your app stored there.
+- It can overwrite newer cookies in the web view's store, as in `react-native-webview`. Cookies from a
+  `source` `Cookie` header win over shared cookies with the same name.
+- On Android it has no effect, because `CookieManager` is already shared.
+
+### Differences from `react-native-webview`
+
+- `about:blank`, `file:///` and other URLs without a host are rejected.
+- A `Cookie` header needs a registrable domain host, so `localhost`, IP addresses and single-label hosts are
+  rejected.
+- With headers, a host with non-ASCII characters must be written in its punycode form.
+- Not supported: `source.method`, `source.body`, `source.html`, `incognito`, `injectedJavaScript` and
+  `onShouldStartLoadWithRequest`. Without `incognito`, cookies persist between sessions, so pass them again
+  when they change.
+- In a native Hybrid integration the merchant owns the web view, so it sets its own headers and cookies
+  there; `source` is for `KlarnaStandaloneWebView` only.
+
 ## Support
 
 If you are having any issues using the SDK in your project or if you think that something is wrong with the SDK itself, please follow our [support guide](https://github.com/klarna/react-native-klarna-inapp-sdk/blob/master/SUPPORT.md).

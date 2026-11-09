@@ -23,6 +23,8 @@
 @property (nonatomic, strong) KlarnaExpressCheckoutButton* expressCheckoutButton;
 @property (nonatomic, strong) KlarnaExpressCheckoutButtonDelegateProxy* delegateProxy;
 @property (nonatomic, assign) BOOL isButtonCreated;
+// YES once React has delivered props, so the button can be rebuilt from them after a window change.
+@property (nonatomic, assign) BOOL hasReceivedProps;
 
 @end
 
@@ -137,6 +139,7 @@
  */
 - (void)didSetProps:(NSArray<NSString *> *)changedProps {
     [super didSetProps:changedProps];
+    self.hasReceivedProps = YES;
     if (self.isButtonCreated) {
         [self resetButton];
     }
@@ -219,6 +222,10 @@
     [super didMoveToWindow];
     if (!self.window) {
         [self resetButton];
+    } else if (self.hasReceivedProps) {
+        // The button is torn down when the view leaves the window (e.g. a tab switch) and
+        // React does not re-send props when it comes back, so rebuild it from the stored props.
+        [self createButtonIfNeeded];
     }
 }
 

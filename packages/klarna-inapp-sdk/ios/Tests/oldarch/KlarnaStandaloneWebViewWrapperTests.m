@@ -6,12 +6,18 @@
 #import <KlarnaMobileSDK/KlarnaMobileSDK-Swift.h>
 
 #import "../../Sources/view/KlarnaStandaloneWebViewWrapper.h"
+#import "../../Sources/view/KlarnaStandaloneWebViewLoadOptions.h"
 
 @interface KlarnaStandaloneWebViewWrapper () <KlarnaStandaloneWebViewDelegate>
 
 // Expose private properties and methods for testing
 @property (nonatomic, strong) KlarnaStandaloneWebView* klarnaStandaloneWebView;
+@property (nonatomic, strong, nullable) NSObject *pendingLoad;
+@property (nonatomic, strong, nullable) KlarnaStandaloneWebViewLoadOptions *firstLoadOptions;
+@property (nonatomic, strong, nullable) NSURL *firstLoadURL;
+- (void)klarnaStandaloneWebView:(KlarnaStandaloneWebView * _Nonnull)webView decidePolicyFor:(WKNavigationAction * _Nonnull)navigationAction decisionHandler:(void (^ _Nonnull)(WKNavigationActionPolicy))decisionHandler;
 - (void) initializeKlarnaStandaloneWebView;
+- (KlarnaStandaloneWebView *) createKlarnaStandaloneWebView;
 
 @end
 
@@ -95,6 +101,23 @@
     OCMVerify([self.wrapper initializeKlarnaStandaloneWebView]);
 }
 
+- (void)test_navigationCommandsInvalidateAPendingLoad {
+    // goBack, goForward and reload supersede a load that is still copying shared cookies.
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+
+    wrapper.pendingLoad = [NSObject new];
+    [wrapper goBack];
+    XCTAssertNil(wrapper.pendingLoad);
+
+    wrapper.pendingLoad = [NSObject new];
+    [wrapper goForward];
+    XCTAssertNil(wrapper.pendingLoad);
+
+    wrapper.pendingLoad = [NSObject new];
+    [wrapper reload];
+    XCTAssertNil(wrapper.pendingLoad);
+}
+
 - (void)test_returnUrlCanBeSetBeforeBounces {
     // WHEN
     [self.wrapper setReturnUrl:@"testapp://return"];
@@ -102,6 +125,125 @@
 
     // THEN
     OCMVerify([self.wrapper initializeKlarnaStandaloneWebView]);
+}
+
+- (void)test_crossOriginSubframeRequestIsNotRestartedAsATopLevelLoad {
+    // A subframe request can match the load headers by chance (e.g. Accept-Language) and must be left alone.
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    wrapper.firstLoadOptions = [KlarnaStandaloneWebViewLoadOptions optionsWithJsonString:@"{\"headers\":{\"X-Store\":\"42\"}}"];
+    wrapper.firstLoadURL = [NSURL URLWithString:@"https://www.example.com/checkout"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://ads.example.com/frame"]];
+    [request setValue:@"42" forHTTPHeaderField:@"X-Store"];
+    id frame = OCMClassMock([WKFrameInfo class]);
+    OCMStub([frame isMainFrame]).andReturn(NO);
+    id action = OCMClassMock([WKNavigationAction class]);
+    OCMStub([action request]).andReturn(request);
+    OCMStub([action targetFrame]).andReturn(frame);
+    id webView = OCMClassMock([KlarnaStandaloneWebView class]);
+    OCMReject([webView loadURLRequest:[OCMArg any]]);
+    __block WKNavigationActionPolicy policy = WKNavigationActionPolicyCancel;
+
+    [wrapper klarnaStandaloneWebView:webView decidePolicyFor:action decisionHandler:^(WKNavigationActionPolicy p) { policy = p; }];
+
+    XCTAssertEqual(policy, WKNavigationActionPolicyAllow);
+    XCTAssertNotNil(wrapper.firstLoadOptions);
+    OCMVerifyAll(webView);
+}
+
+#pragma mark - Theme Tests
+
+- (void)test_setTheme_storesValue {
+    // GIVEN
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+
+    // WHEN
+    [wrapper setTheme:@"dark"];
+
+    // THEN
+    XCTAssertEqualObjects(wrapper.theme, @"dark");
+}
+
+- (void)test_setTheme_light_setsLightThemeOnView {
+    // GIVEN
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    KlarnaStandaloneWebView *webView = [self attachMockWebView];
+
+    // WHEN
+    [wrapper setTheme:@"light"];
+
+    // THEN
+    OCMVerify([webView setTheme:KlarnaThemeLight]);
+}
+
+- (void)test_setTheme_dark_setsDarkThemeOnView {
+    // GIVEN
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    KlarnaStandaloneWebView *webView = [self attachMockWebView];
+
+    // WHEN
+    [wrapper setTheme:@"dark"];
+
+    // THEN
+    OCMVerify([webView setTheme:KlarnaThemeDark]);
+}
+
+- (void)test_setTheme_automatic_setsAutomaticThemeOnView {
+    // GIVEN
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    KlarnaStandaloneWebView *webView = [self attachMockWebView];
+
+    // WHEN
+    [wrapper setTheme:@"automatic"];
+
+    // THEN
+    OCMVerify([webView setTheme:KlarnaThemeAutomatic]);
+}
+
+- (void)test_setTheme_empty_keepsDefaultTheme {
+    // JS always sends a theme, light when the prop is not set. An empty value is ignored.
+    // GIVEN
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    KlarnaStandaloneWebView *webView = [self attachMockWebView];
+    OCMReject([webView setTheme:KlarnaThemeLight]);
+    OCMReject([webView setTheme:KlarnaThemeDark]);
+    OCMReject([webView setTheme:KlarnaThemeAutomatic]);
+
+    // WHEN
+    [wrapper setTheme:@""];
+
+    // THEN
+    OCMVerifyAll((id)webView);
+}
+
+- (void)test_setTheme_unknown_keepsDefaultTheme {
+    // GIVEN
+    KlarnaStandaloneWebViewWrapper *wrapper = self.wrapper;
+    KlarnaStandaloneWebView *webView = [self attachMockWebView];
+    OCMReject([webView setTheme:KlarnaThemeLight]);
+    OCMReject([webView setTheme:KlarnaThemeDark]);
+    OCMReject([webView setTheme:KlarnaThemeAutomatic]);
+
+    // WHEN
+    [wrapper setTheme:@"unknown"];
+
+    // THEN
+    OCMVerifyAll((id)webView);
+}
+
+- (void)test_themeSetBeforeReturnUrl_isAppliedWhenViewIsCreated {
+    // React Native does not guarantee prop ordering, so the theme can arrive before
+    // returnUrl, while there is no native view yet. Only initializeKlarnaStandaloneWebView
+    // can then apply it to the view it creates.
+    // GIVEN
+    KlarnaStandaloneWebView *webView = OCMClassMock([KlarnaStandaloneWebView class]);
+    KlarnaStandaloneWebViewWrapper *wrapper = [self wrapperCreatingWebView:webView];
+    XCTAssertNoThrow([wrapper setTheme:@"dark"]);
+
+    // WHEN
+    [wrapper setReturnUrl:@"testapp://return"];
+
+    // THEN
+    OCMVerify([webView setTheme:KlarnaThemeDark]);
 }
 
 #pragma mark - onError Tests
@@ -155,7 +297,82 @@
     XCTAssertFalse(called);
 }
 
+- (void)test_didFinish_retiresLoadOptions {
+    // GIVEN
+    self.wrapper.firstLoadOptions = [KlarnaStandaloneWebViewLoadOptions optionsWithJsonString:@"{\"headers\":{\"X-Store\":\"42\"}}"];
+
+    // WHEN
+    [self.wrapper klarnaStandaloneWebView:OCMClassMock([KlarnaStandaloneWebView class]) didFinish:OCMClassMock([WKNavigation class])];
+
+    // THEN
+    XCTAssertNil(self.wrapper.firstLoadOptions);
+}
+
+- (void)test_didFail_retiresLoadOptions {
+    // GIVEN
+    self.wrapper.firstLoadOptions = [KlarnaStandaloneWebViewLoadOptions optionsWithJsonString:@"{\"headers\":{\"X-Store\":\"42\"}}"];
+
+    // WHEN
+    [self.wrapper klarnaStandaloneWebView:OCMClassMock([KlarnaStandaloneWebView class]) didFail:OCMClassMock([WKNavigation class]) withError:[NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorNotConnectedToInternet userInfo:nil]];
+
+    // THEN
+    XCTAssertNil(self.wrapper.firstLoadOptions);
+}
+
+- (void)test_didFailProvisionalNavigation_retiresLoadOptions {
+    // GIVEN
+    self.wrapper.firstLoadOptions = [KlarnaStandaloneWebViewLoadOptions optionsWithJsonString:@"{\"headers\":{\"X-Store\":\"42\"}}"];
+
+    // WHEN
+    [self.wrapper klarnaStandaloneWebView:OCMClassMock([KlarnaStandaloneWebView class]) didFailProvisionalNavigation:OCMClassMock([WKNavigation class]) withError:[NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorNotConnectedToInternet userInfo:nil]];
+
+    // THEN
+    XCTAssertNil(self.wrapper.firstLoadOptions);
+}
+
+- (void)test_cancelledNavigation_keepsLoadOptionsOfTheNewLoad {
+    // A cancel of the previous load can arrive after the next load installed its options.
+    // GIVEN
+    self.wrapper.firstLoadOptions = [KlarnaStandaloneWebViewLoadOptions optionsWithJsonString:@"{\"headers\":{\"X-Store\":\"42\"}}"];
+    NSError *cancelled = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
+
+    // WHEN
+    [self.wrapper klarnaStandaloneWebView:OCMClassMock([KlarnaStandaloneWebView class]) didFail:OCMClassMock([WKNavigation class]) withError:cancelled];
+    [self.wrapper klarnaStandaloneWebView:OCMClassMock([KlarnaStandaloneWebView class]) didFailProvisionalNavigation:OCMClassMock([WKNavigation class]) withError:cancelled];
+
+    // THEN
+    XCTAssertNotNil(self.wrapper.firstLoadOptions);
+}
+
 #pragma mark - Helpers
+
+- (KlarnaStandaloneWebView *)attachMockWebView {
+    // Stubbing the getter rather than assigning the property: storing a mock in the
+    // partial mock's property over-releases it when the test's invocations are freed.
+    KlarnaStandaloneWebView *webView = OCMClassMock([KlarnaStandaloneWebView class]);
+    OCMStub([self.wrapper klarnaStandaloneWebView]).andReturn(webView);
+    return webView;
+}
+
+- (id)wrapperCreatingWebView:(KlarnaStandaloneWebView *)webView {
+    // Runs the real initializer and stubs only what it can't do in tests: creating the SDK
+    // view, storing the mock in the property (see attachMockWebView) and adding the mock
+    // to the view hierarchy. The getter returns nil until the view is created.
+    KlarnaStandaloneWebViewWrapper *wrapper = [KlarnaStandaloneWebViewWrapper alloc];
+    id partialMock = OCMPartialMock(wrapper);
+    __block KlarnaStandaloneWebView *createdWebView = nil;
+    OCMStub([partialMock createKlarnaStandaloneWebView]).andDo(^(NSInvocation *invocation) {
+        createdWebView = webView;
+        [invocation setReturnValue:&createdWebView];
+    });
+    OCMStub([partialMock klarnaStandaloneWebView]).andDo(^(NSInvocation *invocation) {
+        [invocation setReturnValue:&createdWebView];
+    });
+    OCMStub([partialMock setKlarnaStandaloneWebView:OCMOCK_ANY]);
+    OCMStub([partialMock addSubview:OCMOCK_ANY]);
+    [wrapper init];
+    return partialMock;
+}
 
 - (NSDictionary *)onErrorPayloadForFailure:(void (^)(KlarnaStandaloneWebViewWrapper *wrapper, id webView, NSError *error))failure {
     // A web view whose first load failed has no URL and no title.

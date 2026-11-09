@@ -7,6 +7,9 @@ runs:
     - name: Enable corepack
       shell: bash
       run: corepack enable
+    - name: Use the public NPM registry
+      shell: bash
+      run: echo "YARN_NPM_REGISTRY_SERVER=https://registry.yarnpkg.com" >> "$GITHUB_ENV"
     - name: Setup Node.js
       uses: actions/setup-node@v6
       with:
@@ -27,5 +30,5 @@ runs:
     - name: Install dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: |
-        yarn install --frozen-lockfile
+        yarn install --immutable
       shell: bash

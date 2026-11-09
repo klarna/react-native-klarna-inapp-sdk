@@ -13,6 +13,7 @@
 //      the isButtonCreated flag
 //    • -createButtonIfNeeded exits early (no SDK call) when isButtonCreated==YES
 //    • -didMoveToWindow with nil window resets the recreation guard
+//    • -didMoveToWindow with a window rebuilds the button once props were received
 //    • Delegate-proxy handler closures forward events to the React Native blocks
 //
 
@@ -34,6 +35,7 @@
 @property (nonatomic, strong) KlarnaExpressCheckoutButton *expressCheckoutButton;
 @property (nonatomic, strong) id delegateProxy;
 @property (nonatomic, assign) BOOL isButtonCreated;
+@property (nonatomic, assign) BOOL hasReceivedProps;
 
 - (void)createButtonIfNeeded;
 - (void)resetButton;
@@ -286,6 +288,55 @@
 
     XCTAssertNil(w.expressCheckoutButton);
     XCTAssertFalse(w.isButtonCreated);
+}
+
+- (void)test_didMoveToWindow_withWindow_afterPropsReceived_recreatesButton {
+    // Tab switch: the button is torn down on leaving the window and React does not
+    // re-send props, so re-entering the window must rebuild it from the stored props.
+    self.wrapper.hasReceivedProps = YES;
+    self.wrapper.isButtonCreated = NO;
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+
+    OCMExpect([self.wrapperMock createButtonIfNeeded]);
+
+    [window addSubview:self.wrapper];   // triggers -didMoveToWindow
+
+    OCMVerifyAll(self.wrapperMock);
+}
+
+- (void)test_didMoveToWindow_withWindow_beforePropsReceived_doesNotCreateButton {
+    // Props have not been delivered yet; -didSetProps: owns the first creation.
+    self.wrapper.hasReceivedProps = NO;
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+
+    OCMReject([self.wrapperMock createButtonIfNeeded]);
+
+    [window addSubview:self.wrapper];
+
+    OCMVerifyAll(self.wrapperMock);
+}
+
+- (void)test_didSetProps_marksPropsAsReceived {
+    OCMStub([self.wrapperMock createButtonIfNeeded]);
+
+    [self.wrapper didSetProps:@[]];
+
+    XCTAssertTrue(self.wrapper.hasReceivedProps);
+}
+
+- (void)test_windowRoundTrip_resetsOnLeaveAndRecreatesOnReturn {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    OCMStub([self.wrapperMock createButtonIfNeeded]);
+    [self.wrapper didSetProps:@[]];
+    [window addSubview:self.wrapper];
+    self.wrapper.isButtonCreated = YES;
+
+    [self.wrapper removeFromSuperview];   // leaves the window
+    XCTAssertFalse(self.wrapper.isButtonCreated);
+
+    OCMExpect([self.wrapperMock createButtonIfNeeded]);
+    [window addSubview:self.wrapper];     // returns to the window
+    OCMVerifyAll(self.wrapperMock);
 }
 
 // ---------------------------------------------------------------------------

@@ -38,6 +38,8 @@ public class KlarnaStandaloneWebViewEventSender {
     private static final String PARAM_NAME_ACTION = "action";
     private static final String PARAM_NAME_PARAMS = "params";
     private static final String PARAM_NAME_DID_CRASH = "didCrash";
+    private static final String PARAM_NAME_SET_COOKIES_RESULT = "setCookiesResult";
+    private static final String PARAM_NAME_REQUEST_ID = "requestId";
 
     private final Map<KlarnaStandaloneWebView, ReactContext> viewToReactContext;
 
@@ -97,6 +99,17 @@ public class KlarnaStandaloneWebViewEventSender {
             put(PARAM_NAME_RENDER_PROCESS_GONE_EVENT, eventMap);
         }});
         postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE, params, view);
+    }
+
+    public void sendSetCookiesResultEvent(@Nullable KlarnaStandaloneWebView view, int requestId, @NonNull String error) {
+        ReadableMap eventMap = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
+            put(PARAM_NAME_REQUEST_ID, requestId);
+            put(PARAM_NAME_ERROR, error);
+        }});
+        WritableMap params = ArgumentsUtil.createMap(new HashMap<String, Object>() {{
+            put(PARAM_NAME_SET_COOKIES_RESULT, eventMap);
+        }});
+        postEventForView(KlarnaStandaloneWebViewEvent.Event.ON_SET_COOKIES_RESULT, params, view);
     }
 
     /**

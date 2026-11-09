@@ -283,9 +283,11 @@ export default function KlarnaOSMScreen(): React.JSX.Element {
             title="Render"
           />
         </View>
-        <Text style={{ color: theme.text }} {...testProps('state_events')}>
-          {eventState}
-        </Text>
+        <ScrollView style={styles.eventsContainer} nestedScrollEnabled>
+          <Text style={{ color: theme.text }} {...testProps('state_events')}>
+            {eventState}
+          </Text>
+        </ScrollView>
         {renderParams && (
           <KlarnaOSMView
             key={renderKey.current}

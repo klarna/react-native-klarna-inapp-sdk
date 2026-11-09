@@ -20,16 +20,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onError;
 @property (nonatomic, copy) RCTDirectEventBlock onLoadProgress;
 @property (nonatomic, copy) RCTDirectEventBlock onKlarnaMessage;
+@property (nonatomic, copy) RCTDirectEventBlock onSetCookiesResult;
 
 @property (nonatomic, strong) NSString* returnUrl;
+@property (nonatomic, strong) NSString* theme;
 @property (nonatomic, assign) BOOL bounces;
+@property (nonatomic, assign) BOOL sharedCookiesEnabled;
 #endif
 
 #pragma mark - React Native Overrides
 
 @property (nonatomic, weak) RCTUIManager* uiManager;
 
-- (void)load:(nonnull NSString*)url;
+- (void)load:(nonnull NSString*)url optionsJson:(nullable NSString*)optionsJson;
 
 - (void)goForward;
 
@@ -38,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)reload;
 
 - (void)stopLoading;
+
+- (void)setCookies:(NSInteger)requestId cookiesJson:(nonnull NSString*)cookiesJson;
 
 @end
 

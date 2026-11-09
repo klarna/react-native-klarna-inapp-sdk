@@ -1,9 +1,5 @@
 import { StyleSheet, useColorScheme } from 'react-native';
 
-export function foregroundColor(isDarkMode: boolean) {
-  return isDarkMode ? Colors.white : '#333333';
-}
-
 export const Colors = {
   white: '#FFF',
   lighter: '#F3F3F3',
@@ -104,6 +100,10 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     marginBottom: 5,
+  },
+  eventsContainer: {
+    flexGrow: 0,
+    maxHeight: 100,
   },
   buttonsContainer: {
     flexDirection: 'row',

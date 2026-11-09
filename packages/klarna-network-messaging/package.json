@@ -1,16 +1,19 @@
 {
   "name": "@klarna/react-native-klarna-network-messaging",
-  "version": "2.9.5",
+  "version": "2.10.0",
   "description": "React Native package for Klarna Network Messaging placements",
   "main": "./src/index.tsx",
   "codegenConfig": {
     "name": "KlarnaNetworkMessagingSpec",
-    "type": "components",
+    "type": "all",
     "jsSrcsDir": "src",
     "android": {
       "javaPackageName": "com.klarna.mobile.sdk.reactnative.klarnanetwork.messaging"
     },
     "ios": {
+      "modulesProvider": {
+        "KlarnaNetworkMessaging": "KlarnaNetworkMessaging"
+      },
       "componentProvider": {
         "RNKlarnaMessagingPlacementView": "KlarnaMessagingPlacementViewWrapper"
       }
@@ -94,7 +97,7 @@
     "typescript": "^5.0.2"
   },
   "peerDependencies": {
-    "@klarna/react-native-klarna-network-core": "2.9.5",
+    "@klarna/react-native-klarna-network-core": "2.10.0",
     "react": ">=18.2.0",
     "react-native": ">=0.76.0 <1.0.x"
   },

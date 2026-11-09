@@ -19,6 +19,11 @@ end
 target 'TestApp' do
   config = use_native_modules!
 
+  # CocoaPods trunk stops accepting new versions on 2 Dec 2026. Uncomment to resolve KlarnaMobileSDK
+  # from the podspec on our CDN instead of trunk. The packages' podspecs still choose the subspecs.
+  # The version is bumped by scripts/update-sdk-versions.sh.
+  # pod 'KlarnaMobileSDK/core', :podspec => 'https://x.klarnacdn.net/mobile-sdk/ios/specs/KlarnaMobileSDK/2.16.1/KlarnaMobileSDK.podspec'
+
   pod 'react-native-klarna-inapp-sdk',
     :path => '../../node_modules/react-native-klarna-inapp-sdk',
     :testspecs => ['Tests']
@@ -49,5 +54,17 @@ target 'TestApp' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # react_native_post_install raises each pod's deployment target but skips the test
+    # targets, which keep their podspec's minimum. Fabric's C++ headers don't compile
+    # for react-native-klarna-inapp-sdk's iOS 10.0, so its tests need this too.
+    installer.target_installation_results.pod_target_installation_results.each do |_, result|
+      result.test_native_targets.each do |target|
+        target.build_configurations.each do |config|
+          current = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] || min_ios_version_supported
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = [min_ios_version_supported.to_f, current.to_f].max.to_s
+        end
+      end
+    end
   end
 end

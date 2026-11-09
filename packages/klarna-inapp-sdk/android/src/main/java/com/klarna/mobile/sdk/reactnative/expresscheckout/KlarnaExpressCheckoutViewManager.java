@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -77,8 +78,9 @@ public class KlarnaExpressCheckoutViewManager extends RNKlarnaExpressCheckoutVie
     @NonNull
     @Override
     protected FrameLayout createViewInstance(@NonNull ThemedReactContext themedReactContext) {
-        FrameLayout view = new FrameLayout(themedReactContext);
+        KlarnaExpressCheckoutWrapperView view = new KlarnaExpressCheckoutWrapperView(themedReactContext);
         view.setBackgroundColor(Color.TRANSPARENT);
+        view.setRelayoutListener(this::relayout);
 
         EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(
                 (ReactContext) view.getContext(), view.getId());
@@ -89,6 +91,7 @@ public class KlarnaExpressCheckoutViewManager extends RNKlarnaExpressCheckoutVie
         view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(@NonNull View v) {
+                onWrapperAttached(view);
             }
 
             @Override
@@ -283,7 +286,30 @@ public class KlarnaExpressCheckoutViewManager extends RNKlarnaExpressCheckoutVie
         });
     }
 
+    /**
+     * The button is torn down whenever the wrapper detaches (e.g. a tab switch), so it has to be
+     * rebuilt when the wrapper attaches again. React does not re-send props in that case, hence
+     * the stored props are reused.
+     */
+    @VisibleForTesting
+    void onWrapperAttached(@NonNull FrameLayout view) {
+        ExpressCheckoutProps props = viewToProps.get(view);
+        if (props == null || props.sessionType == null) {
+            // Props have not been delivered yet; the prop setters will schedule creation.
+            return;
+        }
+        if (Boolean.TRUE.equals(isButtonCreated.get(view))) {
+            // The button survived (created while detached): restart its layout pass, since
+            // the frame callbacks stop once the button is not attached.
+            view.post(() -> relayout(view));
+        } else {
+            scheduleButtonCreation(view);
+        }
+    }
+
     private void tearDownButton(@NonNull FrameLayout view) {
+        // Invalidate in-flight frame callbacks of the button being removed.
+        nextGeneration(view);
         // Remove the previous layout change listener to avoid stale references.
         View.OnLayoutChangeListener oldListener = viewToLayoutListener.remove(view);
         if (oldListener != null) {
@@ -433,6 +459,29 @@ public class KlarnaExpressCheckoutViewManager extends RNKlarnaExpressCheckoutVie
         };
         viewToLayoutListener.put(wrapper, layoutListener);
         wrapper.addOnLayoutChangeListener(layoutListener);
+    }
+
+    /**
+     * Re-measures the button at the wrapper's current React Native frame. Called when the SDK
+     * button requests a layout (e.g. its label finished loading) because Yoga never measures
+     * native children: the new height is laid out and reported back so React resizes the
+     * wrapper instead of clipping the button.
+     */
+    @VisibleForTesting
+    void relayout(@NonNull FrameLayout wrapper) {
+        if (wrapper.getChildCount() == 0 || !wrapper.isAttachedToWindow()) {
+            return;
+        }
+        // Re-measure the wrapper itself so its pending layout request is cleared and later
+        // requests from the button propagate again.
+        wrapper.measure(
+                View.MeasureSpec.makeMeasureSpec(wrapper.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(wrapper.getHeight(), View.MeasureSpec.EXACTLY)
+        );
+        wrapper.layout(wrapper.getLeft(), wrapper.getTop(), wrapper.getRight(), wrapper.getBottom());
+        View button = wrapper.getChildAt(0);
+        YogaLayoutHelper.measureAndLayout(wrapper, button);
+        maybeSendResizeEvent(wrapper, button);
     }
 
     private int nextGeneration(@NonNull FrameLayout view) {

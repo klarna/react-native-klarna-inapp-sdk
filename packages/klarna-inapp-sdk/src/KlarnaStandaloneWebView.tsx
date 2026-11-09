@@ -9,12 +9,36 @@ import RNKlarnaStandaloneWebView, {
   type RNKlarnaStandaloneWebViewProps,
 } from './specs/KlarnaStandaloneWebViewNativeComponent';
 import type { Double } from 'react-native/Libraries/Types/CodegenTypes';
+import {
+  serializeCookies,
+  serializeLoadOptions,
+  splitCookieHeader,
+  validateSourceURL,
+  type KlarnaWebViewCookie,
+  type KlarnaWebViewLoadOptions,
+} from './KlarnaStandaloneWebViewLoadOptions';
+
+export interface KlarnaWebViewSource {
+  /** Needs a scheme and a host, so `about:blank` and `file:///` URLs are reported through onError (code -1). */
+  readonly uri: string;
+  /** A Cookie header is stored as cookies for the host of `uri` before the page loads. It needs a registrable domain host (no localhost, IP or single-label host). */
+  readonly headers?: { readonly [name: string]: string };
+}
+import { KlarnaTheme } from './types/common/KlarnaTheme';
 
 export interface KlarnaWebViewProps {
   style?: ViewStyle;
   readonly returnUrl: string;
+  /** Loads the page on mount and whenever `uri` or `headers` change, like react-native-webview. */
+  readonly source?: KlarnaWebViewSource;
+  readonly theme?: KlarnaTheme;
   readonly overScrollMode?: 'always' | 'content' | 'never';
   readonly bounces?: boolean;
+  /**
+   * iOS only: copies all of the app's shared HTTPCookieStorage cookies into the web view before every load.
+   * Not filtered by host, and it can overwrite newer cookies in the web view's store.
+   */
+  readonly sharedCookiesEnabled?: boolean;
   readonly onLoadStart?: (
     navigationEvent: KlarnaWebViewNavigationEvent
   ) => void;
@@ -40,10 +64,86 @@ export class KlarnaStandaloneWebView extends Component<
   >;
 
   private shouldSuppressStopEvent: boolean = false;
+  private lastSetCookiesRequestId = 0;
+  private sourceRequestId = 0;
+  private readonly pendingSetCookies = new Map<
+    number,
+    { resolve: () => void; reject: (error: Error) => void }
+  >();
 
   constructor(props: KlarnaWebViewProps) {
     super(props);
     this.standaloneWebViewRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.loadSource();
+  }
+
+  componentDidUpdate(previousProps: KlarnaWebViewProps) {
+    if (!isSameSource(previousProps.source, this.props.source)) {
+      this.loadSource();
+    }
+  }
+
+  private loadSource() {
+    const source = this.props.source;
+    const requestId = ++this.sourceRequestId;
+    if (source == null) {
+      return;
+    }
+    const isCurrent = () => requestId === this.sourceRequestId;
+    const reportError = (error: unknown) => {
+      if (isCurrent()) {
+        this.reportSourceError(source.uri, error);
+      }
+    };
+    try {
+      validateSourceURL(source.uri);
+      const { headers, cookies } = splitCookieHeader(
+        source.uri,
+        source.headers
+      );
+      if (cookies.length === 0) {
+        this.loadWithOptions(source.uri, { headers });
+        return;
+      }
+      // Rejects invalid headers before any cookie reaches the shared store.
+      serializeLoadOptions(source.uri, { headers });
+      this.storeCookies(cookies)
+        .then(() => {
+          if (isCurrent()) {
+            this.loadWithOptions(source.uri, { headers });
+          }
+        })
+        .catch(reportError);
+    } catch (error) {
+      reportError(error);
+    }
+  }
+
+  private reportSourceError(uri: string, error: unknown) {
+    this.props.onError?.({
+      url: uri,
+      loading: false,
+      title: '',
+      canGoBack: false,
+      canGoForward: false,
+      code: -1,
+      description: error instanceof Error ? error.message : String(error),
+    });
+  }
+
+  componentWillUnmount() {
+    this.sourceRequestId++;
+    this.pendingSetCookies.forEach(({ reject }) =>
+      reject(
+        new Error(
+          'KlarnaStandaloneWebView: the view was unmounted before the cookies were stored.'
+        )
+      )
+    );
+    this.pendingSetCookies.clear();
   }
 
   render() {
@@ -52,8 +152,10 @@ export class KlarnaStandaloneWebView extends Component<
         ref={this.standaloneWebViewRef}
         style={this.props.style}
         returnUrl={this.props.returnUrl || ''}
+        theme={this.props.theme ?? KlarnaTheme.Light}
         overScrollMode={this.props.overScrollMode ?? 'always'}
         bounces={this.props.bounces ?? true}
+        sharedCookiesEnabled={this.props.sharedCookiesEnabled ?? false}
         onLoadStart={(
           event: NativeSyntheticEvent<
             Readonly<{
@@ -163,6 +265,28 @@ export class KlarnaStandaloneWebView extends Component<
             });
           }
         }}
+        onSetCookiesResult={(
+          event: NativeSyntheticEvent<
+            Readonly<{
+              readonly setCookiesResult: Readonly<{
+                readonly requestId: number;
+                readonly error: string;
+              }>;
+            }>
+          >
+        ) => {
+          const { requestId, error } = event.nativeEvent.setCookiesResult;
+          const pending = this.pendingSetCookies.get(requestId);
+          if (pending == null) {
+            return;
+          }
+          this.pendingSetCookies.delete(requestId);
+          if (error === '') {
+            pending.resolve();
+          } else {
+            pending.reject(new Error(`KlarnaStandaloneWebView: ${error}`));
+          }
+        }}
         onRenderProcessGone={(
           event: NativeSyntheticEvent<
             Readonly<{
@@ -183,13 +307,62 @@ export class KlarnaStandaloneWebView extends Component<
   }
 
   load = (url: string) => {
-    const view = this.standaloneWebViewRef.current;
-    if (view != null) {
-      RNKlarnaStandaloneWebViewCommands.load(view, url);
-    }
+    // A source load still waiting on its cookies must not override this one.
+    this.sourceRequestId++;
+    this.loadWithOptions(url, undefined);
   };
 
+  /**
+   * Loads the URL. Headers go with this request and its same-origin redirects, never to another origin or a Klarna page; both platforms drop them on a cross-origin redirect.
+   * Throws if the URL isn't http(s), the host is a Klarna domain or not ASCII, a header is invalid, or a Cookie header is passed.
+   */
+  private loadWithOptions(url: string, options?: KlarnaWebViewLoadOptions) {
+    const optionsJson = serializeLoadOptions(url, options);
+    const view = this.standaloneWebViewRef.current;
+    if (view != null) {
+      RNKlarnaStandaloneWebViewCommands.load(view, url, optionsJson);
+    }
+  }
+
+  /**
+   * Stores the cookies in the app-wide cookie store (Android CookieManager, iOS default data store), shared with other web views; they persist.
+   * Resolves once every cookie is stored. Rejects without storing anything if a cookie is invalid, and rejects if the view isn't mounted or unmounts first.
+   * On Android it also rejects if the web view refuses a cookie; the cookies stored before it are kept.
+   */
+  private storeCookies(
+    cookies: ReadonlyArray<KlarnaWebViewCookie>
+  ): Promise<void> {
+    let cookiesJson: string;
+    try {
+      cookiesJson = serializeCookies(cookies);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+    const view = this.standaloneWebViewRef.current;
+    if (view == null) {
+      return Promise.reject(
+        new Error(
+          'KlarnaStandaloneWebView: cookies from source.headers cannot be stored while the view is not mounted.'
+        )
+      );
+    }
+    if (cookiesJson === '') {
+      return Promise.resolve();
+    }
+    const requestId = ++this.lastSetCookiesRequestId;
+    return new Promise((resolve, reject) => {
+      this.pendingSetCookies.set(requestId, { resolve, reject });
+      RNKlarnaStandaloneWebViewCommands.setCookies(
+        view,
+        requestId,
+        cookiesJson
+      );
+    });
+  }
+
   goForward = () => {
+    // A source load still waiting on its cookies must not override this navigation.
+    this.sourceRequestId++;
     const view = this.standaloneWebViewRef.current;
     if (view != null) {
       RNKlarnaStandaloneWebViewCommands.goForward(view);
@@ -197,6 +370,7 @@ export class KlarnaStandaloneWebView extends Component<
   };
 
   goBack = () => {
+    this.sourceRequestId++;
     const view = this.standaloneWebViewRef.current;
     if (view != null) {
       RNKlarnaStandaloneWebViewCommands.goBack(view);
@@ -204,6 +378,7 @@ export class KlarnaStandaloneWebView extends Component<
   };
 
   reload = () => {
+    this.sourceRequestId++;
     const view = this.standaloneWebViewRef.current;
     if (view != null) {
       RNKlarnaStandaloneWebViewCommands.reload(view);
@@ -211,12 +386,30 @@ export class KlarnaStandaloneWebView extends Component<
   };
 
   stopLoading = () => {
+    this.sourceRequestId++;
     const view = this.standaloneWebViewRef.current;
     if (view != null) {
       this.shouldSuppressStopEvent = true;
       RNKlarnaStandaloneWebViewCommands.stopLoading(view);
     }
   };
+}
+
+function isSameSource(
+  first: KlarnaWebViewSource | undefined,
+  second: KlarnaWebViewSource | undefined
+): boolean {
+  if (first == null || second == null) {
+    return first === second;
+  }
+  const firstHeaders = first.headers ?? {};
+  const secondHeaders = second.headers ?? {};
+  const names = Object.keys(firstHeaders);
+  return (
+    first.uri === second.uri &&
+    names.length === Object.keys(secondHeaders).length &&
+    names.every((name) => firstHeaders[name] === secondHeaders[name])
+  );
 }
 
 interface KlarnaWebViewNativeEvent {

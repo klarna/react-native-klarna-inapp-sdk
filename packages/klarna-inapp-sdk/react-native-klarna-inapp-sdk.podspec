@@ -47,5 +47,7 @@ Pod::Spec.new do |s|
   s.test_spec 'Tests' do |ts|
     ts.source_files = 'ios/Tests/**/*.{h,m,mm,swift}'
     ts.dependency 'OCMock'
+    # The new-arch wrapper tests include Fabric headers, which need a newer deployment target than the pod's.
+    ts.ios.deployment_target = '15.1'
   end
 end

@@ -47,6 +47,11 @@ jest.mock(
   '../../../klarna-network-core/src/Specs/NativeKlarnaNetworkCore',
   () => ({ default: {} })
 );
+// Same for this package's own TurboModule (pulled in by index.tsx).
+jest.mock('../Specs/NativeKlarnaNetworkMessaging', () => ({
+  __esModule: true,
+  default: { initiatePrequalification: jest.fn(), dispose: jest.fn() },
+}));
 
 import { KlarnaMessagingPlacementType, KlarnaTheme } from '../index';
 import type { KlarnaMessagingPlacementConfiguration } from '../types/KlarnaMessagingPlacementConfiguration';
