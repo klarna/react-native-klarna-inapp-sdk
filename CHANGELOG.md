@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2026-11-09
+
+- Updated the native Android SDK version to 2.16.1
+- Added the `source` prop to `KlarnaStandaloneWebView`. It takes a `uri` and optional `headers`, and loads the page when it mounts or changes.
+- Added the `sharedCookiesEnabled` prop to `KlarnaStandaloneWebView` (iOS only), which shares cookies with the app's other web views. It is off by default.
+- Added the `theme` prop to `KlarnaStandaloneWebView`. It defaults to light.
+- Added Prequalification support to `@klarna/react-native-klarna-network-messaging` via `sdk.messaging.prequalification.initiate({ amount, currency })`.
+- Fixed the Klarna Express Checkout (KEC) button disappearing after switching tabs, or being clipped when its label loads, on iOS and Android.
+
 ## [2.9.5] - 2026-10-29
 
 - Updated the native iOS SDK version to 2.16.1

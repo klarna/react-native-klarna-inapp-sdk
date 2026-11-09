@@ -3,7 +3,9 @@ package com.klarna.mobile.sdk.reactnative.standalonewebview;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -21,11 +23,16 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import com.klarna.mobile.sdk.KlarnaMobileSDKError;
 import com.klarna.mobile.sdk.api.KlarnaEventHandler;
 import com.klarna.mobile.sdk.api.KlarnaProductEvent;
+import com.klarna.mobile.sdk.api.KlarnaTheme;
 import com.klarna.mobile.sdk.api.component.KlarnaComponent;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebView;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebViewClient;
 import com.klarna.mobile.sdk.reactnative.spec.RNKlarnaStandaloneWebViewSpec;
 
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
@@ -40,6 +47,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     public static final String COMMAND_GO_BACK = "goBack";
     public static final String COMMAND_RELOAD = "reload";
     public static final String COMMAND_STOP_LOADING = "stopLoading";
+    public static final String COMMAND_SET_COOKIES = "setCookies";
 
     private static final String OVER_SCROLL_MODE_ALWAYS = "always";
     private static final String OVER_SCROLL_MODE_CONTENT = "content";
@@ -113,8 +121,14 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     };
 
     public KlarnaStandaloneWebViewManager() {
+        this(null);
+    }
+
+    KlarnaStandaloneWebViewManager(@Nullable KlarnaStandaloneWebViewEventSender eventSender) {
         super();
-        klarnaStandaloneWebViewEventSender = new KlarnaStandaloneWebViewEventSender(viewToReactContext);
+        klarnaStandaloneWebViewEventSender = eventSender != null
+                ? eventSender
+                : new KlarnaStandaloneWebViewEventSender(viewToReactContext);
     }
 
     @ReactProp(name = "returnUrl")
@@ -122,6 +136,24 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
     public void setReturnUrl(KlarnaStandaloneWebView view, @Nullable String returnUrl) {
         if (!Objects.equals(returnUrl, view.getReturnURL())) {
             view.setReturnURL(returnUrl);
+        }
+    }
+
+    @ReactProp(name = "theme")
+    @Override
+    public void setTheme(KlarnaStandaloneWebView view, @Nullable String value) {
+        if (value != null && !value.isEmpty()) {
+            switch (value) {
+                case "light":
+                    view.setTheme(KlarnaTheme.LIGHT);
+                    break;
+                case "dark":
+                    view.setTheme(KlarnaTheme.DARK);
+                    break;
+                case "automatic":
+                    view.setTheme(KlarnaTheme.AUTOMATIC);
+                    break;
+            }
         }
     }
 
@@ -156,6 +188,11 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         // No need to implement this as it is not supported in Android
     }
 
+    @Override
+    public void setSharedCookiesEnabled(KlarnaStandaloneWebView view, boolean value) {
+        // CookieManager is already shared by every WebView in the app, so there is nothing to copy
+    }
+
     @NonNull
     @Override
     public String getName() {
@@ -175,7 +212,8 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
             case COMMAND_LOAD:
                 if (args != null && args.size() > 0) {
                     String url = args.getString(0);
-                    load(root, url);
+                    String optionsJson = args.size() > 1 ? args.getString(1) : null;
+                    load(root, url, optionsJson);
                 }
                 break;
             case COMMAND_GO_FORWARD:
@@ -190,12 +228,22 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
             case COMMAND_STOP_LOADING:
                 stopLoading(root);
                 break;
+            case COMMAND_SET_COOKIES:
+                if (args != null && args.size() > 1) {
+                    setCookies(root, args.getInt(0), args.getString(1));
+                }
+                break;
         }
     }
 
     @Override
-    public void load(KlarnaStandaloneWebView view, String url) {
-        view.loadUrl(url);
+    public void load(KlarnaStandaloneWebView view, String url, @Nullable String optionsJson) {
+        KlarnaStandaloneWebViewLoadOptions options = KlarnaStandaloneWebViewLoadOptions.parse(optionsJson);
+        if (options.headers.isEmpty()) {
+            view.loadUrl(url);
+        } else {
+            view.loadUrl(url, options.headers);
+        }
     }
 
     @Override
@@ -218,6 +266,67 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         view.stopLoading();
     }
 
+    // Stores the cookies in the app-wide CookieManager and reports once all of them are stored.
+    @Override
+    public void setCookies(KlarnaStandaloneWebView view, int requestId, String cookiesJson) {
+        List<KlarnaStandaloneWebViewCookie> cookies;
+        try {
+            cookies = KlarnaStandaloneWebViewCookie.parseList(cookiesJson);
+        } catch (JSONException e) {
+            klarnaStandaloneWebViewEventSender.sendSetCookiesResultEvent(view, requestId, "Invalid cookies: " + e.getMessage());
+            return;
+        }
+        if (cookies.isEmpty()) {
+            klarnaStandaloneWebViewEventSender.sendSetCookiesResultEvent(view, requestId, "");
+            return;
+        }
+        CookieManager cookieManager = CookieManager.getInstance();
+        List<KlarnaStandaloneWebViewCookie.Expiry> expiries = new ArrayList<>();
+        for (KlarnaStandaloneWebViewCookie cookie : cookies) {
+            expiries.addAll(cookie.expiries);
+        }
+        // The old cookies are expired before the new ones are stored, so a new cookie is never expired by mistake.
+        expireThenStore(cookieManager, view, requestId, cookies, expiries);
+    }
+
+    private void expireThenStore(CookieManager cookieManager, KlarnaStandaloneWebView view, int requestId,
+                                 List<KlarnaStandaloneWebViewCookie> cookies,
+                                 List<KlarnaStandaloneWebViewCookie.Expiry> expiries) {
+        if (expiries.isEmpty()) {
+            storeCookies(cookieManager, view, requestId, cookies);
+            return;
+        }
+        int[] pending = {expiries.size()};
+        for (KlarnaStandaloneWebViewCookie.Expiry expiry : expiries) {
+            // A rejected expiry (for example a public suffix domain) only means there was nothing to remove.
+            cookieManager.setCookie(expiry.url, expiry.setCookieValue, ignored -> {
+                pending[0]--;
+                if (pending[0] == 0) {
+                    storeCookies(cookieManager, view, requestId, cookies);
+                }
+            });
+        }
+    }
+
+    private void storeCookies(CookieManager cookieManager, KlarnaStandaloneWebView view, int requestId,
+                              List<KlarnaStandaloneWebViewCookie> cookies) {
+        List<String> failed = new ArrayList<>();
+        int[] remaining = {cookies.size()};
+        for (KlarnaStandaloneWebViewCookie cookie : cookies) {
+            cookieManager.setCookie(cookie.url, cookie.setCookieValue, stored -> {
+                if (!Boolean.TRUE.equals(stored)) {
+                    failed.add(cookie.name);
+                }
+                remaining[0]--;
+                if (remaining[0] == 0) {
+                    cookieManager.flush();
+                    String error = failed.isEmpty() ? "" : "Could not store the cookies " + TextUtils.join(", ", failed) + ".";
+                    klarnaStandaloneWebViewEventSender.sendSetCookiesResultEvent(view, requestId, error);
+                }
+            });
+        }
+    }
+
     /**
      * Exposes direct event types that will be accessible as prop "callbacks" from RN.
      * <p>
@@ -234,6 +343,7 @@ public class KlarnaStandaloneWebViewManager extends RNKlarnaStandaloneWebViewSpe
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_LOAD_PROGRESS.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_KLARNA_MESSAGE.name));
         builder.put(KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_RENDER_PROCESS_GONE.name));
+        builder.put(KlarnaStandaloneWebViewEvent.Event.ON_SET_COOKIES_RESULT.name, MapBuilder.of("registrationName", KlarnaStandaloneWebViewEvent.Event.ON_SET_COOKIES_RESULT.name));
         return builder.build();
     }
 

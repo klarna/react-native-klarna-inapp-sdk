@@ -8,11 +8,13 @@ import type { Double, Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
   returnUrl: string;
+  theme: string;
   onLoadStart: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   onLoadEnd: DirectEventHandler<KlarnaWebViewNavigationEvent>;
   onError: DirectEventHandler<KlarnaWebViewError>;
   onLoadProgress: DirectEventHandler<KlarnaWebViewProgressEvent>;
   onKlarnaMessage: DirectEventHandler<KlarnaWebViewKlarnaMessageEvent>;
+  onSetCookiesResult: DirectEventHandler<KlarnaWebViewSetCookiesResultEvent>;
 
   /* Android only */
   onRenderProcessGone: DirectEventHandler<KlarnaWebViewRenderProcessGoneEvent>;
@@ -21,6 +23,7 @@ export interface RNKlarnaStandaloneWebViewProps extends ViewProps {
 
   /* iOS only */
   bounces: boolean;
+  sharedCookiesEnabled: boolean;
   /* End of iOS only */
 }
 
@@ -66,6 +69,14 @@ type KlarnaWebViewKlarnaMessageEvent = Readonly<{
   }>;
 }>;
 
+type KlarnaWebViewSetCookiesResultEvent = Readonly<{
+  setCookiesResult: Readonly<{
+    requestId: Int32;
+    // Empty when every cookie was stored.
+    error: string;
+  }>;
+}>;
+
 type KlarnaWebViewRenderProcessGoneEvent = Readonly<{
   renderProcessGoneEvent: Readonly<{
     didCrash: boolean;
@@ -78,7 +89,8 @@ type KlarnaStandaloneWebViewNativeComponentType =
 interface RNKlarnaStandaloneWebViewNativeCommands {
   load: (
     viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>,
-    url: string
+    url: string,
+    optionsJson: string
   ) => void;
   goBack: (
     viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>
@@ -92,11 +104,23 @@ interface RNKlarnaStandaloneWebViewNativeCommands {
   stopLoading: (
     viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>
   ) => void;
+  setCookies: (
+    viewRef: React.ElementRef<KlarnaStandaloneWebViewNativeComponentType>,
+    requestId: Int32,
+    cookiesJson: string
+  ) => void;
 }
 
 export const Commands: RNKlarnaStandaloneWebViewNativeCommands =
   codegenNativeCommands<RNKlarnaStandaloneWebViewNativeCommands>({
-    supportedCommands: ['load', 'goBack', 'goForward', 'reload', 'stopLoading'],
+    supportedCommands: [
+      'load',
+      'goBack',
+      'goForward',
+      'reload',
+      'stopLoading',
+      'setCookies',
+    ],
   });
 
 export default codegenNativeComponent<RNKlarnaStandaloneWebViewProps>(

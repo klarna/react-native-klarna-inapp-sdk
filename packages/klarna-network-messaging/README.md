@@ -6,7 +6,7 @@
 [![License][license-badge]][license-url]
 [![Developed at Klarna][klarna-badge]][klarna-url]
 
-React Native bindings for Klarna **messaging placements**: a Fabric-native `KlarnaMessagingPlacementView` that renders on-device messaging (for example credit promotion placements) with **amount**, **currency**, and **placement type**, an optional **theme**, automatic height from native resize events, and **error** callbacks.
+React Native bindings for Klarna **messaging placements**: a Fabric-native `KlarnaMessagingPlacementView` that renders on-device messaging (for example credit promotion placements) with **amount**, **currency**, and **placement type**, an optional **theme**, automatic height from native resize events, and **error** callbacks. It also exposes a **prequalification** flow (`sdk.messaging.prequalification.initiate`).
 
 This package builds on [`@klarna/react-native-klarna-network-core`](https://www.npmjs.com/package/@klarna/react-native-klarna-network-core): initialize `Klarna` from core before showing placements; this module re-exports `KlarnaTheme` for convenience.
 
@@ -69,6 +69,54 @@ export function CheckoutMessaging({ sdk }: { sdk: Klarna }) {
 | `configuration` | Required. `{ type, amount, currency, theme? }`. `type` is a `KlarnaMessagingPlacementType`; `theme` is optional — when omitted, the native SDK chooses the default. |
 | `onError`       | Optional. Receives `KlarnaMessagingError` (`name`, `message`) when native messaging fails.                                                                          |
 | `style`         | Optional. Passed through; height is driven by native content after load.                                                                                            |
+
+## Prequalification
+
+Importing this package adds a `messaging` property to every `Klarna` instance. `sdk.messaging.prequalification.initiate` starts the Klarna prequalification flow for a given amount and currency.
+
+> **Messaging placements are the recommended surface** for presenting Klarna messaging. Use `initiate` only when a placement cannot be rendered.
+
+```ts
+import '@klarna/react-native-klarna-network-messaging';
+import type { Klarna } from '@klarna/react-native-klarna-network-core';
+
+async function prequalify(sdk: Klarna) {
+  try {
+    const result = await sdk.messaging.prequalification.initiate({
+      amount: 9999, // minor units (for example cents), positive integer
+      currency: 'USD', // ISO 4217
+    });
+
+    if (result.status === 'APPROVED') {
+      console.log('Prequalified until', result.expiresAt.toISOString());
+    } else {
+      // 'ABORTED': the customer was not prequalified or dismissed the flow.
+      console.log('Prequalification aborted');
+    }
+  } catch (error) {
+    // The flow could not be started. Native failures carry the native error
+    // name in `code`; local validation failures have no `code`.
+    const { code, message } = error as { code?: string; message: string };
+    console.warn(code ?? 'VALIDATION_ERROR', message);
+  }
+}
+```
+
+**Result**
+
+| `status`     | Meaning                                                                          |
+| ------------ | -------------------------------------------------------------------------------- |
+| `'APPROVED'` | The customer prequalified. `expiresAt` (`Date`) tells when the approval expires. |
+| `'ABORTED'`  | The customer was not prequalified, or closed the flow.                           |
+
+Every customer outcome resolves the promise. The promise only rejects when the flow could not be started:
+
+- **Native failures** reject with an `Error` whose `code` property is the native SDK error name (for example `OPERATION_FAILED` or `INITIATE_ALREADY_IN_PROGRESS`) and whose `message` describes the failure. The error's `name` is not set by React Native on these rejections and stays `'Error'`, so read `code`, not `name`.
+- **Local validation failures** (`amount` is not a positive safe integer, or `currency` is empty) reject with a plain `Error` that has no `code`, without calling native code.
+
+The native error is passed through as-is; this package does not wrap or normalise it.
+
+**Android:** `initiate` presents UI and requires a foreground Activity. Call it while your app is in the foreground.
 
 ## Support
 

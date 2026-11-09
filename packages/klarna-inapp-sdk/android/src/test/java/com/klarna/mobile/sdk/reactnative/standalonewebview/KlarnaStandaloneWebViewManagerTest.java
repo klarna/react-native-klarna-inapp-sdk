@@ -11,6 +11,7 @@ import com.facebook.react.bridge.JavaOnlyMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.EventDispatcher;
+import com.klarna.mobile.sdk.api.KlarnaTheme;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebView;
 import com.klarna.mobile.sdk.api.standalonewebview.KlarnaStandaloneWebViewClient;
 
@@ -142,6 +143,51 @@ public class KlarnaStandaloneWebViewManagerTest {
         webViewClientGivenToTheSdk().onPageStarted(webView, "https://example.com", null);
 
         Mockito.verifyNoInteractions(viewEventDispatcher, otherEventDispatcher);
+    }
+
+    // --- Prop setter: theme ---
+
+    @Test
+    public void testSetThemeLight() {
+        KlarnaStandaloneWebView webView = Mockito.mock(KlarnaStandaloneWebView.class);
+        manager.setTheme(webView, "light");
+        Mockito.verify(webView).setTheme(KlarnaTheme.LIGHT);
+    }
+
+    @Test
+    public void testSetThemeDark() {
+        KlarnaStandaloneWebView webView = Mockito.mock(KlarnaStandaloneWebView.class);
+        manager.setTheme(webView, "dark");
+        Mockito.verify(webView).setTheme(KlarnaTheme.DARK);
+    }
+
+    @Test
+    public void testSetThemeAutomatic() {
+        KlarnaStandaloneWebView webView = Mockito.mock(KlarnaStandaloneWebView.class);
+        manager.setTheme(webView, "automatic");
+        Mockito.verify(webView).setTheme(KlarnaTheme.AUTOMATIC);
+    }
+
+    @Test
+    public void testSetThemeEmpty() {
+        // JS always sends a theme, light when the prop is not set. An empty value is ignored.
+        KlarnaStandaloneWebView webView = Mockito.mock(KlarnaStandaloneWebView.class);
+        manager.setTheme(webView, "");
+        Mockito.verify(webView, Mockito.never()).setTheme(Mockito.any());
+    }
+
+    @Test
+    public void testSetThemeUnknown() {
+        KlarnaStandaloneWebView webView = Mockito.mock(KlarnaStandaloneWebView.class);
+        manager.setTheme(webView, "unknown");
+        Mockito.verify(webView, Mockito.never()).setTheme(Mockito.any());
+    }
+
+    @Test
+    public void testSetThemeNull() {
+        KlarnaStandaloneWebView webView = Mockito.mock(KlarnaStandaloneWebView.class);
+        manager.setTheme(webView, null);
+        Mockito.verify(webView, Mockito.never()).setTheme(Mockito.any());
     }
 
     // --- onReceivedError ---

@@ -88,9 +88,11 @@ export default function KlarnaCheckoutScreen(): React.JSX.Element {
           {renderSuspendButton()}
           {renderResumeButton()}
         </View>
-        <Text style={{ color: theme.text }} {...testProps('state_events')}>
-          {eventState}
-        </Text>
+        <ScrollView style={styles.eventsContainer}>
+          <Text style={{ color: theme.text }} {...testProps('state_events')}>
+            {eventState}
+          </Text>
+        </ScrollView>
       </View>
       <ScrollView>
         <KlarnaCheckoutView

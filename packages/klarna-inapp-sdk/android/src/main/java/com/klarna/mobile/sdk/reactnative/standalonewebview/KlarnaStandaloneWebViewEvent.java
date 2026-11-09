@@ -29,7 +29,9 @@ public class KlarnaStandaloneWebViewEvent extends Event<KlarnaStandaloneWebViewE
         // This event is sent when the Mobile SDK wants to send an event to the Web View
         ON_KLARNA_MESSAGE("onKlarnaMessage"),
         // This event is sent when the WebView's render process has exited
-        ON_RENDER_PROCESS_GONE("onRenderProcessGone");
+        ON_RENDER_PROCESS_GONE("onRenderProcessGone"),
+        // This event is sent when a setCookies command has stored its cookies or failed
+        ON_SET_COOKIES_RESULT("onSetCookiesResult");
 
         public final String name;
 
@@ -53,6 +55,12 @@ public class KlarnaStandaloneWebViewEvent extends Event<KlarnaStandaloneWebViewE
     @Override
     public String getEventName() {
         return eventName;
+    }
+
+    // A coalesced cookie result would leave its setCookies promise pending forever.
+    @Override
+    public boolean canCoalesce() {
+        return !Event.ON_SET_COOKIES_RESULT.name.equals(eventName);
     }
 
     @Nullable
