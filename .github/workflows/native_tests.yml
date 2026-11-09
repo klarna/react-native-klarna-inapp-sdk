@@ -44,6 +44,35 @@ jobs:
           pod repo update
           (cd TestApp/ios && pod install --verbose)
 
+      - name: Boot iOS simulator
+        # On a fresh runner the simulator service is sometimes not ready when xcodebuild
+        # first looks for devices, so it finds none and fails with "Unable to find a device
+        # matching the provided destination specifier". Wait until the device shows up and
+        # boot it before the tests. SIMULATOR_NAME must match the destination in the
+        # packages' test:ios scripts; like xcodebuild, this picks the newest iOS runtime.
+        timeout-minutes: 10
+        env:
+          SIMULATOR_NAME: iPhone 17 Pro
+        run: |
+          for attempt in $(seq 1 20); do
+            UDID=$(xcrun simctl list devices available -j | jq -r --arg name "$SIMULATOR_NAME" '
+              [.devices | to_entries[]
+                | select(.key | test("SimRuntime\\.iOS-"))
+                | {version: (.key | sub(".*iOS-"; "") | split("-") | map(tonumber)), device: .value[]}
+                | select(.device.name == $name)]
+              | sort_by(.version) | last | .device.udid // empty') || UDID=""
+            [ -n "$UDID" ] && break
+            echo "$SIMULATOR_NAME not available yet (attempt $attempt of 20), retrying in 15s"
+            sleep 15
+          done
+          if [ -z "$UDID" ]; then
+            echo "::error::No $SIMULATOR_NAME simulator found"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Booting $SIMULATOR_NAME ($UDID)"
+          xcrun simctl bootstatus "$UDID" -b
+
       - name: Run Unit Tests for iOS
         # The macos-26 image puts the Metal toolchain ahead of XcodeDefault in TOOLCHAINS,
         # so TOOLCHAIN_DIR resolves to Metal.xctoolchain, which lacks the Swift back-deploy
