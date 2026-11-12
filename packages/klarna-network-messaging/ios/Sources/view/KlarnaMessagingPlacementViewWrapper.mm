@@ -170,6 +170,23 @@ Class<RCTComponentViewProtocol> RNKlarnaMessagingPlacementViewCls(void)
     }
 }
 
+#pragma mark - Recycling
+
+/// Fabric reuses this view for a new React component instance and keeps both the stored
+/// props and the SDK placement view from the previous one. With unchanged props
+/// `updateProps:` would not recreate the placement view, and the height observer would
+/// dedupe against the previous mount's height, so JS (reset to its minimum-height
+/// fallback) would never receive `onResized` and a placement taller than the fallback
+/// would stay clipped. Tear everything down so the next mount starts from scratch.
+- (void)prepareForRecycle {
+    [super prepareForRecycle];
+    [self.heightObserver stopObserving];
+    [self.placementView removeFromSuperview];
+    self.placementView = nil;
+    static const auto defaultProps = std::make_shared<const RNKlarnaMessagingPlacementViewProps>();
+    _props = defaultProps;
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews {

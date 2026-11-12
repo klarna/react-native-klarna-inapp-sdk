@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.1] - 2026-11-12
+
+- Fixed the iOS messaging placement in `@klarna/react-native-klarna-network-messaging` being clipped, or never reporting its height, after React Native recycles the view.
+
 ## [2.10.0] - 2026-11-09
 
 - Updated the native Android SDK version to 2.16.1

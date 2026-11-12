@@ -201,4 +201,56 @@ class KlarnaMessagingHeightObserverTests: XCTestCase {
 
         delayObserver.stopObserving()
     }
+
+    // MARK: - Stale delayed checks
+
+    // The delayed checks of an earlier observation must not count towards (or finish) the
+    // current one, otherwise a re-observed placement is reported as empty before its
+    // content has had the full delay to load.
+    func testStaleDelayedChecks_doNotReportZeroForANewObservation() {
+        let delayObserver = KlarnaMessagingHeightObserver(delayIntervals: [0.2, 0.6])
+        delayObserver.delegate = delegate
+        delayObserver.observe(UIView(frame: .zero))
+
+        // Re-observe while the first observation still has a delayed check pending.
+        let reobserved = expectation(description: "Re-observed")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            delayObserver.observe(UIView(frame: .zero))
+            reobserved.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+
+        // The old observation's last check and the new one's first check fire around 0.6s;
+        // the new observation is only finished after its own last check (1.0s).
+        let midway = expectation(description: "Between the first and last new checks")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            midway.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+        XCTAssertTrue(delegate.reportedHeights.isEmpty, "stale checks must not finish the new observation")
+
+        let finished = expectation(description: "New observation finished")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            finished.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+        XCTAssertEqual(delegate.reportedHeights, [0])
+
+        delayObserver.stopObserving()
+    }
+
+    func testDelayedChecks_doNotReportAfterObservationStopped() {
+        let delayObserver = KlarnaMessagingHeightObserver(delayIntervals: [0.05, 0.1])
+        delayObserver.delegate = delegate
+        delayObserver.observe(UIView(frame: .zero))
+        delayObserver.stopObserving()
+
+        let expectation = expectation(description: "Delays elapsed")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1.0)
+
+        XCTAssertTrue(delegate.reportedHeights.isEmpty)
+    }
 }

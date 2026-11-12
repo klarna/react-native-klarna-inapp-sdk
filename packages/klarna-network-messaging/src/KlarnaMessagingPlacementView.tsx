@@ -129,8 +129,12 @@ const styles = StyleSheet.create({
     width: '100%',
     overflow: 'hidden',
   },
+  // Shown until the native view reports its first height. `overflow` is visible
+  // here so that a placement taller than the minimum is never clipped while (or
+  // if) the report is missing; it is clipped again once the exact height is known.
   minHeightFallback: {
     minHeight: 60,
+    overflow: 'visible',
   },
   collapsed: {
     height: 0,

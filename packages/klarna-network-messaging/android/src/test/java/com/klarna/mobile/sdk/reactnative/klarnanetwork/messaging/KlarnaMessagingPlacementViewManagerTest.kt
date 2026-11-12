@@ -1,5 +1,6 @@
 package com.klarna.mobile.sdk.reactnative.klarnanetwork.messaging
 
+import android.widget.FrameLayout
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.JavaOnlyMap
 import org.junit.After
@@ -34,6 +35,19 @@ class KlarnaMessagingPlacementViewManagerTest {
     @Test
     fun getName_returnsCorrectReactClass() {
         assertEquals("RNKlarnaMessagingPlacementView", manager.name)
+    }
+
+    // MARK: - onDropViewInstance
+
+    // If React Native recycles the view, the next mount must start without the
+    // previous placement still attached.
+    @Test
+    fun onDropViewInstance_removesAllChildren() {
+        val view = Mockito.mock(FrameLayout::class.java)
+
+        manager.onDropViewInstance(view)
+
+        Mockito.verify(view).removeAllViews()
     }
 
     // MARK: - getExportedCustomDirectEventTypeConstants
