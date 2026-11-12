@@ -38,6 +38,7 @@
  */
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import renderer from 'react-test-renderer';
 
 // Stub the core's TurboModule binding before any import that pulls Klarna
@@ -345,6 +346,41 @@ describe('KlarnaMessagingPlacementView', () => {
       nativeViewHeight: 0,
       hasReceivedResize: true,
     });
+  });
+
+  // -- Clipping: until native reports its first height the container only has a
+  // minimum height, so it must not clip a taller placement (a missed report
+  // would otherwise cut off e.g. the fourth line of a message).
+
+  function renderedStyle(view: KlarnaMessagingPlacementView) {
+    const element = view.render() as React.ReactElement<{ style: any }>;
+    return StyleSheet.flatten(element.props.style);
+  }
+
+  it('does not clip while waiting for the first height report', () => {
+    const view = makeView();
+    view.state = { nativeViewHeight: 0, hasReceivedResize: false };
+    expect(renderedStyle(view)).toMatchObject({
+      minHeight: 60,
+      overflow: 'visible',
+    });
+  });
+
+  it('clips to the exact height once native has reported it', () => {
+    const view = makeView();
+    view.state = { nativeViewHeight: 67, hasReceivedResize: true };
+    expect(renderedStyle(view)).toMatchObject({
+      height: 67,
+      overflow: 'hidden',
+    });
+  });
+
+  it('clips again when the configuration changes after a report', () => {
+    const view = makeView();
+    view.state = { nativeViewHeight: 67, hasReceivedResize: true };
+    expect(renderedStyle(view).overflow).toBe('hidden');
+    view.state = { nativeViewHeight: 0, hasReceivedResize: false };
+    expect(renderedStyle(view).overflow).toBe('visible');
   });
 
   it('collapses when native reports height 0 via onResized', () => {

@@ -23,6 +23,12 @@ Pod::Spec.new do |s|
   s.dependency 'react-native-klarna-network-core', s.version.to_s
 
   s.test_spec 'Tests' do |ts|
-    ts.source_files = 'ios/Tests/**/*.swift'
+    ts.source_files = 'ios/Tests/**/*.{h,m,mm,swift}'
+    # The wrapper test includes Fabric headers, which need a newer deployment target than the pod's.
+    ts.ios.deployment_target = '15.1'
+    # The wrapper test imports the pod's generated Swift header (KlarnaMessagingHeightObserver).
+    ts.pod_target_xcconfig = {
+      'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/react-native-klarna-network-messaging/Swift Compatibility Header"'
+    }
   end
 end

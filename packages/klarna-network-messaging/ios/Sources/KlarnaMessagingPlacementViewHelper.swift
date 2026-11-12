@@ -99,6 +99,12 @@ public class KlarnaMessagingHeightObserver: NSObject {
     private var isObserving = false
     private var lastReportedHeight: CGFloat = 0
     private var pendingDelayedChecks: Int = 0
+    /// Identifies the current observation. Delayed checks capture the value they were
+    /// scheduled with and do nothing once it changed, so checks left over from an earlier
+    /// observation (or from before `stopObserving`) can't affect the current one.
+    /// It only ever increases (on every `stopObserving`) and is never reset or compared to
+    /// 0: all that matters is whether it still equals the value a check captured.
+    private var observationGeneration = 0
     private let delayIntervals: [Double]
 
     @objc public init(delayIntervals: [Double]) {
@@ -116,9 +122,10 @@ public class KlarnaMessagingHeightObserver: NSObject {
         isObserving = true
         view.addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
 
+        let generation = observationGeneration
         for delay in delayIntervals {
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                guard let self = self else { return }
+                guard let self = self, self.observationGeneration == generation else { return }
                 self.checkAndReportHeight()
                 self.pendingDelayedChecks -= 1
                 if self.pendingDelayedChecks <= 0 && self.lastReportedHeight == 0 {
@@ -129,6 +136,7 @@ public class KlarnaMessagingHeightObserver: NSObject {
     }
 
     @objc public func stopObserving() {
+        observationGeneration += 1
         if isObserving, let view = observedView {
             view.removeObserver(self, forKeyPath: "bounds")
         }

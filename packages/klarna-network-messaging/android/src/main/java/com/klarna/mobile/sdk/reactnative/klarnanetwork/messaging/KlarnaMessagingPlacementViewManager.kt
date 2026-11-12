@@ -54,6 +54,10 @@ class KlarnaMessagingPlacementViewManager :
     override fun onDropViewInstance(view: FrameLayout) {
         removeLayoutListener(view)
         handler.removeCallbacksAndMessages(view)
+        // If React Native recycles this view, the next mount must not start with the
+        // previous placement still attached (e.g. when its props are incomplete and
+        // recreatePlacementView returns early).
+        view.removeAllViews()
         pendingRecreate.remove(view)
         viewToInstanceId.remove(view)
         viewToPlacementType.remove(view)
